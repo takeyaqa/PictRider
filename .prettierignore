@@ -1,0 +1,5 @@
+.devcontainer/
+.github/
+pnpm-lock.yaml
+index.html
+README.md
