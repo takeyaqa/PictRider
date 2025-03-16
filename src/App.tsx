@@ -11,7 +11,7 @@ interface ParametersAreaProps {
   ) => void
   onAddRow: () => void
   onRemoveRow: () => void
-  onClearAll: () => void
+  onClearValues: () => void
 }
 
 export function ParametersArea({
@@ -19,7 +19,7 @@ export function ParametersArea({
   onInputChange,
   onAddRow,
   onRemoveRow,
-  onClearAll,
+  onClearValues,
 }: ParametersAreaProps) {
   return (
     <>
@@ -49,7 +49,7 @@ export function ParametersArea({
           <button
             type="button"
             className="btn btn-warning"
-            onClick={onClearAll}
+            onClick={onClearValues}
           >
             クリア
           </button>
@@ -103,7 +103,7 @@ function App() {
 
   const [parameters, setParameters] = useState(INITIAL_PARAMETERS)
 
-  function handleInputChange(
+  function handleParameterInputChange(
     id: string,
     field: 'name' | 'values',
     e: React.ChangeEvent<HTMLInputElement>,
@@ -114,11 +114,11 @@ function App() {
     setParameters(newParameters)
   }
 
-  function addInputRow() {
+  function addParameterInputRow() {
     setParameters([...parameters, { id: uuidv4(), name: '', values: '' }])
   }
 
-  function removeInputRow() {
+  function removeParameterInputRow() {
     if (parameters.length > 1) {
       const newParameters = [...parameters]
       newParameters.pop()
@@ -126,7 +126,7 @@ function App() {
     }
   }
 
-  function clearAllInputs() {
+  function clearAllParameterValues() {
     const emptyParameters = parameters.map(() => ({
       id: uuidv4(),
       name: '',
@@ -140,10 +140,10 @@ function App() {
       <h1>PictRider</h1>
       <ParametersArea
         parameters={parameters}
-        onInputChange={handleInputChange}
-        onAddRow={addInputRow}
-        onRemoveRow={removeInputRow}
-        onClearAll={clearAllInputs}
+        onInputChange={handleParameterInputChange}
+        onAddRow={addParameterInputRow}
+        onRemoveRow={removeParameterInputRow}
+        onClearValues={clearAllParameterValues}
       />
     </div>
   )
