@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/unbound-method, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 import '@testing-library/jest-dom/vitest'
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import App from '../src/App'
+import App from '../src/App.tsx'
+import { PictRunner } from '../src/pict/pict-runner.ts'
 
 describe('App', () => {
   describe('ParametersArea', () => {
@@ -124,6 +125,206 @@ describe('App', () => {
       )
       expect(screen.getAllByRole('textbox')[12]).toHaveValue('')
       expect(screen.getAllByRole('textbox')[13]).toHaveValue('')
+    })
+  })
+
+  describe('OutputArea', () => {
+    let user: any
+    let pictRunner: PictRunner
+
+    beforeEach(() => {
+      vi.mock('../src/pict/pict-runner.ts', () => {
+        const PictRunner = vi.fn()
+        PictRunner.prototype.init = vi.fn()
+        PictRunner.prototype.run = vi.fn(() => ({
+          header: ['Type', 'Size', 'Format method'],
+          body: [
+            ['Single', '10', 'Quick'],
+            ['Span', '100', 'Slow'],
+          ],
+        }))
+
+        return { PictRunner }
+      })
+      pictRunner = new PictRunner()
+      user = userEvent.setup()
+      render(<App />)
+    })
+
+    afterEach(() => {
+      cleanup()
+      vi.clearAllMocks()
+    })
+
+    it('Should display result table when input default value', async () => {
+      // act - click the run button
+      await user.click(screen.getByText('実行'))
+
+      // assert - check result table
+      expect(pictRunner.run).toHaveBeenCalledWith([
+        {
+          id: expect.any(String),
+          name: 'Type',
+          values: 'Single, Span, Stripe, Mirror, RAID-5',
+        },
+        {
+          id: expect.any(String),
+          name: 'Size',
+          values: '10, 100, 500, 1000, 5000, 10000, 40000',
+        },
+        {
+          id: expect.any(String),
+          name: 'Format method',
+          values: 'Quick, Slow',
+        },
+        {
+          id: expect.any(String),
+          name: 'File system',
+          values: 'FAT, FAT32, NTFS',
+        },
+        { id: expect.any(String), name: 'Cluster size', values: 'Quick, Slow' },
+        { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
+      ])
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+      expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
+        '出力',
+      )
+      expect(screen.getByRole('table')).toBeInTheDocument()
+      expect(
+        screen.getByRole('columnheader', { name: 'Type' }),
+      ).toBeInTheDocument()
+      expect(screen.getByRole('cell', { name: '100' })).toBeInTheDocument()
+    })
+
+    it('Should display result table when add empty row', async () => {
+      // arrange - add empty row
+      await user.click(screen.getByText('行を追加'))
+
+      // act - click the run button
+      await user.click(screen.getByText('実行'))
+
+      // assert - check result table
+      expect(pictRunner.run).toHaveBeenCalledWith([
+        {
+          id: expect.any(String),
+          name: 'Type',
+          values: 'Single, Span, Stripe, Mirror, RAID-5',
+        },
+        {
+          id: expect.any(String),
+          name: 'Size',
+          values: '10, 100, 500, 1000, 5000, 10000, 40000',
+        },
+        {
+          id: expect.any(String),
+          name: 'Format method',
+          values: 'Quick, Slow',
+        },
+        {
+          id: expect.any(String),
+          name: 'File system',
+          values: 'FAT, FAT32, NTFS',
+        },
+        { id: expect.any(String), name: 'Cluster size', values: 'Quick, Slow' },
+        { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
+        { id: expect.any(String), name: '', values: '' },
+      ])
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+      expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
+        '出力',
+      )
+      expect(screen.getByRole('table')).toBeInTheDocument()
+      expect(
+        screen.getByRole('columnheader', { name: 'Type' }),
+      ).toBeInTheDocument()
+      expect(screen.getByRole('cell', { name: '100' })).toBeInTheDocument()
+    })
+
+    it('Should display result table when delete existing row', async () => {
+      // arrange - delete existing row
+      await user.click(screen.getByText('行を削除'))
+
+      // act - click the run button
+      await user.click(screen.getByText('実行'))
+
+      // assert - check result table
+      expect(pictRunner.run).toHaveBeenCalledWith([
+        {
+          id: expect.any(String),
+          name: 'Type',
+          values: 'Single, Span, Stripe, Mirror, RAID-5',
+        },
+        {
+          id: expect.any(String),
+          name: 'Size',
+          values: '10, 100, 500, 1000, 5000, 10000, 40000',
+        },
+        {
+          id: expect.any(String),
+          name: 'Format method',
+          values: 'Quick, Slow',
+        },
+        {
+          id: expect.any(String),
+          name: 'File system',
+          values: 'FAT, FAT32, NTFS',
+        },
+        { id: expect.any(String), name: 'Cluster size', values: 'Quick, Slow' },
+      ])
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+      expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
+        '出力',
+      )
+      expect(screen.getByRole('table')).toBeInTheDocument()
+      expect(
+        screen.getByRole('columnheader', { name: 'Type' }),
+      ).toBeInTheDocument()
+      expect(screen.getByRole('cell', { name: '100' })).toBeInTheDocument()
+    })
+
+    it('Should display result table when editing value', async () => {
+      // arrange - edit existing value
+      const input = screen.getAllByRole('textbox')[1]
+      await user.clear(input)
+      await user.type(input, 'Double, Span, Stripe, Mirror, RAID-5000')
+
+      // act - click the run button
+      await user.click(screen.getByText('実行'))
+
+      // assert - check result table
+      expect(pictRunner.run).toHaveBeenCalledWith([
+        {
+          id: expect.any(String),
+          name: 'Type',
+          values: 'Double, Span, Stripe, Mirror, RAID-5000',
+        },
+        {
+          id: expect.any(String),
+          name: 'Size',
+          values: '10, 100, 500, 1000, 5000, 10000, 40000',
+        },
+        {
+          id: expect.any(String),
+          name: 'Format method',
+          values: 'Quick, Slow',
+        },
+        {
+          id: expect.any(String),
+          name: 'File system',
+          values: 'FAT, FAT32, NTFS',
+        },
+        { id: expect.any(String), name: 'Cluster size', values: 'Quick, Slow' },
+        { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
+      ])
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+      expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
+        '出力',
+      )
+      expect(screen.getByRole('table')).toBeInTheDocument()
+      expect(
+        screen.getByRole('columnheader', { name: 'Type' }),
+      ).toBeInTheDocument()
+      expect(screen.getByRole('cell', { name: '100' })).toBeInTheDocument()
     })
   })
 })
