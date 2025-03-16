@@ -2,7 +2,6 @@
 import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
-// @ts-expect-error userEvent is not typed
 import userEvent from '@testing-library/user-event'
 import App from '../src/App'
 
