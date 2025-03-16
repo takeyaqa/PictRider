@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any */
-import { PictParameter, PictOutput } from './pict-types.ts'
+import { PictParameter, PictOutput } from './pict-types'
 // @ts-expect-error - no types available
-import createModule from './wasm/pict.mjs'
+import createModule from './wasm/pict'
 
 export class PictRunner {
   private pict: any

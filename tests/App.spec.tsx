@@ -3,8 +3,8 @@ import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import App from '../src/App.tsx'
-import { PictRunner } from '../src/pict/pict-runner.ts'
+import App from '../src/App'
+import { PictRunner } from '../src/pict/pict-runner'
 
 describe('App', () => {
   describe('ParametersArea', () => {
@@ -133,7 +133,7 @@ describe('App', () => {
     let pictRunner: PictRunner
 
     beforeEach(() => {
-      vi.mock('../src/pict/pict-runner.ts', () => {
+      vi.mock('../src/pict/pict-runner', () => {
         const PictRunner = vi.fn()
         PictRunner.prototype.init = vi.fn()
         PictRunner.prototype.run = vi.fn(() => ({
