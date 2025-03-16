@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { PictParameter } from './pict/pict-types'
+import { PictParameter, PictOutput } from './pict/pict-types.ts'
+import { PictRunner } from './pict/pict-runner.ts'
 
 interface ParametersAreaProps {
   parameters: PictParameter[]
@@ -83,6 +84,63 @@ export function ParametersArea({
   )
 }
 
+interface ErrorMessageAreaProps {
+  message: string
+}
+
+function ErrorMessageArea({ message }: ErrorMessageAreaProps) {
+  if (!message) {
+    return null
+  }
+  return (
+    <div className="row mt-3">
+      <div className="col-12">
+        <div className="alert alert-danger" role="alert">
+          {message}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export interface OutputAreaProps {
+  output: PictOutput | null
+}
+
+function OutputArea({ output }: OutputAreaProps) {
+  if (!output) {
+    return null
+  }
+  return (
+    <div className="row mt-3">
+      <div className="col-12">
+        <h4>出力</h4>
+        <table className="table">
+          <thead>
+            <tr>
+              {output.header.map((h, i) => (
+                // eslint-disable-next-line react-x/no-array-index-key
+                <th key={i}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {output.body.map((b, i) => (
+              // eslint-disable-next-line react-x/no-array-index-key
+              <tr key={i}>
+                {b.map((b, j) => (
+                  // eslint-disable-next-line react-x/no-array-index-key
+                  <td key={j}>{b}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
 function App() {
   const INITIAL_PARAMETERS = [
     {
@@ -102,6 +160,21 @@ function App() {
   ]
 
   const [parameters, setParameters] = useState(INITIAL_PARAMETERS)
+  const [output, setOutput] = useState<PictOutput | null>(null)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [pictRunnerLoaded, setPictRunnerLoaded] = useState(false)
+  const pictRunner = useRef<PictRunner>(null)
+
+  useEffect(() => {
+    const loadPictRunner = async () => {
+      pictRunner.current = new PictRunner()
+      await pictRunner.current.init()
+      setPictRunnerLoaded(true)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    loadPictRunner()
+  }, [])
 
   function handleParameterInputChange(
     id: string,
@@ -135,6 +208,21 @@ function App() {
     setParameters(emptyParameters)
   }
 
+  function runPict() {
+    if (!pictRunnerLoaded || !pictRunner.current) {
+      return
+    }
+    try {
+      const output = pictRunner.current.run(parameters)
+      setErrorMessage('')
+      setOutput(output)
+    } catch (e) {
+      if (e instanceof Error) {
+        setErrorMessage(e.message)
+      }
+    }
+  }
+
   return (
     <div className="container">
       <h1>PictRider</h1>
@@ -145,6 +233,19 @@ function App() {
         onRemoveRow={removeParameterInputRow}
         onClearValues={clearAllParameterValues}
       />
+      <div className="row mt-3">
+        <div className="col-3">
+          <input
+            type="submit"
+            value="実行"
+            className="btn btn-primary"
+            disabled={!pictRunnerLoaded}
+            onClick={runPict}
+          />
+        </div>
+      </div>
+      <ErrorMessageArea message={errorMessage} />
+      <OutputArea output={output} />
     </div>
   )
 }
