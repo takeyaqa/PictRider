@@ -74,7 +74,7 @@ describe('App', () => {
   })
 
   it('Should handle adding and removing multiple parameter rows', async () => {
-    // Initial state - 12 textboxes (6 parameter rows)
+    // Initial state - 12 textbox (6 parameter rows)
     expect(screen.getAllByRole('textbox')).toHaveLength(12)
 
     // Add 3 rows
@@ -104,7 +104,7 @@ describe('App', () => {
     // assert
     expect(screen.getAllByRole('textbox')).toHaveLength(14)
 
-    // Verify we still have the correct values in the remaining textboxes
+    // Verify we still have the correct values in the remaining textbox
     expect(screen.getAllByRole('textbox')[0]).toHaveValue('Type')
     expect(screen.getAllByRole('textbox')[1]).toHaveValue(
       'Single, Span, Stripe, Mirror, RAID-5',
