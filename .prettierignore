@@ -1,5 +1,6 @@
 .devcontainer/
 .github/
+src/pict/
 pnpm-lock.yaml
 index.html
 README.md
