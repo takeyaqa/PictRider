@@ -7,10 +7,10 @@ interface ConstraintsAreaProps {
   constraints: PictConstraint[]
   onAddConstraint: () => void
   onRemoveConstraint: () => void
-  onClickCondition: (index: number, index2: number) => void
-  onConditionChange: (
-    index: number,
-    index2: number,
+  onClickCondition: (constraintIndex: number, parameterIndex: number) => void
+  onChangeCondition: (
+    constraintIndex: number,
+    parameterIndex: number,
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
 }
@@ -22,7 +22,7 @@ function ConstraintsArea({
   onAddConstraint,
   onRemoveConstraint,
   onClickCondition,
-  onConditionChange,
+  onChangeCondition,
 }: ConstraintsAreaProps) {
   if (!isEnable) {
     return null
@@ -82,7 +82,7 @@ function ConstraintsArea({
                       <input
                         type="text"
                         onChange={(e) => {
-                          onConditionChange(j, i, e)
+                          onChangeCondition(j, i, e)
                         }}
                         value={c.conditions[i].predicate}
                       />

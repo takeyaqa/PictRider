@@ -89,21 +89,27 @@ function App() {
     }
   }
 
-  function handleClickCondition(index: number, index2: number) {
-    const currentCondition = constraints[index].conditions[index2].ifOrThen
+  function handleClickCondition(
+    constraintIndex: number,
+    parameterIndex: number,
+  ) {
+    const currentCondition =
+      constraints[constraintIndex].conditions[parameterIndex].ifOrThen
     const newCondition = currentCondition === 'if' ? 'then' : 'if'
     const newConstraints = [...constraints]
-    newConstraints[index].conditions[index2].ifOrThen = newCondition
+    newConstraints[constraintIndex].conditions[parameterIndex].ifOrThen =
+      newCondition
     setConstraints(newConstraints)
   }
 
-  function handleConditionChange(
-    index: number,
-    index2: number,
+  function handleChangeCondition(
+    constraintIndex: number,
+    parameterIndex: number,
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
     const newConstraints = [...constraints]
-    newConstraints[index].conditions[index2].predicate = e.target.value
+    newConstraints[constraintIndex].conditions[parameterIndex].predicate =
+      e.target.value
     setConstraints(newConstraints)
   }
 
@@ -163,7 +169,7 @@ function App() {
         onAddConstraint={addConstraint}
         onRemoveConstraint={removeConstraint}
         onClickCondition={handleClickCondition}
-        onConditionChange={handleConditionChange}
+        onChangeCondition={handleChangeCondition}
       />
       <RunButtonArea pictRunnerLoaded={pictRunnerLoaded} onClickRun={runPict} />
       <ErrorMessageArea message={errorMessage} />
