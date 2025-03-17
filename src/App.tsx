@@ -115,6 +115,16 @@ function App() {
 
   function addParameterInputRow() {
     setParameters([...parameters, { id: uuidv4(), name: '', values: '' }])
+    const newConstraints = [...constraints]
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let i = 0; i < newConstraints.length; i++) {
+      newConstraints[i].conditions.push({
+        ifOrThen: 'if',
+        parameter: '',
+        predicate: '',
+      })
+    }
+    setConstraints(newConstraints)
   }
 
   function removeParameterInputRow() {
@@ -122,6 +132,11 @@ function App() {
       const newParameters = [...parameters]
       newParameters.pop()
       setParameters(newParameters)
+      const newConstraints = [...constraints]
+      // eslint-disable-next-line @typescript-eslint/prefer-for-of
+      for (let i = 0; i < newConstraints.length; i++) {
+        newConstraints[i].conditions.pop()
+      }
     }
   }
 
