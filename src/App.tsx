@@ -163,7 +163,7 @@ function App() {
         onClearValues={clearAllParameterValues}
       />
       <ConstraintsArea
-        isEnable={enabledConstraints}
+        enabledConstraints={enabledConstraints}
         parameters={parameters}
         constraints={constraints}
         onAddConstraint={addConstraint}
