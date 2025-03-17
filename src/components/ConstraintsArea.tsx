@@ -2,7 +2,7 @@ import { PictConstraint, PictParameter } from '../pict/pict-types'
 import { convertConstraint } from '../pict/pict-helper'
 
 interface ConstraintsAreaProps {
-  isEnable: boolean
+  enabledConstraints: boolean
   parameters: PictParameter[]
   constraints: PictConstraint[]
   onAddConstraint: () => void
@@ -16,7 +16,7 @@ interface ConstraintsAreaProps {
 }
 
 function ConstraintsArea({
-  isEnable,
+  enabledConstraints,
   parameters,
   constraints,
   onAddConstraint,
@@ -24,7 +24,7 @@ function ConstraintsArea({
   onClickCondition,
   onChangeCondition,
 }: ConstraintsAreaProps) {
-  if (!isEnable) {
+  if (!enabledConstraints) {
     return null
   }
   return (
