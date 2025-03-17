@@ -1,9 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { PictParameter, PictOutput } from './pict/pict-types'
+import {
+  PictParameter,
+  PictCondition,
+  PictConstraint,
+  PictOutput,
+} from './pict/pict-types'
 import { PictRunner } from './pict/pict-runner'
 import {
   ParametersArea,
+  ConstraintsArea,
   RunButtonArea,
   ErrorMessageArea,
   OutputArea,
@@ -29,6 +35,10 @@ function App() {
 
   const [parameters, setParameters] =
     useState<PictParameter[]>(INITIAL_PARAMETERS)
+  const [constraints, setConstraints] = useState([
+    convertToConstraint(INITIAL_PARAMETERS),
+  ])
+  const [enabledConstraints, setEnabledConstraints] = useState(false)
   const [output, setOutput] = useState<PictOutput | null>(null)
   const [errorMessage, setErrorMessage] = useState('')
   const [pictRunnerLoaded, setPictRunnerLoaded] = useState(false)
@@ -54,6 +64,53 @@ function App() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     newParameters.find((p) => p.id === id)![field] = e.target.value
     setParameters(newParameters)
+  }
+
+  function enableConstraintsArea() {
+    setEnabledConstraints(!enabledConstraints)
+  }
+
+  function convertToConstraint(parameters: PictParameter[]): PictConstraint {
+    const conditions: PictCondition[] = parameters.map((value) => {
+      return { ifOrThen: 'if', parameter: value.name, predicate: '' }
+    })
+    return { id: uuidv4(), conditions: conditions }
+  }
+
+  function addConstraint() {
+    setConstraints([...constraints, convertToConstraint(parameters)])
+  }
+
+  function removeConstraint() {
+    if (constraints.length > 1) {
+      const newConstraints = [...constraints]
+      newConstraints.pop()
+      setConstraints(newConstraints)
+    }
+  }
+
+  function handleClickCondition(
+    constraintIndex: number,
+    parameterIndex: number,
+  ) {
+    const currentCondition =
+      constraints[constraintIndex].conditions[parameterIndex].ifOrThen
+    const newCondition = currentCondition === 'if' ? 'then' : 'if'
+    const newConstraints = [...constraints]
+    newConstraints[constraintIndex].conditions[parameterIndex].ifOrThen =
+      newCondition
+    setConstraints(newConstraints)
+  }
+
+  function handleChangeCondition(
+    constraintIndex: number,
+    parameterIndex: number,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    const newConstraints = [...constraints]
+    newConstraints[constraintIndex].conditions[parameterIndex].predicate =
+      e.target.value
+    setConstraints(newConstraints)
   }
 
   function addParameterInputRow() {
@@ -82,12 +139,13 @@ function App() {
       return
     }
     try {
-      const output = pictRunner.current.run(parameters)
+      const output = pictRunner.current.run(parameters, constraints)
       setErrorMessage('')
       setOutput(output)
     } catch (e) {
       if (e instanceof Error) {
         setErrorMessage(e.message)
+        setOutput(null)
       }
     }
   }
@@ -97,10 +155,21 @@ function App() {
       <h1>PictRider</h1>
       <ParametersArea
         parameters={parameters}
+        enabledConstraints={enabledConstraints}
+        onEnableConstraintsArea={enableConstraintsArea}
         onInputChange={handleParameterInputChange}
         onAddRow={addParameterInputRow}
         onRemoveRow={removeParameterInputRow}
         onClearValues={clearAllParameterValues}
+      />
+      <ConstraintsArea
+        enabledConstraints={enabledConstraints}
+        parameters={parameters}
+        constraints={constraints}
+        onAddConstraint={addConstraint}
+        onRemoveConstraint={removeConstraint}
+        onClickCondition={handleClickCondition}
+        onChangeCondition={handleChangeCondition}
       />
       <RunButtonArea pictRunnerLoaded={pictRunnerLoaded} onClickRun={runPict} />
       <ErrorMessageArea message={errorMessage} />

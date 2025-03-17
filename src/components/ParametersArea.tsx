@@ -2,6 +2,8 @@ import { PictParameter } from '../pict/pict-types'
 
 interface ParametersAreaProps {
   parameters: PictParameter[]
+  enabledConstraints: boolean
+  onEnableConstraintsArea: () => void
   onInputChange: (
     id: string,
     field: 'name' | 'values',
@@ -14,6 +16,8 @@ interface ParametersAreaProps {
 
 function ParametersArea({
   parameters,
+  enabledConstraints,
+  onEnableConstraintsArea,
   onInputChange,
   onAddRow,
   onRemoveRow,
@@ -25,10 +29,24 @@ function ParametersArea({
         <div className="col-2">
           <h5>パラメータ</h5>
         </div>
-        <div className="col-7">
+        <div className="col-6">
           <h5>値の並び</h5>
         </div>
-        <div className="col-3">
+        <div className="col-4">
+          <input
+            type="checkbox"
+            className="btn-check"
+            id="enable-constraints-button"
+            autoComplete="off"
+            checked={enabledConstraints}
+            onChange={onEnableConstraintsArea}
+          />
+          <label
+            className="btn btn-primary"
+            htmlFor="enable-constraints-button"
+          >
+            制約表
+          </label>
           <button
             type="button"
             className="btn btn-secondary"
