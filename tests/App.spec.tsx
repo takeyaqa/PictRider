@@ -161,30 +161,37 @@ describe('App', () => {
       await user.click(screen.getByText('実行'))
 
       // assert - check result table
-      expect(pictRunner.run).toHaveBeenCalledWith([
-        {
-          id: expect.any(String),
-          name: 'Type',
-          values: 'Single, Span, Stripe, Mirror, RAID-5',
-        },
-        {
-          id: expect.any(String),
-          name: 'Size',
-          values: '10, 100, 500, 1000, 5000, 10000, 40000',
-        },
-        {
-          id: expect.any(String),
-          name: 'Format method',
-          values: 'Quick, Slow',
-        },
-        {
-          id: expect.any(String),
-          name: 'File system',
-          values: 'FAT, FAT32, NTFS',
-        },
-        { id: expect.any(String), name: 'Cluster size', values: 'Quick, Slow' },
-        { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
-      ])
+      expect(pictRunner.run).toHaveBeenCalledWith(
+        [
+          {
+            id: expect.any(String),
+            name: 'Type',
+            values: 'Single, Span, Stripe, Mirror, RAID-5',
+          },
+          {
+            id: expect.any(String),
+            name: 'Size',
+            values: '10, 100, 500, 1000, 5000, 10000, 40000',
+          },
+          {
+            id: expect.any(String),
+            name: 'Format method',
+            values: 'Quick, Slow',
+          },
+          {
+            id: expect.any(String),
+            name: 'File system',
+            values: 'FAT, FAT32, NTFS',
+          },
+          {
+            id: expect.any(String),
+            name: 'Cluster size',
+            values: 'Quick, Slow',
+          },
+          { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
+        ],
+        expect.any(Array),
+      )
       expect(screen.queryByRole('alert')).not.toBeInTheDocument()
       expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
         '出力',
@@ -204,31 +211,38 @@ describe('App', () => {
       await user.click(screen.getByText('実行'))
 
       // assert - check result table
-      expect(pictRunner.run).toHaveBeenCalledWith([
-        {
-          id: expect.any(String),
-          name: 'Type',
-          values: 'Single, Span, Stripe, Mirror, RAID-5',
-        },
-        {
-          id: expect.any(String),
-          name: 'Size',
-          values: '10, 100, 500, 1000, 5000, 10000, 40000',
-        },
-        {
-          id: expect.any(String),
-          name: 'Format method',
-          values: 'Quick, Slow',
-        },
-        {
-          id: expect.any(String),
-          name: 'File system',
-          values: 'FAT, FAT32, NTFS',
-        },
-        { id: expect.any(String), name: 'Cluster size', values: 'Quick, Slow' },
-        { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
-        { id: expect.any(String), name: '', values: '' },
-      ])
+      expect(pictRunner.run).toHaveBeenCalledWith(
+        [
+          {
+            id: expect.any(String),
+            name: 'Type',
+            values: 'Single, Span, Stripe, Mirror, RAID-5',
+          },
+          {
+            id: expect.any(String),
+            name: 'Size',
+            values: '10, 100, 500, 1000, 5000, 10000, 40000',
+          },
+          {
+            id: expect.any(String),
+            name: 'Format method',
+            values: 'Quick, Slow',
+          },
+          {
+            id: expect.any(String),
+            name: 'File system',
+            values: 'FAT, FAT32, NTFS',
+          },
+          {
+            id: expect.any(String),
+            name: 'Cluster size',
+            values: 'Quick, Slow',
+          },
+          { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
+          { id: expect.any(String), name: '', values: '' },
+        ],
+        expect.any(Array),
+      )
       expect(screen.queryByRole('alert')).not.toBeInTheDocument()
       expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
         '出力',
@@ -248,29 +262,36 @@ describe('App', () => {
       await user.click(screen.getByText('実行'))
 
       // assert - check result table
-      expect(pictRunner.run).toHaveBeenCalledWith([
-        {
-          id: expect.any(String),
-          name: 'Type',
-          values: 'Single, Span, Stripe, Mirror, RAID-5',
-        },
-        {
-          id: expect.any(String),
-          name: 'Size',
-          values: '10, 100, 500, 1000, 5000, 10000, 40000',
-        },
-        {
-          id: expect.any(String),
-          name: 'Format method',
-          values: 'Quick, Slow',
-        },
-        {
-          id: expect.any(String),
-          name: 'File system',
-          values: 'FAT, FAT32, NTFS',
-        },
-        { id: expect.any(String), name: 'Cluster size', values: 'Quick, Slow' },
-      ])
+      expect(pictRunner.run).toHaveBeenCalledWith(
+        [
+          {
+            id: expect.any(String),
+            name: 'Type',
+            values: 'Single, Span, Stripe, Mirror, RAID-5',
+          },
+          {
+            id: expect.any(String),
+            name: 'Size',
+            values: '10, 100, 500, 1000, 5000, 10000, 40000',
+          },
+          {
+            id: expect.any(String),
+            name: 'Format method',
+            values: 'Quick, Slow',
+          },
+          {
+            id: expect.any(String),
+            name: 'File system',
+            values: 'FAT, FAT32, NTFS',
+          },
+          {
+            id: expect.any(String),
+            name: 'Cluster size',
+            values: 'Quick, Slow',
+          },
+        ],
+        expect.any(Array),
+      )
       expect(screen.queryByRole('alert')).not.toBeInTheDocument()
       expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
         '出力',
@@ -292,30 +313,37 @@ describe('App', () => {
       await user.click(screen.getByText('実行'))
 
       // assert - check result table
-      expect(pictRunner.run).toHaveBeenCalledWith([
-        {
-          id: expect.any(String),
-          name: 'Type',
-          values: 'Double, Span, Stripe, Mirror, RAID-5000',
-        },
-        {
-          id: expect.any(String),
-          name: 'Size',
-          values: '10, 100, 500, 1000, 5000, 10000, 40000',
-        },
-        {
-          id: expect.any(String),
-          name: 'Format method',
-          values: 'Quick, Slow',
-        },
-        {
-          id: expect.any(String),
-          name: 'File system',
-          values: 'FAT, FAT32, NTFS',
-        },
-        { id: expect.any(String), name: 'Cluster size', values: 'Quick, Slow' },
-        { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
-      ])
+      expect(pictRunner.run).toHaveBeenCalledWith(
+        [
+          {
+            id: expect.any(String),
+            name: 'Type',
+            values: 'Double, Span, Stripe, Mirror, RAID-5000',
+          },
+          {
+            id: expect.any(String),
+            name: 'Size',
+            values: '10, 100, 500, 1000, 5000, 10000, 40000',
+          },
+          {
+            id: expect.any(String),
+            name: 'Format method',
+            values: 'Quick, Slow',
+          },
+          {
+            id: expect.any(String),
+            name: 'File system',
+            values: 'FAT, FAT32, NTFS',
+          },
+          {
+            id: expect.any(String),
+            name: 'Cluster size',
+            values: 'Quick, Slow',
+          },
+          { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
+        ],
+        expect.any(Array),
+      )
       expect(screen.queryByRole('alert')).not.toBeInTheDocument()
       expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
         '出力',
