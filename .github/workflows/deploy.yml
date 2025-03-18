@@ -26,15 +26,18 @@ jobs:
           cache: pnpm
       - run: pnpm install
       - run: pnpm run build
-      - run: |
+      - name: Set branch name
+        id: set_branch_name
+        run: |
           if [[ $GITHUB_REF == refs/tags/* ]]; then
-            echo "BRANCH_NAME=main" >> $GITHUB_ENV
+            echo "BRANCH_NAME=main" >> "$GITHUB_OUTPUT"
           else
-            echo "BRANCH_NAME=edge" >> $GITHUB_ENV
+            echo "BRANCH_NAME=edge" >> "$GITHUB_OUTPUT"
           fi
-      - uses: cloudflare/wrangler-action@v3
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          command: pages deploy dist --project-name=pictrider --branch=$BRANCH_NAME
+          command: pages deploy dist --project-name=pictrider --branch=${{ steps.set_branch_name.outputs.BRANCH_NAME }}
