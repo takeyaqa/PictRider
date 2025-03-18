@@ -1,0 +1,44 @@
+name: deploy
+on:
+  push:
+    branches: [main]
+  release:
+    types: [released]
+  workflow_dispatch:
+
+env:
+  PNPM_VERSION: 9
+  NODE_VERSION: 22
+    
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm run build
+      - name: Set branch name
+        id: set_branch_name
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo "BRANCH_NAME=main" >> "$GITHUB_OUTPUT"
+          else
+            echo "BRANCH_NAME=edge" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy dist --project-name=pictrider --branch=${{ steps.set_branch_name.outputs.BRANCH_NAME }}
