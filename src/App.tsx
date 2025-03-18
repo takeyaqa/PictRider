@@ -145,6 +145,7 @@ function App() {
       for (let i = 0; i < newConstraints.length; i++) {
         newConstraints[i].conditions.pop()
       }
+      setConstraints(newConstraints)
     }
   }
 
