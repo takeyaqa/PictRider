@@ -9,7 +9,7 @@ function RunButtonArea({ pictRunnerLoaded, onClickRun }: RunButtonAreaProps) {
       <div className="col-3">
         <input
           type="submit"
-          value="実行"
+          value="Run"
           className="btn btn-primary"
           disabled={!pictRunnerLoaded}
           onClick={onClickRun}
