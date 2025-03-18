@@ -27,11 +27,11 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          command: |
+          preCommands : |
             if [[ $GITHUB_REF == refs/tags/* ]]; then
               BRANCH_NAME=main
             else
               BRANCH_NAME=edge
             fi
-
+          command: |
             pages deploy dist --project-name=pictrider --branch-name=${BRANCH_NAME}
