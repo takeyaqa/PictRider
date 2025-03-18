@@ -12,7 +12,7 @@ import {
   ConstraintsArea,
   RunButtonArea,
   ErrorMessageArea,
-  OutputArea,
+  ResultArea,
 } from './components'
 
 function App() {
@@ -197,7 +197,7 @@ function App() {
       />
       <RunButtonArea pictRunnerLoaded={pictRunnerLoaded} onClickRun={runPict} />
       <ErrorMessageArea message={errorMessage} />
-      <OutputArea output={output} />
+      <ResultArea output={output} />
     </div>
   )
 }

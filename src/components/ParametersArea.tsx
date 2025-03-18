@@ -27,10 +27,10 @@ function ParametersArea({
     <>
       <div className="row">
         <div className="col-2">
-          <h5>パラメータ</h5>
+          <h5>Parameters</h5>
         </div>
         <div className="col-6">
-          <h5>値の並び</h5>
+          <h5>Values</h5>
         </div>
         <div className="col-4">
           <input
@@ -45,14 +45,14 @@ function ParametersArea({
             className="btn btn-primary"
             htmlFor="enable-constraints-button"
           >
-            制約表
+            Constraints
           </label>
           <button
             type="button"
             className="btn btn-secondary"
             onClick={onAddRow}
           >
-            行を追加
+            Add Row
           </button>
           <button
             type="button"
@@ -60,14 +60,14 @@ function ParametersArea({
             onClick={onRemoveRow}
             disabled={parameters.length <= 1}
           >
-            行を削除
+            Remove Row
           </button>
           <button
             type="button"
             className="btn btn-warning"
             onClick={onClearValues}
           >
-            クリア
+            Clear
           </button>
         </div>
       </div>

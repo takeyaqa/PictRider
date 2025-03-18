@@ -1,17 +1,17 @@
 import { PictOutput } from '../pict/pict-types'
 
-interface OutputAreaProps {
+interface ResultAreaProps {
   output: PictOutput | null
 }
 
-function OutputArea({ output }: OutputAreaProps) {
+function ResultArea({ output }: ResultAreaProps) {
   if (!output) {
     return null
   }
   return (
     <div className="row mt-3">
       <div className="col-12">
-        <h4>出力</h4>
+        <h4>Result</h4>
         <table className="table">
           <thead>
             <tr>
@@ -38,4 +38,4 @@ function OutputArea({ output }: OutputAreaProps) {
   )
 }
 
-export default OutputArea
+export default ResultArea

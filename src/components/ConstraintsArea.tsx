@@ -31,7 +31,7 @@ function ConstraintsArea({
     <>
       <div className="row mt-3">
         <div className="col-8">
-          <h4>制約表</h4>
+          <h4>Constraints</h4>
         </div>
         <div className="col-2">
           <button
@@ -39,7 +39,7 @@ function ConstraintsArea({
             className="btn btn-success"
             onClick={onAddConstraint}
           >
-            制約を追加
+            Add Constraint
           </button>
         </div>
         <div className="col-2">
@@ -49,7 +49,7 @@ function ConstraintsArea({
             onClick={onRemoveConstraint}
             disabled={constraints.length <= 1}
           >
-            制約を削除
+            Remove Constraint
           </button>
         </div>
       </div>
@@ -58,9 +58,9 @@ function ConstraintsArea({
           <table className="table table-striped-columns">
             <thead>
               <tr>
-                <th>パラメータ</th>
+                <th>Parameter</th>
                 {constraints.map((c, i) => (
-                  <th key={c.id}>制約{i + 1}</th>
+                  <th key={c.id}>Constraint {i + 1}</th>
                 ))}
               </tr>
             </thead>
