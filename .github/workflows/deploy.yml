@@ -1,0 +1,37 @@
+name: deploy
+on:
+  push:
+  release:
+    types: [released]
+  workflow_dispatch:
+
+env:
+  PNPM_VERSION: 9
+  NODE_VERSION: 22
+    
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm run build
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: |
+            if [[ $GITHUB_REF == refs/tags/* ]]; then
+              BRANCH_NAME=main
+            else
+              BRANCH_NAME=edge
+            fi
+
+            pages deploy dist --project-name=pictrider --branch-name=${BRANCH_NAME}
