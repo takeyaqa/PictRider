@@ -28,10 +28,11 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           preCommands : |
+            # Export the variable to make it available to the command section
             if [ "$GITHUB_REF" = "refs/heads/main" ]; then
-              BRANCH_NAME=edge
+              echo "BRANCH_NAME=edge" >> $GITHUB_ENV
             else
-              BRANCH_NAME=main
+              echo "BRANCH_NAME=main" >> $GITHUB_ENV
             fi
           command: |
-            pages deploy dist --project-name=pictrider --branch-name=${BRANCH_NAME}
+            pages deploy dist --project-name=pictrider --branch-name=${{ env.BRANCH_NAME }}
