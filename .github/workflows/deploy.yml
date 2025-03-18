@@ -33,4 +33,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          command: pages deploy dist --project-name=pictrider --branch-name=${{ env.BRANCH_NAME }}
+          command: pages deploy dist --project-name=pictrider --branch=${{ env.BRANCH_NAME }}
