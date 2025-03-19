@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test('default view', async ({ page }) => {
+test('should display default values', async ({ page }) => {
   // act
   await page.goto('/')
 
@@ -9,7 +9,7 @@ test('default view', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('PictRider')
 })
 
-test('run under default values', async ({ page }) => {
+test('should display result after clicking Run', async ({ page }) => {
   // arrange
   await page.goto('/')
 
