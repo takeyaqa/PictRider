@@ -177,6 +177,7 @@ function App() {
   return (
     <div className="container">
       <h1>PictRider</h1>
+      <div className="alert alert-danger">🚧 Under Construction 🚧</div>
       <ParametersArea
         parameters={parameters}
         enabledConstraints={enabledConstraints}
