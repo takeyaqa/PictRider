@@ -173,7 +173,10 @@ function App({ pictRunnerInjection }: AppProps) {
       return
     }
     try {
-      const output = pictRunner.current.run(parameters, constraints)
+      const fixedParameters = parameters.filter(
+        (p) => p.name !== '' && p.values !== '',
+      )
+      const output = pictRunner.current.run(fixedParameters, constraints)
       setErrorMessage('')
       setOutput(output)
     } catch (e) {
