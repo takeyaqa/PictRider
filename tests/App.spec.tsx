@@ -9,14 +9,26 @@ import { PictRunner } from '../src/pict/pict-runner'
 describe('App', () => {
   describe('ParametersArea', () => {
     let user: any
+    let pictRunnerMock: PictRunner
 
     beforeEach(() => {
+      const PictRunnerMock = vi.fn()
+      PictRunnerMock.prototype.init = vi.fn()
+      PictRunnerMock.prototype.run = vi.fn(() => ({
+        header: ['Type', 'Size', 'Format method'],
+        body: [
+          ['Single', '10', 'Quick'],
+          ['Span', '100', 'Slow'],
+        ],
+      }))
+      pictRunnerMock = new PictRunner()
       user = userEvent.setup()
-      render(<App />)
+      render(<App pictRunnerInjection={pictRunnerMock} />)
     })
 
     afterEach(() => {
       cleanup()
+      vi.clearAllMocks()
     })
 
     it('Should display PictRider title and default parameter values', () => {
@@ -130,14 +142,26 @@ describe('App', () => {
 
   describe('ConstraintsArea', () => {
     let user: any
+    let pictRunnerMock: PictRunner
 
     beforeEach(() => {
+      const PictRunnerMock = vi.fn()
+      PictRunnerMock.prototype.init = vi.fn()
+      PictRunnerMock.prototype.run = vi.fn(() => ({
+        header: ['Type', 'Size', 'Format method'],
+        body: [
+          ['Single', '10', 'Quick'],
+          ['Span', '100', 'Slow'],
+        ],
+      }))
+      pictRunnerMock = new PictRunnerMock()
       user = userEvent.setup()
-      render(<App />)
+      render(<App pictRunnerInjection={pictRunnerMock} />)
     })
 
     afterEach(() => {
       cleanup()
+      vi.clearAllMocks()
     })
 
     it('Should not render constraints area by default', () => {
@@ -289,25 +313,21 @@ describe('App', () => {
 
   describe('OutputArea', () => {
     let user: any
-    let pictRunner: PictRunner
+    let pictRunnerMock: PictRunner
 
     beforeEach(() => {
-      vi.mock('../src/pict/pict-runner', () => {
-        const PictRunner = vi.fn()
-        PictRunner.prototype.init = vi.fn()
-        PictRunner.prototype.run = vi.fn(() => ({
-          header: ['Type', 'Size', 'Format method'],
-          body: [
-            ['Single', '10', 'Quick'],
-            ['Span', '100', 'Slow'],
-          ],
-        }))
-
-        return { PictRunner }
-      })
-      pictRunner = new PictRunner()
+      const PictRunnerMock = vi.fn()
+      PictRunnerMock.prototype.init = vi.fn()
+      PictRunnerMock.prototype.run = vi.fn(() => ({
+        header: ['Type', 'Size', 'Format method'],
+        body: [
+          ['Single', '10', 'Quick'],
+          ['Span', '100', 'Slow'],
+        ],
+      }))
+      pictRunnerMock = new PictRunnerMock()
       user = userEvent.setup()
-      render(<App />)
+      render(<App pictRunnerInjection={pictRunnerMock} />)
     })
 
     afterEach(() => {
@@ -320,7 +340,7 @@ describe('App', () => {
       await user.click(screen.getByText('Run'))
 
       // assert - check result table
-      expect(pictRunner.run).toHaveBeenCalledWith(
+      expect(pictRunnerMock.run).toHaveBeenCalledWith(
         [
           {
             id: expect.any(String),
@@ -370,7 +390,7 @@ describe('App', () => {
       await user.click(screen.getByText('Run'))
 
       // assert - check result table
-      expect(pictRunner.run).toHaveBeenCalledWith(
+      expect(pictRunnerMock.run).toHaveBeenCalledWith(
         [
           {
             id: expect.any(String),
@@ -421,7 +441,7 @@ describe('App', () => {
       await user.click(screen.getByText('Run'))
 
       // assert - check result table
-      expect(pictRunner.run).toHaveBeenCalledWith(
+      expect(pictRunnerMock.run).toHaveBeenCalledWith(
         [
           {
             id: expect.any(String),
@@ -472,7 +492,7 @@ describe('App', () => {
       await user.click(screen.getByText('Run'))
 
       // assert - check result table
-      expect(pictRunner.run).toHaveBeenCalledWith(
+      expect(pictRunnerMock.run).toHaveBeenCalledWith(
         [
           {
             id: expect.any(String),
