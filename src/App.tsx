@@ -15,7 +15,11 @@ import {
   ResultArea,
 } from './components'
 
-function App() {
+interface AppProps {
+  pictRunnerInjection?: PictRunner // use for testing
+}
+
+function App({ pictRunnerInjection }: AppProps) {
   const INITIAL_PARAMETERS = [
     {
       id: uuidv4(),
@@ -45,6 +49,12 @@ function App() {
   const pictRunner = useRef<PictRunner>(null)
 
   useEffect(() => {
+    // Use the injected PictRunner for testing
+    if (pictRunnerInjection) {
+      pictRunner.current = pictRunnerInjection
+      setPictRunnerLoaded(true)
+      return
+    }
     const loadPictRunner = async () => {
       pictRunner.current = new PictRunner()
       await pictRunner.current.init()
@@ -53,7 +63,7 @@ function App() {
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadPictRunner()
-  }, [])
+  }, [pictRunnerInjection])
 
   function handleParameterInputChange(
     id: string,

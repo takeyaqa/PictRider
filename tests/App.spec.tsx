@@ -9,14 +9,26 @@ import { PictRunner } from '../src/pict/pict-runner'
 describe('App', () => {
   describe('ParametersArea', () => {
     let user: any
+    let pictRunner: PictRunner
 
     beforeEach(() => {
+      const PictRunner = vi.fn()
+      PictRunner.prototype.init = vi.fn()
+      PictRunner.prototype.run = vi.fn(() => ({
+        header: ['Type', 'Size', 'Format method'],
+        body: [
+          ['Single', '10', 'Quick'],
+          ['Span', '100', 'Slow'],
+        ],
+      }))
+      pictRunner = new PictRunner()
       user = userEvent.setup()
-      render(<App />)
+      render(<App pictRunnerInjection={pictRunner} />)
     })
 
     afterEach(() => {
       cleanup()
+      vi.clearAllMocks()
     })
 
     it('Should display PictRider title and default parameter values', () => {
@@ -130,14 +142,26 @@ describe('App', () => {
 
   describe('ConstraintsArea', () => {
     let user: any
+    let pictRunner: PictRunner
 
     beforeEach(() => {
+      const PictRunner = vi.fn()
+      PictRunner.prototype.init = vi.fn()
+      PictRunner.prototype.run = vi.fn(() => ({
+        header: ['Type', 'Size', 'Format method'],
+        body: [
+          ['Single', '10', 'Quick'],
+          ['Span', '100', 'Slow'],
+        ],
+      }))
+      pictRunner = new PictRunner()
       user = userEvent.setup()
-      render(<App />)
+      render(<App pictRunnerInjection={pictRunner} />)
     })
 
     afterEach(() => {
       cleanup()
+      vi.clearAllMocks()
     })
 
     it('Should not render constraints area by default', () => {
@@ -292,22 +316,18 @@ describe('App', () => {
     let pictRunner: PictRunner
 
     beforeEach(() => {
-      vi.mock('../src/pict/pict-runner', () => {
-        const PictRunner = vi.fn()
-        PictRunner.prototype.init = vi.fn()
-        PictRunner.prototype.run = vi.fn(() => ({
-          header: ['Type', 'Size', 'Format method'],
-          body: [
-            ['Single', '10', 'Quick'],
-            ['Span', '100', 'Slow'],
-          ],
-        }))
-
-        return { PictRunner }
-      })
+      const PictRunner = vi.fn()
+      PictRunner.prototype.init = vi.fn()
+      PictRunner.prototype.run = vi.fn(() => ({
+        header: ['Type', 'Size', 'Format method'],
+        body: [
+          ['Single', '10', 'Quick'],
+          ['Span', '100', 'Slow'],
+        ],
+      }))
       pictRunner = new PictRunner()
       user = userEvent.setup()
-      render(<App />)
+      render(<App pictRunnerInjection={pictRunner} />)
     })
 
     afterEach(() => {
