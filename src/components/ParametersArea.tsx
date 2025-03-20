@@ -76,8 +76,10 @@ function ParametersArea({
           <div className="col-2">
             <input
               type="text"
-              className="form-control"
+              name="parameter_name"
+              className={m.isValid ? 'form-control' : 'form-control is-invalid'}
               value={m.name}
+              autoComplete="off"
               onChange={(e) => {
                 onInputChange(m.id, 'name', e)
               }}
@@ -86,8 +88,10 @@ function ParametersArea({
           <div className="col-10">
             <input
               type="text"
+              name="parameter_values"
               className="form-control"
               value={m.values}
+              autoComplete="off"
               onChange={(e) => {
                 onInputChange(m.id, 'values', e)
               }}

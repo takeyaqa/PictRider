@@ -25,16 +25,33 @@ function App({ pictRunnerInjection }: AppProps) {
       id: uuidv4(),
       name: 'Type',
       values: 'Single, Span, Stripe, Mirror, RAID-5',
+      isValid: true,
     },
     {
       id: uuidv4(),
       name: 'Size',
       values: '10, 100, 500, 1000, 5000, 10000, 40000',
+      isValid: true,
     },
-    { id: uuidv4(), name: 'Format method', values: 'Quick, Slow' },
-    { id: uuidv4(), name: 'File system', values: 'FAT, FAT32, NTFS' },
-    { id: uuidv4(), name: 'Cluster size', values: 'Quick, Slow' },
-    { id: uuidv4(), name: 'Compression', values: 'ON, OFF' },
+    {
+      id: uuidv4(),
+      name: 'Format method',
+      values: 'Quick, Slow',
+      isValid: true,
+    },
+    {
+      id: uuidv4(),
+      name: 'File system',
+      values: 'FAT, FAT32, NTFS',
+      isValid: true,
+    },
+    {
+      id: uuidv4(),
+      name: 'Cluster size',
+      values: 'Quick, Slow',
+      isValid: true,
+    },
+    { id: uuidv4(), name: 'Compression', values: 'ON, OFF', isValid: true },
   ]
 
   const [parameters, setParameters] =
@@ -70,9 +87,36 @@ function App({ pictRunnerInjection }: AppProps) {
     field: 'name' | 'values',
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
+    // Update the parameter value
     const newParameters = [...parameters]
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    newParameters.find((p) => p.id === id)![field] = e.target.value
+    const newParameter = newParameters.find((p) => p.id === id)
+    if (!newParameter) {
+      return
+    }
+    newParameter[field] = e.target.value
+
+    // Check for duplicate parameter
+    if (field === 'name') {
+      const parameterNames = newParameters.map((p) => p.name)
+      const duplicates = parameterNames.filter(
+        (item, index) => item && parameterNames.indexOf(item) !== index,
+      )
+      if (duplicates.length > 0) {
+        for (const parameter of newParameters) {
+          if (duplicates.includes(parameter.name)) {
+            parameter.isValid = false
+          } else {
+            parameter.isValid = true
+          }
+        }
+        setErrorMessage('Parameter names must be unique.')
+      } else {
+        for (const parameter of newParameters) {
+          parameter.isValid = true
+        }
+        setErrorMessage('')
+      }
+    }
     setParameters(newParameters)
   }
 
@@ -124,7 +168,10 @@ function App({ pictRunnerInjection }: AppProps) {
   }
 
   function addParameterInputRow() {
-    setParameters([...parameters, { id: uuidv4(), name: '', values: '' }])
+    setParameters([
+      ...parameters,
+      { id: uuidv4(), name: '', values: '', isValid: true },
+    ])
     const newConstraints = constraints.map((constraint) => ({
       ...constraint,
       conditions: constraint.conditions.map((condition) => ({ ...condition })),
@@ -164,6 +211,7 @@ function App({ pictRunnerInjection }: AppProps) {
       id: uuidv4(),
       name: '',
       values: '',
+      isValid: true,
     }))
     setParameters(emptyParameters)
   }
@@ -173,9 +221,9 @@ function App({ pictRunnerInjection }: AppProps) {
       return
     }
     try {
-      const fixedParameters = parameters.filter(
-        (p) => p.name !== '' && p.values !== '',
-      )
+      const fixedParameters = parameters
+        .filter((p) => p.name !== '' && p.values !== '')
+        .map((p) => ({ name: p.name, values: p.values }))
       const output = pictRunner.current.run(fixedParameters, constraints)
       setErrorMessage('')
       setOutput(output)
@@ -209,7 +257,11 @@ function App({ pictRunnerInjection }: AppProps) {
         onClickCondition={handleClickCondition}
         onChangeCondition={handleChangeCondition}
       />
-      <RunButtonArea pictRunnerLoaded={pictRunnerLoaded} onClickRun={runPict} />
+      <RunButtonArea
+        parameters={parameters}
+        pictRunnerLoaded={pictRunnerLoaded}
+        onClickRun={runPict}
+      />
       <ErrorMessageArea message={errorMessage} />
       <ResultArea output={output} />
     </div>

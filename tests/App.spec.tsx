@@ -132,6 +132,73 @@ describe('App', () => {
       expect(screen.getAllByRole('textbox')[12]).toHaveValue('')
       expect(screen.getAllByRole('textbox')[13]).toHaveValue('')
     })
+
+    it('Should display error message when duplicate parameter names are found (single)', async () => {
+      // act - edit parameter name to create a duplicate
+      const nameInput = screen.getAllByRole('textbox')[2]
+      await user.clear(nameInput)
+      await user.type(nameInput, 'Type') // Set to 'Type' which already exists
+
+      // assert - check error message is displayed
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        'Parameter names must be unique.',
+      )
+      expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
+
+      // act - clear the error by changing the name
+      await user.clear(nameInput)
+      await user.type(nameInput, 'New Type')
+
+      // assert - error message should be gone
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Run' })).toBeEnabled()
+    })
+
+    it('Should display error message when duplicate parameter names are found (double)', async () => {
+      // act - edit parameter name to create a duplicate
+      const nameInput0 = screen.getAllByRole('textbox')[0]
+      await user.clear(nameInput0)
+      await user.type(nameInput0, 'Type')
+      const nameInput1 = screen.getAllByRole('textbox')[2]
+      await user.clear(nameInput1)
+      await user.type(nameInput1, 'Type')
+
+      // assert - check error message is displayed
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        'Parameter names must be unique.',
+      )
+      expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
+
+      // act - edit parameter name to create a duplicate twice
+      const nameInput2 = screen.getAllByRole('textbox')[4]
+      await user.clear(nameInput2)
+      await user.type(nameInput2, 'Duplicate')
+      const nameInput3 = screen.getAllByRole('textbox')[6]
+      await user.clear(nameInput3)
+      await user.type(nameInput3, 'Duplicate')
+
+      // assert - still error message is displayed
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        'Parameter names must be unique.',
+      )
+      expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
+
+      // act - edit first parameter name to clear a duplicate, but still have one
+      await user.clear(nameInput0)
+
+      // assert - still error message is displayed
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        'Parameter names must be unique.',
+      )
+      expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
+
+      // act - clear the error by changing the name
+      await user.clear(nameInput3)
+
+      // assert - error message should be gone (blank input is ignored)
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Run' })).toBeEnabled()
+    })
   })
 
   describe('ConstraintsArea', () => {
@@ -347,31 +414,26 @@ describe('App', () => {
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
         [
           {
-            id: expect.any(String),
             name: 'Type',
             values: 'Single, Span, Stripe, Mirror, RAID-5',
           },
           {
-            id: expect.any(String),
             name: 'Size',
             values: '10, 100, 500, 1000, 5000, 10000, 40000',
           },
           {
-            id: expect.any(String),
             name: 'Format method',
             values: 'Quick, Slow',
           },
           {
-            id: expect.any(String),
             name: 'File system',
             values: 'FAT, FAT32, NTFS',
           },
           {
-            id: expect.any(String),
             name: 'Cluster size',
             values: 'Quick, Slow',
           },
-          { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
+          { name: 'Compression', values: 'ON, OFF' },
         ],
         expect.any(Array),
       )
@@ -388,31 +450,26 @@ describe('App', () => {
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
         [
           {
-            id: expect.any(String),
             name: 'Type',
             values: 'Single, Span, Stripe, Mirror, RAID-5',
           },
           {
-            id: expect.any(String),
             name: 'Size',
             values: '10, 100, 500, 1000, 5000, 10000, 40000',
           },
           {
-            id: expect.any(String),
             name: 'Format method',
             values: 'Quick, Slow',
           },
           {
-            id: expect.any(String),
             name: 'File system',
             values: 'FAT, FAT32, NTFS',
           },
           {
-            id: expect.any(String),
             name: 'Cluster size',
             values: 'Quick, Slow',
           },
-          { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
+          { name: 'Compression', values: 'ON, OFF' },
           // empty row is ignored
         ],
         expect.any(Array),
@@ -430,27 +487,22 @@ describe('App', () => {
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
         [
           {
-            id: expect.any(String),
             name: 'Type',
             values: 'Single, Span, Stripe, Mirror, RAID-5',
           },
           {
-            id: expect.any(String),
             name: 'Size',
             values: '10, 100, 500, 1000, 5000, 10000, 40000',
           },
           {
-            id: expect.any(String),
             name: 'Format method',
             values: 'Quick, Slow',
           },
           {
-            id: expect.any(String),
             name: 'File system',
             values: 'FAT, FAT32, NTFS',
           },
           {
-            id: expect.any(String),
             name: 'Cluster size',
             values: 'Quick, Slow',
           },
@@ -472,31 +524,26 @@ describe('App', () => {
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
         [
           {
-            id: expect.any(String),
             name: 'Type',
             values: 'Double, Span, Stripe, Mirror, RAID-5000',
           },
           {
-            id: expect.any(String),
             name: 'Size',
             values: '10, 100, 500, 1000, 5000, 10000, 40000',
           },
           {
-            id: expect.any(String),
             name: 'Format method',
             values: 'Quick, Slow',
           },
           {
-            id: expect.any(String),
             name: 'File system',
             values: 'FAT, FAT32, NTFS',
           },
           {
-            id: expect.any(String),
             name: 'Cluster size',
             values: 'Quick, Slow',
           },
-          { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
+          { name: 'Compression', values: 'ON, OFF' },
         ],
         expect.any(Array),
       )
@@ -514,27 +561,23 @@ describe('App', () => {
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
         [
           {
-            id: expect.any(String),
             name: 'Type',
             values: 'Single, Span, Stripe, Mirror, RAID-5',
           },
           // empty parameter is ignored
           {
-            id: expect.any(String),
             name: 'Format method',
             values: 'Quick, Slow',
           },
           {
-            id: expect.any(String),
             name: 'File system',
             values: 'FAT, FAT32, NTFS',
           },
           {
-            id: expect.any(String),
             name: 'Cluster size',
             values: 'Quick, Slow',
           },
-          { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
+          { name: 'Compression', values: 'ON, OFF' },
         ],
         expect.any(Array),
       )
@@ -552,27 +595,23 @@ describe('App', () => {
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
         [
           {
-            id: expect.any(String),
             name: 'Type',
             values: 'Single, Span, Stripe, Mirror, RAID-5',
           },
           {
-            id: expect.any(String),
             name: 'Size',
             values: '10, 100, 500, 1000, 5000, 10000, 40000',
           },
           // empty values is ignored
           {
-            id: expect.any(String),
             name: 'File system',
             values: 'FAT, FAT32, NTFS',
           },
           {
-            id: expect.any(String),
             name: 'Cluster size',
             values: 'Quick, Slow',
           },
-          { id: expect.any(String), name: 'Compression', values: 'ON, OFF' },
+          { name: 'Compression', values: 'ON, OFF' },
         ],
         expect.any(Array),
       )
