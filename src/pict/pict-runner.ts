@@ -16,15 +16,8 @@ export class PictRunner {
 
   public async init(): Promise<void> {
     this.pict = await createModule({
-      preRun: [
-        (module: any) => {
-          module.FS.init(
-            null,
-            this.stdoutCapture.capture,
-            this.stderrCapture.capture,
-          )
-        },
-      ],
+      print: this.stdoutCapture.capture,
+      printErr: this.stderrCapture.capture,
     })
   }
 
@@ -61,12 +54,14 @@ export class PictRunner {
 
 class OutputCapture {
   private outs: string[] = []
-  public capture = (char: number) => {
-    this.outs.push(String.fromCharCode(char))
+  public capture = (line: string) => {
+    this.outs.push(line)
   }
 
   public getOuts(): string {
-    return this.outs.join('')
+    const out = this.outs.join('\n')
+    this.clear()
+    return out
   }
 
   public clear(): void {
