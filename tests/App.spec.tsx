@@ -411,32 +411,29 @@ describe('App', () => {
       await user.click(screen.getByText('Run'))
 
       // assert - check result table
-      expect(pictRunnerMock.run).toHaveBeenCalledWith(
-        [
-          {
-            name: 'Type',
-            values: 'Single, Span, Stripe, Mirror, RAID-5',
-          },
-          {
-            name: 'Size',
-            values: '10, 100, 500, 1000, 5000, 10000, 40000',
-          },
-          {
-            name: 'Format method',
-            values: 'Quick, Slow',
-          },
-          {
-            name: 'File system',
-            values: 'FAT, FAT32, NTFS',
-          },
-          {
-            name: 'Cluster size',
-            values: 'Quick, Slow',
-          },
-          { name: 'Compression', values: 'ON, OFF' },
-        ],
-        expect.any(Array),
-      )
+      expect(pictRunnerMock.run).toHaveBeenCalledWith([
+        {
+          name: 'Type',
+          values: 'Single, Span, Stripe, Mirror, RAID-5',
+        },
+        {
+          name: 'Size',
+          values: '10, 100, 500, 1000, 5000, 10000, 40000',
+        },
+        {
+          name: 'Format method',
+          values: 'Quick, Slow',
+        },
+        {
+          name: 'File system',
+          values: 'FAT, FAT32, NTFS',
+        },
+        {
+          name: 'Cluster size',
+          values: 'Quick, Slow',
+        },
+        { name: 'Compression', values: 'ON, OFF' },
+      ])
     })
 
     it('Should call with parameters when add empty row', async () => {
@@ -447,33 +444,30 @@ describe('App', () => {
       await user.click(screen.getByText('Run'))
 
       // assert - check result table
-      expect(pictRunnerMock.run).toHaveBeenCalledWith(
-        [
-          {
-            name: 'Type',
-            values: 'Single, Span, Stripe, Mirror, RAID-5',
-          },
-          {
-            name: 'Size',
-            values: '10, 100, 500, 1000, 5000, 10000, 40000',
-          },
-          {
-            name: 'Format method',
-            values: 'Quick, Slow',
-          },
-          {
-            name: 'File system',
-            values: 'FAT, FAT32, NTFS',
-          },
-          {
-            name: 'Cluster size',
-            values: 'Quick, Slow',
-          },
-          { name: 'Compression', values: 'ON, OFF' },
-          // empty row is ignored
-        ],
-        expect.any(Array),
-      )
+      expect(pictRunnerMock.run).toHaveBeenCalledWith([
+        {
+          name: 'Type',
+          values: 'Single, Span, Stripe, Mirror, RAID-5',
+        },
+        {
+          name: 'Size',
+          values: '10, 100, 500, 1000, 5000, 10000, 40000',
+        },
+        {
+          name: 'Format method',
+          values: 'Quick, Slow',
+        },
+        {
+          name: 'File system',
+          values: 'FAT, FAT32, NTFS',
+        },
+        {
+          name: 'Cluster size',
+          values: 'Quick, Slow',
+        },
+        { name: 'Compression', values: 'ON, OFF' },
+        // empty row is ignored
+      ])
     })
 
     it('Should call with parameters when delete existing row', async () => {
@@ -484,31 +478,28 @@ describe('App', () => {
       await user.click(screen.getByText('Run'))
 
       // assert - check result table
-      expect(pictRunnerMock.run).toHaveBeenCalledWith(
-        [
-          {
-            name: 'Type',
-            values: 'Single, Span, Stripe, Mirror, RAID-5',
-          },
-          {
-            name: 'Size',
-            values: '10, 100, 500, 1000, 5000, 10000, 40000',
-          },
-          {
-            name: 'Format method',
-            values: 'Quick, Slow',
-          },
-          {
-            name: 'File system',
-            values: 'FAT, FAT32, NTFS',
-          },
-          {
-            name: 'Cluster size',
-            values: 'Quick, Slow',
-          },
-        ],
-        expect.any(Array),
-      )
+      expect(pictRunnerMock.run).toHaveBeenCalledWith([
+        {
+          name: 'Type',
+          values: 'Single, Span, Stripe, Mirror, RAID-5',
+        },
+        {
+          name: 'Size',
+          values: '10, 100, 500, 1000, 5000, 10000, 40000',
+        },
+        {
+          name: 'Format method',
+          values: 'Quick, Slow',
+        },
+        {
+          name: 'File system',
+          values: 'FAT, FAT32, NTFS',
+        },
+        {
+          name: 'Cluster size',
+          values: 'Quick, Slow',
+        },
+      ])
     })
 
     it('Should call with parameters when editing value', async () => {
@@ -521,32 +512,29 @@ describe('App', () => {
       await user.click(screen.getByText('Run'))
 
       // assert - check result table
-      expect(pictRunnerMock.run).toHaveBeenCalledWith(
-        [
-          {
-            name: 'Type',
-            values: 'Double, Span, Stripe, Mirror, RAID-5000',
-          },
-          {
-            name: 'Size',
-            values: '10, 100, 500, 1000, 5000, 10000, 40000',
-          },
-          {
-            name: 'Format method',
-            values: 'Quick, Slow',
-          },
-          {
-            name: 'File system',
-            values: 'FAT, FAT32, NTFS',
-          },
-          {
-            name: 'Cluster size',
-            values: 'Quick, Slow',
-          },
-          { name: 'Compression', values: 'ON, OFF' },
-        ],
-        expect.any(Array),
-      )
+      expect(pictRunnerMock.run).toHaveBeenCalledWith([
+        {
+          name: 'Type',
+          values: 'Double, Span, Stripe, Mirror, RAID-5000',
+        },
+        {
+          name: 'Size',
+          values: '10, 100, 500, 1000, 5000, 10000, 40000',
+        },
+        {
+          name: 'Format method',
+          values: 'Quick, Slow',
+        },
+        {
+          name: 'File system',
+          values: 'FAT, FAT32, NTFS',
+        },
+        {
+          name: 'Cluster size',
+          values: 'Quick, Slow',
+        },
+        { name: 'Compression', values: 'ON, OFF' },
+      ])
     })
 
     it('Should call with parameters when editing parameter to empty', async () => {
@@ -558,29 +546,26 @@ describe('App', () => {
       await user.click(screen.getByText('Run'))
 
       // assert - check result table
-      expect(pictRunnerMock.run).toHaveBeenCalledWith(
-        [
-          {
-            name: 'Type',
-            values: 'Single, Span, Stripe, Mirror, RAID-5',
-          },
-          // empty parameter is ignored
-          {
-            name: 'Format method',
-            values: 'Quick, Slow',
-          },
-          {
-            name: 'File system',
-            values: 'FAT, FAT32, NTFS',
-          },
-          {
-            name: 'Cluster size',
-            values: 'Quick, Slow',
-          },
-          { name: 'Compression', values: 'ON, OFF' },
-        ],
-        expect.any(Array),
-      )
+      expect(pictRunnerMock.run).toHaveBeenCalledWith([
+        {
+          name: 'Type',
+          values: 'Single, Span, Stripe, Mirror, RAID-5',
+        },
+        // empty parameter is ignored
+        {
+          name: 'Format method',
+          values: 'Quick, Slow',
+        },
+        {
+          name: 'File system',
+          values: 'FAT, FAT32, NTFS',
+        },
+        {
+          name: 'Cluster size',
+          values: 'Quick, Slow',
+        },
+        { name: 'Compression', values: 'ON, OFF' },
+      ])
     })
 
     it('Should call with parameters when editing values to empty', async () => {
@@ -592,29 +577,26 @@ describe('App', () => {
       await user.click(screen.getByText('Run'))
 
       // assert - check result table
-      expect(pictRunnerMock.run).toHaveBeenCalledWith(
-        [
-          {
-            name: 'Type',
-            values: 'Single, Span, Stripe, Mirror, RAID-5',
-          },
-          {
-            name: 'Size',
-            values: '10, 100, 500, 1000, 5000, 10000, 40000',
-          },
-          // empty values is ignored
-          {
-            name: 'File system',
-            values: 'FAT, FAT32, NTFS',
-          },
-          {
-            name: 'Cluster size',
-            values: 'Quick, Slow',
-          },
-          { name: 'Compression', values: 'ON, OFF' },
-        ],
-        expect.any(Array),
-      )
+      expect(pictRunnerMock.run).toHaveBeenCalledWith([
+        {
+          name: 'Type',
+          values: 'Single, Span, Stripe, Mirror, RAID-5',
+        },
+        {
+          name: 'Size',
+          values: '10, 100, 500, 1000, 5000, 10000, 40000',
+        },
+        // empty values is ignored
+        {
+          name: 'File system',
+          values: 'FAT, FAT32, NTFS',
+        },
+        {
+          name: 'Cluster size',
+          values: 'Quick, Slow',
+        },
+        { name: 'Compression', values: 'ON, OFF' },
+      ])
     })
   })
 })

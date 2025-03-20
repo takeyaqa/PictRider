@@ -224,7 +224,9 @@ function App({ pictRunnerInjection }: AppProps) {
       const fixedParameters = parameters
         .filter((p) => p.name !== '' && p.values !== '')
         .map((p) => ({ name: p.name, values: p.values }))
-      const output = pictRunner.current.run(fixedParameters, constraints)
+      const output = enabledConstraints
+        ? pictRunner.current.run(fixedParameters, constraints)
+        : pictRunner.current.run(fixedParameters)
       setErrorMessage('')
       setOutput(output)
     } catch (e) {

@@ -23,7 +23,7 @@ export class PictRunner {
 
   public run(
     parameters: { name: string; values: string }[],
-    constraints: PictConstraint[],
+    constraints?: PictConstraint[],
   ): PictOutput {
     if (!this.pict) {
       throw new Error('PictRunner not initialized')
@@ -32,12 +32,12 @@ export class PictRunner {
       .map((m) => `${m.name}: ${m.values}`)
       .join('\n')
     const constraintsText = constraints
-      .map((c) => convertConstraint(c))
+      ?.map((c) => convertConstraint(c))
       .join('\n')
-    this.pict.FS.writeFile(
-      'model.txt',
-      `${parametersText}\n\n${constraintsText}`,
-    )
+    const model = constraintsText
+      ? `${parametersText}\n\n${constraintsText}`
+      : parametersText
+    this.pict.FS.writeFile('model.txt', model)
     this.pict.callMain(['model.txt'])
     const err = this.stderrCapture.getOuts()
     if (err) {
