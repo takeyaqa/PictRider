@@ -24,7 +24,7 @@ function App({ pictRunnerInjection }: AppProps) {
   const [parameters, setParameters] =
     useState<PictParameter[]>(INITIAL_PARAMETERS)
   const [constraints, setConstraints] = useState([
-    convertToConstraint(INITIAL_PARAMETERS),
+    createConstraintFromParameters(INITIAL_PARAMETERS),
   ])
   const [enabledConstraints, setEnabledConstraints] = useState(false)
   const [output, setOutput] = useState<PictOutput | null>(null)
@@ -91,7 +91,13 @@ function App({ pictRunnerInjection }: AppProps) {
     setEnabledConstraints(!enabledConstraints)
   }
 
-  function convertToConstraint(parameters: PictParameter[]): PictConstraint {
+  function addConstraint() {
+    setConstraints([...constraints, createConstraintFromParameters(parameters)])
+  }
+
+  function createConstraintFromParameters(
+    parameters: PictParameter[],
+  ): PictConstraint {
     const conditions: PictCondition[] = parameters.map((value) => {
       return {
         ifOrThen: 'if',
@@ -101,10 +107,6 @@ function App({ pictRunnerInjection }: AppProps) {
       }
     })
     return { id: uuidv4(), conditions: conditions }
-  }
-
-  function addConstraint() {
-    setConstraints([...constraints, convertToConstraint(parameters)])
   }
 
   function removeConstraint() {
@@ -166,9 +168,8 @@ function App({ pictRunnerInjection }: AppProps) {
       ...constraint,
       conditions: constraint.conditions.map((condition) => ({ ...condition })),
     }))
-    // eslint-disable-next-line @typescript-eslint/prefer-for-of
-    for (let i = 0; i < newConstraints.length; i++) {
-      newConstraints[i].conditions.push({
+    for (const newConstraint of newConstraints) {
+      newConstraint.conditions.push({
         ifOrThen: 'if',
         parameter: newParameter.name,
         predicate: '',
