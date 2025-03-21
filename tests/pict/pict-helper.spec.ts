@@ -3,7 +3,7 @@ import { printConstraint } from '../../src/pict/pict-helper'
 import { Constraint } from '../../src/pict/pict-types'
 
 describe('convertConstraints', () => {
-  it('should convert an equal constraint with one if and one then condition', () => {
+  it('should convert basic constraint (1)', () => {
     const constraint: Constraint = {
       conditions: [
         {
@@ -23,7 +23,7 @@ describe('convertConstraints', () => {
     expect(result).toBe('IF ([A] = "a1") THEN ([B] = "b1");')
   })
 
-  it('should convert a not equal constraint with one if and one then condition', () => {
+  it('should convert basic constraint (2)', () => {
     const constraint: Constraint = {
       conditions: [
         {
@@ -43,7 +43,7 @@ describe('convertConstraints', () => {
     expect(result).toBe('IF ([A] <> "a1") THEN ([B] <> "b1");')
   })
 
-  it('should convert a or constraint with one if and one then condition', () => {
+  it('should convert basic constraint (3)', () => {
     const constraint: Constraint = {
       conditions: [
         {
@@ -63,7 +63,7 @@ describe('convertConstraints', () => {
     expect(result).toBe('IF ([A] = "a1" OR [A] = "a2") THEN ([B] = "b1");')
   })
 
-  it('should convert a or constraint with one if and one then condition', () => {
+  it('should convert basic constraint (4)', () => {
     const constraint: Constraint = {
       conditions: [
         {
@@ -83,7 +83,7 @@ describe('convertConstraints', () => {
     expect(result).toBe('IF ([A] = "a3") THEN ([B] <> "b1");')
   })
 
-  it('should convert a or constraint with one if and one then condition', () => {
+  it('should convert basic constraint (5)', () => {
     const constraint: Constraint = {
       conditions: [
         {
@@ -110,7 +110,7 @@ describe('convertConstraints', () => {
     )
   })
 
-  it('should convert a or constraint with one if and one then condition', () => {
+  it('should convert basic constraint (6)', () => {
     const constraint: Constraint = {
       conditions: [
         {
@@ -137,7 +137,7 @@ describe('convertConstraints', () => {
     )
   })
 
-  it('should convert a or constraint with one if and one then condition', () => {
+  it('should convert basic constraint (7)', () => {
     const constraint: Constraint = {
       conditions: [
         {
