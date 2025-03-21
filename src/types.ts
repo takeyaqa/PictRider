@@ -1,15 +1,17 @@
-import { Parameter, Condition, Constraint } from './pict/pict-types'
-
-export interface PictParameter extends Parameter {
+export interface PictParameter {
   id: string
+  name: string
+  values: string
   isValid: boolean
 }
 
-export interface PictCondition extends Condition {
-  parameterId: string
+export interface PictCondition {
+  ifOrThen: 'if' | 'then'
+  predicate: string
+  parameterRef: PictParameter
 }
 
-export interface PictConstraint extends Constraint {
+export interface PictConstraint {
   id: string
   conditions: PictCondition[]
 }

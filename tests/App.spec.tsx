@@ -384,6 +384,46 @@ describe('App', () => {
       )
       expect(preElement).toBeInTheDocument()
     })
+
+    it('Should change constraints when edit parameter name', async () => {
+      // arrange - enable constraints area
+      await user.click(screen.getByLabelText('Constraints'))
+
+      // get the second 'if' button
+      const ifButtons = screen.getAllByText('if')
+      const secondIfButton = ifButtons[1]
+
+      // change the second to 'then'
+      await user.click(secondIfButton)
+
+      // find all inputs in the constraints area
+      const constraintsTable = screen.getAllByRole('table')[0]
+      const inputs = constraintsTable.querySelectorAll('input[type="text"]')
+
+      // act - type predicates
+      await user.type(inputs[0], 'RAID-5')
+      await user.type(inputs[1], '> 1000')
+
+      // assert - the constraint should be displayed in the pre element
+      const constraintsCell = constraintsTable.querySelector('td')
+      expect(constraintsCell).toHaveTextContent('Type')
+      const beforePreElement = screen.getByText(
+        /IF \[Type\] = "RAID-5" THEN \[Size\] > 1000;/i,
+      )
+      expect(beforePreElement).toBeInTheDocument()
+
+      // act - edit parameter values
+      const parameterInput = screen.getAllByRole('textbox')[0]
+      await user.clear(parameterInput)
+      await user.type(parameterInput, 'New Type')
+
+      // assert - the constraint should be displayed in the pre element
+      expect(constraintsCell).toHaveTextContent('New Type')
+      const afterPreElement = screen.getByText(
+        /IF \[New Type\] = "RAID-5" THEN \[Size\] > 1000;/i,
+      )
+      expect(afterPreElement).toBeInTheDocument()
+    })
   })
 
   describe('Run Pict', () => {

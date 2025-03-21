@@ -99,12 +99,11 @@ function App({ pictRunnerInjection }: AppProps) {
   function createConstraintFromParameters(
     parameters: PictParameter[],
   ): PictConstraint {
-    const conditions: PictCondition[] = parameters.map((value) => {
+    const conditions: PictCondition[] = parameters.map((p) => {
       return {
         ifOrThen: 'if',
-        parameter: value.name,
         predicate: '',
-        parameterId: value.id,
+        parameterRef: p,
       }
     })
     return { id: uuidv4(), conditions: conditions }
@@ -154,7 +153,7 @@ function App({ pictRunnerInjection }: AppProps) {
       throw new Error('Constraint not found')
     }
     const condition = constraint.conditions.find(
-      (p) => p.parameterId === parameterId,
+      (p) => p.parameterRef.id === parameterId,
     )
     if (!condition) {
       throw new Error('Condition not found')
@@ -172,9 +171,8 @@ function App({ pictRunnerInjection }: AppProps) {
     for (const newConstraint of newConstraints) {
       newConstraint.conditions.push({
         ifOrThen: 'if',
-        parameter: newParameter.name,
         predicate: '',
-        parameterId: newParameter.id,
+        parameterRef: newParameter,
       })
     }
     setConstraints(newConstraints)
@@ -217,8 +215,15 @@ function App({ pictRunnerInjection }: AppProps) {
       const fixedParameters = parameters
         .filter((p) => p.name !== '' && p.values !== '')
         .map((p) => ({ name: p.name, values: p.values }))
+      const fixedConstraints = constraints.map((c) => ({
+        conditions: c.conditions.map((cond) => ({
+          ifOrThen: cond.ifOrThen,
+          predicate: cond.predicate,
+          parameter: cond.parameterRef.name,
+        })),
+      }))
       const output = enabledConstraints
-        ? pictRunner.current.run(fixedParameters, constraints)
+        ? pictRunner.current.run(fixedParameters, fixedConstraints)
         : pictRunner.current.run(fixedParameters)
       const header = output.header.map((h, i) => {
         return { id: i, name: h }

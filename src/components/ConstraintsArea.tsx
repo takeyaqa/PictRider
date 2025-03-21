@@ -1,5 +1,5 @@
 import { PictParameter, PictConstraint } from '../types'
-import { convertConstraint } from '../pict/pict-helper'
+import { convertConstraintWrapper } from '../helpers'
 
 interface ConstraintsAreaProps {
   enabledConstraints: boolean
@@ -78,8 +78,9 @@ function ConstraintsArea({
                         }}
                       >
                         {
-                          c.conditions.find((cond) => cond.parameterId === p.id)
-                            ?.ifOrThen
+                          c.conditions.find(
+                            (cond) => cond.parameterRef.id === p.id,
+                          )?.ifOrThen
                         }
                       </button>
                       <input
@@ -90,8 +91,9 @@ function ConstraintsArea({
                           onChangeCondition(c.id, p.id, e)
                         }}
                         value={
-                          c.conditions.find((cond) => cond.parameterId === p.id)
-                            ?.predicate
+                          c.conditions.find(
+                            (cond) => cond.parameterRef.id === p.id,
+                          )?.predicate
                         }
                       />
                     </td>
@@ -104,7 +106,9 @@ function ConstraintsArea({
       </div>
       <div className="row">
         <div className="col-12">
-          <pre>{constraints.map((v) => convertConstraint(v)).join('\n')}</pre>
+          <pre>
+            {constraints.map((v) => convertConstraintWrapper(v)).join('\n')}
+          </pre>
         </div>
       </div>
     </>
