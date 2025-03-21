@@ -14,17 +14,18 @@ import {
   PictConstraint,
   PictOutput,
 } from './types'
-import { INITIAL_PARAMETERS } from './initial-parameters'
+import { getInitialParameters } from './initial-parameters'
 
 interface AppProps {
   pictRunnerInjection?: PictRunner // use for testing
 }
 
 function App({ pictRunnerInjection }: AppProps) {
-  const [parameters, setParameters] =
-    useState<PictParameter[]>(INITIAL_PARAMETERS)
+  const [parameters, setParameters] = useState<PictParameter[]>([
+    ...getInitialParameters(),
+  ])
   const [constraints, setConstraints] = useState([
-    createConstraintFromParameters(INITIAL_PARAMETERS),
+    createConstraintFromParameters(parameters),
   ])
   const [enabledConstraints, setEnabledConstraints] = useState(false)
   const [output, setOutput] = useState<PictOutput | null>(null)
