@@ -111,14 +111,14 @@ function splitValueAndRelation(predicate: string): [string, string] {
     return ['LIKE', predicate.trim()]
   } else if (predicate.startsWith('#')) {
     return ['<>', predicate.replace('#', '').trim()]
-  } else if (predicate.startsWith('>')) {
-    return ['>', predicate.replace('>', '').trim()]
-  } else if (predicate.startsWith('<')) {
-    return ['<', predicate.replace('<', '').trim()]
   } else if (predicate.startsWith('>=')) {
     return ['>=', predicate.replace('>=', '').trim()]
   } else if (predicate.startsWith('<=')) {
     return ['<=', predicate.replace('<=', '').trim()]
+  } else if (predicate.startsWith('>')) {
+    return ['>', predicate.replace('>', '').trim()]
+  } else if (predicate.startsWith('<')) {
+    return ['<', predicate.replace('<', '').trim()]
   } else {
     return ['=', predicate.trim()]
   }
