@@ -1,4 +1,4 @@
-import { PictOutput } from '../pict/pict-types'
+import { PictOutput } from '../types'
 
 interface ResultAreaProps {
   output: PictOutput | null
@@ -15,19 +15,16 @@ function ResultArea({ output }: ResultAreaProps) {
         <table className="table">
           <thead>
             <tr>
-              {output.header.map((h, i) => (
-                // eslint-disable-next-line react-x/no-array-index-key
-                <th key={i}>{h}</th>
+              {output.header.map((h) => (
+                <th key={h.id}>{h.name}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {output.body.map((b, i) => (
-              // eslint-disable-next-line react-x/no-array-index-key
-              <tr key={i}>
-                {b.map((b, j) => (
-                  // eslint-disable-next-line react-x/no-array-index-key
-                  <td key={j}>{b}</td>
+            {output.body.map((row) => (
+              <tr key={row.id}>
+                {row.values.map((col) => (
+                  <td key={col.id}>{col.value}</td>
                 ))}
               </tr>
             ))}

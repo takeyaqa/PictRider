@@ -1,4 +1,4 @@
-import { PictParameter } from '../pict/pict-types'
+import { PictParameter } from '../types'
 
 interface ParametersAreaProps {
   parameters: PictParameter[]
@@ -71,25 +71,29 @@ function ParametersArea({
           </button>
         </div>
       </div>
-      {parameters.map((m) => (
-        <div className="row" key={m.id}>
+      {parameters.map((p) => (
+        <div className="row" key={p.id}>
           <div className="col-2">
             <input
               type="text"
-              className="form-control"
-              value={m.name}
+              name="parameter_name"
+              className={p.isValid ? 'form-control' : 'form-control is-invalid'}
+              value={p.name}
+              autoComplete="off"
               onChange={(e) => {
-                onInputChange(m.id, 'name', e)
+                onInputChange(p.id, 'name', e)
               }}
             />
           </div>
           <div className="col-10">
             <input
               type="text"
+              name="parameter_values"
               className="form-control"
-              value={m.values}
+              value={p.values}
+              autoComplete="off"
               onChange={(e) => {
-                onInputChange(m.id, 'values', e)
+                onInputChange(p.id, 'values', e)
               }}
             />
           </div>

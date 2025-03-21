@@ -1,11 +1,10 @@
 import { it, describe, expect } from 'vitest'
 import { convertConstraint } from '../../src/pict/pict-helper'
-import { PictConstraint } from '../../src/pict/pict-types'
+import { Constraint } from '../../src/pict/pict-types'
 
 describe('convertConstraints', () => {
   it('should convert a simple constraint with one if and one then condition', () => {
-    const constraint: PictConstraint = {
-      id: '',
+    const constraint: Constraint = {
       conditions: [
         {
           ifOrThen: 'if',
@@ -25,8 +24,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert a constraint with double if conditions', () => {
-    const constraint: PictConstraint = {
-      id: '',
+    const constraint: Constraint = {
       conditions: [
         {
           ifOrThen: 'if',
@@ -53,8 +51,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert a constraint with triple if conditions', () => {
-    const constraint: PictConstraint = {
-      id: '',
+    const constraint: Constraint = {
       conditions: [
         {
           ifOrThen: 'if',
@@ -86,8 +83,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert a constraint with multiple then conditions', () => {
-    const constraint: PictConstraint = {
-      id: '',
+    const constraint: Constraint = {
       conditions: [
         {
           ifOrThen: 'if',
@@ -114,8 +110,7 @@ describe('convertConstraints', () => {
   })
 
   it('should ignore conditions with empty predicates', () => {
-    const constraint: PictConstraint = {
-      id: '',
+    const constraint: Constraint = {
       conditions: [
         {
           ifOrThen: 'if',
@@ -145,8 +140,7 @@ describe('convertConstraints', () => {
   })
 
   it('should return an empty string when no valid conditions exist', () => {
-    const constraint: PictConstraint = {
-      id: '',
+    const constraint: Constraint = {
       conditions: [
         {
           ifOrThen: 'if',
@@ -166,8 +160,7 @@ describe('convertConstraints', () => {
   })
 
   it('should return an empty string with only if conditions', () => {
-    const constraint: PictConstraint = {
-      id: '',
+    const constraint: Constraint = {
       conditions: [
         {
           ifOrThen: 'if',
@@ -188,8 +181,7 @@ describe('convertConstraints', () => {
   })
 
   it('should handle a constraint with only then conditions', () => {
-    const constraint: PictConstraint = {
-      id: '',
+    const constraint: Constraint = {
       conditions: [
         {
           ifOrThen: 'then',

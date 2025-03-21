@@ -1,21 +1,19 @@
-export interface PictParameter {
-  id: string
+export interface Parameter {
   name: string
   values: string
 }
 
-export interface PictCondition {
+export interface Condition {
   ifOrThen: 'if' | 'then'
   parameter: string
   predicate: string
 }
 
-export interface PictConstraint {
-  id: string
-  conditions: PictCondition[]
+export interface Constraint {
+  conditions: Condition[]
 }
 
-export interface PictOutput {
+export interface Output {
   header: string[]
   body: string[][]
 }
