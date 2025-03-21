@@ -1,11 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import {
-  PictParameter,
-  PictCondition,
-  PictConstraint,
-  PictOutput,
-} from './pict/pict-types'
 import { PictRunner } from './pict/pict-runner'
 import {
   ParametersArea,
@@ -14,46 +8,19 @@ import {
   ErrorMessageArea,
   ResultArea,
 } from './components'
+import {
+  PictParameter,
+  PictCondition,
+  PictConstraint,
+  PictOutput,
+} from './types'
+import { INITIAL_PARAMETERS } from './initial-parameters'
 
 interface AppProps {
   pictRunnerInjection?: PictRunner // use for testing
 }
 
 function App({ pictRunnerInjection }: AppProps) {
-  const INITIAL_PARAMETERS = [
-    {
-      id: uuidv4(),
-      name: 'Type',
-      values: 'Single, Span, Stripe, Mirror, RAID-5',
-      isValid: true,
-    },
-    {
-      id: uuidv4(),
-      name: 'Size',
-      values: '10, 100, 500, 1000, 5000, 10000, 40000',
-      isValid: true,
-    },
-    {
-      id: uuidv4(),
-      name: 'Format method',
-      values: 'Quick, Slow',
-      isValid: true,
-    },
-    {
-      id: uuidv4(),
-      name: 'File system',
-      values: 'FAT, FAT32, NTFS',
-      isValid: true,
-    },
-    {
-      id: uuidv4(),
-      name: 'Cluster size',
-      values: 'Quick, Slow',
-      isValid: true,
-    },
-    { id: uuidv4(), name: 'Compression', values: 'ON, OFF', isValid: true },
-  ]
-
   const [parameters, setParameters] =
     useState<PictParameter[]>(INITIAL_PARAMETERS)
   const [constraints, setConstraints] = useState([
@@ -126,7 +93,12 @@ function App({ pictRunnerInjection }: AppProps) {
 
   function convertToConstraint(parameters: PictParameter[]): PictConstraint {
     const conditions: PictCondition[] = parameters.map((value) => {
-      return { ifOrThen: 'if', parameter: value.name, predicate: '' }
+      return {
+        ifOrThen: 'if',
+        parameter: value.name,
+        predicate: '',
+        parameterId: value.id,
+      }
     })
     return { id: uuidv4(), conditions: conditions }
   }
@@ -143,35 +115,53 @@ function App({ pictRunnerInjection }: AppProps) {
     }
   }
 
-  function handleClickCondition(
-    constraintIndex: number,
-    parameterIndex: number,
-  ) {
-    const currentCondition =
-      constraints[constraintIndex].conditions[parameterIndex].ifOrThen
-    const newCondition = currentCondition === 'if' ? 'then' : 'if'
+  function handleClickCondition(constraintId: string, parameterId: string) {
     const newConstraints = [...constraints]
-    newConstraints[constraintIndex].conditions[parameterIndex].ifOrThen =
-      newCondition
+    const newCondition = searchCondition(
+      newConstraints,
+      constraintId,
+      parameterId,
+    )
+    newCondition.ifOrThen = newCondition.ifOrThen === 'if' ? 'then' : 'if'
     setConstraints(newConstraints)
   }
 
   function handleChangeCondition(
-    constraintIndex: number,
-    parameterIndex: number,
+    constraintId: string,
+    parameterId: string,
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
     const newConstraints = [...constraints]
-    newConstraints[constraintIndex].conditions[parameterIndex].predicate =
-      e.target.value
+    const newCondition = searchCondition(
+      newConstraints,
+      constraintId,
+      parameterId,
+    )
+    newCondition.predicate = e.target.value
     setConstraints(newConstraints)
   }
 
+  function searchCondition(
+    constraints: PictConstraint[],
+    constraintId: string,
+    parameterId: string,
+  ): PictCondition {
+    const constraint = constraints.find((c) => c.id === constraintId)
+    if (!constraint) {
+      throw new Error('Constraint not found')
+    }
+    const condition = constraint.conditions.find(
+      (p) => p.parameterId === parameterId,
+    )
+    if (!condition) {
+      throw new Error('Condition not found')
+    }
+    return condition
+  }
+
   function addParameterInputRow() {
-    setParameters([
-      ...parameters,
-      { id: uuidv4(), name: '', values: '', isValid: true },
-    ])
+    const newParameter = { id: uuidv4(), name: '', values: '', isValid: true }
+    setParameters([...parameters, newParameter])
     const newConstraints = constraints.map((constraint) => ({
       ...constraint,
       conditions: constraint.conditions.map((condition) => ({ ...condition })),
@@ -180,8 +170,9 @@ function App({ pictRunnerInjection }: AppProps) {
     for (let i = 0; i < newConstraints.length; i++) {
       newConstraints[i].conditions.push({
         ifOrThen: 'if',
-        parameter: '',
+        parameter: newParameter.name,
         predicate: '',
+        parameterId: newParameter.id,
       })
     }
     setConstraints(newConstraints)

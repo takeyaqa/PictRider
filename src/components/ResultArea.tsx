@@ -1,4 +1,4 @@
-import { PictOutput } from '../pict/pict-types'
+import { PictOutput } from '../types'
 
 interface ResultAreaProps {
   output: PictOutput | null

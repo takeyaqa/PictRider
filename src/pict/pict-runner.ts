@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any */
-import { PictConstraint, PictOutput } from './pict-types'
+import { Parameter, Constraint, Output } from './pict-types'
 import { convertConstraint } from './pict-helper'
 // @ts-expect-error - no types available
 import createModule from './wasm/pict'
@@ -21,10 +21,7 @@ export class PictRunner {
     })
   }
 
-  public run(
-    parameters: { name: string; values: string }[],
-    constraints?: PictConstraint[],
-  ): PictOutput {
+  public run(parameters: Parameter[], constraints?: Constraint[]): Output {
     if (!this.pict) {
       throw new Error('PictRunner not initialized')
     }

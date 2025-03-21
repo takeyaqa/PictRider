@@ -1,4 +1,4 @@
-import { PictConstraint, PictParameter } from '../pict/pict-types'
+import { PictParameter, PictConstraint } from '../types'
 import { convertConstraint } from '../pict/pict-helper'
 
 interface ConstraintsAreaProps {
@@ -7,10 +7,10 @@ interface ConstraintsAreaProps {
   constraints: PictConstraint[]
   onAddConstraint: () => void
   onRemoveConstraint: () => void
-  onClickCondition: (constraintIndex: number, parameterIndex: number) => void
+  onClickCondition: (constraintId: string, parameterId: string) => void
   onChangeCondition: (
-    constraintIndex: number,
-    parameterIndex: number,
+    constraintId: string,
+    parameterId: string,
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
 }
@@ -65,26 +65,32 @@ function ConstraintsArea({
               </tr>
             </thead>
             <tbody>
-              {parameters.map((p, i) => (
+              {parameters.map((p) => (
                 <tr key={p.id}>
                   <td>{p.name}</td>
-                  {constraints.map((c, j) => (
-                    <td key={c.id}>
+                  {constraints.map((c) => (
+                    <td key={`${c.id}-${p.id}`}>
                       <button
                         type="button"
                         className="btn btn-secondary font-monospace"
                         onClick={() => {
-                          onClickCondition(j, i)
+                          onClickCondition(c.id, p.id)
                         }}
                       >
-                        {c.conditions[i].ifOrThen}
+                        {
+                          c.conditions.find((cond) => cond.parameterId === p.id)
+                            ?.ifOrThen
+                        }
                       </button>
                       <input
                         type="text"
                         onChange={(e) => {
-                          onChangeCondition(j, i, e)
+                          onChangeCondition(c.id, p.id, e)
                         }}
-                        value={c.conditions[i].predicate}
+                        value={
+                          c.conditions.find((cond) => cond.parameterId === p.id)
+                            ?.predicate
+                        }
                       />
                     </td>
                   ))}

@@ -1,4 +1,4 @@
-import { PictParameter } from '../pict/pict-types'
+import { PictParameter } from '../types'
 
 interface RunButtonAreaProps {
   parameters: PictParameter[]
