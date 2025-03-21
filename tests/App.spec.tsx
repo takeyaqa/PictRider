@@ -354,7 +354,7 @@ describe('App', () => {
 
       // the constraint should be displayed in the pre element
       const preElement = screen.getByText(
-        /IF \[Type\] = "RAID-5" THEN \[Size\] > 1000;/i,
+        /IF \(\[Type\] = "RAID-5"\) THEN \(\[Size\] > 1000\);/i,
       )
       expect(preElement).toBeInTheDocument()
     })
@@ -380,7 +380,7 @@ describe('App', () => {
 
       // assert - the constraint should be displayed in the pre element
       const preElement = screen.getByText(
-        /IF \[Type\] = "RAID-5" THEN \[Size\] > 1000;/i,
+        /IF \(\[Type\] = "RAID-5"\) THEN \(\[Size\] > 1000\);/i,
       )
       expect(preElement).toBeInTheDocument()
     })
@@ -408,7 +408,7 @@ describe('App', () => {
       const constraintsCell = constraintsTable.querySelector('td')
       expect(constraintsCell).toHaveTextContent('Type')
       const beforePreElement = screen.getByText(
-        /IF \[Type\] = "RAID-5" THEN \[Size\] > 1000;/i,
+        /IF \(\[Type\] = "RAID-5"\) THEN \(\[Size\] > 1000\);/i,
       )
       expect(beforePreElement).toBeInTheDocument()
 
@@ -420,7 +420,7 @@ describe('App', () => {
       // assert - the constraint should be displayed in the pre element
       expect(constraintsCell).toHaveTextContent('New Type')
       const afterPreElement = screen.getByText(
-        /IF \[New Type\] = "RAID-5" THEN \[Size\] > 1000;/i,
+        /IF \(\[New Type\] = "RAID-5"\) THEN \(\[Size\] > 1000\);/i,
       )
       expect(afterPreElement).toBeInTheDocument()
     })
