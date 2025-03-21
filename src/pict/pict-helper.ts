@@ -1,4 +1,4 @@
-import { Constraint } from './pict-types.ts'
+import { Constraint } from './pict-types'
 
 export function convertConstraint(constraint: Constraint): string {
   const ifConditions = constraint.conditions.filter((c) => c.ifOrThen === 'if')
