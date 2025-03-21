@@ -84,6 +84,8 @@ function ConstraintsArea({
                       </button>
                       <input
                         type="text"
+                        name="constraint_condition"
+                        autoComplete="off"
                         onChange={(e) => {
                           onChangeCondition(c.id, p.id, e)
                         }}
