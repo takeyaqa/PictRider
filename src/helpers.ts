@@ -1,7 +1,10 @@
-import { PictConstraint } from './types'
-import { convertConstraint } from './pict/pict-helper'
+import { PictConstraint, PictParameter } from './types'
+import { printConstraint } from './pict/pict-helper'
 
-export function convertConstraintWrapper(constraints: PictConstraint): string {
+export function convertConstraintWrapper(
+  constraints: PictConstraint,
+  parameters: PictParameter[],
+): string {
   const conditions = constraints.conditions.map((c) => {
     return {
       ifOrThen: c.ifOrThen,
@@ -9,5 +12,8 @@ export function convertConstraintWrapper(constraints: PictConstraint): string {
       parameter: c.parameterRef.name,
     }
   })
-  return convertConstraint({ conditions })
+  return printConstraint(
+    { conditions },
+    parameters.map((p) => p.name),
+  )
 }

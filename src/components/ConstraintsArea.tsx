@@ -107,7 +107,9 @@ function ConstraintsArea({
       <div className="row">
         <div className="col-12">
           <pre>
-            {constraints.map((v) => convertConstraintWrapper(v)).join('\n')}
+            {constraints
+              .map((v) => convertConstraintWrapper(v, parameters))
+              .join('\n')}
           </pre>
         </div>
       </div>

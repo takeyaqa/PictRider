@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any */
 import { Parameter, Constraint, Output } from './pict-types'
-import { convertConstraint } from './pict-helper'
+import { printConstraint } from './pict-helper'
 // @ts-expect-error - no types available
 import createModule from './wasm/pict'
 
@@ -29,7 +29,12 @@ export class PictRunner {
       .map((m) => `${m.name}: ${m.values}`)
       .join('\n')
     const constraintsText = constraints
-      ?.map((c) => convertConstraint(c))
+      ?.map((c) =>
+        printConstraint(
+          c,
+          parameters.map((p) => p.name),
+        ),
+      )
       .join('\n')
     const model = constraintsText
       ? `${parametersText}\n\n${constraintsText}`
