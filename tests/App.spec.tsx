@@ -71,11 +71,11 @@ describe('App', () => {
 
     it('Should disable delete row button when only one low', async () => {
       // act - delete rows until only one row is left
-      await user.click(screen.getByText('Remove Row'))
-      await user.click(screen.getByText('Remove Row'))
-      await user.click(screen.getByText('Remove Row'))
-      await user.click(screen.getByText('Remove Row'))
-      await user.click(screen.getByText('Remove Row'))
+      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
+      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
+      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
+      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
+      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
 
       // assert
       expect(screen.getByText('Remove Row')).toBeDisabled()
@@ -83,7 +83,7 @@ describe('App', () => {
 
     it('Should clear all parameter values when clicking the clear button', async () => {
       // act
-      await user.click(screen.getByText('Clear'))
+      await user.click(screen.getByRole('button', { name: 'Clear' }))
 
       // assert - check count is not changed but values is empty
       expect(screen.getAllByRole('textbox')).toHaveLength(12)
@@ -99,28 +99,28 @@ describe('App', () => {
 
       // Add 3 rows
       // act - add first row
-      await user.click(screen.getByText('Add Row'))
+      await user.click(screen.getByRole('button', { name: 'Add Row' }))
       // assert
       expect(screen.getAllByRole('textbox')).toHaveLength(14)
 
       // act - add second row
-      await user.click(screen.getByText('Add Row'))
+      await user.click(screen.getByRole('button', { name: 'Add Row' }))
       // assert
       expect(screen.getAllByRole('textbox')).toHaveLength(16)
 
       // act - add third row
-      await user.click(screen.getByText('Add Row'))
+      await user.click(screen.getByRole('button', { name: 'Add Row' }))
       // assert
       expect(screen.getAllByRole('textbox')).toHaveLength(18)
 
       // Now remove 2 rows
       // act - remove first row
-      await user.click(screen.getByText('Remove Row'))
+      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
       // assert
       expect(screen.getAllByRole('textbox')).toHaveLength(16)
 
       // act - remove second row
-      await user.click(screen.getByText('Remove Row'))
+      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
       // assert
       expect(screen.getAllByRole('textbox')).toHaveLength(14)
 
@@ -221,8 +221,12 @@ describe('App', () => {
 
     it('Should not render constraints area by default', () => {
       // assert - by default, constraints area should not be visible
-      expect(screen.queryByText('Add Constraint')).not.toBeInTheDocument()
-      expect(screen.queryByText('Remove Constraint')).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: 'Add Constraint' }),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: 'Remove Constraint' }),
+      ).not.toBeInTheDocument()
     })
 
     it('Should render constraints area when enabled', async () => {
@@ -230,11 +234,15 @@ describe('App', () => {
       await user.click(screen.getByLabelText('Constraints'))
 
       // assert - verify constraints area is rendered
-      expect(screen.getByText('Add Constraint')).toBeInTheDocument()
-      expect(screen.getByText('Remove Constraint')).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: 'Add Constraint' }),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: 'Remove Constraint' }),
+      ).toBeInTheDocument()
       expect(screen.getByText('Parameter')).toBeInTheDocument() // One in parameters area, one in constraints area
       expect(screen.getByText('Constraint 1')).toBeInTheDocument()
-      expect(screen.getAllByText('if')).toHaveLength(6) // Default app has 6 parameters, so we should have 6 'if' buttons
+      expect(screen.getAllByRole('button', { name: 'if' })).toHaveLength(6) // Default app has 6 parameters, so we should have 6 'if' buttons
     })
 
     it('Should add a new constraint when add constraint button is clicked', async () => {
@@ -246,12 +254,12 @@ describe('App', () => {
       expect(screen.queryByText('Constraint 2')).not.toBeInTheDocument()
 
       // act - add a new constraint
-      await user.click(screen.getByText('Add Constraint'))
+      await user.click(screen.getByRole('button', { name: 'Add Constraint' }))
 
       // assert - now there should be two constraints
       expect(screen.getByText('Constraint 1')).toBeInTheDocument()
       expect(screen.getByText('Constraint 2')).toBeInTheDocument()
-      expect(screen.getAllByText('if')).toHaveLength(12) // With 6 parameters and 2 constraints, we should have 12 'if' buttons
+      expect(screen.getAllByRole('button', { name: 'if' })).toHaveLength(12) // With 6 parameters and 2 constraints, we should have 12 'if' buttons
     })
 
     it('Should remove a constraint when remove constraint button is clicked', async () => {
@@ -263,15 +271,19 @@ describe('App', () => {
       expect(screen.getByText('Constraint 2')).toBeInTheDocument()
 
       // assert - remove constraint button should be enabled
-      expect(screen.getByText('Remove Constraint')).toBeEnabled()
+      expect(
+        screen.getByRole('button', { name: 'Remove Constraint' }),
+      ).toBeEnabled()
 
       // act - remove a constraint
-      await user.click(screen.getByText('Remove Constraint'))
+      await user.click(
+        screen.getByRole('button', { name: 'Remove Constraint' }),
+      )
 
       // assert - now there should be only one constraint
       expect(screen.getByText('Constraint 1')).toBeInTheDocument()
       expect(screen.queryByText('Constraint 2')).not.toBeInTheDocument()
-      expect(screen.getAllByText('if')).toHaveLength(6) // With 6 parameters and 1 constraint, we should have 6 'if' buttons
+      expect(screen.getAllByRole('button', { name: 'if' })).toHaveLength(6) // With 6 parameters and 1 constraint, we should have 6 'if' buttons
     })
 
     it('Should disable remove constraint button when only one constraint exists', async () => {
@@ -279,25 +291,33 @@ describe('App', () => {
       await user.click(screen.getByLabelText('Constraints'))
 
       // assert - by default there's only one constraint, so remove button should be disabled
-      expect(screen.getByText('Remove Constraint')).toBeDisabled()
+      expect(
+        screen.getByRole('button', { name: 'Remove Constraint' }),
+      ).toBeDisabled()
 
       // act - add a constraint
-      await user.click(screen.getByText('Add Constraint'))
+      await user.click(screen.getByRole('button', { name: 'Add Constraint' }))
 
       // assert - now remove button should be enabled
-      expect(screen.getByText('Remove Constraint')).toBeEnabled()
+      expect(
+        screen.getByRole('button', { name: 'Remove Constraint' }),
+      ).toBeEnabled()
 
       // act - remove the constraint
-      await user.click(screen.getByText('Remove Constraint'))
+      await user.click(
+        screen.getByRole('button', { name: 'Remove Constraint' }),
+      )
 
       // assert - remove button should be disabled again
-      expect(screen.getByText('Remove Constraint')).toBeDisabled()
+      expect(
+        screen.getByRole('button', { name: 'Remove Constraint' }),
+      ).toBeDisabled()
     })
 
     it('Should toggle condition between if and then when clicked', async () => {
       // arrange - enable constraints area
       await user.click(screen.getByLabelText('Constraints'))
-      const firstIfButton = screen.getAllByText('if')[0] // Get the first 'if' button
+      const firstIfButton = screen.getAllByRole('button', { name: 'if' })[0] // Get the first 'if' button
 
       // act - click it to toggle to 'then'
       await user.click(firstIfButton)
@@ -317,7 +337,7 @@ describe('App', () => {
       await user.click(screen.getByLabelText('Constraints'))
 
       // get the second 'if' button (for Size parameter) and change it to 'then'
-      const ifButtons = screen.getAllByText('if')
+      const ifButtons = screen.getAllByRole('button', { name: 'if' })
       await user.click(ifButtons[1])
 
       // find all inputs in the constraints area
