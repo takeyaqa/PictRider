@@ -220,12 +220,23 @@ function App({ pictRunnerInjection }: AppProps) {
       const output = enabledConstraints
         ? pictRunner.current.run(fixedParameters, constraints)
         : pictRunner.current.run(fixedParameters)
+      const header = output.header.map((h, i) => {
+        return { id: i, name: h }
+      })
+      const body = output.body.map((row, i) => {
+        return {
+          id: i,
+          values: row.map((col, j) => {
+            return { id: j, value: col }
+          }),
+        }
+      })
+      setOutput({ header, body })
       setErrorMessage('')
-      setOutput(output)
     } catch (e) {
       if (e instanceof Error) {
-        setErrorMessage(e.message)
         setOutput(null)
+        setErrorMessage(e.message)
       }
     }
   }

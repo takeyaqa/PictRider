@@ -1,4 +1,4 @@
-import { Parameter, Condition, Constraint, Output } from './pict/pict-types'
+import { Parameter, Condition, Constraint } from './pict/pict-types'
 
 export interface PictParameter extends Parameter {
   id: string
@@ -14,6 +14,7 @@ export interface PictConstraint extends Constraint {
   conditions: PictCondition[]
 }
 
-export interface PictOutput extends Output {
-  id?: number
+export interface PictOutput {
+  header: { id: number; name: string }[]
+  body: { id: number; values: { id: number; value: string }[] }[]
 }
