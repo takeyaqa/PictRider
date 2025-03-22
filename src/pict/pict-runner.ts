@@ -41,6 +41,7 @@ export class PictRunner {
       : parametersText
     this.pict.FS.writeFile('model.txt', model)
     this.pict.callMain(['model.txt'])
+    this.pict.FS.unlink('model.txt')
     const err = this.stderrCapture.getOuts()
     if (err) {
       throw new Error(err)
