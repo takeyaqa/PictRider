@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
+import { version } from './package.json'
 
 export default defineConfig({
   plugins: [react()],
@@ -8,6 +9,6 @@ export default defineConfig({
     environment: 'jsdom',
   },
   define: {
-    __APP_VERSION__: JSON.stringify('DEV'),
+    __APP_VERSION__: JSON.stringify(`v${version}`),
   },
 })
