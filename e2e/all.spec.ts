@@ -9,7 +9,9 @@ test('should display default values', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('PictRider')
 })
 
-test('should display result after clicking Run (default values)', async ({ page }) => {
+test('should display result after clicking Run (default values)', async ({
+  page,
+}) => {
   // arrange
   await page.goto('/')
 
@@ -30,18 +32,32 @@ test('should display result after clicking Run (default values)', async ({ page 
   await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('FAT')
 })
 
-test('should display result after clicking Run (edit values)', async ({ page }) => {
+test('should display result after clicking Run (edit values)', async ({
+  page,
+}) => {
   // arrange
   await page.goto('/')
   await page.getByRole('button', { name: 'Clear' }).click()
   await page.getByRole('textbox').nth(0).fill('null')
-  await page.getByRole('textbox').nth(1).fill('undefined, true, false, NaN, Infinity, eval')
+  await page
+    .getByRole('textbox')
+    .nth(1)
+    .fill('undefined, true, false, NaN, Infinity, eval')
   await page.getByRole('textbox').nth(2).fill('⅛⅜⅝⅞')
-  await page.getByRole('textbox').nth(3).fill('Ω≈ç√∫˜µ≤≥÷, ٠١٢٣٤٥٦٧٨٩, ¡™£¢∞§¶•ªº–≠')
+  await page
+    .getByRole('textbox')
+    .nth(3)
+    .fill('Ω≈ç√∫˜µ≤≥÷, ٠١٢٣٤٥٦٧٨٩, ¡™£¢∞§¶•ªº–≠')
   await page.getByRole('textbox').nth(4).fill('社會科學院語學研究所')
-  await page.getByRole('textbox').nth(5).fill('表ポあA鷗ŒéＢ逍Üßªąñ丂㐀𠀀, 캄사함니다')
+  await page
+    .getByRole('textbox')
+    .nth(5)
+    .fill('表ポあA鷗ŒéＢ逍Üßªąñ丂㐀𠀀, 캄사함니다')
   await page.getByRole('textbox').nth(6).fill('(╯°□°）╯︵ ┻━┻)')
-  await page.getByRole('textbox').nth(7).fill('👾 🙇 💁 🙅 🙆 🙋 🙎 🙍, ✋🏿 💪🏿 👐🏿 🙌🏿 👏🏿 🙏🏿, 🇺🇸🇷🇺🇸🇦')
+  await page
+    .getByRole('textbox')
+    .nth(7)
+    .fill('👾 🙇 💁 🙅 🙆 🙋 🙎 🙍, ✋🏿 💪🏿 👐🏿 🙌🏿 👏🏿 🙏🏿, 🇺🇸🇷🇺🇸🇦')
   await page.getByRole('textbox').nth(8).fill('<script>alert(0)</script>')
   await page.getByRole('textbox').nth(9).fill('مرحبًا, בְּרֵאשִׁית')
 
@@ -54,9 +70,13 @@ test('should display result after clicking Run (edit values)', async ({ page }) 
   const headerRow = table.getByRole('row').first()
   await expect(headerRow.getByRole('cell').nth(0)).toHaveText('null')
   await expect(headerRow.getByRole('cell').nth(1)).toHaveText('⅛⅜⅝⅞')
-  await expect(headerRow.getByRole('cell').nth(2)).toHaveText('社會科學院語學研究所')
+  await expect(headerRow.getByRole('cell').nth(2)).toHaveText(
+    '社會科學院語學研究所',
+  )
   await expect(headerRow.getByRole('cell').nth(3)).toHaveText('(╯°□°）╯︵ ┻━┻)')
-  await expect(headerRow.getByRole('cell').nth(4)).toHaveText('<script>alert(0)</script>')
+  await expect(headerRow.getByRole('cell').nth(4)).toHaveText(
+    '<script>alert(0)</script>',
+  )
   const row1 = table.getByRole('row').nth(1)
   await expect(row1.getByRole('cell').nth(0)).toHaveText('false')
   await expect(row1.getByRole('cell').nth(1)).toHaveText('¡™£¢∞§¶•ªº–≠')
@@ -66,8 +86,12 @@ test('should display result after clicking Run (edit values)', async ({ page }) 
   const row4 = table.getByRole('row').nth(4)
   await expect(row4.getByRole('cell').nth(0)).toHaveText('Infinity')
   await expect(row4.getByRole('cell').nth(1)).toHaveText('Ω≈ç√∫˜µ≤≥÷')
-  await expect(row4.getByRole('cell').nth(2)).toHaveText('表ポあA鷗ŒéＢ逍Üßªąñ丂㐀𠀀')
-  await expect(row4.getByRole('cell').nth(3)).toHaveText('👾 🙇 💁 🙅 🙆 🙋 🙎 🙍')
+  await expect(row4.getByRole('cell').nth(2)).toHaveText(
+    '表ポあA鷗ŒéＢ逍Üßªąñ丂㐀𠀀',
+  )
+  await expect(row4.getByRole('cell').nth(3)).toHaveText(
+    '👾 🙇 💁 🙅 🙆 🙋 🙎 🙍',
+  )
   await expect(row4.getByRole('cell').nth(4)).toHaveText('مرحبًا')
   const row12 = table.getByRole('row').nth(12)
   await expect(row12.getByRole('cell').nth(0)).toHaveText('Infinity')
