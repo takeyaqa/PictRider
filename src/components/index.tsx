@@ -1,5 +1,7 @@
+export { default as HeaderArea } from './HeaderArea'
 export { default as ParametersArea } from './ParametersArea'
 export { default as ConstraintsArea } from './ConstraintsArea'
 export { default as RunButtonArea } from './RunButtonArea'
 export { default as ErrorMessageArea } from './ErrorMessageArea'
 export { default as ResultArea } from './ResultArea'
+export { default as FooterArea } from './FooterArea'
