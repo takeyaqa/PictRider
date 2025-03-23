@@ -27,9 +27,6 @@ describe('App', () => {
 
     it('Should display PictRider title and default parameter values', () => {
       // assert - only checking default text and values
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-        'PictRider',
-      )
       expect(screen.getAllByRole('textbox')).toHaveLength(12)
       expect(screen.getAllByRole('textbox')[0]).toHaveValue('Type')
       expect(screen.getAllByRole('textbox')[1]).toHaveValue(

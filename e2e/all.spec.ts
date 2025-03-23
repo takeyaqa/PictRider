@@ -6,7 +6,6 @@ test('should display default values', async ({ page }) => {
 
   // assert
   await expect(page).toHaveTitle('PictRider')
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('PictRider')
 })
 
 test('should display result after clicking Run (default values)', async ({
@@ -22,14 +21,14 @@ test('should display result after clicking Run (default values)', async ({
   await expect(page.getByRole('heading', { name: 'Result' })).toBeVisible()
   const table = page.getByRole('table')
   const headerRow = table.getByRole('row').first()
-  await expect(headerRow.getByRole('cell').nth(0)).toHaveText('Type')
-  await expect(headerRow.getByRole('cell').nth(3)).toHaveText('File system')
+  await expect(headerRow.getByRole('cell').nth(1)).toHaveText('Type')
+  await expect(headerRow.getByRole('cell').nth(4)).toHaveText('File system')
   const firstDataRow = table.getByRole('row').nth(1)
-  await expect(firstDataRow.getByRole('cell').nth(0)).toHaveText('Mirror')
-  await expect(firstDataRow.getByRole('cell').nth(5)).toHaveText('OFF')
+  await expect(firstDataRow.getByRole('cell').nth(1)).toHaveText('Mirror')
+  await expect(firstDataRow.getByRole('cell').nth(6)).toHaveText('OFF')
   const lastDataRow = table.getByRole('row').nth(35)
-  await expect(lastDataRow.getByRole('cell').nth(2)).toHaveText('Quick')
-  await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('FAT')
+  await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('Quick')
+  await expect(lastDataRow.getByRole('cell').nth(4)).toHaveText('FAT')
 })
 
 test('should display result after clicking Run (edit values)', async ({
@@ -68,37 +67,37 @@ test('should display result after clicking Run (edit values)', async ({
   await expect(page.getByRole('heading', { name: 'Result' })).toBeVisible()
   const table = page.getByRole('table')
   const headerRow = table.getByRole('row').first()
-  await expect(headerRow.getByRole('cell').nth(0)).toHaveText('null')
-  await expect(headerRow.getByRole('cell').nth(1)).toHaveText('⅛⅜⅝⅞')
-  await expect(headerRow.getByRole('cell').nth(2)).toHaveText(
+  await expect(headerRow.getByRole('cell').nth(1)).toHaveText('null')
+  await expect(headerRow.getByRole('cell').nth(2)).toHaveText('⅛⅜⅝⅞')
+  await expect(headerRow.getByRole('cell').nth(3)).toHaveText(
     '社會科學院語學研究所',
   )
-  await expect(headerRow.getByRole('cell').nth(3)).toHaveText('(╯°□°）╯︵ ┻━┻)')
-  await expect(headerRow.getByRole('cell').nth(4)).toHaveText(
+  await expect(headerRow.getByRole('cell').nth(4)).toHaveText('(╯°□°）╯︵ ┻━┻)')
+  await expect(headerRow.getByRole('cell').nth(5)).toHaveText(
     '<script>alert(0)</script>',
   )
   const row1 = table.getByRole('row').nth(1)
-  await expect(row1.getByRole('cell').nth(0)).toHaveText('false')
-  await expect(row1.getByRole('cell').nth(1)).toHaveText('¡™£¢∞§¶•ªº–≠')
-  await expect(row1.getByRole('cell').nth(2)).toHaveText('캄사함니다')
-  await expect(row1.getByRole('cell').nth(3)).toHaveText('🇺🇸🇷🇺🇸🇦')
-  await expect(row1.getByRole('cell').nth(4)).toHaveText('مرحبًا')
+  await expect(row1.getByRole('cell').nth(1)).toHaveText('false')
+  await expect(row1.getByRole('cell').nth(2)).toHaveText('¡™£¢∞§¶•ªº–≠')
+  await expect(row1.getByRole('cell').nth(3)).toHaveText('캄사함니다')
+  await expect(row1.getByRole('cell').nth(4)).toHaveText('🇺🇸🇷🇺🇸🇦')
+  await expect(row1.getByRole('cell').nth(5)).toHaveText('مرحبًا')
   const row4 = table.getByRole('row').nth(4)
-  await expect(row4.getByRole('cell').nth(0)).toHaveText('Infinity')
-  await expect(row4.getByRole('cell').nth(1)).toHaveText('Ω≈ç√∫˜µ≤≥÷')
-  await expect(row4.getByRole('cell').nth(2)).toHaveText(
+  await expect(row4.getByRole('cell').nth(1)).toHaveText('Infinity')
+  await expect(row4.getByRole('cell').nth(2)).toHaveText('Ω≈ç√∫˜µ≤≥÷')
+  await expect(row4.getByRole('cell').nth(3)).toHaveText(
     '表ポあA鷗ŒéＢ逍Üßªąñ丂㐀𠀀',
   )
-  await expect(row4.getByRole('cell').nth(3)).toHaveText(
+  await expect(row4.getByRole('cell').nth(4)).toHaveText(
     '👾 🙇 💁 🙅 🙆 🙋 🙎 🙍',
   )
-  await expect(row4.getByRole('cell').nth(4)).toHaveText('مرحبًا')
+  await expect(row4.getByRole('cell').nth(5)).toHaveText('مرحبًا')
   const row12 = table.getByRole('row').nth(12)
-  await expect(row12.getByRole('cell').nth(0)).toHaveText('Infinity')
-  await expect(row12.getByRole('cell').nth(1)).toHaveText('٠١٢٣٤٥٦٧٨٩')
-  await expect(row12.getByRole('cell').nth(2)).toHaveText('캄사함니다')
-  await expect(row12.getByRole('cell').nth(3)).toHaveText('✋🏿 💪🏿 👐🏿 🙌🏿 👏🏿 🙏🏿')
-  await expect(row12.getByRole('cell').nth(4)).toHaveText('בְּרֵאשִׁית')
+  await expect(row12.getByRole('cell').nth(1)).toHaveText('Infinity')
+  await expect(row12.getByRole('cell').nth(2)).toHaveText('٠١٢٣٤٥٦٧٨٩')
+  await expect(row12.getByRole('cell').nth(3)).toHaveText('캄사함니다')
+  await expect(row12.getByRole('cell').nth(4)).toHaveText('✋🏿 💪🏿 👐🏿 🙌🏿 👏🏿 🙏🏿')
+  await expect(row12.getByRole('cell').nth(5)).toHaveText('בְּרֵאשִׁית')
 })
 
 test('should display result after clicking Run with constraints', async ({
@@ -147,12 +146,12 @@ test('should display result after clicking Run with constraints', async ({
   await expect(page.getByRole('heading', { name: 'Result' })).toBeVisible()
   const table = page.getByRole('table').nth(1)
   const headerRow = table.getByRole('row').first()
-  await expect(headerRow.getByRole('cell').nth(0)).toHaveText('Type')
-  await expect(headerRow.getByRole('cell').nth(3)).toHaveText('File system')
+  await expect(headerRow.getByRole('cell').nth(1)).toHaveText('Type')
+  await expect(headerRow.getByRole('cell').nth(4)).toHaveText('File system')
   const firstDataRow = table.getByRole('row').nth(1)
-  await expect(firstDataRow.getByRole('cell').nth(0)).toHaveText('Mirror')
-  await expect(firstDataRow.getByRole('cell').nth(5)).toHaveText('OFF')
+  await expect(firstDataRow.getByRole('cell').nth(1)).toHaveText('Mirror')
+  await expect(firstDataRow.getByRole('cell').nth(6)).toHaveText('OFF')
   const lastDataRow = table.getByRole('row').nth(35)
-  await expect(lastDataRow.getByRole('cell').nth(2)).toHaveText('Quick')
-  await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('NTFS')
+  await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('Quick')
+  await expect(lastDataRow.getByRole('cell').nth(4)).toHaveText('NTFS')
 })

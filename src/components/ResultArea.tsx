@@ -8,6 +8,7 @@ function ResultArea({ output }: ResultAreaProps) {
   if (!output) {
     return null
   }
+
   return (
     <div className="row mt-3">
       <div className="col-12">
@@ -15,6 +16,7 @@ function ResultArea({ output }: ResultAreaProps) {
         <table className="table">
           <thead>
             <tr>
+              <th>#</th>
               {output.header.map((h) => (
                 <th key={h.id}>{h.name}</th>
               ))}
@@ -23,6 +25,7 @@ function ResultArea({ output }: ResultAreaProps) {
           <tbody>
             {output.body.map((row) => (
               <tr key={row.id}>
+                <th>{row.id}</th>
                 {row.values.map((col) => (
                   <td key={col.id}>{col.value}</td>
                 ))}

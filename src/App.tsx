@@ -2,11 +2,13 @@ import { useState, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { PictRunner } from './pict/pict-runner'
 import {
+  HeaderArea,
   ParametersArea,
   ConstraintsArea,
   RunButtonArea,
   ErrorMessageArea,
   ResultArea,
+  FooterArea,
 } from './components'
 import {
   PictParameter,
@@ -247,35 +249,38 @@ function App({ pictRunnerInjection }: AppProps) {
   }
 
   return (
-    <div className="container">
-      <h1>PictRider</h1>
-      <div className="alert alert-danger">🚧 Under Construction 🚧</div>
-      <ParametersArea
-        parameters={parameters}
-        enabledConstraints={enabledConstraints}
-        onEnableConstraintsArea={enableConstraintsArea}
-        onInputChange={handleParameterInputChange}
-        onAddRow={addParameterInputRow}
-        onRemoveRow={removeParameterInputRow}
-        onClearValues={clearAllParameterValues}
-      />
-      <ConstraintsArea
-        enabledConstraints={enabledConstraints}
-        parameters={parameters}
-        constraints={constraints}
-        onAddConstraint={addConstraint}
-        onRemoveConstraint={removeConstraint}
-        onClickCondition={handleClickCondition}
-        onChangeCondition={handleChangeCondition}
-      />
-      <RunButtonArea
-        parameters={parameters}
-        pictRunnerLoaded={pictRunnerLoaded}
-        onClickRun={runPict}
-      />
-      <ErrorMessageArea message={errorMessage} />
-      <ResultArea output={output} />
-    </div>
+    <>
+      <HeaderArea />
+      <div className="container">
+        <div className="alert alert-danger">🚧 Under Construction 🚧</div>
+        <ParametersArea
+          parameters={parameters}
+          enabledConstraints={enabledConstraints}
+          onEnableConstraintsArea={enableConstraintsArea}
+          onInputChange={handleParameterInputChange}
+          onAddRow={addParameterInputRow}
+          onRemoveRow={removeParameterInputRow}
+          onClearValues={clearAllParameterValues}
+        />
+        <ConstraintsArea
+          enabledConstraints={enabledConstraints}
+          parameters={parameters}
+          constraints={constraints}
+          onAddConstraint={addConstraint}
+          onRemoveConstraint={removeConstraint}
+          onClickCondition={handleClickCondition}
+          onChangeCondition={handleChangeCondition}
+        />
+        <RunButtonArea
+          parameters={parameters}
+          pictRunnerLoaded={pictRunnerLoaded}
+          onClickRun={runPict}
+        />
+        <ErrorMessageArea message={errorMessage} />
+        <ResultArea output={output} />
+      </div>
+      <FooterArea />
+    </>
   )
 }
 
