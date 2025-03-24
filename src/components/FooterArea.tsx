@@ -1,8 +1,8 @@
 function FooterArea() {
   return (
-    <footer className="mt-5">
-      <div className="container">
-        <p className="text-muted">© 2025 Takeshi Kishi</p>
+    <footer className="mt-10">
+      <div className="container mx-auto px-4">
+        <p className="text-gray-500">© 2025 Takeshi Kishi</p>
       </div>
     </footer>
   )
