@@ -20,6 +20,7 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
+				"bradlc.vscode-tailwindcss",
 				"dbaeumer.vscode-eslint",
 				"esbenp.prettier-vscode",
 				"github.vscode-github-actions",

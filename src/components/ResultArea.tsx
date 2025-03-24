@@ -12,7 +12,7 @@ function ResultArea({ output }: ResultAreaProps) {
   return (
     <div className="mt-6">
       <div className="w-full">
-        <h4 className="text-xl font-medium mb-3">Result</h4>
+        <h4 className="mb-3 text-xl font-medium">Result</h4>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>

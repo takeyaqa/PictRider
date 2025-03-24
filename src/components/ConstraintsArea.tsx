@@ -29,14 +29,14 @@ function ConstraintsArea({
   }
   return (
     <>
-      <div className="flex flex-wrap -mx-2 mt-6">
+      <div className="-mx-2 mt-6 flex flex-wrap">
         <div className="w-2/3 px-2">
           <h4 className="text-xl font-medium">Constraints</h4>
         </div>
         <div className="w-1/6 px-2">
           <button
             type="button"
-            className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            className="w-full rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
             onClick={onAddConstraint}
           >
             Add Constraint
@@ -45,7 +45,7 @@ function ConstraintsArea({
         <div className="w-1/6 px-2">
           <button
             type="button"
-            className="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
             onClick={onRemoveConstraint}
             disabled={constraints.length <= 1}
           >
@@ -78,7 +78,7 @@ function ConstraintsArea({
                       <div className="flex items-center space-x-2">
                         <button
                           type="button"
-                          className="px-3 py-1 bg-gray-500 text-white rounded font-mono text-sm hover:bg-gray-600"
+                          className="rounded bg-gray-500 px-3 py-1 font-mono text-sm text-white hover:bg-gray-600"
                           onClick={() => {
                             onClickCondition(c.id, p.id)
                           }}
@@ -92,7 +92,7 @@ function ConstraintsArea({
                         <input
                           type="text"
                           name="constraint_condition"
-                          className="flex-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                          className="flex-1 rounded border border-gray-300 px-2 py-1 focus:border-transparent focus:ring-1 focus:ring-blue-500 focus:outline-none"
                           autoComplete="off"
                           onChange={(e) => {
                             onChangeCondition(c.id, p.id, e)
@@ -114,7 +114,7 @@ function ConstraintsArea({
       </div>
       <div className="mt-4">
         <div className="w-full">
-          <pre className="bg-gray-100 p-4 rounded overflow-x-auto">
+          <pre className="overflow-x-auto rounded bg-gray-100 p-4">
             {constraints
               .map((v) => convertConstraintWrapper(v, parameters))
               .join('\n')}

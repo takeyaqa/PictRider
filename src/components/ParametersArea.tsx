@@ -25,25 +25,25 @@ function ParametersArea({
 }: ParametersAreaProps) {
   return (
     <>
-      <div className="flex flex-wrap -mx-2">
+      <div className="-mx-2 flex flex-wrap">
         <div className="w-1/6 px-2">
           <h5 className="text-lg font-medium">Parameters</h5>
         </div>
         <div className="w-1/2 px-2">
           <h5 className="text-lg font-medium">Values</h5>
         </div>
-        <div className="w-1/3 px-2 flex space-x-2">
+        <div className="flex w-1/3 space-x-2 px-2">
           <div className="relative inline-block">
             <input
               type="checkbox"
-              className="sr-only peer"
+              className="peer sr-only"
               id="enable-constraints-button"
               autoComplete="off"
               checked={enabledConstraints}
               onChange={onEnableConstraintsArea}
             />
             <label
-              className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 peer-checked:bg-blue-700"
+              className="inline-flex cursor-pointer items-center rounded bg-blue-500 px-4 py-2 text-white peer-checked:bg-blue-700 hover:bg-blue-600"
               htmlFor="enable-constraints-button"
             >
               Constraints
@@ -51,14 +51,14 @@ function ParametersArea({
           </div>
           <button
             type="button"
-            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
             onClick={onAddRow}
           >
             Add Row
           </button>
           <button
             type="button"
-            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
             onClick={onRemoveRow}
             disabled={parameters.length <= 1}
           >
@@ -66,7 +66,7 @@ function ParametersArea({
           </button>
           <button
             type="button"
-            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+            className="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-yellow-600"
             onClick={onClearValues}
           >
             Clear
@@ -74,15 +74,15 @@ function ParametersArea({
         </div>
       </div>
       {parameters.map((p) => (
-        <div className="flex flex-wrap -mx-2 mt-2" key={p.id}>
+        <div className="-mx-2 mt-2 flex flex-wrap" key={p.id}>
           <div className="w-1/6 px-2">
             <input
               type="text"
               name="parameter_name"
               className={
                 p.isValid
-                  ? 'w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-                  : 'w-full px-3 py-2 border border-red-500 rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent'
+                  ? 'w-full rounded border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                  : 'w-full rounded border border-red-500 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-red-500 focus:outline-none'
               }
               value={p.name}
               autoComplete="off"
@@ -95,7 +95,7 @@ function ParametersArea({
             <input
               type="text"
               name="parameter_values"
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full rounded border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
               value={p.values}
               autoComplete="off"
               onChange={(e) => {

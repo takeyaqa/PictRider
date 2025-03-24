@@ -10,7 +10,7 @@ function ErrorMessageArea({ message }: ErrorMessageAreaProps) {
     <div className="mt-6">
       <div className="w-full">
         <div
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
+          className="rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700"
           role="alert"
         >
           {message}

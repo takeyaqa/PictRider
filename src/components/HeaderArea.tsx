@@ -8,22 +8,22 @@ function HeaderArea() {
               PictRider
             </a>
             <button
-              className="lg:hidden border border-white rounded px-3 py-2"
+              className="rounded border border-white px-3 py-2 lg:hidden"
               type="button"
               aria-controls="navbarNav"
               aria-expanded="false"
               aria-label="Toggle navigation"
             >
-              <span className="block w-6 h-px bg-white mb-1"></span>
-              <span className="block w-6 h-px bg-white mb-1"></span>
-              <span className="block w-6 h-px bg-white"></span>
+              <span className="mb-1 block h-px w-6 bg-white"></span>
+              <span className="mb-1 block h-px w-6 bg-white"></span>
+              <span className="block h-px w-6 bg-white"></span>
             </button>
             <div
-              className="hidden lg:flex flex-grow items-center"
+              className="hidden flex-grow items-center lg:flex"
               id="navbarNav"
             >
-              <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
-                <li className="py-2 lg:py-0 lg:px-3">
+              <ul className="flex list-none flex-col lg:ml-auto lg:flex-row">
+                <li className="py-2 lg:px-3 lg:py-0">
                   <a
                     className="font-medium hover:text-green-200"
                     aria-current="page"
@@ -32,12 +32,12 @@ function HeaderArea() {
                     Home
                   </a>
                 </li>
-                <li className="py-2 lg:py-0 lg:px-3">
+                <li className="py-2 lg:px-3 lg:py-0">
                   <a className="hover:text-green-200" href="#">
                     About
                   </a>
                 </li>
-                <li className="py-2 lg:py-0 lg:px-3">
+                <li className="py-2 lg:px-3 lg:py-0">
                   <a
                     className="hover:text-green-200"
                     href="https://github.com/takeyaqa/PictRider"

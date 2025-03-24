@@ -252,7 +252,7 @@ function App({ pictRunnerInjection }: AppProps) {
     <>
       <HeaderArea />
       <div className="container mx-auto px-4">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <div className="relative rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
           🚧 Under Construction 🚧
         </div>
         <ParametersArea
