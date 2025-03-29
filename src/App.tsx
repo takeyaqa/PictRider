@@ -251,36 +251,31 @@ function App({ pictRunnerInjection }: AppProps) {
   return (
     <>
       <HeaderArea />
-      <div className="container mx-auto px-4">
-        <div className="relative rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-          🚧 Under Construction 🚧
-        </div>
-        <ParametersArea
-          parameters={parameters}
-          enabledConstraints={enabledConstraints}
-          onEnableConstraintsArea={enableConstraintsArea}
-          onInputChange={handleParameterInputChange}
-          onAddRow={addParameterInputRow}
-          onRemoveRow={removeParameterInputRow}
-          onClearValues={clearAllParameterValues}
-        />
-        <ConstraintsArea
-          enabledConstraints={enabledConstraints}
-          parameters={parameters}
-          constraints={constraints}
-          onAddConstraint={addConstraint}
-          onRemoveConstraint={removeConstraint}
-          onClickCondition={handleClickCondition}
-          onChangeCondition={handleChangeCondition}
-        />
-        <RunButtonArea
-          parameters={parameters}
-          pictRunnerLoaded={pictRunnerLoaded}
-          onClickRun={runPict}
-        />
-        <ErrorMessageArea message={errorMessage} />
-        <ResultArea output={output} />
-      </div>
+      <ParametersArea
+        parameters={parameters}
+        enabledConstraints={enabledConstraints}
+        onEnableConstraintsArea={enableConstraintsArea}
+        onInputChange={handleParameterInputChange}
+        onAddRow={addParameterInputRow}
+        onRemoveRow={removeParameterInputRow}
+        onClearValues={clearAllParameterValues}
+      />
+      <ConstraintsArea
+        enabledConstraints={enabledConstraints}
+        parameters={parameters}
+        constraints={constraints}
+        onAddConstraint={addConstraint}
+        onRemoveConstraint={removeConstraint}
+        onClickCondition={handleClickCondition}
+        onChangeCondition={handleChangeCondition}
+      />
+      <RunButtonArea
+        parameters={parameters}
+        pictRunnerLoaded={pictRunnerLoaded}
+        onClickRun={runPict}
+      />
+      <ErrorMessageArea message={errorMessage} />
+      <ResultArea output={output} />
       <FooterArea />
     </>
   )
