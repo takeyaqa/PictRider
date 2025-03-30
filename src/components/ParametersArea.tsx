@@ -24,88 +24,102 @@ function ParametersArea({
   onClearValues,
 }: ParametersAreaProps) {
   return (
-    <>
-      <div className="-mx-2 flex flex-wrap">
-        <div className="w-1/6 px-2">
-          <h5 className="text-lg font-medium">Parameters</h5>
-        </div>
-        <div className="w-1/2 px-2">
-          <h5 className="text-lg font-medium">Values</h5>
-        </div>
-        <div className="flex w-1/3 space-x-2 px-2">
-          <div className="relative inline-block">
-            <input
-              type="checkbox"
-              className="peer sr-only"
-              id="enable-constraints-button"
-              autoComplete="off"
-              checked={enabledConstraints}
-              onChange={onEnableConstraintsArea}
-            />
-            <label
-              className="inline-flex cursor-pointer items-center rounded bg-blue-500 px-4 py-2 text-white peer-checked:bg-blue-700 hover:bg-blue-600"
-              htmlFor="enable-constraints-button"
+    <section className="mx-10 mt-5 mb-10 flex flex-col rounded-md border-2 bg-gray-50 p-7 shadow-md">
+      <div className="">
+        <div className="mb-5 grid grid-cols-12 gap-5">
+          <div className="col-span-3">
+            <p className="text-lg font-bold" id="parameters_label">
+              Parameters
+            </p>
+          </div>
+          <div className="col-span-4">
+            <p className="text-lg font-bold" id="values_label">
+              Values
+            </p>
+          </div>
+          <div className="col-span-2">
+            <button
+              type="button"
+              className="w-full cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={onAddRow}
             >
-              Constraints
-            </label>
+              Add Row
+            </button>
           </div>
-          <button
-            type="button"
-            className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
-            onClick={onAddRow}
-          >
-            Add Row
-          </button>
-          <button
-            type="button"
-            className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
-            onClick={onRemoveRow}
-            disabled={parameters.length <= 1}
-          >
-            Remove Row
-          </button>
-          <button
-            type="button"
-            className="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-yellow-600"
-            onClick={onClearValues}
-          >
-            Clear
-          </button>
+          <div className="col-span-2">
+            <button
+              type="button"
+              className="w-full cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={onRemoveRow}
+              disabled={parameters.length <= 1}
+            >
+              Remove Row
+            </button>
+          </div>
+
+          <div className="col-start-12">
+            <button
+              type="button"
+              className="w-full cursor-pointer rounded bg-yellow-500 px-3 py-2 text-white hover:bg-yellow-600"
+              onClick={onClearValues}
+            >
+              Clear
+            </button>
+          </div>
         </div>
+        {parameters.map((p) => (
+          <div className="mb-1 grid grid-cols-12 gap-5" key={p.id}>
+            <div className="col-span-3">
+              <input
+                type="text"
+                name="parameter_name"
+                className={
+                  p.isValid
+                    ? 'w-full rounded border border-black bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none'
+                    : 'w-full rounded border border-red-500 bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:ring-red-500 focus:outline-none'
+                }
+                value={p.name}
+                autoComplete="off"
+                aria-labelledby="parameters_label"
+                onChange={(e) => {
+                  onInputChange(p.id, 'name', e)
+                }}
+              />
+            </div>
+            <div className="col-span-9">
+              <input
+                type="text"
+                name="parameter_values"
+                className="w-full rounded border border-black bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none"
+                value={p.values}
+                autoComplete="off"
+                aria-labelledby="values_label"
+                onChange={(e) => {
+                  onInputChange(p.id, 'values', e)
+                }}
+              />
+            </div>
+          </div>
+        ))}
       </div>
-      {parameters.map((p) => (
-        <div className="-mx-2 mt-2 flex flex-wrap" key={p.id}>
-          <div className="w-1/6 px-2">
-            <input
-              type="text"
-              name="parameter_name"
-              className={
-                p.isValid
-                  ? 'w-full rounded border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none'
-                  : 'w-full rounded border border-red-500 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-red-500 focus:outline-none'
-              }
-              value={p.name}
-              autoComplete="off"
-              onChange={(e) => {
-                onInputChange(p.id, 'name', e)
-              }}
-            />
-          </div>
-          <div className="w-5/6 px-2">
-            <input
-              type="text"
-              name="parameter_values"
-              className="w-full rounded border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              value={p.values}
-              autoComplete="off"
-              onChange={(e) => {
-                onInputChange(p.id, 'values', e)
-              }}
-            />
-          </div>
-        </div>
-      ))}
-    </>
+      <hr></hr>
+      <div className="relative inline-block">
+        <input
+          type="checkbox"
+          className="peer sr-only"
+          id="enable-constraints-button"
+          autoComplete="off"
+          checked={enabledConstraints}
+          onChange={onEnableConstraintsArea}
+        />
+        <label
+          className="inline-flex cursor-pointer items-center rounded bg-blue-500 px-4 py-2 text-white peer-checked:bg-blue-700 hover:bg-blue-600"
+          htmlFor="enable-constraints-button"
+        >
+          Constraints
+        </label>
+      </div>
+    </section>
   )
 }
 

@@ -1,7 +1,7 @@
 function HeaderArea() {
   return (
     <header>
-      <nav className="top-0 left-0 mb-10 flex h-15 w-full border-b bg-white text-black">
+      <nav className="top-0 left-0 mb-10 flex h-15 w-full bg-white text-black shadow-sm">
         <h1 className="my-auto mr-10 ml-5 text-2xl font-bold">
           <a href="#">PictRider 🚧 Under Construction 🚧</a>
         </h1>
@@ -22,9 +22,7 @@ function HeaderArea() {
             </a>
           </li>
         </ul>
-        <span className="my-auto mr-10 ml-auto pr-3 pl-3">
-          {__APP_VERSION__}
-        </span>
+        <span className="my-auto mr-10 ml-auto px-3">{__APP_VERSION__}</span>
       </nav>
     </header>
   )
