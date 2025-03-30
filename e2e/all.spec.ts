@@ -5,7 +5,7 @@ test('should display default values', async ({ page }) => {
   await page.goto('/')
 
   // assert
-  await expect(page).toHaveTitle('PictRider')
+  await expect(page).toHaveTitle('PictRider: Pairwise Testing on the Web')
 })
 
 test('should display result after clicking Run (default values)', async ({
