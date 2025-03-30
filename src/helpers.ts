@@ -17,3 +17,7 @@ export function convertConstraintWrapper(
     parameters.map((p) => p.name),
   )
 }
+
+export function uuidv4(): string {
+  return crypto.randomUUID()
+}

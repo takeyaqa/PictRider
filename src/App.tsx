@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { v4 as uuidv4 } from 'uuid'
 import { PictRunner } from './pict/pict-runner'
 import {
   HeaderArea,
@@ -11,6 +10,7 @@ import {
   ResultArea,
   FooterArea,
 } from './components'
+import { uuidv4 } from './helpers'
 import {
   PictParameter,
   PictCondition,
