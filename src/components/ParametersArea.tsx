@@ -20,7 +20,7 @@ function ParametersArea({
   onClearValues,
 }: ParametersAreaProps) {
   return (
-    <section className="mx-10 mt-5 mb-10 flex flex-col rounded-md border-2 bg-gray-50 p-7 shadow-md">
+    <section className="mx-10 mt-5 mb-5 rounded-md border-2 bg-gray-50 p-7 shadow-md">
       <div className="">
         <div className="mb-5 grid grid-cols-12 gap-5">
           <div className="col-span-3">

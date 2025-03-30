@@ -5,8 +5,6 @@ interface ConstraintsAreaProps {
   enabledConstraints: boolean
   parameters: PictParameter[]
   constraints: PictConstraint[]
-  onEnableConstraintsArea: () => void
-
   onAddConstraint: () => void
   onRemoveConstraint: () => void
   onClickCondition: (constraintId: string, parameterId: string) => void
@@ -21,67 +19,33 @@ function ConstraintsArea({
   enabledConstraints,
   parameters,
   constraints,
-  onEnableConstraintsArea,
   onAddConstraint,
   onRemoveConstraint,
   onClickCondition,
   onChangeCondition,
 }: ConstraintsAreaProps) {
   if (!enabledConstraints) {
-    return (
-      <div className="relative inline-block">
-        <input
-          type="checkbox"
-          className="peer sr-only"
-          id="enable-constraints-button"
-          autoComplete="off"
-          checked={enabledConstraints}
-          onChange={onEnableConstraintsArea}
-        />
-        <label
-          className="inline-flex cursor-pointer items-center rounded bg-blue-500 px-4 py-2 text-white peer-checked:bg-blue-700 hover:bg-blue-600"
-          htmlFor="enable-constraints-button"
-        >
-          Constraints
-        </label>
-      </div>
-    )
+    return null
   }
   return (
-    <>
-      <div className="relative inline-block">
-        <input
-          type="checkbox"
-          className="peer sr-only"
-          id="enable-constraints-button"
-          autoComplete="off"
-          checked={enabledConstraints}
-          onChange={onEnableConstraintsArea}
-        />
-        <label
-          className="inline-flex cursor-pointer items-center rounded bg-blue-500 px-4 py-2 text-white peer-checked:bg-blue-700 hover:bg-blue-600"
-          htmlFor="enable-constraints-button"
-        >
-          Constraints
-        </label>
-      </div>
-      <div className="-mx-2 mt-6 flex flex-wrap">
-        <div className="w-2/3 px-2">
-          <h4 className="text-xl font-medium">Constraints</h4>
+    <section className="mx-10 mb-10 rounded-md border-2 bg-gray-50 p-7 shadow-md">
+      <div className="mb-5 grid grid-cols-12 gap-5">
+        <div className="col-span-6">
+          <p className="text-lg font-bold">Constraints</p>
         </div>
-        <div className="w-1/6 px-2">
+        <div className="col-span-3">
           <button
             type="button"
-            className="w-full rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+            className="w-full cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
             onClick={onAddConstraint}
           >
             Add Constraint
           </button>
         </div>
-        <div className="w-1/6 px-2">
+        <div className="col-span-3">
           <button
             type="button"
-            className="w-full rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
             onClick={onRemoveConstraint}
             disabled={constraints.length <= 1}
           >
@@ -89,32 +53,41 @@ function ConstraintsArea({
           </button>
         </div>
       </div>
-      <div className="mt-4">
-        <div className="w-full overflow-x-auto">
-          <table className="w-full border-collapse">
+      <div className="">
+        <div className="overflow-x-auto">
+          <table className="border-collapse border border-black">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border px-4 py-2 text-left">Parameter</th>
+              <tr className="border border-black bg-gray-200 text-left">
+                <th className="px-4 py-2">Parameter</th>
                 {constraints.map((c, i) => (
-                  <th key={c.id} className="border px-4 py-2 text-left">
+                  <th key={c.id} className="border border-black px-4 py-2">
                     Constraint {i + 1}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {parameters.map((p, index) => (
-                <tr
-                  key={p.id}
-                  className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
-                >
-                  <td className="border px-4 py-2">{p.name}</td>
+              {parameters.map((p) => (
+                <tr key={p.id} className="bg-white">
+                  <td className="border border-black px-4 py-2">{p.name}</td>
                   {constraints.map((c) => (
-                    <td key={`${c.id}-${p.id}`} className="border px-4 py-2">
-                      <div className="flex items-center space-x-2">
+                    <td
+                      key={`${c.id}-${p.id}`}
+                      className={
+                        c.conditions.find(
+                          (cond) => cond.parameterRef.id === p.id,
+                        )?.ifOrThen === 'if' &&
+                        c.conditions.find(
+                          (cond) => cond.parameterRef.id === p.id,
+                        )?.predicate !== ''
+                          ? 'border border-black bg-sky-200 px-4 py-2'
+                          : 'border border-black bg-white px-4 py-2'
+                      }
+                    >
+                      <div className="flex gap-1">
                         <button
                           type="button"
-                          className="rounded bg-gray-500 px-3 py-1 font-mono text-sm text-white hover:bg-gray-600"
+                          className="w-15 cursor-pointer rounded bg-gray-500 px-3 py-1 font-mono text-sm text-white hover:bg-gray-600"
                           onClick={() => {
                             onClickCondition(c.id, p.id)
                           }}
@@ -128,7 +101,7 @@ function ConstraintsArea({
                         <input
                           type="text"
                           name="constraint_condition"
-                          className="flex-1 rounded border border-gray-300 px-2 py-1 focus:border-transparent focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                          className="w-auto rounded border border-black bg-white px-1 py-1 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none"
                           autoComplete="off"
                           onChange={(e) => {
                             onChangeCondition(c.id, p.id, e)
@@ -148,16 +121,14 @@ function ConstraintsArea({
           </table>
         </div>
       </div>
-      <div className="mt-4">
-        <div className="w-full">
-          <pre className="overflow-x-auto rounded bg-gray-100 p-4">
-            {constraints
-              .map((v) => convertConstraintWrapper(v, parameters))
-              .join('\n')}
-          </pre>
-        </div>
+      <div className="mt-3">
+        <pre className="max-h-50 min-h-30 overflow-x-auto rounded bg-gray-100 p-4 font-mono text-sm text-black">
+          {constraints
+            .map((v) => convertConstraintWrapper(v, parameters))
+            .join('\n')}
+        </pre>
       </div>
-    </>
+    </section>
   )
 }
 

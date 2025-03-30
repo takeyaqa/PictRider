@@ -4,6 +4,7 @@ import { PictRunner } from './pict/pict-runner'
 import {
   HeaderArea,
   ParametersArea,
+  OptionsArea,
   ConstraintsArea,
   RunButtonArea,
   ErrorMessageArea,
@@ -258,11 +259,14 @@ function App({ pictRunnerInjection }: AppProps) {
         onRemoveRow={removeParameterInputRow}
         onClearValues={clearAllParameterValues}
       />
+      <OptionsArea
+        enabledConstraints={enabledConstraints}
+        onEnableConstraintsArea={enableConstraintsArea}
+      />
       <ConstraintsArea
         enabledConstraints={enabledConstraints}
         parameters={parameters}
         constraints={constraints}
-        onEnableConstraintsArea={enableConstraintsArea}
         onAddConstraint={addConstraint}
         onRemoveConstraint={removeConstraint}
         onClickCondition={handleClickCondition}
