@@ -10,42 +10,42 @@ function ResultArea({ output }: ResultAreaProps) {
   }
 
   return (
-    <div className="mt-6">
-      <div className="w-full">
-        <h4 className="mb-3 text-xl font-medium">Result</h4>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border px-4 py-2 text-left">#</th>
-                {output.header.map((h) => (
-                  <th key={h.id} className="border px-4 py-2 text-left">
-                    {h.name}
-                  </th>
+    <section className="mx-10 mb-10 rounded-md border-2 bg-gray-50 p-7 shadow-md">
+      <div>
+        <table className="w-full table-fixed border-collapse">
+          <caption className="mb-3 text-left text-xl font-bold">Result</caption>
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border border-black px-4 py-2 text-left font-bold">
+                #
+              </th>
+              {output.header.map((h) => (
+                <th
+                  key={h.id}
+                  className="border border-black px-4 py-2 text-left"
+                >
+                  {h.name}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {output.body.map((row) => (
+              <tr key={row.id} className="bg-white">
+                <th className="border border-black px-4 py-2 text-left font-bold">
+                  {row.id}
+                </th>
+                {row.values.map((col) => (
+                  <td key={col.id} className="border border-black px-4 py-2">
+                    {col.value}
+                  </td>
                 ))}
               </tr>
-            </thead>
-            <tbody>
-              {output.body.map((row, index) => (
-                <tr
-                  key={row.id}
-                  className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
-                >
-                  <th className="border px-4 py-2 text-left font-medium">
-                    {row.id}
-                  </th>
-                  {row.values.map((col) => (
-                    <td key={col.id} className="border px-4 py-2">
-                      {col.value}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </div>
+    </section>
   )
 }
 
