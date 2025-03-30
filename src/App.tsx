@@ -253,8 +253,6 @@ function App({ pictRunnerInjection }: AppProps) {
       <HeaderArea />
       <ParametersArea
         parameters={parameters}
-        enabledConstraints={enabledConstraints}
-        onEnableConstraintsArea={enableConstraintsArea}
         onInputChange={handleParameterInputChange}
         onAddRow={addParameterInputRow}
         onRemoveRow={removeParameterInputRow}
@@ -264,6 +262,7 @@ function App({ pictRunnerInjection }: AppProps) {
         enabledConstraints={enabledConstraints}
         parameters={parameters}
         constraints={constraints}
+        onEnableConstraintsArea={enableConstraintsArea}
         onAddConstraint={addConstraint}
         onRemoveConstraint={removeConstraint}
         onClickCondition={handleClickCondition}

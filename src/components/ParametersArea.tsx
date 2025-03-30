@@ -2,8 +2,6 @@ import { PictParameter } from '../types'
 
 interface ParametersAreaProps {
   parameters: PictParameter[]
-  enabledConstraints: boolean
-  onEnableConstraintsArea: () => void
   onInputChange: (
     id: string,
     field: 'name' | 'values',
@@ -16,8 +14,6 @@ interface ParametersAreaProps {
 
 function ParametersArea({
   parameters,
-  enabledConstraints,
-  onEnableConstraintsArea,
   onInputChange,
   onAddRow,
   onRemoveRow,
@@ -101,23 +97,6 @@ function ParametersArea({
             </div>
           </div>
         ))}
-      </div>
-      <hr></hr>
-      <div className="relative inline-block">
-        <input
-          type="checkbox"
-          className="peer sr-only"
-          id="enable-constraints-button"
-          autoComplete="off"
-          checked={enabledConstraints}
-          onChange={onEnableConstraintsArea}
-        />
-        <label
-          className="inline-flex cursor-pointer items-center rounded bg-blue-500 px-4 py-2 text-white peer-checked:bg-blue-700 hover:bg-blue-600"
-          htmlFor="enable-constraints-button"
-        >
-          Constraints
-        </label>
       </div>
     </section>
   )

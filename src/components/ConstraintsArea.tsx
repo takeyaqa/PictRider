@@ -5,6 +5,8 @@ interface ConstraintsAreaProps {
   enabledConstraints: boolean
   parameters: PictParameter[]
   constraints: PictConstraint[]
+  onEnableConstraintsArea: () => void
+
   onAddConstraint: () => void
   onRemoveConstraint: () => void
   onClickCondition: (constraintId: string, parameterId: string) => void
@@ -19,16 +21,50 @@ function ConstraintsArea({
   enabledConstraints,
   parameters,
   constraints,
+  onEnableConstraintsArea,
   onAddConstraint,
   onRemoveConstraint,
   onClickCondition,
   onChangeCondition,
 }: ConstraintsAreaProps) {
   if (!enabledConstraints) {
-    return null
+    return (
+      <div className="relative inline-block">
+        <input
+          type="checkbox"
+          className="peer sr-only"
+          id="enable-constraints-button"
+          autoComplete="off"
+          checked={enabledConstraints}
+          onChange={onEnableConstraintsArea}
+        />
+        <label
+          className="inline-flex cursor-pointer items-center rounded bg-blue-500 px-4 py-2 text-white peer-checked:bg-blue-700 hover:bg-blue-600"
+          htmlFor="enable-constraints-button"
+        >
+          Constraints
+        </label>
+      </div>
+    )
   }
   return (
     <>
+      <div className="relative inline-block">
+        <input
+          type="checkbox"
+          className="peer sr-only"
+          id="enable-constraints-button"
+          autoComplete="off"
+          checked={enabledConstraints}
+          onChange={onEnableConstraintsArea}
+        />
+        <label
+          className="inline-flex cursor-pointer items-center rounded bg-blue-500 px-4 py-2 text-white peer-checked:bg-blue-700 hover:bg-blue-600"
+          htmlFor="enable-constraints-button"
+        >
+          Constraints
+        </label>
+      </div>
       <div className="-mx-2 mt-6 flex flex-wrap">
         <div className="w-2/3 px-2">
           <h4 className="text-xl font-medium">Constraints</h4>
