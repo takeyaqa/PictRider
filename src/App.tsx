@@ -252,33 +252,35 @@ function App({ pictRunnerInjection }: AppProps) {
   return (
     <>
       <HeaderArea />
-      <ParametersArea
-        parameters={parameters}
-        onInputChange={handleParameterInputChange}
-        onAddRow={addParameterInputRow}
-        onRemoveRow={removeParameterInputRow}
-        onClearValues={clearAllParameterValues}
-      />
-      <OptionsArea
-        enabledConstraints={enabledConstraints}
-        onEnableConstraintsArea={enableConstraintsArea}
-      />
-      <ConstraintsArea
-        enabledConstraints={enabledConstraints}
-        parameters={parameters}
-        constraints={constraints}
-        onAddConstraint={addConstraint}
-        onRemoveConstraint={removeConstraint}
-        onClickCondition={handleClickCondition}
-        onChangeCondition={handleChangeCondition}
-      />
-      <RunButtonArea
-        parameters={parameters}
-        pictRunnerLoaded={pictRunnerLoaded}
-        onClickRun={runPict}
-      />
-      <ErrorMessageArea message={errorMessage} />
-      <ResultArea output={output} />
+      <main>
+        <ParametersArea
+          parameters={parameters}
+          onInputChange={handleParameterInputChange}
+          onAddRow={addParameterInputRow}
+          onRemoveRow={removeParameterInputRow}
+          onClearValues={clearAllParameterValues}
+        />
+        <OptionsArea
+          enabledConstraints={enabledConstraints}
+          onEnableConstraintsArea={enableConstraintsArea}
+        />
+        <ConstraintsArea
+          enabledConstraints={enabledConstraints}
+          parameters={parameters}
+          constraints={constraints}
+          onAddConstraint={addConstraint}
+          onRemoveConstraint={removeConstraint}
+          onClickCondition={handleClickCondition}
+          onChangeCondition={handleChangeCondition}
+        />
+        <RunButtonArea
+          parameters={parameters}
+          pictRunnerLoaded={pictRunnerLoaded}
+          onClickRun={runPict}
+        />
+        <ErrorMessageArea message={errorMessage} />
+        <ResultArea output={output} />
+      </main>
       <FooterArea />
     </>
   )

@@ -9,7 +9,7 @@ function OptionsArea({
 }: OptionsAreaProps) {
   return (
     <section className="mx-10 mb-5 rounded-md border-2 bg-gray-50 p-7 shadow-md">
-      <div className="">
+      <div>
         <input
           type="checkbox"
           className="mr-1 cursor-pointer rounded"
