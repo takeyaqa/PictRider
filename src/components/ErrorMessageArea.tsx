@@ -7,13 +7,9 @@ function ErrorMessageArea({ message }: ErrorMessageAreaProps) {
     return null
   }
   return (
-    <div className="row mt-3">
-      <div className="col-12">
-        <div className="alert alert-danger" role="alert">
-          {message}
-        </div>
-      </div>
-    </div>
+    <section className="shadow-md-6 mx-10 mb-10 rounded-md border-2 border-red-400 bg-red-100 p-7 text-red-700">
+      <div role="alert">{message}</div>
+    </section>
   )
 }
 

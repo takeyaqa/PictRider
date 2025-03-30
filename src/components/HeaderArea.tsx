@@ -1,50 +1,28 @@
 function HeaderArea() {
   return (
     <header>
-      <nav className="navbar bg-success navbar-expand-lg">
-        <div className="container-xxl">
-          <a className="navbar-brand" href="#">
-            PictRider
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
-                  Home
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  About
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link"
-                  href="https://github.com/takeyaqa/PictRider"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  GitHub
-                </a>
-              </li>
-            </ul>
-            <span className="navbar-text">
-              {__APP_VERSION__ ? __APP_VERSION__ : 'Development'}
-            </span>
-          </div>
-        </div>
+      <nav className="top-0 left-0 mb-10 flex h-15 w-full bg-white text-black shadow-sm">
+        <h1 className="my-auto mr-10 ml-5 text-2xl font-bold">
+          <a href="#">PictRider 🚧 Under Construction 🚧</a>
+        </h1>
+        <ul className="mt-auto mb-auto flex space-x-6 text-lg font-bold">
+          <li>
+            <a href="#">Home</a>
+          </li>
+          <li>
+            <a href="#">About</a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/takeyaqa/PictRider"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              GitHub
+            </a>
+          </li>
+        </ul>
+        <span className="my-auto mr-10 ml-auto px-3">{__APP_VERSION__}</span>
       </nav>
     </header>
   )

@@ -18,8 +18,7 @@ test('should display result after clicking Run (default values)', async ({
   await page.getByRole('button', { name: 'Run' }).click()
 
   // assert
-  await expect(page.getByRole('heading', { name: 'Result' })).toBeVisible()
-  const table = page.getByRole('table')
+  const table = page.getByRole('table', { name: 'Result' })
   const headerRow = table.getByRole('row').first()
   await expect(headerRow.getByRole('cell').nth(1)).toHaveText('Type')
   await expect(headerRow.getByRole('cell').nth(4)).toHaveText('File system')
@@ -64,8 +63,7 @@ test('should display result after clicking Run (edit values)', async ({
   await page.getByRole('button', { name: 'Run' }).click()
 
   // assert
-  await expect(page.getByRole('heading', { name: 'Result' })).toBeVisible()
-  const table = page.getByRole('table')
+  const table = page.getByRole('table', { name: 'Result' })
   const headerRow = table.getByRole('row').first()
   await expect(headerRow.getByRole('cell').nth(1)).toHaveText('null')
   await expect(headerRow.getByRole('cell').nth(2)).toHaveText('⅛⅜⅝⅞')
@@ -143,8 +141,7 @@ test('should display result after clicking Run with constraints', async ({
   await page.getByRole('button', { name: 'Run' }).click()
 
   // assert
-  await expect(page.getByRole('heading', { name: 'Result' })).toBeVisible()
-  const table = page.getByRole('table').nth(1)
+  const table = page.getByRole('table', { name: 'Result' })
   const headerRow = table.getByRole('row').first()
   await expect(headerRow.getByRole('cell').nth(1)).toHaveText('Type')
   await expect(headerRow.getByRole('cell').nth(4)).toHaveText('File system')

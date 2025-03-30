@@ -453,9 +453,7 @@ describe('App', () => {
 
       // assert - check result table
       expect(screen.queryByRole('alert')).not.toBeInTheDocument()
-      expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
-        'Result',
-      )
+      expect(screen.getByRole('caption')).toHaveTextContent('Result')
       expect(screen.getByRole('table')).toBeInTheDocument()
       expect(
         screen.getByRole('columnheader', { name: 'Type' }),

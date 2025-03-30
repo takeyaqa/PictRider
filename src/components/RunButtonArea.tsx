@@ -13,17 +13,17 @@ function RunButtonArea({
 }: RunButtonAreaProps) {
   const containsInvalidValues = parameters.some((p) => !p.isValid)
   return (
-    <div className="row mt-3">
-      <div className="col-3">
+    <section className="mx-10 mt-6 mb-5">
+      <div>
         <input
           type="submit"
           value="Run"
-          className="btn btn-primary"
+          className="w-full cursor-pointer rounded bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
           disabled={containsInvalidValues || !pictRunnerLoaded}
           onClick={onClickRun}
         />
       </div>
-    </div>
+    </section>
   )
 }
 

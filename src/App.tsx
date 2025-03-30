@@ -4,6 +4,7 @@ import { PictRunner } from './pict/pict-runner'
 import {
   HeaderArea,
   ParametersArea,
+  OptionsArea,
   ConstraintsArea,
   RunButtonArea,
   ErrorMessageArea,
@@ -251,16 +252,17 @@ function App({ pictRunnerInjection }: AppProps) {
   return (
     <>
       <HeaderArea />
-      <div className="container">
-        <div className="alert alert-danger">🚧 Under Construction 🚧</div>
+      <main>
         <ParametersArea
           parameters={parameters}
-          enabledConstraints={enabledConstraints}
-          onEnableConstraintsArea={enableConstraintsArea}
           onInputChange={handleParameterInputChange}
           onAddRow={addParameterInputRow}
           onRemoveRow={removeParameterInputRow}
           onClearValues={clearAllParameterValues}
+        />
+        <OptionsArea
+          enabledConstraints={enabledConstraints}
+          onEnableConstraintsArea={enableConstraintsArea}
         />
         <ConstraintsArea
           enabledConstraints={enabledConstraints}
@@ -278,7 +280,7 @@ function App({ pictRunnerInjection }: AppProps) {
         />
         <ErrorMessageArea message={errorMessage} />
         <ResultArea output={output} />
-      </div>
+      </main>
       <FooterArea />
     </>
   )
