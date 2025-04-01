@@ -1,6 +1,53 @@
 import { PictParameter, PictConstraint } from '../types'
 import { convertConstraintWrapper } from '../helpers'
 
+interface ConstraintTableCell {
+  constraintId: string
+  ifOrThen: 'if' | 'then' | undefined
+  predicate: string
+  isIfWithPredicate: boolean
+}
+
+interface ConstraintTableRow {
+  parameterId: string
+  parameterName: string
+  cells: ConstraintTableCell[]
+}
+
+/**
+ * Builds a table data structure from parameters and constraints
+ * to avoid repetitive lookups in the JSX
+ */
+function buildConstraintTable(
+  parameters: PictParameter[],
+  constraints: PictConstraint[],
+): ConstraintTableRow[] {
+  return parameters.map((parameter) => {
+    const cells = constraints.map((constraint) => {
+      const condition = constraint.conditions.find(
+        (cond) => cond.parameterRef.id === parameter.id,
+      )
+
+      const ifOrThen = condition?.ifOrThen
+      const predicate = condition?.predicate ?? ''
+      const isIfWithPredicate = ifOrThen === 'if' && predicate !== ''
+
+      return {
+        constraintId: constraint.id,
+        ifOrThen,
+        predicate,
+        isIfWithPredicate,
+      }
+    })
+
+    return {
+      parameterId: parameter.id,
+      parameterName: parameter.name,
+      cells,
+    }
+  })
+}
+
 interface ConstraintsAreaProps {
   enabledConstraints: boolean
   parameters: PictParameter[]
@@ -65,19 +112,16 @@ function ConstraintsArea({
               </tr>
             </thead>
             <tbody>
-              {parameters.map((p) => (
-                <tr key={p.id} className="bg-white">
-                  <td className="border border-black px-4 py-2">{p.name}</td>
-                  {constraints.map((c) => (
+              {buildConstraintTable(parameters, constraints).map((row) => (
+                <tr key={row.parameterId} className="bg-white">
+                  <td className="border border-black px-4 py-2">
+                    {row.parameterName}
+                  </td>
+                  {row.cells.map((cell) => (
                     <td
-                      key={`${c.id}-${p.id}`}
+                      key={`${cell.constraintId}-${row.parameterId}`}
                       className={
-                        c.conditions.find(
-                          (cond) => cond.parameterRef.id === p.id,
-                        )?.ifOrThen === 'if' &&
-                        c.conditions.find(
-                          (cond) => cond.parameterRef.id === p.id,
-                        )?.predicate !== ''
+                        cell.isIfWithPredicate
                           ? 'border border-black bg-sky-200 px-4 py-2'
                           : 'border border-black bg-white px-4 py-2'
                       }
@@ -87,14 +131,10 @@ function ConstraintsArea({
                           type="button"
                           className="w-15 cursor-pointer rounded bg-gray-500 px-3 py-1 font-mono text-sm text-white hover:bg-gray-600"
                           onClick={() => {
-                            onClickCondition(c.id, p.id)
+                            onClickCondition(cell.constraintId, row.parameterId)
                           }}
                         >
-                          {
-                            c.conditions.find(
-                              (cond) => cond.parameterRef.id === p.id,
-                            )?.ifOrThen
-                          }
+                          {cell.ifOrThen}
                         </button>
                         <input
                           type="text"
@@ -102,13 +142,13 @@ function ConstraintsArea({
                           className="w-auto rounded border border-black bg-white px-1 py-1 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none"
                           autoComplete="off"
                           onChange={(e) => {
-                            onChangeCondition(c.id, p.id, e)
+                            onChangeCondition(
+                              cell.constraintId,
+                              row.parameterId,
+                              e,
+                            )
                           }}
-                          value={
-                            c.conditions.find(
-                              (cond) => cond.parameterRef.id === p.id,
-                            )?.predicate
-                          }
+                          value={cell.predicate}
                         />
                       </div>
                     </td>
