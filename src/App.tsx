@@ -1,11 +1,11 @@
 import { HeaderArea, FooterArea } from './components'
-import { AppMain } from './pages'
+import { Outlet } from 'react-router'
 
 function App() {
   return (
     <>
       <HeaderArea />
-      <AppMain />
+      <Outlet />
       <FooterArea />
     </>
   )

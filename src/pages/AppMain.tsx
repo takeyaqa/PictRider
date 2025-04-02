@@ -248,7 +248,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   }
 
   return (
-    <main>
+    <main className="bg-white">
       <ParametersArea
         parameters={parameters}
         onInputChange={handleParameterInputChange}
