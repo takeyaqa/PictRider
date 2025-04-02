@@ -13,7 +13,7 @@ function RunButtonArea({
 }: RunButtonAreaProps) {
   const containsInvalidValues = parameters.some((p) => !p.isValid)
   return (
-    <section className="mx-10 mt-6 mb-5">
+    <section className="mx-10 my-10">
       <div>
         <input
           type="submit"

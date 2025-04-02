@@ -10,8 +10,8 @@ function ResultArea({ output }: ResultAreaProps) {
   }
 
   return (
-    <section className="mx-10 mb-10 rounded-md border-2 bg-gray-50 p-7 shadow-md">
-      <div>
+    <section className="mx-2 mb-10 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
+      <div className="overflow-x-auto">
         <table className="w-full table-fixed border-collapse">
           <caption className="mb-3 text-left text-xl font-bold">Result</caption>
           <thead>
