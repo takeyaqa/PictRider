@@ -16,12 +16,23 @@ function HeaderArea() {
         </h1>
         <ul className="mt-auto mb-auto flex space-x-6 text-lg font-bold">
           <li>
-            <NavLink to="/" end>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive ? 'text-gray-500' : 'text-black'
+              }
+            >
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink to="/about" end>
+            <NavLink
+              to="/about"
+              className={({ isActive }) =>
+                isActive ? 'text-gray-500' : 'text-black'
+              }
+              end
+            >
               About
             </NavLink>
           </li>
