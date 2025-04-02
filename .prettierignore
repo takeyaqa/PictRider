@@ -2,5 +2,4 @@
 .github/
 src/pict/wasm
 pnpm-lock.yaml
-index.html
 README.md
