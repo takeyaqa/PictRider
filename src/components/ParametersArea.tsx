@@ -37,6 +37,7 @@ function ParametersArea({
             type="button"
             className="w-20 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-30"
             onClick={onAddRow}
+            disabled={parameters.length >= 50}
           >
             Add Row
           </button>

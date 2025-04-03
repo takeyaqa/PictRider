@@ -163,6 +163,11 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   }
 
   function addParameterInputRow() {
+    // Limit to maximum 50 rows
+    if (parameters.length >= 50) {
+      return
+    }
+
     const newParameter = { id: uuidv4(), name: '', values: '', isValid: true }
     setParameters([...parameters, newParameter])
     const newConstraints = constraints.map((constraint) => ({

@@ -130,6 +130,23 @@ describe('AppMain', () => {
       expect(screen.getAllByRole('textbox')[13]).toHaveValue('')
     })
 
+    it('Should disable add row button when maximum row limit (50) is reached', async () => {
+      // Initial state - 12 textbox (6 parameter rows)
+      expect(screen.getAllByRole('textbox')).toHaveLength(12)
+
+      // Add rows until we reach the limit (50 rows)
+      // We already have 6 rows, so we need to add 44 more
+      for (let i = 0; i < 44; i++) {
+        await user.click(screen.getByRole('button', { name: 'Add Row' }))
+      }
+
+      // Verify we have 50 rows (100 textbox - 2 per row)
+      expect(screen.getAllByRole('textbox')).toHaveLength(100)
+
+      // Verify the Add Row button is disabled
+      expect(screen.getByRole('button', { name: 'Add Row' })).toBeDisabled()
+    })
+
     it('Should display error message when duplicate parameter names are found (single)', async () => {
       // act - edit parameter name to create a duplicate
       const nameInput = screen.getAllByRole('textbox')[2]
