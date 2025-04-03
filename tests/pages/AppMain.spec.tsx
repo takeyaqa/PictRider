@@ -499,20 +499,24 @@ describe('AppMain', () => {
       ).toBeInTheDocument()
       expect(screen.getByRole('cell', { name: '100' })).toBeInTheDocument()
 
-      // Check that the Download CSV button is present
+      // Check that the CSV and TSV buttons are present
       expect(screen.getByRole('button', { name: 'CSV' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'TSV' })).toBeInTheDocument()
     })
 
-    it('Should have a Download CSV button that is enabled after running PICT', async () => {
+    it('Should have CSV and TSV buttons that are enabled after running PICT', async () => {
       // Run PICT to get results
       await user.click(screen.getByText('Run'))
 
-      // Get the Download CSV button and verify it exists and is enabled
-      const downloadButton = screen.getByRole('button', {
-        name: 'CSV',
-      })
-      expect(downloadButton).toBeInTheDocument()
-      expect(downloadButton).not.toBeDisabled()
+      // Get the CSV button and verify it exists and is enabled
+      const csvButton = screen.getByRole('button', { name: 'CSV' })
+      expect(csvButton).toBeInTheDocument()
+      expect(csvButton).not.toBeDisabled()
+
+      // Get the TSV button and verify it exists and is enabled
+      const tsvButton = screen.getByRole('button', { name: 'TSV' })
+      expect(tsvButton).toBeInTheDocument()
+      expect(tsvButton).not.toBeDisabled()
     })
 
     it('Should call with parameters when input default value', async () => {

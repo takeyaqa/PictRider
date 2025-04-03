@@ -1,33 +1,48 @@
 import { PictOutput } from '../types'
 
+function createCsvContent(output: PictOutput) {
+  const headerRow = output.header.map((h) => `"${h.name}"`).join(',')
+  const bodyRows = output.body.map((row) =>
+    row.values.map((col) => `"${col.value}"`).join(','),
+  )
+  return [headerRow, ...bodyRows].join('\n')
+}
+
+function createTsvContent(output: PictOutput) {
+  const headerRow = output.header.map((h) => h.name).join('\t')
+  const bodyRows = output.body.map((row) =>
+    row.values.map((col) => col.value).join('\t'),
+  )
+  return [headerRow, ...bodyRows].join('\n')
+}
+
 interface ResultAreaProps {
   output: PictOutput | null
 }
 
 function ResultArea({ output }: ResultAreaProps) {
-  function handleDownloadCSV() {
+  function handleDownload(type: 'csv' | 'tsv') {
     if (!output) {
       return
     }
 
-    // Create CSV content
-    const headerRow = output.header.map((h) => `"${h.name}"`).join(',')
-    const bodyRows = output.body.map((row) =>
-      row.values.map((col) => `"${col.value}"`).join(','),
-    )
-    const csvContent = [headerRow, ...bodyRows].join('\n')
+    const content =
+      type === 'csv' ? createCsvContent(output) : createTsvContent(output)
+    const mimeType = type === 'csv' ? 'text/csv' : 'text/tab-separated-values'
+    const fileName = type === 'csv' ? 'result.csv' : 'result.tsv'
 
     // Create a blob and download link
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const blob = new Blob([content], { type: `${mimeType};charset=utf-8;` })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.setAttribute('href', url)
-    link.setAttribute('download', 'result.csv')
+    link.setAttribute('download', fileName)
     link.style.visibility = 'hidden'
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
   }
+
   if (!output) {
     return null
   }
@@ -38,13 +53,26 @@ function ResultArea({ output }: ResultAreaProps) {
         <h2 className="text-xl font-bold" id="result_heading">
           Result
         </h2>
-        <button
-          type="button"
-          className="cursor-pointer rounded bg-green-600 px-3 py-2 text-white hover:bg-green-700"
-          onClick={handleDownloadCSV}
-        >
-          CSV
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            className="cursor-pointer rounded bg-green-600 px-3 py-2 text-white hover:bg-green-700"
+            onClick={() => {
+              handleDownload('csv')
+            }}
+          >
+            CSV
+          </button>
+          <button
+            type="button"
+            className="cursor-pointer rounded bg-green-600 px-3 py-2 text-white hover:bg-green-700"
+            onClick={() => {
+              handleDownload('tsv')
+            }}
+          >
+            TSV
+          </button>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table
