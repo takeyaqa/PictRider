@@ -5,7 +5,7 @@ function About() {
         <h2 className="mb-6 text-2xl font-bold">About PictRider</h2>
 
         <p className="mb-4">
-          <img src="public/logo.svg" alt="PictRider Logo" width="640" />
+          <img src="/logo.svg" alt="PictRider Logo" width="640" />
         </p>
 
         <p className="mb-4">
