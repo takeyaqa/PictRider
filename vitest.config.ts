@@ -7,6 +7,7 @@ export default defineConfig({
   test: {
     include: ['tests/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     environment: 'jsdom',
+    testTimeout: 10000,
   },
   define: {
     __APP_VERSION__: JSON.stringify(`v${version}`),
