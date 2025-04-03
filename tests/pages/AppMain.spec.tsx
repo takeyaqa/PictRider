@@ -493,12 +493,26 @@ describe('AppMain', () => {
 
       // assert - check result table
       expect(screen.queryByRole('alert')).not.toBeInTheDocument()
-      expect(screen.getByRole('caption')).toHaveTextContent('Result')
-      expect(screen.getByRole('table')).toBeInTheDocument()
+      expect(screen.getByRole('table', { name: 'Result' })).toBeInTheDocument()
       expect(
         screen.getByRole('columnheader', { name: 'Type' }),
       ).toBeInTheDocument()
       expect(screen.getByRole('cell', { name: '100' })).toBeInTheDocument()
+
+      // Check that the Download CSV button is present
+      expect(screen.getByRole('button', { name: 'CSV' })).toBeInTheDocument()
+    })
+
+    it('Should have a Download CSV button that is enabled after running PICT', async () => {
+      // Run PICT to get results
+      await user.click(screen.getByText('Run'))
+
+      // Get the Download CSV button and verify it exists and is enabled
+      const downloadButton = screen.getByRole('button', {
+        name: 'CSV',
+      })
+      expect(downloadButton).toBeInTheDocument()
+      expect(downloadButton).not.toBeDisabled()
     })
 
     it('Should call with parameters when input default value', async () => {
