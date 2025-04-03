@@ -94,6 +94,10 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   }
 
   function addConstraint() {
+    // Limit to maximum 50 constraints
+    if (constraints.length >= 50) {
+      return
+    }
     setConstraints([...constraints, createConstraintFromParameters(parameters)])
   }
 
