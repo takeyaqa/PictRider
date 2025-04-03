@@ -85,6 +85,7 @@ function ConstraintsArea({
             type="button"
             className="w-25 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-50"
             onClick={onAddConstraint}
+            disabled={constraints.length >= 50}
           >
             Add Constraint
           </button>
