@@ -1,5 +1,7 @@
 # PictRider
 
+<img src="public/logo.svg" alt="PictRider Logo" width="640">
+
 ## Pairwise Testing on the Web
 
 PictRider is a modern and user-friendly combinatorial testing tool that allows you to easily generate test cases using pairwise testing techniques directly on the web. It requires no installation and runs entirely in the browser, enabling QA engineers and software developers to quickly and efficiently design effective test cases.
@@ -72,4 +74,10 @@ SOFTWARE.
 
 PictRider is licensed under the MIT License:
 
-[LICENSE](./LICENSE)
+[LICENSE](LICENSE)
+
+## Acknowledgement
+
+PictRider is heavily inspired by **[PictMaster](https://sourceforge.net/projects/pictmaster/)**, a powerful Excel-based tool developed by Iwatsu System & Software Co., Ltd..
+
+We would like to express our respect and appreciation for the ideas, user interface design, and contributions that PictMaster has brought to the field of combinatorial testing.
