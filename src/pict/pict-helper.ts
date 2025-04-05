@@ -48,7 +48,13 @@ function printClause(
     for (const predicate of predicates) {
       const [relation, identifier] = printRightIdentifier(predicate, parameters)
       if (predicateText) {
-        if (isAllNegated) {
+        if (
+          isAllNegated ||
+          relation === '<' ||
+          relation === '<=' ||
+          relation === '>=' ||
+          relation === '>'
+        ) {
           predicateText += ' AND '
         } else if (relation !== '&=' && relation !== '&!') {
           predicateText += ' OR '

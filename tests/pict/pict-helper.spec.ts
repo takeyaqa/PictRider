@@ -157,6 +157,114 @@ describe('convertConstraints', () => {
     expect(result).toBe('IF ([B] = "b1") THEN ([C] = "c1");')
   })
 
+  it('should convert basic constraint (8)', () => {
+    const constraint: Constraint = {
+      conditions: [
+        {
+          ifOrThen: 'if',
+          parameter: 'A',
+          predicate: 'a1,<a2',
+        },
+        {
+          ifOrThen: 'if',
+          parameter: 'B',
+          predicate: 'b1',
+        },
+        {
+          ifOrThen: 'then',
+          parameter: 'C',
+          predicate: '#c2,c3',
+        },
+      ],
+    }
+
+    const result = printConstraint(constraint, ['A', 'B', 'C', 'D'])
+    expect(result).toBe(
+      'IF ([A] = "a1" AND [A] < "a2") AND ([B] = "b1") THEN ([C] <> "c2" AND [C] <> "c3");',
+    )
+  })
+
+  it('should convert basic constraint (9)', () => {
+    const constraint: Constraint = {
+      conditions: [
+        {
+          ifOrThen: 'if',
+          parameter: 'A',
+          predicate: 'a1,a2,< a3',
+        },
+        {
+          ifOrThen: 'if',
+          parameter: 'B',
+          predicate: 'b1',
+        },
+        {
+          ifOrThen: 'then',
+          parameter: 'C',
+          predicate: '#c2,c3',
+        },
+      ],
+    }
+
+    const result = printConstraint(constraint, ['A', 'B', 'C', 'D'])
+    expect(result).toBe(
+      'IF ([A] = "a1" OR [A] = "a2" AND [A] < "a3") AND ([B] = "b1") THEN ([C] <> "c2" AND [C] <> "c3");',
+    )
+  })
+
+  it('should convert basic constraint (10)', () => {
+    const constraint: Constraint = {
+      conditions: [
+        {
+          ifOrThen: 'if',
+          parameter: 'A',
+          predicate: 'a1,<=a2,a3',
+        },
+        {
+          ifOrThen: 'if',
+          parameter: 'B',
+          predicate: 'b1',
+        },
+        {
+          ifOrThen: 'then',
+          parameter: 'C',
+          predicate: '#c2,c3',
+        },
+      ],
+    }
+
+    const result = printConstraint(constraint, ['A', 'B', 'C', 'D'])
+    expect(result).toBe(
+      'IF ([A] = "a1" AND [A] <= "a2" OR [A] = "a3") AND ([B] = "b1") THEN ([C] <> "c2" AND [C] <> "c3");',
+    )
+  })
+
+  it('should convert basic constraint (11)', () => {
+    const constraint: Constraint = {
+      conditions: [
+        {
+          ifOrThen: 'if',
+          parameter: 'A',
+          predicate: '>a1,a2,a3',
+        },
+        {
+          ifOrThen: 'if',
+          parameter: 'B',
+          predicate: 'b1',
+        },
+        {
+          ifOrThen: 'then',
+          parameter: 'C',
+          predicate: '#c2,c3',
+        },
+      ],
+    }
+
+    const result = printConstraint(constraint, ['A', 'B', 'C', 'D'])
+    expect(result).toBe(
+      'IF ([A] > "a1" OR [A] = "a2" OR [A] = "a3") AND ([B] = "b1") THEN ([C] <> "c2" AND [C] <> "c3");',
+    )
+  })
+
   it('should convert parameter and parameter constraint (1)', () => {
     const constraint: Constraint = {
       conditions: [
