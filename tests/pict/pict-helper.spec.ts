@@ -265,6 +265,26 @@ describe('convertConstraints', () => {
     )
   })
 
+  it('should not convert error constraint', () => {
+    const constraint: Constraint = {
+      conditions: [
+        {
+          ifOrThen: 'if',
+          parameter: 'A',
+          predicate: 'a1,a2',
+        },
+        {
+          ifOrThen: 'then',
+          parameter: 'C',
+          predicate: 'c2,#c3',
+        },
+      ],
+    }
+
+    const result = printConstraint(constraint, ['A', 'B', 'C', 'D'])
+    expect(result).toBe('')
+  })
+
   it('should convert parameter and parameter constraint (1)', () => {
     const constraint: Constraint = {
       conditions: [

@@ -11,6 +11,9 @@ export function printConstraint(
   if (thenConditions.length === 0) {
     return ''
   }
+  if (isError(ifConditions) || isError(thenConditions)) {
+    return ''
+  }
   const ifPredicateText = printPredicate(ifConditions, parameters)
   const thenPredicateText = printPredicate(thenConditions, parameters)
   if (thenPredicateText) {
@@ -20,6 +23,16 @@ export function printConstraint(
   } else {
     return ''
   }
+}
+
+function isError(conditions: Condition[]): boolean {
+  for (const cond of conditions) {
+    // '#' is only allowed at the beginning of the predicate
+    if (cond.predicate.includes('#') && !cond.predicate.startsWith('#')) {
+      return true
+    }
+  }
+  return false
 }
 
 function printPredicate(conditions: Condition[], parameters: string[]): string {
