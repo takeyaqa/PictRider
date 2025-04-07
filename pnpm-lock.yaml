@@ -18,8 +18,8 @@ importers:
         specifier: ^7.4.1
         version: 7.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       tailwindcss:
-        specifier: ^4.0.15
-        version: 4.1.1
+        specifier: ^4.1.3
+        version: 4.1.3
     devDependencies:
       '@eslint/js':
         specifier: ^9.21.0
@@ -1731,6 +1731,9 @@ packages:
 
   tailwindcss@4.1.1:
     resolution: {integrity: sha512-QNbdmeS979Efzim2g/bEvfuh+fTcIdp1y7gA+sb6OYSW74rt7Cr7M78AKdf6HqWT3d5AiTb7SwTT3sLQxr4/qw==}
+
+  tailwindcss@4.1.3:
+    resolution: {integrity: sha512-2Q+rw9vy1WFXu5cIxlvsabCwhU2qUwodGq03ODhLJ0jW4ek5BUtoCsnLB0qG+m8AHgEsSJcJGDSDe06FXlP74g==}
 
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
@@ -3529,6 +3532,8 @@ snapshots:
   symbol-tree@3.2.4: {}
 
   tailwindcss@4.1.1: {}
+
+  tailwindcss@4.1.3: {}
 
   tapable@2.2.1: {}
 
