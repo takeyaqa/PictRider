@@ -31,34 +31,14 @@ interface UnfixedRelationTerm {
   right: Value | ParameterName
 }
 
-export function mergeConstraints(constraints: Constraint[]): Constraint[] {
-  const mergedConstraints: Constraint[] = []
-  for (let i = 0; i < constraints.length; i++) {
-    if (i + 1 === constraints.length) {
-      break
-    }
-    const currentConstraint = constraints[i]
-    const nextConstraint = constraints[i + 1]
-    for (const currentCondition of currentConstraint.conditions) {
-      if (currentCondition.ifOrThen === 'if') {
-        const nextCondition = nextConstraint.conditions.find(
-          (c) =>
-            c.ifOrThen === 'if' &&
-            c.parameter === currentCondition.parameter &&
-            c.predicate === currentCondition.predicate,
-        )
-        if (nextCondition) {
-          currentCondition.predicate += `, ${nextCondition.predicate}`
-        }
-      }
-    }
-    mergedConstraints.push(currentConstraint)
-  }
-
-  return mergedConstraints
+export function printConstraints(
+  constraint: Constraint[],
+  parameters: string[],
+): string {
+  return printCodeFromAST(convertTableToConstraints(constraint, parameters))
 }
 
-export function convertTableToConstraints(
+function convertTableToConstraints(
   constraints: Constraint[],
   parameters: string[],
 ): ConstraintsAst {
@@ -235,13 +215,6 @@ function fixRestTerm(
       right: unfixedTerm.right,
     },
   ]
-}
-
-export function printConstraint(
-  constraint: Constraint,
-  parameters: string[],
-): string {
-  return printCodeFromAST(convertTableToConstraints([constraint], parameters))
 }
 
 function isError(conditions: Condition[]): boolean {

@@ -162,9 +162,7 @@ function ConstraintsArea({
       </div>
       <div className="mt-3">
         <pre className="max-h-50 min-h-30 overflow-x-auto rounded bg-gray-100 p-4 font-mono text-sm text-black">
-          {constraints
-            .map((v) => convertConstraintWrapper(v, parameters))
-            .join('\n')}
+          {convertConstraintWrapper(constraints, parameters)}
         </pre>
       </div>
     </section>
