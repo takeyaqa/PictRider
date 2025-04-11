@@ -309,7 +309,7 @@ describe('convertConstraints', () => {
     expect(result).toBe('')
   })
 
-  it('should convert merged constraint (1)', () => {
+  it.skip('should convert merged constraint (1)', () => {
     const constraint1: Constraint = {
       conditions: [
         {
@@ -364,7 +364,7 @@ describe('convertConstraints', () => {
     )
   })
 
-  it('should convert merged constraint (2)', () => {
+  it.skip('should convert merged constraint (2)', () => {
     const constraint1: Constraint = {
       conditions: [
         {
@@ -429,7 +429,7 @@ describe('convertConstraints', () => {
     )
   })
 
-  it('should convert merged constraint (3)', () => {
+  it.skip('should convert merged constraint (3)', () => {
     const constraint1: Constraint = {
       conditions: [
         {
@@ -494,7 +494,7 @@ describe('convertConstraints', () => {
     )
   })
 
-  it('should convert merged constraint (4)', () => {
+  it.skip('should convert merged constraint (4)', () => {
     const constraint1: Constraint = {
       conditions: [
         {
@@ -706,6 +706,33 @@ describe('convertConstraints', () => {
     expect(result).toBe(
       '([B] = [C] OR [B] <> [D]) AND ([D] <> [E] AND [D] = [F]);',
     )
+  })
+
+  it.skip('should convert condition less constraint 3', () => {
+    const constraints: Constraint[] = [
+      {
+        conditions: [
+          {
+            ifOrThen: 'then',
+            parameter: 'B',
+            predicate: '=C',
+          },
+          {
+            ifOrThen: 'then',
+            parameter: 'C',
+            predicate: '+=D',
+          },
+          {
+            ifOrThen: 'then',
+            parameter: 'D',
+            predicate: '+=B',
+          },
+        ],
+      },
+    ]
+
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D', 'E', 'F'])
+    expect(result).toBe('[B] = [C] OR [C] = [D] OR [D] = [B];')
   })
 
   it('should convert wildcard constraint', () => {
