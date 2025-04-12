@@ -25,6 +25,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   const [parameters, setParameters] = useState<PictParameter[]>([
     ...getInitialParameters(),
   ])
+  const [parameterError, setParameterError] = useState('')
   const [constraints, setConstraints] = useState([
     createConstraintFromParameters(parameters),
   ])
@@ -78,12 +79,12 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
             parameter.isValid = true
           }
         }
-        setErrorMessage('Parameter names must be unique.')
+        setParameterError('Parameter names must be unique.')
       } else {
         for (const parameter of newParameters) {
           parameter.isValid = true
         }
-        setErrorMessage('')
+        setParameterError('')
       }
     }
     setParameters(newParameters)
@@ -260,6 +261,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     <main className="bg-white">
       <ParametersArea
         parameters={parameters}
+        message={parameterError}
         onInputChange={handleParameterInputChange}
         onAddRow={addParameterInputRow}
         onRemoveRow={removeParameterInputRow}

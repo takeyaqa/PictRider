@@ -2,6 +2,7 @@ import { PictParameter } from '../types'
 
 interface ParametersAreaProps {
   parameters: PictParameter[]
+  message?: string
   onInputChange: (
     id: string,
     field: 'name' | 'values',
@@ -14,6 +15,7 @@ interface ParametersAreaProps {
 
 function ParametersArea({
   parameters,
+  message,
   onInputChange,
   onAddRow,
   onRemoveRow,
@@ -92,6 +94,14 @@ function ParametersArea({
           </div>
         </div>
       ))}
+      {message && (
+        <div
+          className="mt-5 rounded-md border-2 border-red-400 bg-red-100 p-7 text-red-700"
+          role="alert"
+        >
+          {message}
+        </div>
+      )}
     </section>
   )
 }
