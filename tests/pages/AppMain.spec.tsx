@@ -63,7 +63,9 @@ describe('AppMain', () => {
         'Single, Span, Stripe, Mirror, RAID-5',
       )
       expect(screen.getAllByRole('textbox')[8]).toHaveValue('Cluster size')
-      expect(screen.getAllByRole('textbox')[9]).toHaveValue('Quick, Slow')
+      expect(screen.getAllByRole('textbox')[9]).toHaveValue(
+        '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
+      )
     })
 
     it('Should disable delete row button when only one low', async () => {
@@ -210,6 +212,47 @@ describe('AppMain', () => {
       await user.clear(nameInput3)
 
       // assert - error message should be gone (blank input is ignored)
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Run' })).toBeEnabled()
+    })
+
+    it('Should display error message when invalid character in parameter name', async () => {
+      // act - edit parameter name to create invalid character
+      const nameInput = screen.getAllByRole('textbox')[0]
+      await user.clear(nameInput)
+      await user.type(nameInput, 'Ty#:()|,~{{}}@[[]]:=!+&*?pe')
+
+      // assert - check error message is displayed
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        'Parameter name cannot contain special characters: "#", ":", "<", ">", "(", ")", "|", ",", "~", "{", "}", "@", "[", "]", ";", "=", "!", "+", "&", "*", "?"',
+      )
+      expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
+
+      // act - clear the error by changing the name
+      await user.clear(nameInput)
+      await user.type(nameInput, 'Type')
+
+      // assert - error message should be gone
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Run' })).toBeEnabled()
+    })
+
+    it('Should display error message when invalid character in parameter values', async () => {
+      // act - edit parameter name to create invalid character
+      const nameInput = screen.getAllByRole('textbox')[1]
+      await user.clear(nameInput)
+      await user.type(nameInput, 'Type, a#:,{{}}@[[]]=!+&*?')
+      // assert - check error message is displayed
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        'Parameter values cannot contain special characters: "#", ":", "{", "}", "@", "[", "]", ";", "=", "!", "+", "&", "*", "?"',
+      )
+      expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
+
+      // act - clear the error by changing the name
+      await user.clear(nameInput)
+      await user.type(nameInput, 'Type, A | B, C(3), ~D')
+
+      // assert - error message should be gone
       expect(screen.queryByRole('alert')).not.toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Run' })).toBeEnabled()
     })
@@ -543,7 +586,7 @@ describe('AppMain', () => {
         },
         {
           name: 'Cluster size',
-          values: 'Quick, Slow',
+          values: '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
         },
         { name: 'Compression', values: 'ON, OFF' },
       ])
@@ -576,7 +619,7 @@ describe('AppMain', () => {
         },
         {
           name: 'Cluster size',
-          values: 'Quick, Slow',
+          values: '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
         },
         { name: 'Compression', values: 'ON, OFF' },
         // empty row is ignored
@@ -610,7 +653,7 @@ describe('AppMain', () => {
         },
         {
           name: 'Cluster size',
-          values: 'Quick, Slow',
+          values: '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
         },
       ])
     })
@@ -644,7 +687,7 @@ describe('AppMain', () => {
         },
         {
           name: 'Cluster size',
-          values: 'Quick, Slow',
+          values: '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
         },
         { name: 'Compression', values: 'ON, OFF' },
       ])
@@ -675,7 +718,7 @@ describe('AppMain', () => {
         },
         {
           name: 'Cluster size',
-          values: 'Quick, Slow',
+          values: '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
         },
         { name: 'Compression', values: 'ON, OFF' },
       ])
@@ -706,7 +749,7 @@ describe('AppMain', () => {
         },
         {
           name: 'Cluster size',
-          values: 'Quick, Slow',
+          values: '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
         },
         { name: 'Compression', values: 'ON, OFF' },
       ])

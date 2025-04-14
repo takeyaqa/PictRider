@@ -2,7 +2,8 @@ export interface PictParameter {
   id: string
   name: string
   values: string
-  isValid: boolean
+  isValidName: boolean
+  isValidValues: boolean
 }
 
 export interface PictCondition {

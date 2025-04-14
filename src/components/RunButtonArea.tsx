@@ -11,7 +11,9 @@ function RunButtonArea({
   pictRunnerLoaded,
   onClickRun,
 }: RunButtonAreaProps) {
-  const containsInvalidValues = parameters.some((p) => !p.isValid)
+  const containsInvalidValues = parameters.some(
+    (p) => !p.isValidName || !p.isValidValues,
+  )
   return (
     <section className="mx-10 my-10">
       <div>

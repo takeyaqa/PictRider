@@ -23,11 +23,11 @@ test('should display result after clicking Run (default values)', async ({
   await expect(headerRow.getByRole('cell').nth(1)).toHaveText('Type')
   await expect(headerRow.getByRole('cell').nth(4)).toHaveText('File system')
   const firstDataRow = table.getByRole('row').nth(1)
-  await expect(firstDataRow.getByRole('cell').nth(1)).toHaveText('Mirror')
+  await expect(firstDataRow.getByRole('cell').nth(1)).toHaveText('Span')
   await expect(firstDataRow.getByRole('cell').nth(6)).toHaveText('OFF')
-  const lastDataRow = table.getByRole('row').nth(35)
-  await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('Quick')
-  await expect(lastDataRow.getByRole('cell').nth(4)).toHaveText('FAT')
+  const lastDataRow = table.getByRole('row').nth(56)
+  await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('Slow')
+  await expect(lastDataRow.getByRole('cell').nth(4)).toHaveText('NTFS')
 })
 
 test('should display result after clicking Run (edit values)', async ({
@@ -51,12 +51,12 @@ test('should display result after clicking Run (edit values)', async ({
     .getByRole('textbox')
     .nth(5)
     .fill('表ポあA鷗ŒéＢ逍Üßªąñ丂㐀𠀀, 캄사함니다')
-  await page.getByRole('textbox').nth(6).fill('(╯°□°）╯︵ ┻━┻)')
+  await page.getByRole('textbox').nth(6).fill('╯°□°）╯︵ ┻━┻')
   await page
     .getByRole('textbox')
     .nth(7)
     .fill('👾 🙇 💁 🙅 🙆 🙋 🙎 🙍, ✋🏿 💪🏿 👐🏿 🙌🏿 👏🏿 🙏🏿, 🇺🇸🇷🇺🇸🇦')
-  await page.getByRole('textbox').nth(8).fill('<script>alert(0)</script>')
+  await page.getByRole('textbox').nth(8).fill('script alert0 /script')
   await page.getByRole('textbox').nth(9).fill('مرحبًا, בְּרֵאשִׁית')
 
   // act
@@ -70,9 +70,9 @@ test('should display result after clicking Run (edit values)', async ({
   await expect(headerRow.getByRole('cell').nth(3)).toHaveText(
     '社會科學院語學研究所',
   )
-  await expect(headerRow.getByRole('cell').nth(4)).toHaveText('(╯°□°）╯︵ ┻━┻)')
+  await expect(headerRow.getByRole('cell').nth(4)).toHaveText('╯°□°）╯︵ ┻━┻')
   await expect(headerRow.getByRole('cell').nth(5)).toHaveText(
-    '<script>alert(0)</script>',
+    'script alert0 /script',
   )
   const row1 = table.getByRole('row').nth(1)
   await expect(row1.getByRole('cell').nth(1)).toHaveText('false')
@@ -146,9 +146,9 @@ test('should display result after clicking Run with constraints', async ({
   await expect(headerRow.getByRole('cell').nth(1)).toHaveText('Type')
   await expect(headerRow.getByRole('cell').nth(4)).toHaveText('File system')
   const firstDataRow = table.getByRole('row').nth(1)
-  await expect(firstDataRow.getByRole('cell').nth(1)).toHaveText('Mirror')
+  await expect(firstDataRow.getByRole('cell').nth(1)).toHaveText('Stripe')
   await expect(firstDataRow.getByRole('cell').nth(6)).toHaveText('OFF')
-  const lastDataRow = table.getByRole('row').nth(35)
+  const lastDataRow = table.getByRole('row').nth(56)
   await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('Quick')
-  await expect(lastDataRow.getByRole('cell').nth(4)).toHaveText('NTFS')
+  await expect(lastDataRow.getByRole('cell').nth(4)).toHaveText('FAT')
 })

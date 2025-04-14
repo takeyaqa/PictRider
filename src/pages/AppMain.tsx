@@ -17,6 +17,62 @@ import {
 } from '../types'
 import { getInitialParameters } from '../initial-parameters'
 
+const invalidParameterNameCharacters = [
+  '#', // comments identifier, constraints operator
+  ':', // parameter and values separator
+  '<', // values reference identifier, constraints operator
+  '>', // values reference identifier, constraints operator
+  '(', // values weight identifier
+  ')', // values weight identifier
+  '|', // values alias identifier
+  ',', // values separator
+  '~', // values negation identifier
+  '{', // sub-models identifier
+  '}', // sub-models identifier
+  '@', // sub-models identifier
+  '[', // constraints parameter identifier
+  ']', // constraints parameter identifier
+  ';', // constraints terminator
+  '=', // constraints operator
+  '!', // constraints operator
+  '+', // constraints operator
+  '&', // constraints operator
+  '*', // pattern string wildcard
+  '?', // pattern string wildcard
+]
+
+const invalidParameterValuesCharacters = [
+  '#', // comments identifier, constraints operator
+  ':', // parameter and values separator
+  '{', // sub-models identifier
+  '}', // sub-models identifier
+  '@', // sub-models identifier
+  '[', // constraints parameter identifier
+  ']', // constraints parameter identifier
+  ';', // constraints terminator
+  '=', // constraints operator
+  '!', // constraints operator
+  '+', // constraints operator
+  '&', // constraints operator
+  '*', // pattern string wildcard
+  '?', // pattern string wildcard
+]
+
+const invalidConstraintCharacters = [
+  ':', // parameter and values separator
+  '(', // values weight identifier
+  ')', // values weight identifier
+  '|', // values alias identifier
+  ',', // values separator
+  '~', // values negation identifier
+  '{', // sub-models identifier
+  '}', // sub-models identifier
+  '@', // sub-models identifier
+  '[', // constraints parameter identifier
+  ']', // constraints parameter identifier
+  ';', // constraints terminator
+]
+
 interface AppMainProps {
   pictRunnerInjection?: PictRunner // use for testing
 }
@@ -25,7 +81,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   const [parameters, setParameters] = useState<PictParameter[]>([
     ...getInitialParameters(),
   ])
-  const [parameterError, setParameterError] = useState('')
+  const [parameterError, setParameterError] = useState<string[]>([])
   const [constraints, setConstraints] = useState([
     createConstraintFromParameters(parameters),
   ])
@@ -59,11 +115,18 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   ) {
     // Update the parameter value
     const newParameters = [...parameters]
+
+    // Reset validation flags
+    for (const parameter of newParameters) {
+      parameter.isValidName = true
+      parameter.isValidValues = true
+    }
     const newParameter = newParameters.find((p) => p.id === id)
     if (!newParameter) {
       return
     }
     newParameter[field] = e.target.value
+    const errors: string[] = []
 
     // Check for duplicate parameter
     if (field === 'name') {
@@ -74,19 +137,45 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       if (duplicates.length > 0) {
         for (const parameter of newParameters) {
           if (duplicates.includes(parameter.name)) {
-            parameter.isValid = false
-          } else {
-            parameter.isValid = true
+            parameter.isValidName = false
           }
         }
-        setParameterError('Parameter names must be unique.')
-      } else {
-        for (const parameter of newParameters) {
-          parameter.isValid = true
-        }
-        setParameterError('')
+        errors.push('Parameter names must be unique.')
       }
     }
+
+    // Check for invalid characters
+    let invalidParameterName = false
+    let invalidParameterValues = false
+    for (const parameter of newParameters) {
+      if (
+        invalidParameterNameCharacters.some((char) =>
+          parameter.name.includes(char),
+        )
+      ) {
+        parameter.isValidName = false
+        invalidParameterName = true
+      }
+      if (
+        invalidParameterValuesCharacters.some((char) =>
+          parameter.values.includes(char),
+        )
+      ) {
+        parameter.isValidValues = false
+        invalidParameterValues = true
+      }
+    }
+    if (invalidParameterName) {
+      errors.push(
+        `Parameter name cannot contain special characters: ${invalidParameterNameCharacters.map((s) => `"${s}"`).join(', ')}`,
+      )
+    }
+    if (invalidParameterValues) {
+      errors.push(
+        `Parameter values cannot contain special characters: ${invalidParameterValuesCharacters.map((s) => `"${s}"`).join(', ')}`,
+      )
+    }
+    setParameterError(errors)
     setParameters(newParameters)
   }
 
@@ -173,7 +262,13 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       return
     }
 
-    const newParameter = { id: uuidv4(), name: '', values: '', isValid: true }
+    const newParameter = {
+      id: uuidv4(),
+      name: '',
+      values: '',
+      isValidName: true,
+      isValidValues: true,
+    }
     setParameters([...parameters, newParameter])
     const newConstraints = constraints.map((constraint) => ({
       ...constraint,
@@ -213,7 +308,8 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       id: uuidv4(),
       name: '',
       values: '',
-      isValid: true,
+      isValidName: true,
+      isValidValues: true,
     }))
     setParameters(emptyParameters)
   }
@@ -261,7 +357,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     <main className="bg-white">
       <ParametersArea
         parameters={parameters}
-        message={parameterError}
+        messages={parameterError}
         onInputChange={handleParameterInputChange}
         onAddRow={addParameterInputRow}
         onRemoveRow={removeParameterInputRow}
