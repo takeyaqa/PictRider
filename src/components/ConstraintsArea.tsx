@@ -6,6 +6,7 @@ interface ConstraintTableCell {
   ifOrThen: 'if' | 'then' | undefined
   predicate: string
   isIfWithPredicate: boolean
+  isValid: boolean
 }
 
 interface ConstraintTableRow {
@@ -31,12 +32,14 @@ function buildConstraintTable(
       const ifOrThen = condition?.ifOrThen
       const predicate = condition?.predicate ?? ''
       const isIfWithPredicate = ifOrThen === 'if' && predicate !== ''
+      const isValid = condition ? condition.isValid : true
 
       return {
         constraintId: constraint.id,
         ifOrThen,
         predicate,
         isIfWithPredicate,
+        isValid,
       }
     })
 
@@ -52,6 +55,7 @@ interface ConstraintsAreaProps {
   enabledConstraints: boolean
   parameters: PictParameter[]
   constraints: PictConstraint[]
+  messages: string[]
   onAddConstraint: () => void
   onRemoveConstraint: () => void
   onClickCondition: (constraintId: string, parameterId: string) => void
@@ -66,6 +70,7 @@ function ConstraintsArea({
   enabledConstraints,
   parameters,
   constraints,
+  messages,
   onAddConstraint,
   onRemoveConstraint,
   onClickCondition,
@@ -140,7 +145,11 @@ function ConstraintsArea({
                         <input
                           type="text"
                           name="constraint_condition"
-                          className="w-auto rounded border border-black bg-white px-1 py-1 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none"
+                          className={
+                            cell.isValid
+                              ? 'w-auto rounded border border-black bg-white px-1 py-1 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none'
+                              : 'w-auto rounded border border-red-500 bg-white px-1 py-1 focus:border-transparent focus:ring-3 focus:ring-red-500 focus:outline-none'
+                          }
                           autoComplete="off"
                           onChange={(e) => {
                             onChangeCondition(
@@ -165,6 +174,17 @@ function ConstraintsArea({
           {convertConstraintWrapper(constraints, parameters)}
         </pre>
       </div>
+      {messages.length > 0 && (
+        <div
+          className="mt-5 rounded-md border-2 border-red-400 bg-red-100 p-7 text-red-700"
+          role="alert"
+        >
+          {messages.map((message, index) => (
+            // eslint-disable-next-line react-x/no-array-index-key
+            <p key={index}>{message}</p>
+          ))}
+        </div>
+      )}
     </section>
   )
 }

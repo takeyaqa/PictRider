@@ -2,6 +2,7 @@ import { PictParameter } from '../types'
 
 interface ParametersAreaProps {
   parameters: PictParameter[]
+  messages: string[]
   onInputChange: (
     id: string,
     field: 'name' | 'values',
@@ -14,6 +15,7 @@ interface ParametersAreaProps {
 
 function ParametersArea({
   parameters,
+  messages,
   onInputChange,
   onAddRow,
   onRemoveRow,
@@ -65,7 +67,7 @@ function ParametersArea({
               type="text"
               name="parameter_name"
               className={
-                p.isValid
+                p.isValidName
                   ? 'w-full rounded border border-black bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none'
                   : 'w-full rounded border border-red-500 bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:ring-red-500 focus:outline-none'
               }
@@ -81,7 +83,11 @@ function ParametersArea({
             <input
               type="text"
               name="parameter_values"
-              className="w-full rounded border border-black bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none"
+              className={
+                p.isValidValues
+                  ? 'w-full rounded border border-black bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none'
+                  : 'w-full rounded border border-red-500 bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:ring-red-500 focus:outline-none'
+              }
               value={p.values}
               autoComplete="off"
               aria-labelledby="values_label"
@@ -92,6 +98,17 @@ function ParametersArea({
           </div>
         </div>
       ))}
+      {messages.length > 0 && (
+        <div
+          className="mt-5 rounded-md border-2 border-red-400 bg-red-100 p-7 text-red-700"
+          role="alert"
+        >
+          {messages.map((message, index) => (
+            // eslint-disable-next-line react-x/no-array-index-key
+            <p key={index}>{message}</p>
+          ))}
+        </div>
+      )}
     </section>
   )
 }

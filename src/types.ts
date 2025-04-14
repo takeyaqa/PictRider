@@ -2,13 +2,15 @@ export interface PictParameter {
   id: string
   name: string
   values: string
-  isValid: boolean
+  isValidName: boolean
+  isValidValues: boolean
 }
 
 export interface PictCondition {
   ifOrThen: 'if' | 'then'
   predicate: string
   parameterRef: PictParameter
+  isValid: boolean
 }
 
 export interface PictConstraint {
