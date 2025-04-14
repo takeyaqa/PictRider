@@ -104,6 +104,7 @@ function ParametersArea({
           role="alert"
         >
           {messages.map((message, index) => (
+            // eslint-disable-next-line react-x/no-array-index-key
             <p key={index}>{message}</p>
           ))}
         </div>

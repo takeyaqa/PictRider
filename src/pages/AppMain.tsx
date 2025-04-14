@@ -85,6 +85,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   const [constraints, setConstraints] = useState([
     createConstraintFromParameters(parameters),
   ])
+  const [constraintsError, setConstraintsError] = useState<string[]>([])
   const [enabledConstraints, setEnabledConstraints] = useState(false)
   const [output, setOutput] = useState<PictOutput | null>(null)
   const [errorMessage, setErrorMessage] = useState('')
@@ -199,6 +200,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         ifOrThen: 'if',
         predicate: '',
         parameterRef: p,
+        isValid: true,
       }
     })
     return { id: uuidv4(), conditions: conditions }
@@ -235,6 +237,33 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       parameterId,
     )
     newCondition.predicate = e.target.value
+    // Reset validation flags
+    for (const condition of newConstraints) {
+      for (const c of condition.conditions) {
+        c.isValid = true
+      }
+    }
+    // Check for invalid characters
+    const errors: string[] = []
+    let invalidConstraint = false
+    for (const constraint of newConstraints) {
+      for (const condition of constraint.conditions) {
+        if (
+          invalidConstraintCharacters.some((char) =>
+            condition.predicate.includes(char),
+          )
+        ) {
+          condition.isValid = false
+          invalidConstraint = true
+        }
+      }
+    }
+    if (invalidConstraint) {
+      errors.push(
+        `Constraints cannot contain special characters: ${invalidConstraintCharacters.map((s) => `"${s}"`).join(', ')}`,
+      )
+    }
+    setConstraintsError(errors)
     setConstraints(newConstraints)
   }
 
@@ -279,6 +308,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         ifOrThen: 'if',
         predicate: '',
         parameterRef: newParameter,
+        isValid: true,
       })
     }
     setConstraints(newConstraints)
@@ -371,6 +401,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         enabledConstraints={enabledConstraints}
         parameters={parameters}
         constraints={constraints}
+        messages={constraintsError}
         onAddConstraint={addConstraint}
         onRemoveConstraint={removeConstraint}
         onClickCondition={handleClickCondition}
@@ -378,6 +409,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       />
       <RunButtonArea
         parameters={parameters}
+        constraints={constraints}
         pictRunnerLoaded={pictRunnerLoaded}
         onClickRun={runPict}
       />

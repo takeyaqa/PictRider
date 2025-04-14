@@ -439,6 +439,35 @@ describe('AppMain', () => {
       expect(preElement).toBeInTheDocument()
     })
 
+    it('Should display alert when input is includes error', async () => {
+      // arrange - enable constraints area
+      await user.click(screen.getByLabelText('Constraints'))
+
+      // get the second 'if' button (for Size parameter) and change it to 'then'
+      const ifButtons = screen.getAllByRole('button', { name: 'if' })
+      await user.click(ifButtons[1])
+
+      // find all inputs in the constraints area
+      const constraintsTable = screen.getAllByRole('table')[0]
+      const inputs = constraintsTable.querySelectorAll('input[type="text"]')
+
+      // act - type predicates in both inputs
+
+      await user.type(inputs[0], '@')
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        'Constraints cannot contain special characters: ":", "(", ")", "|", ",", "~", "{", "}", "@", "[", "]", ";',
+      )
+      expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
+
+      // act - clear the error by changing the name
+      await user.clear(inputs[0])
+      await user.type(inputs[0], '<= 1000')
+
+      // assert - error message should be gone
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Run' })).toBeEnabled()
+    })
+
     it('Should display complex constraints with if/then conditions', async () => {
       // arrange - enable constraints area
       await user.click(screen.getByLabelText('Constraints'))
