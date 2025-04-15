@@ -152,3 +152,23 @@ test('should display result after clicking Run with constraints', async ({
   await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('Quick')
   await expect(lastDataRow.getByRole('cell').nth(4)).toHaveText('FAT')
 })
+
+test('should display result after clicking Run (combination 3)', async ({
+  page,
+}) => {
+  // arrange
+  await page.goto('/')
+
+  // act
+  await page
+    .getByRole('spinbutton', { name: 'Order of combinations' })
+    .fill('3')
+  await page.getByRole('button', { name: 'Run' }).click()
+
+  // assert
+  const table = page.getByRole('table', { name: 'Result' })
+  const lastDataRow = table.getByRole('row').nth(281)
+  await expect(lastDataRow.getByRole('cell').nth(0)).toHaveText('280')
+  await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('Slow')
+  await expect(lastDataRow.getByRole('cell').nth(4)).toHaveText('FAT32')
+})

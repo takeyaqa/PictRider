@@ -17,3 +17,7 @@ export interface Output {
   header: string[]
   body: string[][]
 }
+
+export interface Options {
+  orderOfCombinations: number
+}
