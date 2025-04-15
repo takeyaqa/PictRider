@@ -87,7 +87,6 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     createConstraintFromParameters(parameters),
   ])
   const [constraintsError, setConstraintsError] = useState<string[]>([])
-  // const [enabledConstraints, setEnabledConstraints] = useState(false)
   const [config, setConfig] = useState<PictConfig>({
     enableConstraints: false,
     orderOfCombinations: 2,
@@ -185,11 +184,30 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     setParameters(newParameters)
   }
 
-  function enableConstraintsArea() {
-    setConfig({
-      ...config,
-      enableConstraints: !config.enableConstraints,
-    })
+  function handleChangeConfig(
+    type: 'enableConstraints' | 'orderOfCombinations',
+    e?: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    const newConfig = { ...config }
+    switch (type) {
+      case 'enableConstraints': {
+        newConfig.enableConstraints = !config.enableConstraints
+        break
+      }
+      case 'orderOfCombinations': {
+        if (e) {
+          try {
+            if (e.target.value !== '') {
+              newConfig.orderOfCombinations = Number(e.target.value)
+            }
+          } catch {
+            newConfig.orderOfCombinations = 2
+          }
+        }
+        break
+      }
+    }
+    setConfig(newConfig)
   }
 
   function addConstraint() {
@@ -368,8 +386,13 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         })),
       }))
       const output = config.enableConstraints
-        ? pictRunner.current.run(fixedParameters, fixedConstraints)
-        : pictRunner.current.run(fixedParameters)
+        ? pictRunner.current.run(fixedParameters, {
+            constraints: fixedConstraints,
+            options: config,
+          })
+        : pictRunner.current.run(fixedParameters, {
+            options: config,
+          })
       const header = output.header.map((h, i) => {
         return { id: i, name: h }
       })
@@ -401,10 +424,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         onRemoveRow={removeParameterInputRow}
         onClearValues={clearAllParameterValues}
       />
-      <OptionsArea
-        config={config}
-        onEnableConstraintsArea={enableConstraintsArea}
-      />
+      <OptionsArea config={config} handleChangeConfig={handleChangeConfig} />
       <ConstraintsArea
         enabledConstraints={config.enableConstraints}
         parameters={parameters}

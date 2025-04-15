@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any */
-import { Parameter, Constraint, Output } from './pict-types'
+import { Parameter, Constraint, Output, Options } from './pict-types'
 import { printConstraints } from './pict-helper'
 // @ts-expect-error - no types available
 import createModule from './wasm/pict'
@@ -21,10 +21,20 @@ export class PictRunner {
     })
   }
 
-  public run(parameters: Parameter[], constraints?: Constraint[]): Output {
+  public run(
+    parameters: Parameter[],
+    {
+      constraints,
+      options,
+    }: {
+      constraints?: Constraint[]
+      options?: Options
+    },
+  ): Output {
     if (!this.pict) {
       throw new Error('PictRunner not initialized')
     }
+    // Build the model
     const parametersText = parameters
       .map((m) => `${m.name}: ${m.values}`)
       .join('\n')
@@ -36,7 +46,15 @@ export class PictRunner {
       ? `${parametersText}\n\n${constraintsText}`
       : parametersText
     this.pict.FS.writeFile('model.txt', model)
-    this.pict.callMain(['model.txt'])
+
+    // Set the options
+    const switches: string[] = []
+    if (options) {
+      if (options.orderOfCombinations) {
+        switches.push(`/o:${options.orderOfCombinations.toString()}`)
+      }
+    }
+    this.pict.callMain(['model.txt', ...switches])
     this.pict.FS.unlink('model.txt')
     const err = this.stderrCapture.getOuts()
     if (err) {
