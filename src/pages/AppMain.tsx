@@ -14,6 +14,7 @@ import {
   PictCondition,
   PictConstraint,
   PictOutput,
+  PictConfig,
 } from '../types'
 import { getInitialParameters } from '../initial-parameters'
 
@@ -86,7 +87,11 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     createConstraintFromParameters(parameters),
   ])
   const [constraintsError, setConstraintsError] = useState<string[]>([])
-  const [enabledConstraints, setEnabledConstraints] = useState(false)
+  // const [enabledConstraints, setEnabledConstraints] = useState(false)
+  const [config, setConfig] = useState<PictConfig>({
+    enableConstraints: false,
+    orderOfCombinations: 2,
+  })
   const [output, setOutput] = useState<PictOutput | null>(null)
   const [errorMessage, setErrorMessage] = useState('')
   const [pictRunnerLoaded, setPictRunnerLoaded] = useState(false)
@@ -181,7 +186,10 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   }
 
   function enableConstraintsArea() {
-    setEnabledConstraints(!enabledConstraints)
+    setConfig({
+      ...config,
+      enableConstraints: !config.enableConstraints,
+    })
   }
 
   function addConstraint() {
@@ -359,7 +367,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
           parameter: cond.parameterRef.name,
         })),
       }))
-      const output = enabledConstraints
+      const output = config.enableConstraints
         ? pictRunner.current.run(fixedParameters, fixedConstraints)
         : pictRunner.current.run(fixedParameters)
       const header = output.header.map((h, i) => {
@@ -394,11 +402,11 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         onClearValues={clearAllParameterValues}
       />
       <OptionsArea
-        enabledConstraints={enabledConstraints}
+        config={config}
         onEnableConstraintsArea={enableConstraintsArea}
       />
       <ConstraintsArea
-        enabledConstraints={enabledConstraints}
+        enabledConstraints={config.enableConstraints}
         parameters={parameters}
         constraints={constraints}
         messages={constraintsError}
