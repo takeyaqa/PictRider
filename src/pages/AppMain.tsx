@@ -16,6 +16,14 @@ import {
   PictOutput,
   PictConfig,
 } from '../types'
+
+// Interface for the combined state
+interface PictModelState {
+  parameters: PictParameter[]
+  parameterError: string[]
+  constraints: PictConstraint[]
+  constraintsError: string[]
+}
 import { getInitialParameters } from '../initial-parameters'
 
 const invalidParameterNameCharacters = [
@@ -79,14 +87,15 @@ interface AppMainProps {
 }
 
 function AppMain({ pictRunnerInjection }: AppMainProps) {
-  const [parameters, setParameters] = useState<PictParameter[]>([
-    ...getInitialParameters(),
-  ])
-  const [parameterError, setParameterError] = useState<string[]>([])
-  const [constraints, setConstraints] = useState([
-    createConstraintFromParameters(parameters),
-  ])
-  const [constraintsError, setConstraintsError] = useState<string[]>([])
+  const [modelState, setModelState] = useState<PictModelState>(() => {
+    const initialParameters = [...getInitialParameters()]
+    return {
+      parameters: initialParameters,
+      parameterError: [],
+      constraints: [createConstraintFromParameters(initialParameters)],
+      constraintsError: [],
+    }
+  })
   const [config, setConfig] = useState<PictConfig>({
     enableConstraints: false,
     showModelFile: false,
@@ -120,7 +129,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
     // Update the parameter value
-    const newParameters = [...parameters]
+    const newParameters = [...modelState.parameters]
 
     // Reset validation flags
     for (const parameter of newParameters) {
@@ -181,8 +190,12 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         `Parameter values cannot contain special characters: ${invalidParameterValuesCharacters.map((s) => `"${s}"`).join(', ')}`,
       )
     }
-    setParameterError(errors)
-    setParameters(newParameters)
+
+    setModelState({
+      ...modelState,
+      parameters: newParameters,
+      parameterError: errors,
+    })
   }
 
   function handleChangeConfig(
@@ -217,10 +230,16 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
 
   function addConstraint() {
     // Limit to maximum 50 constraints
-    if (constraints.length >= 50) {
+    if (modelState.constraints.length >= 50) {
       return
     }
-    setConstraints([...constraints, createConstraintFromParameters(parameters)])
+    setModelState({
+      ...modelState,
+      constraints: [
+        ...modelState.constraints,
+        createConstraintFromParameters(modelState.parameters),
+      ],
+    })
   }
 
   function createConstraintFromParameters(
@@ -238,22 +257,28 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   }
 
   function removeConstraint() {
-    if (constraints.length > 1) {
-      const newConstraints = [...constraints]
+    if (modelState.constraints.length > 1) {
+      const newConstraints = [...modelState.constraints]
       newConstraints.pop()
-      setConstraints(newConstraints)
+      setModelState({
+        ...modelState,
+        constraints: newConstraints,
+      })
     }
   }
 
   function handleClickCondition(constraintId: string, parameterId: string) {
-    const newConstraints = [...constraints]
+    const newConstraints = [...modelState.constraints]
     const newCondition = searchCondition(
       newConstraints,
       constraintId,
       parameterId,
     )
     newCondition.ifOrThen = newCondition.ifOrThen === 'if' ? 'then' : 'if'
-    setConstraints(newConstraints)
+    setModelState({
+      ...modelState,
+      constraints: newConstraints,
+    })
   }
 
   function handleChangeCondition(
@@ -261,7 +286,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     parameterId: string,
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
-    const newConstraints = [...constraints]
+    const newConstraints = [...modelState.constraints]
     const newCondition = searchCondition(
       newConstraints,
       constraintId,
@@ -294,8 +319,11 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         `Constraints cannot contain special characters: ${invalidConstraintCharacters.map((s) => `"${s}"`).join(', ')}`,
       )
     }
-    setConstraintsError(errors)
-    setConstraints(newConstraints)
+    setModelState({
+      ...modelState,
+      constraints: newConstraints,
+      constraintsError: errors,
+    })
   }
 
   function searchCondition(
@@ -318,7 +346,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
 
   function addParameterInputRow() {
     // Limit to maximum 50 rows
-    if (parameters.length >= 50) {
+    if (modelState.parameters.length >= 50) {
       return
     }
 
@@ -329,8 +357,8 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       isValidName: true,
       isValidValues: true,
     }
-    setParameters([...parameters, newParameter])
-    const newConstraints = constraints.map((constraint) => ({
+    const newParameters = [...modelState.parameters, newParameter]
+    const newConstraints = modelState.constraints.map((constraint) => ({
       ...constraint,
       conditions: constraint.conditions.map((condition) => ({ ...condition })),
     }))
@@ -342,15 +370,18 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         isValid: true,
       })
     }
-    setConstraints(newConstraints)
+    setModelState({
+      ...modelState,
+      parameters: newParameters,
+      constraints: newConstraints,
+    })
   }
 
   function removeParameterInputRow() {
-    if (parameters.length > 1) {
-      const newParameters = [...parameters]
+    if (modelState.parameters.length > 1) {
+      const newParameters = [...modelState.parameters]
       newParameters.pop()
-      setParameters(newParameters)
-      const newConstraints = constraints.map((constraint) => ({
+      const newConstraints = modelState.constraints.map((constraint) => ({
         ...constraint,
         conditions: constraint.conditions.map((condition) => ({
           ...condition,
@@ -360,19 +391,26 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       for (let i = 0; i < newConstraints.length; i++) {
         newConstraints[i].conditions.pop()
       }
-      setConstraints(newConstraints)
+      setModelState({
+        ...modelState,
+        parameters: newParameters,
+        constraints: newConstraints,
+      })
     }
   }
 
   function clearAllParameterValues() {
-    const emptyParameters = parameters.map(() => ({
+    const emptyParameters = modelState.parameters.map(() => ({
       id: uuidv4(),
       name: '',
       values: '',
       isValidName: true,
       isValidValues: true,
     }))
-    setParameters(emptyParameters)
+    setModelState({
+      ...modelState,
+      parameters: emptyParameters,
+    })
   }
 
   function runPict() {
@@ -380,10 +418,10 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       return
     }
     try {
-      const fixedParameters = parameters
+      const fixedParameters = modelState.parameters
         .filter((p) => p.name !== '' && p.values !== '')
         .map((p) => ({ name: p.name, values: p.values }))
-      const fixedConstraints = constraints.map((c) => ({
+      const fixedConstraints = modelState.constraints.map((c) => ({
         conditions: c.conditions.map((cond) => ({
           ifOrThen: cond.ifOrThen,
           predicate: cond.predicate,
@@ -422,8 +460,8 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   return (
     <main className="bg-white">
       <ParametersArea
-        parameters={parameters}
-        messages={parameterError}
+        parameters={modelState.parameters}
+        messages={modelState.parameterError}
         onInputChange={handleParameterInputChange}
         onAddRow={addParameterInputRow}
         onRemoveRow={removeParameterInputRow}
@@ -432,17 +470,17 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       <OptionsArea config={config} handleChangeConfig={handleChangeConfig} />
       <ConstraintsArea
         enabledConstraints={config.enableConstraints}
-        parameters={parameters}
-        constraints={constraints}
-        messages={constraintsError}
+        parameters={modelState.parameters}
+        constraints={modelState.constraints}
+        messages={modelState.constraintsError}
         onAddConstraint={addConstraint}
         onRemoveConstraint={removeConstraint}
         onClickCondition={handleClickCondition}
         onChangeCondition={handleChangeCondition}
       />
       <RunButtonArea
-        parameters={parameters}
-        constraints={constraints}
+        parameters={modelState.parameters}
+        constraints={modelState.constraints}
         pictRunnerLoaded={pictRunnerLoaded}
         onClickRun={runPict}
       />
