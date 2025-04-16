@@ -16,6 +16,7 @@ export interface Constraint {
 export interface Output {
   header: string[]
   body: string[][]
+  modelFile: string
 }
 
 export interface Options {

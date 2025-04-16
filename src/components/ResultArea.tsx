@@ -1,4 +1,4 @@
-import { PictOutput } from '../types'
+import { PictConfig, PictOutput } from '../types'
 
 function createCsvContent(output: PictOutput) {
   const headerRow = output.header.map((h) => `"${h.name}"`).join(',')
@@ -17,10 +17,11 @@ function createTsvContent(output: PictOutput) {
 }
 
 interface ResultAreaProps {
+  config: PictConfig
   output: PictOutput | null
 }
 
-function ResultArea({ output }: ResultAreaProps) {
+function ResultArea({ config, output }: ResultAreaProps) {
   function handleDownload(type: 'csv' | 'tsv') {
     if (!output) {
       return
@@ -47,8 +48,25 @@ function ResultArea({ output }: ResultAreaProps) {
     return null
   }
 
+  let modelFile = <></>
+  if (config.showModelFile) {
+    modelFile = (
+      <div>
+        <h2 className="text-xl font-bold" id="model_label">
+          Model File
+        </h2>
+        <div>
+          <pre className="my-3 rounded-md border-2 bg-white p-4 font-mono">
+            {output.modelFile}
+          </pre>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <section className="mx-2 mb-10 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
+      {modelFile}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-xl font-bold" id="result_heading">
           Result

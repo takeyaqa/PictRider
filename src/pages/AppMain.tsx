@@ -89,6 +89,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   const [constraintsError, setConstraintsError] = useState<string[]>([])
   const [config, setConfig] = useState<PictConfig>({
     enableConstraints: false,
+    showModelFile: false,
     orderOfCombinations: 2,
   })
   const [output, setOutput] = useState<PictOutput | null>(null)
@@ -185,13 +186,17 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   }
 
   function handleChangeConfig(
-    type: 'enableConstraints' | 'orderOfCombinations',
+    type: 'enableConstraints' | 'showModelFile' | 'orderOfCombinations',
     e?: React.ChangeEvent<HTMLInputElement>,
   ) {
     const newConfig = { ...config }
     switch (type) {
       case 'enableConstraints': {
         newConfig.enableConstraints = !config.enableConstraints
+        break
+      }
+      case 'showModelFile': {
+        newConfig.showModelFile = !config.showModelFile
         break
       }
       case 'orderOfCombinations': {
@@ -404,7 +409,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
           }),
         }
       })
-      setOutput({ header, body })
+      setOutput({ header, body, modelFile: output.modelFile })
       setErrorMessage('')
     } catch (e) {
       if (e instanceof Error) {
@@ -442,7 +447,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         onClickRun={runPict}
       />
       <ErrorMessageArea message={errorMessage} />
-      <ResultArea output={output} />
+      <ResultArea config={config} output={output} />
     </main>
   )
 }

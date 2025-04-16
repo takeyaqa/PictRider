@@ -65,7 +65,7 @@ export class PictRunner {
       .split('\n')
       .map((m) => m.split('\t'))
     this.stdoutCapture.clear()
-    return { header: out[0], body: out.slice(1) }
+    return { header: out[0], body: out.slice(1), modelFile: model }
   }
 }
 
