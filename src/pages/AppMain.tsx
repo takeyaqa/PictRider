@@ -17,6 +17,12 @@ import {
   PictConfig,
 } from '../types'
 
+// Interface for the combined output and error state
+interface PictResult {
+  output: PictOutput | null
+  errorMessage: string
+}
+
 // Interface for the combined state
 interface PictModelState {
   parameters: PictParameter[]
@@ -101,8 +107,10 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     showModelFile: false,
     orderOfCombinations: 2,
   })
-  const [output, setOutput] = useState<PictOutput | null>(null)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [result, setResult] = useState<PictResult>({
+    output: null,
+    errorMessage: '',
+  })
   const [pictRunnerLoaded, setPictRunnerLoaded] = useState(false)
   const pictRunner = useRef<PictRunner>(null)
 
@@ -447,12 +455,16 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
           }),
         }
       })
-      setOutput({ header, body, modelFile: output.modelFile })
-      setErrorMessage('')
+      setResult({
+        output: { header, body, modelFile: output.modelFile },
+        errorMessage: '',
+      })
     } catch (e) {
       if (e instanceof Error) {
-        setOutput(null)
-        setErrorMessage(e.message)
+        setResult({
+          output: null,
+          errorMessage: e.message,
+        })
       }
     }
   }
@@ -484,8 +496,8 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         pictRunnerLoaded={pictRunnerLoaded}
         onClickRun={runPict}
       />
-      <ErrorMessageArea message={errorMessage} />
-      <ResultArea config={config} output={output} />
+      <ErrorMessageArea message={result.errorMessage} />
+      <ResultArea config={config} output={result.output} />
     </main>
   )
 }
