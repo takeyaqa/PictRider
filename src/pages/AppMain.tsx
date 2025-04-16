@@ -418,6 +418,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     setModelState({
       ...modelState,
       parameters: emptyParameters,
+      constraints: [createConstraintFromParameters(emptyParameters)],
     })
   }
 
