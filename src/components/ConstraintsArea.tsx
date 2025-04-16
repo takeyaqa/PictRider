@@ -1,5 +1,5 @@
 import { PictParameter, PictConstraint, PictConfig } from '../types'
-import { convertConstraintWrapper } from '../helpers'
+import { printConstraints } from '../pict/pict-helper'
 
 interface ConstraintTableCell {
   constraintId: string
@@ -49,6 +49,22 @@ function buildConstraintTable(
       cells,
     }
   })
+}
+
+function convertConstraintWrapper(
+  constraints: PictConstraint[],
+  parameters: PictParameter[],
+): string {
+  return printConstraints(
+    constraints.map((c) => ({
+      conditions: c.conditions.map((cond) => ({
+        ifOrThen: cond.ifOrThen,
+        predicate: cond.predicate,
+        parameter: cond.parameterRef.name,
+      })),
+    })),
+    parameters.map((p) => p.name),
+  )
 }
 
 interface ConstraintsAreaProps {
