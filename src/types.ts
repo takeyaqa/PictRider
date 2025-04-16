@@ -21,9 +21,11 @@ export interface PictConstraint {
 export interface PictOutput {
   header: { id: number; name: string }[]
   body: { id: number; values: { id: number; value: string }[] }[]
+  modelFile: string
 }
 
 export interface PictConfig {
   enableConstraints: boolean
+  showModelFile: boolean
   orderOfCombinations: number
 }

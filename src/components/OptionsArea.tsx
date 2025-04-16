@@ -3,7 +3,7 @@ import { PictConfig } from '../types'
 interface OptionsAreaProps {
   config: PictConfig
   handleChangeConfig: (
-    type: 'enableConstraints' | 'orderOfCombinations',
+    type: 'enableConstraints' | 'showModelFile' | 'orderOfCombinations',
     e?: React.ChangeEvent<HTMLInputElement>,
   ) => void
 }
@@ -26,6 +26,21 @@ function OptionsArea({ config, handleChangeConfig }: OptionsAreaProps) {
               }}
             />
             Constraints
+          </label>
+        </div>
+        <div>
+          <label className="cursor-pointer" htmlFor="show-model-file-button">
+            <input
+              type="checkbox"
+              className="mr-1 cursor-pointer rounded"
+              id="show-model-file-button"
+              autoComplete="off"
+              checked={config.showModelFile}
+              onChange={() => {
+                handleChangeConfig('showModelFile')
+              }}
+            />
+            Show model file
           </label>
         </div>
         <div>

@@ -172,3 +172,18 @@ test('should display result after clicking Run (combination 3)', async ({
   await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('Slow')
   await expect(lastDataRow.getByRole('cell').nth(4)).toHaveText('FAT32')
 })
+
+test('should display result after clicking Run (with display model file)', async ({
+  page,
+}) => {
+  // arrange
+  await page.goto('/')
+
+  // act
+  await page.getByRole('checkbox', { name: 'Show model file' }).click()
+  await page.getByRole('button', { name: 'Run' }).click()
+
+  // assert
+  await expect(page.getByRole('heading', { name: 'Model File' })).toBeVisible()
+  await expect(page.getByRole('table', { name: 'Result' })).toBeVisible()
+})
