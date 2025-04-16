@@ -469,7 +469,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       />
       <OptionsArea config={config} handleChangeConfig={handleChangeConfig} />
       <ConstraintsArea
-        enabledConstraints={config.enableConstraints}
+        config={config}
         parameters={modelState.parameters}
         constraints={modelState.constraints}
         messages={modelState.constraintsError}

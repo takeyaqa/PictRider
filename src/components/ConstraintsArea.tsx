@@ -1,4 +1,4 @@
-import { PictParameter, PictConstraint } from '../types'
+import { PictParameter, PictConstraint, PictConfig } from '../types'
 import { convertConstraintWrapper } from '../helpers'
 
 interface ConstraintTableCell {
@@ -52,7 +52,7 @@ function buildConstraintTable(
 }
 
 interface ConstraintsAreaProps {
-  enabledConstraints: boolean
+  config: PictConfig
   parameters: PictParameter[]
   constraints: PictConstraint[]
   messages: string[]
@@ -67,7 +67,7 @@ interface ConstraintsAreaProps {
 }
 
 function ConstraintsArea({
-  enabledConstraints,
+  config,
   parameters,
   constraints,
   messages,
@@ -76,7 +76,7 @@ function ConstraintsArea({
   onClickCondition,
   onChangeCondition,
 }: ConstraintsAreaProps) {
-  if (!enabledConstraints) {
+  if (!config.enableConstraints) {
     return null
   }
   return (
