@@ -80,14 +80,14 @@ interface ConstraintsAreaProps {
   parameters: PictParameter[]
   constraints: PictConstraint[]
   messages: string[]
-  onAddConstraint: () => void
-  onRemoveConstraint: () => void
-  onClickCondition: (constraintId: string, parameterId: string) => void
-  onChangeCondition: (
+  handleToggleCondition: (constraintId: string, parameterId: string) => void
+  handleChangeCondition: (
     constraintId: string,
     parameterId: string,
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
+  handleClickAddConstraint: () => void
+  handleClickRemoveConstraint: () => void
 }
 
 function ConstraintsArea({
@@ -95,10 +95,10 @@ function ConstraintsArea({
   parameters,
   constraints,
   messages,
-  onAddConstraint,
-  onRemoveConstraint,
-  onClickCondition,
-  onChangeCondition,
+  handleToggleCondition,
+  handleChangeCondition,
+  handleClickAddConstraint,
+  handleClickRemoveConstraint,
 }: ConstraintsAreaProps) {
   if (!config.enableConstraints) {
     return null
@@ -113,7 +113,7 @@ function ConstraintsArea({
           <button
             type="button"
             className="w-25 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-50"
-            onClick={onAddConstraint}
+            onClick={handleClickAddConstraint}
             disabled={constraints.length >= 50}
           >
             Add Constraint
@@ -121,7 +121,7 @@ function ConstraintsArea({
           <button
             type="button"
             className="w-25 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-50"
-            onClick={onRemoveConstraint}
+            onClick={handleClickRemoveConstraint}
             disabled={constraints.length <= 1}
           >
             Remove Constraint
@@ -161,7 +161,10 @@ function ConstraintsArea({
                           type="button"
                           className="w-15 cursor-pointer rounded bg-gray-500 px-3 py-1 font-mono text-sm text-white hover:bg-gray-600"
                           onClick={() => {
-                            onClickCondition(cell.constraintId, row.parameterId)
+                            handleToggleCondition(
+                              cell.constraintId,
+                              row.parameterId,
+                            )
                           }}
                         >
                           {cell.ifOrThen}
@@ -176,7 +179,7 @@ function ConstraintsArea({
                           }
                           autoComplete="off"
                           onChange={(e) => {
-                            onChangeCondition(
+                            handleChangeCondition(
                               cell.constraintId,
                               row.parameterId,
                               e,

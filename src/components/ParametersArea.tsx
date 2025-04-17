@@ -3,23 +3,23 @@ import { PictParameter } from '../types'
 interface ParametersAreaProps {
   parameters: PictParameter[]
   messages: string[]
-  onInputChange: (
+  handleChangeParameter: (
     id: string,
     field: 'name' | 'values',
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
-  onAddRow: () => void
-  onRemoveRow: () => void
-  onClearValues: () => void
+  handleClickAddRow: () => void
+  handleClickRemoveRow: () => void
+  handleClickClear: () => void
 }
 
 function ParametersArea({
   parameters,
   messages,
-  onInputChange,
-  onAddRow,
-  onRemoveRow,
-  onClearValues,
+  handleChangeParameter,
+  handleClickAddRow,
+  handleClickRemoveRow,
+  handleClickClear,
 }: ParametersAreaProps) {
   return (
     <section className="mx-2 mt-5 mb-5 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
@@ -38,7 +38,7 @@ function ParametersArea({
           <button
             type="button"
             className="w-20 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-30"
-            onClick={onAddRow}
+            onClick={handleClickAddRow}
             disabled={parameters.length >= 50}
           >
             Add Row
@@ -46,7 +46,7 @@ function ParametersArea({
           <button
             type="button"
             className="w-20 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-30"
-            onClick={onRemoveRow}
+            onClick={handleClickRemoveRow}
             disabled={parameters.length <= 1}
           >
             Remove Row
@@ -54,7 +54,7 @@ function ParametersArea({
           <button
             type="button"
             className="w-20 cursor-pointer rounded bg-yellow-500 px-3 py-2 text-white hover:bg-yellow-600"
-            onClick={onClearValues}
+            onClick={handleClickClear}
           >
             Clear
           </button>
@@ -75,7 +75,7 @@ function ParametersArea({
               autoComplete="off"
               aria-labelledby="parameters_label"
               onChange={(e) => {
-                onInputChange(p.id, 'name', e)
+                handleChangeParameter(p.id, 'name', e)
               }}
             />
           </div>
@@ -92,7 +92,7 @@ function ParametersArea({
               autoComplete="off"
               aria-labelledby="values_label"
               onChange={(e) => {
-                onInputChange(p.id, 'values', e)
+                handleChangeParameter(p.id, 'values', e)
               }}
             />
           </div>

@@ -55,7 +55,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     loadPictRunner()
   }, [pictRunnerInjection])
 
-  function handleParameterInputChange(
+  function handleChangeParameter(
     id: string,
     field: 'name' | 'values',
     e: React.ChangeEvent<HTMLInputElement>,
@@ -66,19 +66,25 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     })
   }
 
-  function addConstraint() {
+  function handleClickAddRow() {
     dispatchModelState({
-      type: 'ADD_CONSTRAINT',
+      type: 'ADD_PARAMETER',
     })
   }
 
-  function removeConstraint() {
+  function handleClickRemoveRow() {
     dispatchModelState({
-      type: 'REMOVE_CONSTRAINT',
+      type: 'REMOVE_PARAMETER',
     })
   }
 
-  function handleClickCondition(constraintId: string, parameterId: string) {
+  function handleClickClear() {
+    dispatchModelState({
+      type: 'CLEAR',
+    })
+  }
+
+  function handleToggleCondition(constraintId: string, parameterId: string) {
     console.log('handleClickCondition', constraintId, parameterId)
     dispatchModelState({
       type: 'CLICK_CONSTRAINT',
@@ -97,21 +103,15 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     })
   }
 
-  function addParameterInputRow() {
+  function handleClickAddConstraint() {
     dispatchModelState({
-      type: 'ADD_PARAMETER',
+      type: 'ADD_CONSTRAINT',
     })
   }
 
-  function removeParameterInputRow() {
+  function handleClickRemoveConstraint() {
     dispatchModelState({
-      type: 'REMOVE_PARAMETER',
-    })
-  }
-
-  function clearAllParameterValues() {
-    dispatchModelState({
-      type: 'CLEAR',
+      type: 'REMOVE_CONSTRAINT',
     })
   }
 
@@ -208,10 +208,10 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       <ParametersArea
         parameters={modelState.parameters}
         messages={modelState.parameterErrors}
-        onInputChange={handleParameterInputChange}
-        onAddRow={addParameterInputRow}
-        onRemoveRow={removeParameterInputRow}
-        onClearValues={clearAllParameterValues}
+        handleChangeParameter={handleChangeParameter}
+        handleClickAddRow={handleClickAddRow}
+        handleClickRemoveRow={handleClickRemoveRow}
+        handleClickClear={handleClickClear}
       />
       <OptionsArea config={config} handleChangeConfig={handleChangeConfig} />
       <ConstraintsArea
@@ -219,10 +219,10 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         parameters={modelState.parameters}
         constraints={modelState.constraints}
         messages={modelState.constraintErrors}
-        onAddConstraint={addConstraint}
-        onRemoveConstraint={removeConstraint}
-        onClickCondition={handleClickCondition}
-        onChangeCondition={handleChangeCondition}
+        handleToggleCondition={handleToggleCondition}
+        handleChangeCondition={handleChangeCondition}
+        handleClickAddConstraint={handleClickAddConstraint}
+        handleClickRemoveConstraint={handleClickRemoveConstraint}
       />
       <RunButtonArea
         parameters={modelState.parameters}
