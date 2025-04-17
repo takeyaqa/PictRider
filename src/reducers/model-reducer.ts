@@ -66,7 +66,7 @@ interface PictModel {
 
 type ModelAction =
   | {
-      type: 'CHANGE_PARAMETER'
+      type: 'changeParameter'
       payload: {
         id: string
         field: 'name' | 'values'
@@ -74,14 +74,14 @@ type ModelAction =
       }
     }
   | {
-      type: 'CLICK_CONSTRAINT'
+      type: 'toggleCondition'
       payload: {
         constraintId: string
         parameterId: string
       }
     }
   | {
-      type: 'CHANGE_CONSTRAINT'
+      type: 'changeCondition'
       payload: {
         constraintId: string
         parameterId: string
@@ -90,11 +90,11 @@ type ModelAction =
     }
   | {
       type:
-        | 'ADD_PARAMETER'
-        | 'REMOVE_PARAMETER'
-        | 'CLEAR'
-        | 'ADD_CONSTRAINT'
-        | 'REMOVE_CONSTRAINT'
+        | 'clickAddRow'
+        | 'clickRemoveRow'
+        | 'clickClear'
+        | 'clickAddConstraint'
+        | 'clickRemoveConstraint'
     }
 
 export function modelReducer(state: PictModel, action: ModelAction): PictModel {
@@ -112,7 +112,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
   const newConstraintErrors = [...state.constraintErrors]
 
   switch (action.type) {
-    case 'CHANGE_PARAMETER': {
+    case 'changeParameter': {
       const { id, field, e } = action.payload
       // Reset validation flags
       for (const parameter of newParameters) {
@@ -187,7 +187,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       }
     }
 
-    case 'ADD_PARAMETER': {
+    case 'clickAddRow': {
       // Limit to maximum 50 rows
       if (state.parameters.length >= 50) {
         return {
@@ -221,7 +221,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       }
     }
 
-    case 'REMOVE_PARAMETER': {
+    case 'clickRemoveRow': {
       console.log('REMOVE_PARAMETER')
       if (state.parameters.length <= 1) {
         return {
@@ -245,7 +245,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       }
     }
 
-    case 'CLEAR': {
+    case 'clickClear': {
       const emptyParameters = state.parameters.map(() => ({
         id: uuidv4(),
         name: '',
@@ -261,7 +261,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       }
     }
 
-    case 'CLICK_CONSTRAINT': {
+    case 'toggleCondition': {
       const { constraintId, parameterId } = action.payload
       const newCondition = searchCondition(
         newConstraints,
@@ -278,7 +278,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       }
     }
 
-    case 'CHANGE_CONSTRAINT': {
+    case 'changeCondition': {
       const { constraintId, parameterId, e } = action.payload
       const newCondition = searchCondition(
         newConstraints,
@@ -320,7 +320,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       }
     }
 
-    case 'ADD_CONSTRAINT': {
+    case 'clickAddConstraint': {
       // Limit to maximum 50 constraints
       if (state.constraints.length >= 50) {
         return {
@@ -341,7 +341,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       }
     }
 
-    case 'REMOVE_CONSTRAINT': {
+    case 'clickRemoveConstraint': {
       if (state.constraints.length <= 1) {
         return {
           parameters: newParameters,

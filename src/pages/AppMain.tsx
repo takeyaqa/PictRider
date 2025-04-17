@@ -23,10 +23,7 @@ interface AppMainProps {
 }
 
 function AppMain({ pictRunnerInjection }: AppMainProps) {
-  const [modelState, dispatchModelState] = useReducer(
-    modelReducer,
-    getInitialModel(),
-  )
+  const [model, dispatchModel] = useReducer(modelReducer, getInitialModel())
   const [config, dispatchConfig] = useReducer(configReducer, getInitialConfig())
   const [result, setResult] = useState<PictResult>({
     output: null,
@@ -57,33 +54,33 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     field: 'name' | 'values',
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
-    dispatchModelState({
-      type: 'CHANGE_PARAMETER',
+    dispatchModel({
+      type: 'changeParameter',
       payload: { id, field, e },
     })
   }
 
   function handleClickAddRow() {
-    dispatchModelState({
-      type: 'ADD_PARAMETER',
+    dispatchModel({
+      type: 'clickAddRow',
     })
   }
 
   function handleClickRemoveRow() {
-    dispatchModelState({
-      type: 'REMOVE_PARAMETER',
+    dispatchModel({
+      type: 'clickRemoveRow',
     })
   }
 
   function handleClickClear() {
-    dispatchModelState({
-      type: 'CLEAR',
+    dispatchModel({
+      type: 'clickClear',
     })
   }
 
   function handleToggleCondition(constraintId: string, parameterId: string) {
-    dispatchModelState({
-      type: 'CLICK_CONSTRAINT',
+    dispatchModel({
+      type: 'toggleCondition',
       payload: { constraintId, parameterId },
     })
   }
@@ -93,21 +90,21 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     parameterId: string,
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
-    dispatchModelState({
-      type: 'CHANGE_CONSTRAINT',
+    dispatchModel({
+      type: 'changeCondition',
       payload: { constraintId, parameterId, e },
     })
   }
 
   function handleClickAddConstraint() {
-    dispatchModelState({
-      type: 'ADD_CONSTRAINT',
+    dispatchModel({
+      type: 'clickAddConstraint',
     })
   }
 
   function handleClickRemoveConstraint() {
-    dispatchModelState({
-      type: 'REMOVE_CONSTRAINT',
+    dispatchModel({
+      type: 'clickRemoveConstraint',
     })
   }
 
@@ -126,12 +123,12 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       return
     }
     try {
-      const fixedParameters = modelState.parameters
+      const fixedParameters = model.parameters
         .filter((p) => p.name !== '' && p.values !== '')
         .map((p) => ({ name: p.name, values: p.values }))
-      const fixedConstraints = modelState.constraints.map((c) => ({
+      const fixedConstraints = model.constraints.map((c) => ({
         conditions: c.conditions.map((cond) => {
-          const parameter = modelState.parameters.find(
+          const parameter = model.parameters.find(
             (p) => p.id === cond.parameterId,
           )
           if (!parameter) {
@@ -182,8 +179,8 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   return (
     <main className="bg-white">
       <ParametersArea
-        parameters={modelState.parameters}
-        messages={modelState.parameterErrors}
+        parameters={model.parameters}
+        messages={model.parameterErrors}
         handleChangeParameter={handleChangeParameter}
         handleClickAddRow={handleClickAddRow}
         handleClickRemoveRow={handleClickRemoveRow}
@@ -192,17 +189,17 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       <OptionsArea config={config} handleChangeConfig={handleChangeConfig} />
       <ConstraintsArea
         config={config}
-        parameters={modelState.parameters}
-        constraints={modelState.constraints}
-        messages={modelState.constraintErrors}
+        parameters={model.parameters}
+        constraints={model.constraints}
+        messages={model.constraintErrors}
         handleToggleCondition={handleToggleCondition}
         handleChangeCondition={handleChangeCondition}
         handleClickAddConstraint={handleClickAddConstraint}
         handleClickRemoveConstraint={handleClickRemoveConstraint}
       />
       <RunButtonArea
-        parameters={modelState.parameters}
-        constraints={modelState.constraints}
+        parameters={model.parameters}
+        constraints={model.constraints}
         pictRunnerLoaded={pictRunnerLoaded}
         onClickRun={runPict}
       />
