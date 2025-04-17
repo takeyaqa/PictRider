@@ -9,14 +9,13 @@ import {
   ResultArea,
 } from '../components'
 import { PictOutput, PictConfig } from '../types'
+import { getInitialModel, modelReducer } from '../reducers/model-reducer'
 
 // Interface for the combined output and error state
 interface PictResult {
   output: PictOutput | null
   errorMessage: string
 }
-
-import { getInitialModel, modelReducer } from '../reducers/model-reducer'
 
 interface AppMainProps {
   pictRunnerInjection?: PictRunner // use for testing
@@ -63,11 +62,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   ) {
     dispatchModelState({
       type: 'CHANGE_PARAMETER',
-      payload: {
-        id,
-        field,
-        e,
-      },
+      payload: { id, field, e },
     })
   }
 
@@ -87,10 +82,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     console.log('handleClickCondition', constraintId, parameterId)
     dispatchModelState({
       type: 'CLICK_CONSTRAINT',
-      payload: {
-        constraintId,
-        parameterId,
-      },
+      payload: { constraintId, parameterId },
     })
   }
 
@@ -101,11 +93,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   ) {
     dispatchModelState({
       type: 'CHANGE_CONSTRAINT',
-      payload: {
-        constraintId,
-        parameterId,
-        e,
-      },
+      payload: { constraintId, parameterId, e },
     })
   }
 
