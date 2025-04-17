@@ -154,11 +154,21 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         .filter((p) => p.name !== '' && p.values !== '')
         .map((p) => ({ name: p.name, values: p.values }))
       const fixedConstraints = modelState.constraints.map((c) => ({
-        conditions: c.conditions.map((cond) => ({
-          ifOrThen: cond.ifOrThen,
-          predicate: cond.predicate,
-          parameter: cond.parameterRef.name,
-        })),
+        conditions: c.conditions.map((cond) => {
+          const parameter = modelState.parameters.find(
+            (p) => p.id === cond.parameterId,
+          )
+          if (!parameter) {
+            throw new Error(
+              `Parameter not found for condition: ${cond.parameterId}`,
+            )
+          }
+          return {
+            ifOrThen: cond.ifOrThen,
+            predicate: cond.predicate,
+            parameter: parameter.name,
+          }
+        }),
       }))
       const output = config.enableConstraints
         ? pictRunner.current.run(fixedParameters, {
@@ -197,7 +207,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     <main className="bg-white">
       <ParametersArea
         parameters={modelState.parameters}
-        messages={modelState.parameterError}
+        messages={modelState.parameterErrors}
         onInputChange={handleParameterInputChange}
         onAddRow={addParameterInputRow}
         onRemoveRow={removeParameterInputRow}
@@ -208,7 +218,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         config={config}
         parameters={modelState.parameters}
         constraints={modelState.constraints}
-        messages={modelState.constraintsError}
+        messages={modelState.constraintErrors}
         onAddConstraint={addConstraint}
         onRemoveConstraint={removeConstraint}
         onClickCondition={handleClickCondition}

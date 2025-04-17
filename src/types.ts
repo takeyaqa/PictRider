@@ -9,7 +9,7 @@ export interface PictParameter {
 export interface PictCondition {
   ifOrThen: 'if' | 'then'
   predicate: string
-  parameterRef: PictParameter
+  parameterId: string
   isValid: boolean
 }
 

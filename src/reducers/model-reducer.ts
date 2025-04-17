@@ -59,9 +59,9 @@ const invalidConstraintCharacters = [
 
 interface PictModel {
   parameters: PictParameter[]
-  parameterError: string[]
   constraints: PictConstraint[]
-  constraintsError: string[]
+  parameterErrors: string[]
+  constraintErrors: string[]
 }
 
 type ModelAction =
@@ -98,12 +98,22 @@ type ModelAction =
     }
 
 export function modelReducer(state: PictModel, action: ModelAction): PictModel {
+  // Copy the state to avoid mutating it directly
+  const newParameters = state.parameters.map((parameter) => ({
+    ...parameter,
+  }))
+  const newConstraints = state.constraints.map((constraint) => ({
+    ...constraint,
+    conditions: constraint.conditions.map((condition) => ({
+      ...condition,
+    })),
+  }))
+  const newParameterErrors = [...state.parameterErrors]
+  const newConstraintErrors = [...state.constraintErrors]
+
   switch (action.type) {
     case 'CHANGE_PARAMETER': {
       const { id, field, e } = action.payload
-      // Update the parameter value
-      const newParameters = [...state.parameters]
-
       // Reset validation flags
       for (const parameter of newParameters) {
         parameter.isValidName = true
@@ -111,7 +121,12 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       }
       const newParameter = newParameters.find((p) => p.id === id)
       if (!newParameter) {
-        return { ...state }
+        return {
+          parameters: newParameters,
+          constraints: newConstraints,
+          parameterErrors: newParameterErrors,
+          constraintErrors: newConstraintErrors,
+        }
       }
       newParameter[field] = e.target.value
       const errors: string[] = []
@@ -165,16 +180,22 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       }
 
       return {
-        ...state,
         parameters: newParameters,
-        parameterError: errors,
+        constraints: newConstraints,
+        parameterErrors: errors,
+        constraintErrors: newConstraintErrors,
       }
     }
 
     case 'ADD_PARAMETER': {
       // Limit to maximum 50 rows
       if (state.parameters.length >= 50) {
-        return { ...state }
+        return {
+          parameters: newParameters,
+          constraints: newConstraints,
+          parameterErrors: newParameterErrors,
+          constraintErrors: newConstraintErrors,
+        }
       }
 
       const newParameter = {
@@ -184,50 +205,43 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
         isValidName: true,
         isValidValues: true,
       }
-      const newParameters = [...state.parameters, newParameter]
-      const newConstraints = state.constraints.map((constraint) => ({
-        ...constraint,
-        conditions: constraint.conditions.map((condition) => ({
-          ...condition,
-        })),
-      }))
       for (const newConstraint of newConstraints) {
         newConstraint.conditions.push({
           ifOrThen: 'if',
           predicate: '',
-          parameterRef: newParameter,
+          parameterId: newParameter.id,
           isValid: true,
         })
       }
       return {
-        ...state,
-        parameters: newParameters,
+        parameters: [...newParameters, newParameter],
         constraints: newConstraints,
+        parameterErrors: newParameterErrors,
+        constraintErrors: newConstraintErrors,
       }
     }
 
     case 'REMOVE_PARAMETER': {
       console.log('REMOVE_PARAMETER')
       if (state.parameters.length <= 1) {
-        return { ...state }
+        return {
+          parameters: newParameters,
+          constraints: newConstraints,
+          parameterErrors: newParameterErrors,
+          constraintErrors: newConstraintErrors,
+        }
       }
 
-      const newParameters = [...state.parameters]
       newParameters.pop()
-      const newConstraints = state.constraints.map((constraint) => ({
-        ...constraint,
-        conditions: constraint.conditions.map((condition) => ({
-          ...condition,
-        })),
-      }))
       // eslint-disable-next-line @typescript-eslint/prefer-for-of
       for (let i = 0; i < newConstraints.length; i++) {
         newConstraints[i].conditions.pop()
       }
       return {
-        ...state,
         parameters: newParameters,
         constraints: newConstraints,
+        parameterErrors: newParameterErrors,
+        constraintErrors: newConstraintErrors,
       }
     }
 
@@ -240,21 +254,15 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
         isValidValues: true,
       }))
       return {
-        ...state,
         parameters: emptyParameters,
         constraints: [createConstraintFromParameters(emptyParameters)],
+        parameterErrors: [],
+        constraintErrors: [],
       }
     }
 
     case 'CLICK_CONSTRAINT': {
       const { constraintId, parameterId } = action.payload
-      console.log('CLICK_CONSTRAINT', constraintId, parameterId)
-      const newConstraints = state.constraints.map((constraint) => ({
-        ...constraint,
-        conditions: constraint.conditions.map((condition) => ({
-          ...condition,
-        })),
-      }))
       const newCondition = searchCondition(
         newConstraints,
         constraintId,
@@ -262,22 +270,16 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       )
       newCondition.ifOrThen = newCondition.ifOrThen === 'if' ? 'then' : 'if'
 
-      console.log('constraints', state.constraints)
-      console.log('newConstraints', newConstraints)
       return {
-        ...state,
+        parameters: newParameters,
         constraints: newConstraints,
+        parameterErrors: newParameterErrors,
+        constraintErrors: newConstraintErrors,
       }
     }
 
     case 'CHANGE_CONSTRAINT': {
       const { constraintId, parameterId, e } = action.payload
-      const newConstraints = state.constraints.map((constraint) => ({
-        ...constraint,
-        conditions: constraint.conditions.map((condition) => ({
-          ...condition,
-        })),
-      }))
       const newCondition = searchCondition(
         newConstraints,
         constraintId,
@@ -311,35 +313,49 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
         )
       }
       return {
-        ...state,
+        parameters: newParameters,
         constraints: newConstraints,
-        constraintsError: errors,
+        parameterErrors: newParameterErrors,
+        constraintErrors: errors,
       }
     }
 
     case 'ADD_CONSTRAINT': {
       // Limit to maximum 50 constraints
       if (state.constraints.length >= 50) {
-        return { ...state }
+        return {
+          parameters: newParameters,
+          constraints: newConstraints,
+          parameterErrors: newParameterErrors,
+          constraintErrors: newConstraintErrors,
+        }
       }
       return {
-        ...state,
+        parameters: newParameters,
         constraints: [
-          ...state.constraints,
+          ...newConstraints,
           createConstraintFromParameters(state.parameters),
         ],
+        parameterErrors: newParameterErrors,
+        constraintErrors: newConstraintErrors,
       }
     }
 
     case 'REMOVE_CONSTRAINT': {
       if (state.constraints.length <= 1) {
-        return { ...state }
+        return {
+          parameters: newParameters,
+          constraints: newConstraints,
+          parameterErrors: newParameterErrors,
+          constraintErrors: newConstraintErrors,
+        }
       }
-      const newConstraints = [...state.constraints]
       newConstraints.pop()
       return {
-        ...state,
+        parameters: newParameters,
         constraints: newConstraints,
+        parameterErrors: newParameterErrors,
+        constraintErrors: newConstraintErrors,
       }
     }
   }
@@ -392,9 +408,9 @@ export function getInitialModel(): PictModel {
   ]
   return {
     parameters: initialParameters,
-    parameterError: [],
+    parameterErrors: [],
     constraints: [createConstraintFromParameters(initialParameters)],
-    constraintsError: [],
+    constraintErrors: [],
   }
 }
 
@@ -405,7 +421,7 @@ function createConstraintFromParameters(
     return {
       ifOrThen: 'if',
       predicate: '',
-      parameterRef: p,
+      parameterId: p.id,
       isValid: true,
     }
   })
@@ -422,7 +438,7 @@ function searchCondition(
     throw new Error('Constraint not found')
   }
   const condition = constraint.conditions.find(
-    (p) => p.parameterRef.id === parameterId,
+    (p) => p.parameterId === parameterId,
   )
   if (!condition) {
     throw new Error('Condition not found')

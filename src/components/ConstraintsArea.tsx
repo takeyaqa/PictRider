@@ -26,7 +26,7 @@ function buildConstraintTable(
   return parameters.map((parameter) => {
     const cells = constraints.map((constraint) => {
       const condition = constraint.conditions.find(
-        (cond) => cond.parameterRef.id === parameter.id,
+        (cond) => cond.parameterId === parameter.id,
       )
 
       const ifOrThen = condition?.ifOrThen
@@ -57,11 +57,19 @@ function convertConstraintWrapper(
 ): string {
   return printConstraints(
     constraints.map((c) => ({
-      conditions: c.conditions.map((cond) => ({
-        ifOrThen: cond.ifOrThen,
-        predicate: cond.predicate,
-        parameter: cond.parameterRef.name,
-      })),
+      conditions: c.conditions.map((cond) => {
+        const parameter = parameters.find((p) => p.id === cond.parameterId)
+        if (!parameter) {
+          throw new Error(
+            `Parameter not found for condition: ${cond.parameterId}`,
+          )
+        }
+        return {
+          ifOrThen: cond.ifOrThen,
+          predicate: cond.predicate,
+          parameter: parameter.name,
+        }
+      }),
     })),
     parameters.map((p) => p.name),
   )
