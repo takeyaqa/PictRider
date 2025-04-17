@@ -8,8 +8,9 @@ import {
   ErrorMessageArea,
   ResultArea,
 } from '../components'
-import { PictOutput, PictConfig } from '../types'
+import { PictOutput } from '../types'
 import { getInitialModel, modelReducer } from '../reducers/model-reducer'
+import { configReducer, getInitialConfig } from '../reducers/config-reducer'
 
 // Interface for the combined output and error state
 interface PictResult {
@@ -26,11 +27,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     modelReducer,
     getInitialModel(),
   )
-  const [config, setConfig] = useState<PictConfig>({
-    enableConstraints: false,
-    showModelFile: false,
-    orderOfCombinations: 2,
-  })
+  const [config, dispatchConfig] = useReducer(configReducer, getInitialConfig())
   const [result, setResult] = useState<PictResult>({
     output: null,
     errorMessage: '',
@@ -85,7 +82,6 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   }
 
   function handleToggleCondition(constraintId: string, parameterId: string) {
-    console.log('handleClickCondition', constraintId, parameterId)
     dispatchModelState({
       type: 'CLICK_CONSTRAINT',
       payload: { constraintId, parameterId },
@@ -117,32 +113,12 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
 
   function handleChangeConfig(
     type: 'enableConstraints' | 'showModelFile' | 'orderOfCombinations',
-    e?: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement>,
   ) {
-    const newConfig = { ...config }
-    switch (type) {
-      case 'enableConstraints': {
-        newConfig.enableConstraints = !config.enableConstraints
-        break
-      }
-      case 'showModelFile': {
-        newConfig.showModelFile = !config.showModelFile
-        break
-      }
-      case 'orderOfCombinations': {
-        if (e) {
-          try {
-            if (e.target.value !== '') {
-              newConfig.orderOfCombinations = Number(e.target.value)
-            }
-          } catch {
-            newConfig.orderOfCombinations = 2
-          }
-        }
-        break
-      }
-    }
-    setConfig(newConfig)
+    dispatchConfig({
+      type,
+      payload: { e },
+    })
   }
 
   function runPict() {
