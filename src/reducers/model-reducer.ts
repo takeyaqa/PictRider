@@ -1,0 +1,431 @@
+import { PictConstraint, PictParameter, PictCondition } from '../types'
+import { uuidv4 } from '../helpers'
+
+const invalidParameterNameCharacters = [
+  '#', // comments identifier, constraints operator
+  ':', // parameter and values separator
+  '<', // values reference identifier, constraints operator
+  '>', // values reference identifier, constraints operator
+  '(', // values weight identifier
+  ')', // values weight identifier
+  '|', // values alias identifier
+  ',', // values separator
+  '~', // values negation identifier
+  '{', // sub-models identifier
+  '}', // sub-models identifier
+  '@', // sub-models identifier
+  '[', // constraints parameter identifier
+  ']', // constraints parameter identifier
+  ';', // constraints terminator
+  '=', // constraints operator
+  '!', // constraints operator
+  '+', // constraints operator
+  '&', // constraints operator
+  '*', // pattern string wildcard
+  '?', // pattern string wildcard
+]
+
+const invalidParameterValuesCharacters = [
+  '#', // comments identifier, constraints operator
+  ':', // parameter and values separator
+  '{', // sub-models identifier
+  '}', // sub-models identifier
+  '@', // sub-models identifier
+  '[', // constraints parameter identifier
+  ']', // constraints parameter identifier
+  ';', // constraints terminator
+  '=', // constraints operator
+  '!', // constraints operator
+  '+', // constraints operator
+  '&', // constraints operator
+  '*', // pattern string wildcard
+  '?', // pattern string wildcard
+]
+
+const invalidConstraintCharacters = [
+  ':', // parameter and values separator
+  '(', // values weight identifier
+  ')', // values weight identifier
+  '|', // values alias identifier
+  ',', // values separator
+  '~', // values negation identifier
+  '{', // sub-models identifier
+  '}', // sub-models identifier
+  '@', // sub-models identifier
+  '[', // constraints parameter identifier
+  ']', // constraints parameter identifier
+  ';', // constraints terminator
+]
+
+interface PictModel {
+  parameters: PictParameter[]
+  parameterError: string[]
+  constraints: PictConstraint[]
+  constraintsError: string[]
+}
+
+type ModelAction =
+  | {
+      type: 'CHANGE_PARAMETER'
+      payload: {
+        id: string
+        field: 'name' | 'values'
+        e: React.ChangeEvent<HTMLInputElement>
+      }
+    }
+  | {
+      type: 'CLICK_CONSTRAINT'
+      payload: {
+        constraintId: string
+        parameterId: string
+      }
+    }
+  | {
+      type: 'CHANGE_CONSTRAINT'
+      payload: {
+        constraintId: string
+        parameterId: string
+        e: React.ChangeEvent<HTMLInputElement>
+      }
+    }
+  | {
+      type:
+        | 'ADD_PARAMETER'
+        | 'REMOVE_PARAMETER'
+        | 'CLEAR'
+        | 'ADD_CONSTRAINT'
+        | 'REMOVE_CONSTRAINT'
+    }
+
+export function modelReducer(state: PictModel, action: ModelAction): PictModel {
+  switch (action.type) {
+    case 'CHANGE_PARAMETER': {
+      const { id, field, e } = action.payload
+      // Update the parameter value
+      const newParameters = [...state.parameters]
+
+      // Reset validation flags
+      for (const parameter of newParameters) {
+        parameter.isValidName = true
+        parameter.isValidValues = true
+      }
+      const newParameter = newParameters.find((p) => p.id === id)
+      if (!newParameter) {
+        return { ...state }
+      }
+      newParameter[field] = e.target.value
+      const errors: string[] = []
+
+      // Check for duplicate parameter
+      if (field === 'name') {
+        const parameterNames = newParameters.map((p) => p.name)
+        const duplicates = parameterNames.filter(
+          (item, index) => item && parameterNames.indexOf(item) !== index,
+        )
+        if (duplicates.length > 0) {
+          for (const parameter of newParameters) {
+            if (duplicates.includes(parameter.name)) {
+              parameter.isValidName = false
+            }
+          }
+          errors.push('Parameter names must be unique.')
+        }
+      }
+
+      // Check for invalid characters
+      let invalidParameterName = false
+      let invalidParameterValues = false
+      for (const parameter of newParameters) {
+        if (
+          invalidParameterNameCharacters.some((char) =>
+            parameter.name.includes(char),
+          )
+        ) {
+          parameter.isValidName = false
+          invalidParameterName = true
+        }
+        if (
+          invalidParameterValuesCharacters.some((char) =>
+            parameter.values.includes(char),
+          )
+        ) {
+          parameter.isValidValues = false
+          invalidParameterValues = true
+        }
+      }
+      if (invalidParameterName) {
+        errors.push(
+          `Parameter name cannot contain special characters: ${invalidParameterNameCharacters.map((s) => `"${s}"`).join(', ')}`,
+        )
+      }
+      if (invalidParameterValues) {
+        errors.push(
+          `Parameter values cannot contain special characters: ${invalidParameterValuesCharacters.map((s) => `"${s}"`).join(', ')}`,
+        )
+      }
+
+      return {
+        ...state,
+        parameters: newParameters,
+        parameterError: errors,
+      }
+    }
+
+    case 'ADD_PARAMETER': {
+      // Limit to maximum 50 rows
+      if (state.parameters.length >= 50) {
+        return { ...state }
+      }
+
+      const newParameter = {
+        id: uuidv4(),
+        name: '',
+        values: '',
+        isValidName: true,
+        isValidValues: true,
+      }
+      const newParameters = [...state.parameters, newParameter]
+      const newConstraints = state.constraints.map((constraint) => ({
+        ...constraint,
+        conditions: constraint.conditions.map((condition) => ({
+          ...condition,
+        })),
+      }))
+      for (const newConstraint of newConstraints) {
+        newConstraint.conditions.push({
+          ifOrThen: 'if',
+          predicate: '',
+          parameterRef: newParameter,
+          isValid: true,
+        })
+      }
+      return {
+        ...state,
+        parameters: newParameters,
+        constraints: newConstraints,
+      }
+    }
+
+    case 'REMOVE_PARAMETER': {
+      console.log('REMOVE_PARAMETER')
+      if (state.parameters.length <= 1) {
+        return { ...state }
+      }
+
+      const newParameters = [...state.parameters]
+      newParameters.pop()
+      const newConstraints = state.constraints.map((constraint) => ({
+        ...constraint,
+        conditions: constraint.conditions.map((condition) => ({
+          ...condition,
+        })),
+      }))
+      // eslint-disable-next-line @typescript-eslint/prefer-for-of
+      for (let i = 0; i < newConstraints.length; i++) {
+        newConstraints[i].conditions.pop()
+      }
+      return {
+        ...state,
+        parameters: newParameters,
+        constraints: newConstraints,
+      }
+    }
+
+    case 'CLEAR': {
+      const emptyParameters = state.parameters.map(() => ({
+        id: uuidv4(),
+        name: '',
+        values: '',
+        isValidName: true,
+        isValidValues: true,
+      }))
+      return {
+        ...state,
+        parameters: emptyParameters,
+        constraints: [createConstraintFromParameters(emptyParameters)],
+      }
+    }
+
+    case 'CLICK_CONSTRAINT': {
+      const { constraintId, parameterId } = action.payload
+      console.log('CLICK_CONSTRAINT', constraintId, parameterId)
+      const newConstraints = state.constraints.map((constraint) => ({
+        ...constraint,
+        conditions: constraint.conditions.map((condition) => ({
+          ...condition,
+        })),
+      }))
+      const newCondition = searchCondition(
+        newConstraints,
+        constraintId,
+        parameterId,
+      )
+      newCondition.ifOrThen = newCondition.ifOrThen === 'if' ? 'then' : 'if'
+
+      console.log('constraints', state.constraints)
+      console.log('newConstraints', newConstraints)
+      return {
+        ...state,
+        constraints: newConstraints,
+      }
+    }
+
+    case 'CHANGE_CONSTRAINT': {
+      const { constraintId, parameterId, e } = action.payload
+      const newConstraints = state.constraints.map((constraint) => ({
+        ...constraint,
+        conditions: constraint.conditions.map((condition) => ({
+          ...condition,
+        })),
+      }))
+      const newCondition = searchCondition(
+        newConstraints,
+        constraintId,
+        parameterId,
+      )
+      newCondition.predicate = e.target.value
+      // Reset validation flags
+      for (const condition of newConstraints) {
+        for (const c of condition.conditions) {
+          c.isValid = true
+        }
+      }
+      // Check for invalid characters
+      const errors: string[] = []
+      let invalidConstraint = false
+      for (const constraint of newConstraints) {
+        for (const condition of constraint.conditions) {
+          if (
+            invalidConstraintCharacters.some((char) =>
+              condition.predicate.includes(char),
+            )
+          ) {
+            condition.isValid = false
+            invalidConstraint = true
+          }
+        }
+      }
+      if (invalidConstraint) {
+        errors.push(
+          `Constraints cannot contain special characters: ${invalidConstraintCharacters.map((s) => `"${s}"`).join(', ')}`,
+        )
+      }
+      return {
+        ...state,
+        constraints: newConstraints,
+        constraintsError: errors,
+      }
+    }
+
+    case 'ADD_CONSTRAINT': {
+      // Limit to maximum 50 constraints
+      if (state.constraints.length >= 50) {
+        return { ...state }
+      }
+      return {
+        ...state,
+        constraints: [
+          ...state.constraints,
+          createConstraintFromParameters(state.parameters),
+        ],
+      }
+    }
+
+    case 'REMOVE_CONSTRAINT': {
+      if (state.constraints.length <= 1) {
+        return { ...state }
+      }
+      const newConstraints = [...state.constraints]
+      newConstraints.pop()
+      return {
+        ...state,
+        constraints: newConstraints,
+      }
+    }
+  }
+}
+
+export function getInitialModel(): PictModel {
+  const initialParameters = [
+    {
+      id: uuidv4(),
+      name: 'Type',
+      values: 'Single, Span, Stripe, Mirror, RAID-5',
+      isValidName: true,
+      isValidValues: true,
+    },
+    {
+      id: uuidv4(),
+      name: 'Size',
+      values: '10, 100, 500, 1000, 5000, 10000, 40000',
+      isValidName: true,
+      isValidValues: true,
+    },
+    {
+      id: uuidv4(),
+      name: 'Format method',
+      values: 'Quick, Slow',
+      isValidName: true,
+      isValidValues: true,
+    },
+    {
+      id: uuidv4(),
+      name: 'File system',
+      values: 'FAT, FAT32, NTFS',
+      isValidName: true,
+      isValidValues: true,
+    },
+    {
+      id: uuidv4(),
+      name: 'Cluster size',
+      values: '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
+      isValidName: true,
+      isValidValues: true,
+    },
+    {
+      id: uuidv4(),
+      name: 'Compression',
+      values: 'ON, OFF',
+      isValidName: true,
+      isValidValues: true,
+    },
+  ]
+  return {
+    parameters: initialParameters,
+    parameterError: [],
+    constraints: [createConstraintFromParameters(initialParameters)],
+    constraintsError: [],
+  }
+}
+
+function createConstraintFromParameters(
+  parameters: PictParameter[],
+): PictConstraint {
+  const conditions: PictCondition[] = parameters.map((p) => {
+    return {
+      ifOrThen: 'if',
+      predicate: '',
+      parameterRef: p,
+      isValid: true,
+    }
+  })
+  return { id: uuidv4(), conditions: conditions }
+}
+
+function searchCondition(
+  constraints: PictConstraint[],
+  constraintId: string,
+  parameterId: string,
+): PictCondition {
+  const constraint = constraints.find((c) => c.id === constraintId)
+  if (!constraint) {
+    throw new Error('Constraint not found')
+  }
+  const condition = constraint.conditions.find(
+    (p) => p.parameterRef.id === parameterId,
+  )
+  if (!condition) {
+    throw new Error('Condition not found')
+  }
+  return condition
+}
