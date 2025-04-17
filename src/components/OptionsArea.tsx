@@ -4,7 +4,7 @@ interface OptionsAreaProps {
   config: PictConfig
   handleChangeConfig: (
     type: 'enableConstraints' | 'showModelFile' | 'orderOfCombinations',
-    e?: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => void
 }
 
@@ -21,8 +21,8 @@ function OptionsArea({ config, handleChangeConfig }: OptionsAreaProps) {
               id="enable-constraints-button"
               autoComplete="off"
               checked={config.enableConstraints}
-              onChange={() => {
-                handleChangeConfig('enableConstraints')
+              onChange={(e) => {
+                handleChangeConfig('enableConstraints', e)
               }}
             />
             Constraints
@@ -36,8 +36,8 @@ function OptionsArea({ config, handleChangeConfig }: OptionsAreaProps) {
               id="show-model-file-button"
               autoComplete="off"
               checked={config.showModelFile}
-              onChange={() => {
-                handleChangeConfig('showModelFile')
+              onChange={(e) => {
+                handleChangeConfig('showModelFile', e)
               }}
             />
             Show model file

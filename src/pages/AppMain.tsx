@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useReducer } from 'react'
 import { PictRunner } from '../pict/pict-runner'
 import {
   ParametersArea,
@@ -8,92 +8,27 @@ import {
   ErrorMessageArea,
   ResultArea,
 } from '../components'
-import { uuidv4 } from '../helpers'
-import {
-  PictParameter,
-  PictCondition,
-  PictConstraint,
-  PictOutput,
-  PictConfig,
-} from '../types'
-import { getInitialParameters } from '../initial-parameters'
+import { PictOutput } from '../types'
+import { getInitialModel, modelReducer } from '../reducers/model-reducer'
+import { configReducer, getInitialConfig } from '../reducers/config-reducer'
 
-const invalidParameterNameCharacters = [
-  '#', // comments identifier, constraints operator
-  ':', // parameter and values separator
-  '<', // values reference identifier, constraints operator
-  '>', // values reference identifier, constraints operator
-  '(', // values weight identifier
-  ')', // values weight identifier
-  '|', // values alias identifier
-  ',', // values separator
-  '~', // values negation identifier
-  '{', // sub-models identifier
-  '}', // sub-models identifier
-  '@', // sub-models identifier
-  '[', // constraints parameter identifier
-  ']', // constraints parameter identifier
-  ';', // constraints terminator
-  '=', // constraints operator
-  '!', // constraints operator
-  '+', // constraints operator
-  '&', // constraints operator
-  '*', // pattern string wildcard
-  '?', // pattern string wildcard
-]
-
-const invalidParameterValuesCharacters = [
-  '#', // comments identifier, constraints operator
-  ':', // parameter and values separator
-  '{', // sub-models identifier
-  '}', // sub-models identifier
-  '@', // sub-models identifier
-  '[', // constraints parameter identifier
-  ']', // constraints parameter identifier
-  ';', // constraints terminator
-  '=', // constraints operator
-  '!', // constraints operator
-  '+', // constraints operator
-  '&', // constraints operator
-  '*', // pattern string wildcard
-  '?', // pattern string wildcard
-]
-
-const invalidConstraintCharacters = [
-  ':', // parameter and values separator
-  '(', // values weight identifier
-  ')', // values weight identifier
-  '|', // values alias identifier
-  ',', // values separator
-  '~', // values negation identifier
-  '{', // sub-models identifier
-  '}', // sub-models identifier
-  '@', // sub-models identifier
-  '[', // constraints parameter identifier
-  ']', // constraints parameter identifier
-  ';', // constraints terminator
-]
+// Interface for the combined output and error state
+interface PictResult {
+  output: PictOutput | null
+  errorMessage: string
+}
 
 interface AppMainProps {
   pictRunnerInjection?: PictRunner // use for testing
 }
 
 function AppMain({ pictRunnerInjection }: AppMainProps) {
-  const [parameters, setParameters] = useState<PictParameter[]>([
-    ...getInitialParameters(),
-  ])
-  const [parameterError, setParameterError] = useState<string[]>([])
-  const [constraints, setConstraints] = useState([
-    createConstraintFromParameters(parameters),
-  ])
-  const [constraintsError, setConstraintsError] = useState<string[]>([])
-  const [config, setConfig] = useState<PictConfig>({
-    enableConstraints: false,
-    showModelFile: false,
-    orderOfCombinations: 2,
+  const [model, dispatchModel] = useReducer(modelReducer, getInitialModel())
+  const [config, dispatchConfig] = useReducer(configReducer, getInitialConfig())
+  const [result, setResult] = useState<PictResult>({
+    output: null,
+    errorMessage: '',
   })
-  const [output, setOutput] = useState<PictOutput | null>(null)
-  const [errorMessage, setErrorMessage] = useState('')
   const [pictRunnerLoaded, setPictRunnerLoaded] = useState(false)
   const pictRunner = useRef<PictRunner>(null)
 
@@ -114,146 +49,40 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     loadPictRunner()
   }, [pictRunnerInjection])
 
-  function handleParameterInputChange(
+  function handleChangeParameter(
     id: string,
     field: 'name' | 'values',
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
-    // Update the parameter value
-    const newParameters = [...parameters]
-
-    // Reset validation flags
-    for (const parameter of newParameters) {
-      parameter.isValidName = true
-      parameter.isValidValues = true
-    }
-    const newParameter = newParameters.find((p) => p.id === id)
-    if (!newParameter) {
-      return
-    }
-    newParameter[field] = e.target.value
-    const errors: string[] = []
-
-    // Check for duplicate parameter
-    if (field === 'name') {
-      const parameterNames = newParameters.map((p) => p.name)
-      const duplicates = parameterNames.filter(
-        (item, index) => item && parameterNames.indexOf(item) !== index,
-      )
-      if (duplicates.length > 0) {
-        for (const parameter of newParameters) {
-          if (duplicates.includes(parameter.name)) {
-            parameter.isValidName = false
-          }
-        }
-        errors.push('Parameter names must be unique.')
-      }
-    }
-
-    // Check for invalid characters
-    let invalidParameterName = false
-    let invalidParameterValues = false
-    for (const parameter of newParameters) {
-      if (
-        invalidParameterNameCharacters.some((char) =>
-          parameter.name.includes(char),
-        )
-      ) {
-        parameter.isValidName = false
-        invalidParameterName = true
-      }
-      if (
-        invalidParameterValuesCharacters.some((char) =>
-          parameter.values.includes(char),
-        )
-      ) {
-        parameter.isValidValues = false
-        invalidParameterValues = true
-      }
-    }
-    if (invalidParameterName) {
-      errors.push(
-        `Parameter name cannot contain special characters: ${invalidParameterNameCharacters.map((s) => `"${s}"`).join(', ')}`,
-      )
-    }
-    if (invalidParameterValues) {
-      errors.push(
-        `Parameter values cannot contain special characters: ${invalidParameterValuesCharacters.map((s) => `"${s}"`).join(', ')}`,
-      )
-    }
-    setParameterError(errors)
-    setParameters(newParameters)
-  }
-
-  function handleChangeConfig(
-    type: 'enableConstraints' | 'showModelFile' | 'orderOfCombinations',
-    e?: React.ChangeEvent<HTMLInputElement>,
-  ) {
-    const newConfig = { ...config }
-    switch (type) {
-      case 'enableConstraints': {
-        newConfig.enableConstraints = !config.enableConstraints
-        break
-      }
-      case 'showModelFile': {
-        newConfig.showModelFile = !config.showModelFile
-        break
-      }
-      case 'orderOfCombinations': {
-        if (e) {
-          try {
-            if (e.target.value !== '') {
-              newConfig.orderOfCombinations = Number(e.target.value)
-            }
-          } catch {
-            newConfig.orderOfCombinations = 2
-          }
-        }
-        break
-      }
-    }
-    setConfig(newConfig)
-  }
-
-  function addConstraint() {
-    // Limit to maximum 50 constraints
-    if (constraints.length >= 50) {
-      return
-    }
-    setConstraints([...constraints, createConstraintFromParameters(parameters)])
-  }
-
-  function createConstraintFromParameters(
-    parameters: PictParameter[],
-  ): PictConstraint {
-    const conditions: PictCondition[] = parameters.map((p) => {
-      return {
-        ifOrThen: 'if',
-        predicate: '',
-        parameterRef: p,
-        isValid: true,
-      }
+    dispatchModel({
+      type: 'changeParameter',
+      payload: { id, field, e },
     })
-    return { id: uuidv4(), conditions: conditions }
   }
 
-  function removeConstraint() {
-    if (constraints.length > 1) {
-      const newConstraints = [...constraints]
-      newConstraints.pop()
-      setConstraints(newConstraints)
-    }
+  function handleClickAddRow() {
+    dispatchModel({
+      type: 'clickAddRow',
+    })
   }
 
-  function handleClickCondition(constraintId: string, parameterId: string) {
-    const newConstraints = [...constraints]
-    const newCondition = searchCondition(
-      newConstraints,
-      constraintId,
-      parameterId,
-    )
-    newCondition.ifOrThen = newCondition.ifOrThen === 'if' ? 'then' : 'if'
-    setConstraints(newConstraints)
+  function handleClickRemoveRow() {
+    dispatchModel({
+      type: 'clickRemoveRow',
+    })
+  }
+
+  function handleClickClear() {
+    dispatchModel({
+      type: 'clickClear',
+    })
+  }
+
+  function handleToggleCondition(constraintId: string, parameterId: string) {
+    dispatchModel({
+      type: 'toggleCondition',
+      payload: { constraintId, parameterId },
+    })
   }
 
   function handleChangeCondition(
@@ -261,118 +90,32 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     parameterId: string,
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
-    const newConstraints = [...constraints]
-    const newCondition = searchCondition(
-      newConstraints,
-      constraintId,
-      parameterId,
-    )
-    newCondition.predicate = e.target.value
-    // Reset validation flags
-    for (const condition of newConstraints) {
-      for (const c of condition.conditions) {
-        c.isValid = true
-      }
-    }
-    // Check for invalid characters
-    const errors: string[] = []
-    let invalidConstraint = false
-    for (const constraint of newConstraints) {
-      for (const condition of constraint.conditions) {
-        if (
-          invalidConstraintCharacters.some((char) =>
-            condition.predicate.includes(char),
-          )
-        ) {
-          condition.isValid = false
-          invalidConstraint = true
-        }
-      }
-    }
-    if (invalidConstraint) {
-      errors.push(
-        `Constraints cannot contain special characters: ${invalidConstraintCharacters.map((s) => `"${s}"`).join(', ')}`,
-      )
-    }
-    setConstraintsError(errors)
-    setConstraints(newConstraints)
+    dispatchModel({
+      type: 'changeCondition',
+      payload: { constraintId, parameterId, e },
+    })
   }
 
-  function searchCondition(
-    constraints: PictConstraint[],
-    constraintId: string,
-    parameterId: string,
-  ): PictCondition {
-    const constraint = constraints.find((c) => c.id === constraintId)
-    if (!constraint) {
-      throw new Error('Constraint not found')
-    }
-    const condition = constraint.conditions.find(
-      (p) => p.parameterRef.id === parameterId,
-    )
-    if (!condition) {
-      throw new Error('Condition not found')
-    }
-    return condition
+  function handleClickAddConstraint() {
+    dispatchModel({
+      type: 'clickAddConstraint',
+    })
   }
 
-  function addParameterInputRow() {
-    // Limit to maximum 50 rows
-    if (parameters.length >= 50) {
-      return
-    }
-
-    const newParameter = {
-      id: uuidv4(),
-      name: '',
-      values: '',
-      isValidName: true,
-      isValidValues: true,
-    }
-    setParameters([...parameters, newParameter])
-    const newConstraints = constraints.map((constraint) => ({
-      ...constraint,
-      conditions: constraint.conditions.map((condition) => ({ ...condition })),
-    }))
-    for (const newConstraint of newConstraints) {
-      newConstraint.conditions.push({
-        ifOrThen: 'if',
-        predicate: '',
-        parameterRef: newParameter,
-        isValid: true,
-      })
-    }
-    setConstraints(newConstraints)
+  function handleClickRemoveConstraint() {
+    dispatchModel({
+      type: 'clickRemoveConstraint',
+    })
   }
 
-  function removeParameterInputRow() {
-    if (parameters.length > 1) {
-      const newParameters = [...parameters]
-      newParameters.pop()
-      setParameters(newParameters)
-      const newConstraints = constraints.map((constraint) => ({
-        ...constraint,
-        conditions: constraint.conditions.map((condition) => ({
-          ...condition,
-        })),
-      }))
-      // eslint-disable-next-line @typescript-eslint/prefer-for-of
-      for (let i = 0; i < newConstraints.length; i++) {
-        newConstraints[i].conditions.pop()
-      }
-      setConstraints(newConstraints)
-    }
-  }
-
-  function clearAllParameterValues() {
-    const emptyParameters = parameters.map(() => ({
-      id: uuidv4(),
-      name: '',
-      values: '',
-      isValidName: true,
-      isValidValues: true,
-    }))
-    setParameters(emptyParameters)
+  function handleChangeConfig(
+    type: 'enableConstraints' | 'showModelFile' | 'orderOfCombinations',
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    dispatchConfig({
+      type,
+      payload: { e },
+    })
   }
 
   function runPict() {
@@ -380,15 +123,25 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
       return
     }
     try {
-      const fixedParameters = parameters
+      const fixedParameters = model.parameters
         .filter((p) => p.name !== '' && p.values !== '')
         .map((p) => ({ name: p.name, values: p.values }))
-      const fixedConstraints = constraints.map((c) => ({
-        conditions: c.conditions.map((cond) => ({
-          ifOrThen: cond.ifOrThen,
-          predicate: cond.predicate,
-          parameter: cond.parameterRef.name,
-        })),
+      const fixedConstraints = model.constraints.map((c) => ({
+        conditions: c.conditions.map((cond) => {
+          const parameter = model.parameters.find(
+            (p) => p.id === cond.parameterId,
+          )
+          if (!parameter) {
+            throw new Error(
+              `Parameter not found for condition: ${cond.parameterId}`,
+            )
+          }
+          return {
+            ifOrThen: cond.ifOrThen,
+            predicate: cond.predicate,
+            parameter: parameter.name,
+          }
+        }),
       }))
       const output = config.enableConstraints
         ? pictRunner.current.run(fixedParameters, {
@@ -409,12 +162,16 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
           }),
         }
       })
-      setOutput({ header, body, modelFile: output.modelFile })
-      setErrorMessage('')
+      setResult({
+        output: { header, body, modelFile: output.modelFile },
+        errorMessage: '',
+      })
     } catch (e) {
       if (e instanceof Error) {
-        setOutput(null)
-        setErrorMessage(e.message)
+        setResult({
+          output: null,
+          errorMessage: e.message,
+        })
       }
     }
   }
@@ -422,32 +179,32 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   return (
     <main className="bg-white">
       <ParametersArea
-        parameters={parameters}
-        messages={parameterError}
-        onInputChange={handleParameterInputChange}
-        onAddRow={addParameterInputRow}
-        onRemoveRow={removeParameterInputRow}
-        onClearValues={clearAllParameterValues}
+        parameters={model.parameters}
+        messages={model.parameterErrors}
+        handleChangeParameter={handleChangeParameter}
+        handleClickAddRow={handleClickAddRow}
+        handleClickRemoveRow={handleClickRemoveRow}
+        handleClickClear={handleClickClear}
       />
       <OptionsArea config={config} handleChangeConfig={handleChangeConfig} />
       <ConstraintsArea
-        enabledConstraints={config.enableConstraints}
-        parameters={parameters}
-        constraints={constraints}
-        messages={constraintsError}
-        onAddConstraint={addConstraint}
-        onRemoveConstraint={removeConstraint}
-        onClickCondition={handleClickCondition}
-        onChangeCondition={handleChangeCondition}
+        config={config}
+        parameters={model.parameters}
+        constraints={model.constraints}
+        messages={model.constraintErrors}
+        handleToggleCondition={handleToggleCondition}
+        handleChangeCondition={handleChangeCondition}
+        handleClickAddConstraint={handleClickAddConstraint}
+        handleClickRemoveConstraint={handleClickRemoveConstraint}
       />
       <RunButtonArea
-        parameters={parameters}
-        constraints={constraints}
+        parameters={model.parameters}
+        constraints={model.constraints}
         pictRunnerLoaded={pictRunnerLoaded}
         onClickRun={runPict}
       />
-      <ErrorMessageArea message={errorMessage} />
-      <ResultArea config={config} output={output} />
+      <ErrorMessageArea message={result.errorMessage} />
+      <ResultArea config={config} output={result.output} />
     </main>
   )
 }

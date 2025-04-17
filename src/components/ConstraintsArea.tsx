@@ -1,5 +1,5 @@
-import { PictParameter, PictConstraint } from '../types'
-import { convertConstraintWrapper } from '../helpers'
+import { PictParameter, PictConstraint, PictConfig } from '../types'
+import { printConstraints } from '../pict/pict-helper'
 
 interface ConstraintTableCell {
   constraintId: string
@@ -26,7 +26,7 @@ function buildConstraintTable(
   return parameters.map((parameter) => {
     const cells = constraints.map((constraint) => {
       const condition = constraint.conditions.find(
-        (cond) => cond.parameterRef.id === parameter.id,
+        (cond) => cond.parameterId === parameter.id,
       )
 
       const ifOrThen = condition?.ifOrThen
@@ -51,32 +51,56 @@ function buildConstraintTable(
   })
 }
 
+function convertConstraintWrapper(
+  constraints: PictConstraint[],
+  parameters: PictParameter[],
+): string {
+  return printConstraints(
+    constraints.map((c) => ({
+      conditions: c.conditions.map((cond) => {
+        const parameter = parameters.find((p) => p.id === cond.parameterId)
+        if (!parameter) {
+          throw new Error(
+            `Parameter not found for condition: ${cond.parameterId}`,
+          )
+        }
+        return {
+          ifOrThen: cond.ifOrThen,
+          predicate: cond.predicate,
+          parameter: parameter.name,
+        }
+      }),
+    })),
+    parameters.map((p) => p.name),
+  )
+}
+
 interface ConstraintsAreaProps {
-  enabledConstraints: boolean
+  config: PictConfig
   parameters: PictParameter[]
   constraints: PictConstraint[]
   messages: string[]
-  onAddConstraint: () => void
-  onRemoveConstraint: () => void
-  onClickCondition: (constraintId: string, parameterId: string) => void
-  onChangeCondition: (
+  handleToggleCondition: (constraintId: string, parameterId: string) => void
+  handleChangeCondition: (
     constraintId: string,
     parameterId: string,
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
+  handleClickAddConstraint: () => void
+  handleClickRemoveConstraint: () => void
 }
 
 function ConstraintsArea({
-  enabledConstraints,
+  config,
   parameters,
   constraints,
   messages,
-  onAddConstraint,
-  onRemoveConstraint,
-  onClickCondition,
-  onChangeCondition,
+  handleToggleCondition,
+  handleChangeCondition,
+  handleClickAddConstraint,
+  handleClickRemoveConstraint,
 }: ConstraintsAreaProps) {
-  if (!enabledConstraints) {
+  if (!config.enableConstraints) {
     return null
   }
   return (
@@ -89,7 +113,7 @@ function ConstraintsArea({
           <button
             type="button"
             className="w-25 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-50"
-            onClick={onAddConstraint}
+            onClick={handleClickAddConstraint}
             disabled={constraints.length >= 50}
           >
             Add Constraint
@@ -97,7 +121,7 @@ function ConstraintsArea({
           <button
             type="button"
             className="w-25 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-50"
-            onClick={onRemoveConstraint}
+            onClick={handleClickRemoveConstraint}
             disabled={constraints.length <= 1}
           >
             Remove Constraint
@@ -137,7 +161,10 @@ function ConstraintsArea({
                           type="button"
                           className="w-15 cursor-pointer rounded bg-gray-500 px-3 py-1 font-mono text-sm text-white hover:bg-gray-600"
                           onClick={() => {
-                            onClickCondition(cell.constraintId, row.parameterId)
+                            handleToggleCondition(
+                              cell.constraintId,
+                              row.parameterId,
+                            )
                           }}
                         >
                           {cell.ifOrThen}
@@ -152,7 +179,7 @@ function ConstraintsArea({
                           }
                           autoComplete="off"
                           onChange={(e) => {
-                            onChangeCondition(
+                            handleChangeCondition(
                               cell.constraintId,
                               row.parameterId,
                               e,
