@@ -9,6 +9,9 @@ export default defineConfig({
   server: {
     host: '127.0.0.1',
   },
+  optimizeDeps: {
+    exclude: ['@takeyaqa/pict-browser'],
+  },
   define: {
     __APP_VERSION__: JSON.stringify(`v${version}`),
   },

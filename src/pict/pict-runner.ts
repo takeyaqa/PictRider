@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any */
 import { Parameter, Constraint, Output, Options } from './pict-types'
 import { printConstraints } from './pict-helper'
-import createModule from './wasm/pict'
+import createModule from '@takeyaqa/pict-browser'
 
 export class PictRunner {
   private pict: any
