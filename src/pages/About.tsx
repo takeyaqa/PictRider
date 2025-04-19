@@ -128,7 +128,7 @@ function About() {
               href="/dependencies.txt"
               className="text-blue-600 hover:underline"
             >
-              dependencies.txt
+              View third-party dependencies
             </a>
           </p>
         </div>
