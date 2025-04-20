@@ -9,6 +9,7 @@ interface ViteTypeOptions {
 
 interface ImportMetaEnv {
   readonly VITE_BASE_DOMAIN: string
+  readonly VITE_NOTIFICATION_MESSAGE: string
 }
 
 interface ImportMeta {
