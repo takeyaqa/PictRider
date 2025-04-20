@@ -27,5 +27,8 @@ export default defineConfig({
   },
   define: {
     __APP_VERSION__: JSON.stringify(`v${version}`),
+    __NOTIFICATION_MESSAGE__: JSON.stringify(
+      'This application is under active development and is not recommended for production use.',
+    ),
   },
 })

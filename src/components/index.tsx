@@ -1,4 +1,5 @@
 export { default as HeaderArea } from './HeaderArea'
+export { default as NotificationMessageArea } from './NotificationMessageArea'
 export { default as ParametersArea } from './ParametersArea'
 export { default as OptionsArea } from './OptionsArea'
 export { default as ConstraintsArea } from './ConstraintsArea'
