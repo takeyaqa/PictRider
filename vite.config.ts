@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import license from 'rollup-plugin-license'
 import path from 'path'
-import { version } from './package.json'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -24,8 +23,5 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['@takeyaqa/pict-browser'],
-  },
-  define: {
-    __APP_VERSION__: JSON.stringify(`v${version}`),
   },
 })

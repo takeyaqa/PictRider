@@ -47,7 +47,7 @@ function HeaderArea() {
               <img src="/github-mark.svg" alt="GitHub" width="25" height="25" />
             </a>
           </li>
-          <li>{__APP_VERSION__}</li>
+          <li>{import.meta.env.VITE_APP_VERSION}</li>
         </ul>
       </nav>
     </header>

@@ -1,10 +1,7 @@
 name: deploy
 on:
-  push:
-    branches: [main]
   release:
-    types: [released]
-  workflow_dispatch:
+    types: [published]
 
 env:
   PNPM_VERSION: 10
@@ -27,18 +24,14 @@ jobs:
           cache: pnpm
       - run: pnpm install
       - run: pnpm run build
-      - name: Set branch name
-        id: set_branch_name
-        run: |
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            echo "BRANCH_NAME=main" >> "$GITHUB_OUTPUT"
-          else
-            echo "BRANCH_NAME=edge" >> "$GITHUB_OUTPUT"
-          fi
+        env:
+          VITE_APP_VERSION: ${{ github.event.release.tag_name }}
+          VITE_BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
+          VITE_NOTIFICATION_MESSAGE: ${{ vars.NOTIFICATION_MESSAGE }}
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          command: pages deploy dist --project-name=pictrider --branch=${{ steps.set_branch_name.outputs.BRANCH_NAME }}
+          command: pages deploy dist --project-name=pictrider --branch=main
