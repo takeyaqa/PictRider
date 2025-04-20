@@ -36,6 +36,20 @@ This project and everyone participating in it is governed by the [PictRider Code
    git switch -c feature/your-feature-name
    ```
 
+### Environment Variables
+
+PictRider uses environment variables for configuration. Copy the `.env.example` file to `.env` and adjust the values as needed:
+
+```bash
+cp .env.example .env
+```
+
+Available environment variables:
+
+| Variable         | Description | Default               |
+| ---------------- | ----------- | --------------------- |
+| VITE_BASE_DOMAIN | Base domain | pictrider.example.com |
+
 ## Build and Test Commands
 
 PictRider uses Vite, TypeScript, and Vitest for development. Here are the key commands you'll need:

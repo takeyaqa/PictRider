@@ -7,10 +7,14 @@ function Analytics() {
   if (!import.meta.env.PROD) {
     return null
   }
+  // Don't load analytics if base domain is not set
+  if (!import.meta.env.VITE_BASE_DOMAIN) {
+    return null
+  }
   return (
     <script
       async
-      data-domain="pictrider.takeyaqa.dev"
+      data-domain={import.meta.env.VITE_BASE_DOMAIN}
       src="https://plausible.io/js/script.js"
     ></script>
   )
