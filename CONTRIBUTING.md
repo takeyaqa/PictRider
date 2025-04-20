@@ -48,6 +48,7 @@ Available environment variables:
 
 | Variable         | Description | Default               |
 | ---------------- | ----------- | --------------------- |
+| VITE_APP_VERSION | App version | development           |
 | VITE_BASE_DOMAIN | Base domain | pictrider.example.com |
 
 ## Build and Test Commands
