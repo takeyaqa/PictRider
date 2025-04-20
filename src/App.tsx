@@ -10,7 +10,9 @@ function App() {
   return (
     <>
       <HeaderArea />
-      <NotificationMessageArea message={__NOTIFICATION_MESSAGE__} />
+      <NotificationMessageArea
+        message={import.meta.env.VITE_NOTIFICATION_MESSAGE}
+      />
       <Outlet />
       <FooterArea />
       <Analytics />
