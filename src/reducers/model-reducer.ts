@@ -222,7 +222,6 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
     }
 
     case 'clickRemoveRow': {
-      console.log('REMOVE_PARAMETER')
       if (state.parameters.length <= 1) {
         return {
           parameters: newParameters,
