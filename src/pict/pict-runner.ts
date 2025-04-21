@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any */
 import { Parameter, Constraint, Output, Options } from './pict-types'
 import { printConstraints } from './pict-helper'
-import createModule from '@takeyaqa/pict-browser'
+import createModule, { MainModule } from '@takeyaqa/pict-browser'
 
 export class PictRunner {
-  private pict: any
+  private pict: MainModule | null = null
   private stdoutCapture: OutputCapture
   private stderrCapture: OutputCapture
 
@@ -52,19 +51,29 @@ export class PictRunner {
       if (options.orderOfCombinations) {
         switches.push(`/o:${options.orderOfCombinations.toString()}`)
       }
+      if (options.randomizeGeneration) {
+        if (options.randomizeSeed) {
+          switches.push(`/r:${options.randomizeSeed.toString()}`)
+        } else {
+          switches.push('/r')
+        }
+      }
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     this.pict.callMain(['model.txt', ...switches])
     this.pict.FS.unlink('model.txt')
     const err = this.stderrCapture.getOuts()
-    if (err) {
-      throw new Error(err)
-    }
     const out = this.stdoutCapture
       .getOuts()
       .split('\n')
       .map((m) => m.split('\t'))
     this.stdoutCapture.clear()
-    return { header: out[0], body: out.slice(1), modelFile: model }
+    return {
+      header: out[0],
+      body: out.slice(1),
+      modelFile: model,
+      message: err,
+    }
   }
 }
 

@@ -5,7 +5,6 @@ import {
   OptionsArea,
   ConstraintsArea,
   RunButtonArea,
-  ErrorMessageArea,
   ResultArea,
 } from '../components'
 import { PictOutput } from '../types'
@@ -109,7 +108,12 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   }
 
   function handleChangeConfig(
-    type: 'enableConstraints' | 'showModelFile' | 'orderOfCombinations',
+    type:
+      | 'enableConstraints'
+      | 'showModelFile'
+      | 'orderOfCombinations'
+      | 'randomizeGeneration'
+      | 'randomizeSeed',
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
     dispatchConfig({
@@ -122,58 +126,62 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     if (!pictRunnerLoaded || !pictRunner.current) {
       return
     }
-    try {
-      const fixedParameters = model.parameters
-        .filter((p) => p.name !== '' && p.values !== '')
-        .map((p) => ({ name: p.name, values: p.values }))
-      const fixedConstraints = model.constraints.map((c) => ({
-        conditions: c.conditions.map((cond) => {
-          const parameter = model.parameters.find(
-            (p) => p.id === cond.parameterId,
+    const fixedParameters = model.parameters
+      .filter((p) => p.name !== '' && p.values !== '')
+      .map((p) => ({ name: p.name, values: p.values }))
+    const fixedConstraints = model.constraints.map((c) => ({
+      conditions: c.conditions.map((cond) => {
+        const parameter = model.parameters.find(
+          (p) => p.id === cond.parameterId,
+        )
+        if (!parameter) {
+          throw new Error(
+            `Parameter not found for condition: ${cond.parameterId}`,
           )
-          if (!parameter) {
-            throw new Error(
-              `Parameter not found for condition: ${cond.parameterId}`,
-            )
-          }
-          return {
-            ifOrThen: cond.ifOrThen,
-            predicate: cond.predicate,
-            parameter: parameter.name,
-          }
-        }),
-      }))
-      const output = config.enableConstraints
-        ? pictRunner.current.run(fixedParameters, {
-            constraints: fixedConstraints,
-            options: config,
-          })
-        : pictRunner.current.run(fixedParameters, {
-            options: config,
-          })
-      const header = output.header.map((h, i) => {
-        return { id: i, name: h }
-      })
-      const body = output.body.map((row, i) => {
-        return {
-          id: i,
-          values: row.map((col, j) => {
-            return { id: j, value: col }
-          }),
         }
-      })
-      setResult({
-        output: { header, body, modelFile: output.modelFile },
-        errorMessage: '',
-      })
-    } catch (e) {
-      if (e instanceof Error) {
-        setResult({
-          output: null,
-          errorMessage: e.message,
-        })
-      }
+        return {
+          ifOrThen: cond.ifOrThen,
+          predicate: cond.predicate,
+          parameter: parameter.name,
+        }
+      }),
+    }))
+    const pictOptions = {
+      orderOfCombinations: config.orderOfCombinations,
+      randomizeGeneration: config.randomizeGeneration,
+      randomizeSeed:
+        config.randomizeGeneration && config.randomizeSeed !== ''
+          ? config.randomizeSeed
+          : undefined,
     }
+    const output = config.enableConstraints
+      ? pictRunner.current.run(fixedParameters, {
+          constraints: fixedConstraints,
+          options: pictOptions,
+        })
+      : pictRunner.current.run(fixedParameters, {
+          options: pictOptions,
+        })
+    const header = output.header.map((h, i) => {
+      return { id: i, name: h }
+    })
+    const body = output.body.map((row, i) => {
+      return {
+        id: i,
+        values: row.map((col, j) => {
+          return { id: j, value: col }
+        }),
+      }
+    })
+    setResult({
+      output: {
+        header,
+        body,
+        modelFile: output.modelFile,
+        message: output.message,
+      },
+      errorMessage: output.message ?? '',
+    })
   }
 
   return (
@@ -203,7 +211,6 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         pictRunnerLoaded={pictRunnerLoaded}
         onClickRun={runPict}
       />
-      <ErrorMessageArea message={result.errorMessage} />
       <ResultArea config={config} output={result.output} />
     </main>
   )

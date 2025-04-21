@@ -3,7 +3,12 @@ import { PictConfig } from '../types'
 interface OptionsAreaProps {
   config: PictConfig
   handleChangeConfig: (
-    type: 'enableConstraints' | 'showModelFile' | 'orderOfCombinations',
+    type:
+      | 'enableConstraints'
+      | 'showModelFile'
+      | 'orderOfCombinations'
+      | 'randomizeGeneration'
+      | 'randomizeSeed',
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
 }
@@ -56,6 +61,42 @@ function OptionsArea({ config, handleChangeConfig }: OptionsAreaProps) {
               max={50}
               onChange={(e) => {
                 handleChangeConfig('orderOfCombinations', e)
+              }}
+            />
+          </label>
+        </div>
+        <div>
+          <label
+            className="cursor-pointer"
+            htmlFor="randomize-generation-button"
+          >
+            <input
+              type="checkbox"
+              className="mr-1 cursor-pointer rounded"
+              id="randomize-generation-button"
+              autoComplete="off"
+              checked={config.randomizeGeneration}
+              onChange={(e) => {
+                handleChangeConfig('randomizeGeneration', e)
+              }}
+            />
+            Randomize generation
+          </label>
+        </div>
+        <div>
+          <label htmlFor="randomize-seed">
+            Seed
+            <input
+              type="number"
+              className="ml-3 rounded border border-black bg-white pl-2 text-right focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none disabled:bg-gray-300"
+              id="randomize-seed"
+              autoComplete="off"
+              value={config.randomizeSeed}
+              min={0}
+              max={65535}
+              disabled={!config.randomizeGeneration}
+              onChange={(e) => {
+                handleChangeConfig('randomizeSeed', e)
               }}
             />
           </label>
