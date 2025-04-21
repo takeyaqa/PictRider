@@ -22,10 +22,13 @@ export interface PictOutput {
   header: { id: number; name: string }[]
   body: { id: number; values: { id: number; value: string }[] }[]
   modelFile: string
+  message?: string
 }
 
 export interface PictConfig {
   enableConstraints: boolean
   showModelFile: boolean
   orderOfCombinations: number
+  randomizeGeneration: boolean
+  randomizeSeed: number | ''
 }

@@ -17,8 +17,11 @@ export interface Output {
   header: string[]
   body: string[][]
   modelFile: string
+  message?: string
 }
 
 export interface Options {
   orderOfCombinations: number
+  randomizeGeneration: boolean
+  randomizeSeed?: number
 }

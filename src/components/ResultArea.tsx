@@ -92,6 +92,14 @@ function ResultArea({ config, output }: ResultAreaProps) {
           </button>
         </div>
       </div>
+      {output.message && (
+        <div
+          className="my-5 rounded-md border-2 border-red-400 bg-red-100 p-7 text-red-700"
+          role="alert"
+        >
+          {output.message}
+        </div>
+      )}
       <div className="overflow-x-auto">
         <table
           className="w-full table-fixed border-collapse"

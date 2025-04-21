@@ -187,3 +187,18 @@ test('should display result after clicking Run (with display model file)', async
   await expect(page.getByRole('heading', { name: 'Model File' })).toBeVisible()
   await expect(page.getByRole('table', { name: 'Result' })).toBeVisible()
 })
+
+test('should display result after clicking Run (with randomize generation)', async ({
+  page,
+}) => {
+  // arrange
+  await page.goto('/')
+
+  // act
+  await page.getByRole('checkbox', { name: 'Randomize generation' }).click()
+  await page.getByRole('spinbutton', { name: 'Seed' }).fill('1234')
+  await page.getByRole('button', { name: 'Run' }).click()
+
+  // assert
+  await expect(page.getByRole('alert')).toContainText('Used seed: 1234')
+})

@@ -1,7 +1,12 @@
 import { PictConfig } from '../types'
 
 interface ConfigAction {
-  type: 'enableConstraints' | 'showModelFile' | 'orderOfCombinations'
+  type:
+    | 'enableConstraints'
+    | 'showModelFile'
+    | 'orderOfCombinations'
+    | 'randomizeGeneration'
+    | 'randomizeSeed'
   payload: { e: React.ChangeEvent<HTMLInputElement> }
 }
 
@@ -30,6 +35,19 @@ export function configReducer(
       }
       return newConfig
     }
+    case 'randomizeGeneration': {
+      newConfig.randomizeGeneration = !newConfig.randomizeGeneration
+      return newConfig
+    }
+    case 'randomizeSeed': {
+      const { e } = action.payload
+      if (e.target.value !== '') {
+        newConfig.randomizeSeed = Number(e.target.value)
+      } else {
+        newConfig.randomizeSeed = ''
+      }
+      return newConfig
+    }
   }
 }
 
@@ -38,5 +56,7 @@ export function getInitialConfig(): PictConfig {
     enableConstraints: false,
     showModelFile: false,
     orderOfCombinations: 2,
+    randomizeGeneration: false,
+    randomizeSeed: '',
   }
 }
