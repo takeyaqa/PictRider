@@ -279,7 +279,7 @@ describe('AppMain', () => {
     it('Should not render sub-models area by default', () => {
       // assert - by default, sub-models area should not be visible
       expect(
-        screen.queryByRole('heading', { name: 'Sub-models' }),
+        screen.queryByRole('heading', { name: 'Sub-Models' }),
       ).not.toBeInTheDocument()
     })
 
