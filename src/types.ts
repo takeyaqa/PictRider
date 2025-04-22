@@ -6,6 +6,12 @@ export interface PictParameter {
   isValidValues: boolean
 }
 
+export interface SubModel {
+  id: string
+  parameterIds: string[]
+  order: number
+}
+
 export interface PictCondition {
   ifOrThen: 'if' | 'then'
   predicate: string
@@ -26,6 +32,7 @@ export interface PictOutput {
 }
 
 export interface PictConfig {
+  enableSubModels: boolean
   enableConstraints: boolean
   showModelFile: boolean
   orderOfCombinations: number

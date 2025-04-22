@@ -6,6 +6,7 @@ import {
   ConstraintsArea,
   RunButtonArea,
   ResultArea,
+  SubModelsArea,
 } from '../components'
 import { PictOutput } from '../types'
 import { getInitialModel, modelReducer } from '../reducers/model-reducer'
@@ -77,6 +78,26 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     })
   }
 
+  function handleChangeSubModelParameters(
+    id: string,
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) {
+    dispatchModel({
+      type: 'changeSubModelParameters',
+      payload: { id, e },
+    })
+  }
+
+  function handleChangeSubModelOrder(
+    id: string,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    dispatchModel({
+      type: 'changeSubModelOrder',
+      payload: { id, e },
+    })
+  }
+
   function handleToggleCondition(constraintId: string, parameterId: string) {
     dispatchModel({
       type: 'toggleCondition',
@@ -109,6 +130,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
 
   function handleChangeConfig(
     type:
+      | 'enableSubModels'
       | 'enableConstraints'
       | 'showModelFile'
       | 'orderOfCombinations'
@@ -129,6 +151,18 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     const fixedParameters = model.parameters
       .filter((p) => p.name !== '' && p.values !== '')
       .map((p) => ({ name: p.name, values: p.values }))
+    const fixedSubModels = config.enableSubModels
+      ? model.subModels.map((s) => ({
+          parameterNames: s.parameterIds.map((id) => {
+            const parameter = model.parameters.find((p) => p.id === id)
+            if (!parameter) {
+              throw new Error(`Parameter not found: ${id}`)
+            }
+            return parameter.name
+          }),
+          order: s.order,
+        }))
+      : undefined
     const fixedConstraints = model.constraints.map((c) => ({
       conditions: c.conditions.map((cond) => {
         const parameter = model.parameters.find(
@@ -156,10 +190,12 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     }
     const output = config.enableConstraints
       ? pictRunner.current.run(fixedParameters, {
+          subModels: fixedSubModels,
           constraints: fixedConstraints,
           options: pictOptions,
         })
       : pictRunner.current.run(fixedParameters, {
+          subModels: fixedSubModels,
           options: pictOptions,
         })
     const header = output.header.map((h, i) => {
@@ -195,6 +231,13 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         handleClickClear={handleClickClear}
       />
       <OptionsArea config={config} handleChangeConfig={handleChangeConfig} />
+      <SubModelsArea
+        config={config}
+        parameters={model.parameters}
+        subModels={model.subModels}
+        handleChangeSubModelParameters={handleChangeSubModelParameters}
+        handleChangeSubModelOrder={handleChangeSubModelOrder}
+      />
       <ConstraintsArea
         config={config}
         parameters={model.parameters}

@@ -1,4 +1,10 @@
-import { Parameter, Constraint, Output, Options } from './pict-types'
+import {
+  Parameter,
+  Constraint,
+  Output,
+  Options,
+  PictSubModel,
+} from './pict-types'
 import { printConstraints } from './pict-helper'
 import createModule, { MainModule } from '@takeyaqa/pict-browser'
 
@@ -22,9 +28,11 @@ export class PictRunner {
   public run(
     parameters: Parameter[],
     {
+      subModels,
       constraints,
       options,
     }: {
+      subModels?: PictSubModel[]
       constraints?: Constraint[]
       options?: Options
     },
@@ -40,9 +48,20 @@ export class PictRunner {
       constraints ?? [],
       parameters.map((m) => m.name),
     )
-    const model = constraintsText
-      ? `${parametersText}\n\n${constraintsText}`
-      : parametersText
+    const subModelsText = subModels
+      ? subModels
+          .map(
+            (m) => `{ ${m.parameterNames.join(', ')} } @ ${m.order.toString()}`,
+          )
+          .join('\n')
+      : ''
+    let model = parametersText
+    if (subModelsText) {
+      model = `${model}\n\n${subModelsText}`
+    }
+    if (constraintsText) {
+      model = `${model}\n\n${constraintsText}`
+    }
     this.pict.FS.writeFile('model.txt', model)
 
     // Set the options

@@ -1,4 +1,9 @@
-import { PictConstraint, PictParameter, PictCondition } from '../types'
+import {
+  PictConstraint,
+  PictParameter,
+  PictCondition,
+  SubModel,
+} from '../types'
 import { uuidv4 } from '../helpers'
 
 const invalidParameterNameCharacters = [
@@ -60,6 +65,7 @@ const invalidConstraintCharacters = [
 interface PictModel {
   parameters: PictParameter[]
   constraints: PictConstraint[]
+  subModels: SubModel[]
   parameterErrors: string[]
   constraintErrors: string[]
 }
@@ -70,6 +76,20 @@ type ModelAction =
       payload: {
         id: string
         field: 'name' | 'values'
+        e: React.ChangeEvent<HTMLInputElement>
+      }
+    }
+  | {
+      type: 'changeSubModelParameters'
+      payload: {
+        id: string
+        e: React.ChangeEvent<HTMLSelectElement>
+      }
+    }
+  | {
+      type: 'changeSubModelOrder'
+      payload: {
+        id: string
         e: React.ChangeEvent<HTMLInputElement>
       }
     }
@@ -108,6 +128,10 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       ...condition,
     })),
   }))
+  const newSubModels = state.subModels.map((subModel) => ({
+    ...subModel,
+    parameterIds: [...subModel.parameterIds],
+  }))
   const newParameterErrors = [...state.parameterErrors]
   const newConstraintErrors = [...state.constraintErrors]
 
@@ -124,6 +148,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
         return {
           parameters: newParameters,
           constraints: newConstraints,
+          subModels: newSubModels,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -182,6 +207,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       return {
         parameters: newParameters,
         constraints: newConstraints,
+        subModels: newSubModels,
         parameterErrors: errors,
         constraintErrors: newConstraintErrors,
       }
@@ -193,6 +219,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
         return {
           parameters: newParameters,
           constraints: newConstraints,
+          subModels: newSubModels,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -216,6 +243,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       return {
         parameters: [...newParameters, newParameter],
         constraints: newConstraints,
+        subModels: newSubModels,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -226,6 +254,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
         return {
           parameters: newParameters,
           constraints: newConstraints,
+          subModels: newSubModels,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -239,6 +268,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       return {
         parameters: newParameters,
         constraints: newConstraints,
+        subModels: newSubModels,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -255,8 +285,60 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       return {
         parameters: emptyParameters,
         constraints: [createConstraintFromParameters(emptyParameters)],
+        subModels: [],
         parameterErrors: [],
         constraintErrors: [],
+      }
+    }
+
+    case 'changeSubModelParameters': {
+      const { id, e } = action.payload
+      const target = newSubModels.find((m) => m.id === id)
+      if (!target) {
+        return {
+          parameters: newParameters,
+          constraints: newConstraints,
+          subModels: newSubModels,
+          parameterErrors: newParameterErrors,
+          constraintErrors: newConstraintErrors,
+        }
+      }
+      target.parameterIds = Array.from(e.target.selectedOptions).map(
+        (option) => option.value,
+      )
+
+      return {
+        parameters: newParameters,
+        constraints: newConstraints,
+        subModels: newSubModels.map((m) =>
+          m.id === id ? { ...m, parameterIds: target.parameterIds } : m,
+        ),
+        parameterErrors: newParameterErrors,
+        constraintErrors: newConstraintErrors,
+      }
+    }
+
+    case 'changeSubModelOrder': {
+      const { id, e } = action.payload
+      const target = newSubModels.find((m) => m.id === id)
+      if (!target) {
+        return {
+          parameters: newParameters,
+          constraints: newConstraints,
+          subModels: newSubModels,
+          parameterErrors: newParameterErrors,
+          constraintErrors: newConstraintErrors,
+        }
+      }
+      const newOrder = Number(e.target.value)
+      return {
+        parameters: newParameters,
+        constraints: newConstraints,
+        subModels: newSubModels.map((m) =>
+          m.id === id ? { ...m, order: newOrder } : m,
+        ),
+        parameterErrors: newParameterErrors,
+        constraintErrors: newConstraintErrors,
       }
     }
 
@@ -272,6 +354,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       return {
         parameters: newParameters,
         constraints: newConstraints,
+        subModels: newSubModels,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -314,6 +397,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       return {
         parameters: newParameters,
         constraints: newConstraints,
+        subModels: newSubModels,
         parameterErrors: newParameterErrors,
         constraintErrors: errors,
       }
@@ -325,6 +409,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
         return {
           parameters: newParameters,
           constraints: newConstraints,
+          subModels: newSubModels,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -335,6 +420,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
           ...newConstraints,
           createConstraintFromParameters(state.parameters),
         ],
+        subModels: newSubModels,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -345,6 +431,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
         return {
           parameters: newParameters,
           constraints: newConstraints,
+          subModels: newSubModels,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -353,6 +440,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       return {
         parameters: newParameters,
         constraints: newConstraints,
+        subModels: newSubModels,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -410,6 +498,13 @@ export function getInitialModel(): PictModel {
     parameterErrors: [],
     constraints: [createConstraintFromParameters(initialParameters)],
     constraintErrors: [],
+    subModels: [
+      {
+        id: uuidv4(),
+        parameterIds: [],
+        order: 2,
+      },
+    ],
   }
 }
 
