@@ -1,7 +1,7 @@
-import { PictConfig } from '../types'
+import { Config } from '../types'
 
 interface OptionsAreaProps {
-  config: PictConfig
+  config: Config
   handleChangeConfig: (
     type:
       | 'enableSubModels'

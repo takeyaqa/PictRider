@@ -1,4 +1,4 @@
-import { Condition, Constraint } from './pict-types'
+import { PictCondition, PictConstraint } from './pict-types'
 import {
   Constraints as ConstraintsAst,
   Predicate,
@@ -32,14 +32,14 @@ interface UnfixedRelationTerm {
 }
 
 export function printConstraints(
-  constraint: Constraint[],
+  constraint: PictConstraint[],
   parameters: string[],
 ): string {
   return printCodeFromAST(convertTableToConstraints(constraint, parameters))
 }
 
 function convertTableToConstraints(
-  constraints: Constraint[],
+  constraints: PictConstraint[],
   parameters: string[],
 ): ConstraintsAst {
   const constraintsAst: ConstraintsAst = []
@@ -118,7 +118,7 @@ function convertIfOrThenConstraint(predicates: Predicate[]): Predicate {
 }
 
 function convertPredicate(
-  condition: Condition,
+  condition: PictCondition,
   parameters: Set<string>,
 ): Predicate {
   const tokens = condition.predicate.split(',').map((token) => token.trim())
@@ -217,7 +217,7 @@ function fixRestTerm(
   ]
 }
 
-function isError(conditions: Condition[]): boolean {
+function isError(conditions: PictCondition[]): boolean {
   for (const cond of conditions) {
     // '#' is only allowed at the beginning of the predicate
     if (cond.predicate.includes('#') && !cond.predicate.startsWith('#')) {

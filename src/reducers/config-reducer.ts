@@ -1,4 +1,4 @@
-import { PictConfig } from '../types'
+import { Config } from '../types'
 
 interface ConfigAction {
   type:
@@ -11,10 +11,7 @@ interface ConfigAction {
   payload: { e: React.ChangeEvent<HTMLInputElement> }
 }
 
-export function configReducer(
-  state: PictConfig,
-  action: ConfigAction,
-): PictConfig {
+export function configReducer(state: Config, action: ConfigAction): Config {
   const newConfig = { ...state }
   switch (action.type) {
     case 'enableSubModels': {
@@ -56,7 +53,7 @@ export function configReducer(
   }
 }
 
-export function getInitialConfig(): PictConfig {
+export function getInitialConfig(): Config {
   return {
     enableSubModels: false,
     enableConstraints: false,

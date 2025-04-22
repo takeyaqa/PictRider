@@ -1,7 +1,7 @@
-import { PictParameter } from '../types'
+import { Parameter } from '../types'
 
 interface ParametersAreaProps {
-  parameters: PictParameter[]
+  parameters: Parameter[]
   messages: string[]
   handleChangeParameter: (
     id: string,

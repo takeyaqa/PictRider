@@ -1,4 +1,4 @@
-export interface PictParameter {
+export interface Parameter {
   id: string
   name: string
   values: string
@@ -12,26 +12,39 @@ export interface SubModel {
   order: number
 }
 
-export interface PictCondition {
+export interface Condition {
   ifOrThen: 'if' | 'then'
   predicate: string
   parameterId: string
   isValid: boolean
 }
 
-export interface PictConstraint {
+export interface Constraint {
   id: string
-  conditions: PictCondition[]
+  conditions: Condition[]
 }
 
-export interface PictOutput {
+export interface Model {
+  parameters: Parameter[]
+  constraints: Constraint[]
+  subModels: SubModel[]
+  parameterErrors: string[]
+  constraintErrors: string[]
+}
+
+export interface Output {
   header: { id: number; name: string }[]
   body: { id: number; values: { id: number; value: string }[] }[]
   modelFile: string
   message?: string
 }
 
-export interface PictConfig {
+export interface Result {
+  output: Output | null
+  errorMessage: string
+}
+
+export interface Config {
   enableSubModels: boolean
   enableConstraints: boolean
   showModelFile: boolean

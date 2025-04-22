@@ -1,9 +1,4 @@
-import {
-  PictConstraint,
-  PictParameter,
-  PictCondition,
-  SubModel,
-} from '../types'
+import { Constraint, Parameter, Condition, Model } from '../types'
 import { uuidv4 } from '../helpers'
 
 const invalidParameterNameCharacters = [
@@ -62,14 +57,6 @@ const invalidConstraintCharacters = [
   ';', // constraints terminator
 ]
 
-interface PictModel {
-  parameters: PictParameter[]
-  constraints: PictConstraint[]
-  subModels: SubModel[]
-  parameterErrors: string[]
-  constraintErrors: string[]
-}
-
 type ModelAction =
   | {
       type: 'changeParameter'
@@ -117,7 +104,7 @@ type ModelAction =
         | 'clickRemoveConstraint'
     }
 
-export function modelReducer(state: PictModel, action: ModelAction): PictModel {
+export function modelReducer(state: Model, action: ModelAction): Model {
   // Copy the state to avoid mutating it directly
   const newParameters = state.parameters.map((parameter) => ({
     ...parameter,
@@ -463,7 +450,7 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
   }
 }
 
-export function getInitialModel(): PictModel {
+export function getInitialModel(): Model {
   const initialParameters = [
     {
       id: uuidv4(),
@@ -523,10 +510,8 @@ export function getInitialModel(): PictModel {
   }
 }
 
-function createConstraintFromParameters(
-  parameters: PictParameter[],
-): PictConstraint {
-  const conditions: PictCondition[] = parameters.map((p) => {
+function createConstraintFromParameters(parameters: Parameter[]): Constraint {
+  const conditions: Condition[] = parameters.map((p) => {
     return {
       ifOrThen: 'if',
       predicate: '',
@@ -538,10 +523,10 @@ function createConstraintFromParameters(
 }
 
 function searchCondition(
-  constraints: PictConstraint[],
+  constraints: Constraint[],
   constraintId: string,
   parameterId: string,
-): PictCondition {
+): Condition {
   const constraint = constraints.find((c) => c.id === constraintId)
   if (!constraint) {
     throw new Error('Constraint not found')

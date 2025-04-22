@@ -1,6 +1,6 @@
-import { PictConfig, PictOutput } from '../types'
+import { Config, Output } from '../types'
 
-function createCsvContent(output: PictOutput) {
+function createCsvContent(output: Output) {
   const headerRow = output.header.map((h) => `"${h.name}"`).join(',')
   const bodyRows = output.body.map((row) =>
     row.values.map((col) => `"${col.value}"`).join(','),
@@ -8,7 +8,7 @@ function createCsvContent(output: PictOutput) {
   return [headerRow, ...bodyRows].join('\n')
 }
 
-function createTsvContent(output: PictOutput) {
+function createTsvContent(output: Output) {
   const headerRow = output.header.map((h) => h.name).join('\t')
   const bodyRows = output.body.map((row) =>
     row.values.map((col) => col.value).join('\t'),
@@ -17,8 +17,8 @@ function createTsvContent(output: PictOutput) {
 }
 
 interface ResultAreaProps {
-  config: PictConfig
-  output: PictOutput | null
+  config: Config
+  output: Output | null
 }
 
 function ResultArea({ config, output }: ResultAreaProps) {
