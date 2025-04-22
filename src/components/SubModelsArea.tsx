@@ -1,8 +1,8 @@
-import { PictConfig, PictParameter, SubModel } from '../types'
+import { Config, Parameter, SubModel } from '../types'
 
 interface SubModelsAreaProps {
-  config: PictConfig
-  parameters: PictParameter[]
+  config: Config
+  parameters: Parameter[]
   subModels: SubModel[]
   handleChangeSubModelParameters: (
     id: string,

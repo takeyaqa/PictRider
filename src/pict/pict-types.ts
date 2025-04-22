@@ -1,4 +1,4 @@
-export interface Parameter {
+export interface PictParameter {
   name: string
   values: string
 }
@@ -8,24 +8,24 @@ export interface PictSubModel {
   order: number
 }
 
-export interface Condition {
+export interface PictCondition {
   ifOrThen: 'if' | 'then'
   parameter: string
   predicate: string
 }
 
-export interface Constraint {
-  conditions: Condition[]
+export interface PictConstraint {
+  conditions: PictCondition[]
 }
 
-export interface Output {
+export interface PictOutput {
   header: string[]
   body: string[][]
   modelFile: string
   message?: string
 }
 
-export interface Options {
+export interface PictOptions {
   orderOfCombinations: number
   randomizeGeneration: boolean
   randomizeSeed?: number

@@ -1,4 +1,4 @@
-import { PictParameter, PictConstraint, PictConfig } from '../types'
+import { Parameter, Constraint, Config } from '../types'
 import { printConstraints } from '../pict/pict-helper'
 
 interface ConstraintTableCell {
@@ -20,8 +20,8 @@ interface ConstraintTableRow {
  * to avoid repetitive lookups in the JSX
  */
 function buildConstraintTable(
-  parameters: PictParameter[],
-  constraints: PictConstraint[],
+  parameters: Parameter[],
+  constraints: Constraint[],
 ): ConstraintTableRow[] {
   return parameters.map((parameter) => {
     const cells = constraints.map((constraint) => {
@@ -52,8 +52,8 @@ function buildConstraintTable(
 }
 
 function convertConstraintWrapper(
-  constraints: PictConstraint[],
-  parameters: PictParameter[],
+  constraints: Constraint[],
+  parameters: Parameter[],
 ): string {
   return printConstraints(
     constraints.map((c) => ({
@@ -76,9 +76,9 @@ function convertConstraintWrapper(
 }
 
 interface ConstraintsAreaProps {
-  config: PictConfig
-  parameters: PictParameter[]
-  constraints: PictConstraint[]
+  config: Config
+  parameters: Parameter[]
+  constraints: Constraint[]
   messages: string[]
   handleToggleCondition: (constraintId: string, parameterId: string) => void
   handleChangeCondition: (

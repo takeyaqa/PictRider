@@ -1,8 +1,8 @@
 import {
-  Parameter,
-  Constraint,
-  Output,
-  Options,
+  PictParameter,
+  PictConstraint,
+  PictOutput,
+  PictOptions,
   PictSubModel,
 } from './pict-types'
 import { printConstraints } from './pict-helper'
@@ -26,17 +26,17 @@ export class PictRunner {
   }
 
   public run(
-    parameters: Parameter[],
+    parameters: PictParameter[],
     {
       subModels,
       constraints,
       options,
     }: {
       subModels?: PictSubModel[]
-      constraints?: Constraint[]
-      options?: Options
+      constraints?: PictConstraint[]
+      options?: PictOptions
     },
-  ): Output {
+  ): PictOutput {
     if (!this.pict) {
       throw new Error('PictRunner not initialized')
     }

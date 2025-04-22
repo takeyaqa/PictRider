@@ -1,8 +1,8 @@
-import { PictConstraint, PictParameter } from '../types'
+import { Constraint, Parameter } from '../types'
 
 interface RunButtonAreaProps {
-  parameters: PictParameter[]
-  constraints: PictConstraint[]
+  parameters: Parameter[]
+  constraints: Constraint[]
   pictRunnerLoaded: boolean
   onClickRun: () => void
 }

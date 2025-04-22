@@ -1,10 +1,10 @@
 import { it, describe, expect } from 'vitest'
 import { printConstraints } from '../../src/pict/pict-helper'
-import { Constraint } from '../../src/pict/pict-types'
+import { PictConstraint } from '../../src/pict/pict-types'
 
 describe('convertConstraints', () => {
   it('should convert basic constraint (1)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -26,7 +26,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (2)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -48,7 +48,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (3)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -70,7 +70,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (4)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -92,7 +92,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (5)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -121,7 +121,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (6)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -150,7 +150,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (7)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -172,7 +172,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (8)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -201,7 +201,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (9)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -230,7 +230,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (10)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -259,7 +259,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (11)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -288,7 +288,7 @@ describe('convertConstraints', () => {
   })
 
   it('should not convert error constraint', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -310,7 +310,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert parameter and parameter constraint (1)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -332,7 +332,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert parameter and parameter constraint (2)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -354,7 +354,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert parameter and parameter constraint (3)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -376,7 +376,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert parameter and parameter constraint (4)', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -398,7 +398,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert condition less constraint 1', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -425,7 +425,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert condition less constraint 2', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -449,7 +449,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert wildcard constraint', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -471,7 +471,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert a simple constraint with one if and one then condition', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -493,7 +493,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert a constraint with double if conditions', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -526,7 +526,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert a constraint with triple if conditions', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -565,7 +565,7 @@ describe('convertConstraints', () => {
   })
 
   it('should convert a constraint with multiple then conditions', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -598,7 +598,7 @@ describe('convertConstraints', () => {
   })
 
   it('should ignore conditions with empty predicates', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -635,7 +635,7 @@ describe('convertConstraints', () => {
   })
 
   it('should return an empty string when no valid conditions exist', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -657,7 +657,7 @@ describe('convertConstraints', () => {
   })
 
   it('should return an empty string with only if conditions', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {
@@ -680,7 +680,7 @@ describe('convertConstraints', () => {
   })
 
   it('should handle a constraint with only then conditions', () => {
-    const constraints: Constraint[] = [
+    const constraints: PictConstraint[] = [
       {
         conditions: [
           {

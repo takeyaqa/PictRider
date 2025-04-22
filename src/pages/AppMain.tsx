@@ -8,15 +8,9 @@ import {
   ResultArea,
   SubModelsArea,
 } from '../components'
-import { PictOutput } from '../types'
+import { Result } from '../types'
 import { getInitialModel, modelReducer } from '../reducers/model-reducer'
 import { configReducer, getInitialConfig } from '../reducers/config-reducer'
-
-// Interface for the combined output and error state
-interface PictResult {
-  output: PictOutput | null
-  errorMessage: string
-}
 
 interface AppMainProps {
   pictRunnerInjection?: PictRunner // use for testing
@@ -25,7 +19,7 @@ interface AppMainProps {
 function AppMain({ pictRunnerInjection }: AppMainProps) {
   const [model, dispatchModel] = useReducer(modelReducer, getInitialModel())
   const [config, dispatchConfig] = useReducer(configReducer, getInitialConfig())
-  const [result, setResult] = useState<PictResult>({
+  const [result, setResult] = useState<Result>({
     output: null,
     errorMessage: '',
   })
