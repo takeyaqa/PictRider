@@ -122,15 +122,15 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
   const newParameters = state.parameters.map((parameter) => ({
     ...parameter,
   }))
+  const newSubModels = state.subModels.map((subModel) => ({
+    ...subModel,
+    parameterIds: [...subModel.parameterIds],
+  }))
   const newConstraints = state.constraints.map((constraint) => ({
     ...constraint,
     conditions: constraint.conditions.map((condition) => ({
       ...condition,
     })),
-  }))
-  const newSubModels = state.subModels.map((subModel) => ({
-    ...subModel,
-    parameterIds: [...subModel.parameterIds],
   }))
   const newParameterErrors = [...state.parameterErrors]
   const newConstraintErrors = [...state.constraintErrors]
@@ -260,15 +260,24 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
         }
       }
 
-      newParameters.pop()
+      const removedParameter = newParameters.pop()
       // eslint-disable-next-line @typescript-eslint/prefer-for-of
       for (let i = 0; i < newConstraints.length; i++) {
         newConstraints[i].conditions.pop()
       }
+      const fixedSubModels = newSubModels.map((subModel) => {
+        const newParameterIds = subModel.parameterIds.filter(
+          (id) => id !== removedParameter?.id,
+        )
+        return {
+          ...subModel,
+          parameterIds: newParameterIds,
+        }
+      })
       return {
         parameters: newParameters,
         constraints: newConstraints,
-        subModels: newSubModels,
+        subModels: fixedSubModels,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -285,7 +294,13 @@ export function modelReducer(state: PictModel, action: ModelAction): PictModel {
       return {
         parameters: emptyParameters,
         constraints: [createConstraintFromParameters(emptyParameters)],
-        subModels: [],
+        subModels: [
+          {
+            id: uuidv4(),
+            parameterIds: [],
+            order: 2,
+          },
+        ],
         parameterErrors: [],
         constraintErrors: [],
       }
