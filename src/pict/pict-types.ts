@@ -3,6 +3,11 @@ export interface Parameter {
   values: string
 }
 
+export interface PictSubModel {
+  parameterNames: string[]
+  order: number
+}
+
 export interface Condition {
   ifOrThen: 'if' | 'then'
   parameter: string

@@ -258,6 +258,65 @@ describe('AppMain', () => {
     })
   })
 
+  describe('SubModelArea', () => {
+    let user: any
+    let pictRunnerMock: PictRunner
+
+    beforeEach(() => {
+      const PictRunnerMock = vi.fn()
+      PictRunnerMock.prototype.init = vi.fn()
+      PictRunnerMock.prototype.run = vi.fn()
+      pictRunnerMock = new PictRunner()
+      user = userEvent.setup()
+      render(<AppMain pictRunnerInjection={pictRunnerMock} />)
+    })
+
+    afterEach(() => {
+      cleanup()
+      vi.clearAllMocks()
+    })
+
+    it('Should not render sub-models area by default', () => {
+      // assert - by default, sub-models area should not be visible
+      expect(
+        screen.queryByRole('heading', { name: 'Sub-Models' }),
+      ).not.toBeInTheDocument()
+    })
+
+    it('Should render sub-models area when enabled', async () => {
+      // act - enable sub-models area by clicking the checkbox
+      await user.click(screen.getByRole('checkbox', { name: 'Sub-models' }))
+
+      // assert - verify sub-models area is rendered
+      expect(
+        screen.queryByRole('heading', { name: 'Sub-Models' }),
+      ).toBeInTheDocument()
+      expect(
+        screen.queryByRole('listbox', { name: 'Parameters' }),
+      ).toBeInTheDocument()
+      expect(
+        screen.queryByRole('spinbutton', { name: 'Order' }),
+      ).toBeInTheDocument()
+    })
+
+    it('Should change sub-model name when parameter name is changed', async () => {
+      // arrange - enable sub-models area
+      await user.click(screen.getByRole('checkbox', { name: 'Sub-models' }))
+
+      // act - change the name of the first parameter name
+      const nameInput = screen.getAllByRole('textbox', {
+        name: 'Parameters',
+      })[0]
+      await user.clear(nameInput)
+      await user.type(nameInput, 'TypeTypeType')
+
+      // assert - the sub-model name should be updated
+      expect(
+        screen.queryByRole('option', { name: 'TypeTypeType' }),
+      ).toBeInTheDocument()
+    })
+  })
+
   describe('ConstraintsArea', () => {
     let user: any
     let pictRunnerMock: PictRunner
@@ -799,6 +858,106 @@ describe('AppMain', () => {
           { name: 'Compression', values: 'ON, OFF' },
         ],
         expect.anything(),
+      )
+    })
+
+    it('Should call with sub-models when enable sub-models', async () => {
+      // arrange - enable sub-models
+      await user.click(screen.getByLabelText('Sub-models'))
+      await user.selectOptions(
+        screen.getByRole('listbox', { name: 'Parameters' }),
+        ['Type', 'Size', 'Format method'],
+      )
+      await user.clear(screen.getByRole('spinbutton', { name: 'Order' }))
+      await user.type(screen.getByRole('spinbutton', { name: 'Order' }), '3')
+
+      // act - click the run button
+      await user.click(screen.getByText('Run'))
+
+      // assert - check result table
+      expect(pictRunnerMock.run).toHaveBeenCalledWith(
+        [
+          {
+            name: 'Type',
+            values: 'Single, Span, Stripe, Mirror, RAID-5',
+          },
+          {
+            name: 'Size',
+            values: '10, 100, 500, 1000, 5000, 10000, 40000',
+          },
+          {
+            name: 'Format method',
+            values: 'Quick, Slow',
+          },
+          {
+            name: 'File system',
+            values: 'FAT, FAT32, NTFS',
+          },
+          {
+            name: 'Cluster size',
+            values: '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
+          },
+          { name: 'Compression', values: 'ON, OFF' },
+        ],
+        {
+          subModels: [
+            {
+              parameterNames: ['Type', 'Size', 'Format method'],
+              order: 3,
+            },
+          ],
+          options: expect.anything(),
+        },
+      )
+    })
+
+    it('Should call with sub-models when enable sub-models and delete parameter rows', async () => {
+      // arrange - enable sub-models
+      await user.click(screen.getByLabelText('Sub-models'))
+      await user.selectOptions(
+        screen.getByRole('listbox', { name: 'Parameters' }),
+        ['Type', 'Size', 'Format method', 'Compression'],
+      )
+      await user.clear(screen.getByRole('spinbutton', { name: 'Order' }))
+      await user.type(screen.getByRole('spinbutton', { name: 'Order' }), '3')
+
+      // act - click the run button
+      await user.click(screen.getByText('Remove Row'))
+      await user.click(screen.getByText('Run'))
+
+      // assert - check result table
+      expect(pictRunnerMock.run).toHaveBeenCalledWith(
+        [
+          {
+            name: 'Type',
+            values: 'Single, Span, Stripe, Mirror, RAID-5',
+          },
+          {
+            name: 'Size',
+            values: '10, 100, 500, 1000, 5000, 10000, 40000',
+          },
+          {
+            name: 'Format method',
+            values: 'Quick, Slow',
+          },
+          {
+            name: 'File system',
+            values: 'FAT, FAT32, NTFS',
+          },
+          {
+            name: 'Cluster size',
+            values: '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
+          },
+        ],
+        {
+          subModels: [
+            {
+              parameterNames: ['Type', 'Size', 'Format method'],
+              order: 3,
+            },
+          ],
+          options: expect.anything(),
+        },
       )
     })
   })

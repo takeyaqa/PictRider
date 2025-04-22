@@ -2,6 +2,7 @@ import { PictConfig } from '../types'
 
 interface ConfigAction {
   type:
+    | 'enableSubModels'
     | 'enableConstraints'
     | 'showModelFile'
     | 'orderOfCombinations'
@@ -16,6 +17,10 @@ export function configReducer(
 ): PictConfig {
   const newConfig = { ...state }
   switch (action.type) {
+    case 'enableSubModels': {
+      newConfig.enableSubModels = !newConfig.enableSubModels
+      return newConfig
+    }
     case 'enableConstraints': {
       newConfig.enableConstraints = !newConfig.enableConstraints
       return newConfig
@@ -53,6 +58,7 @@ export function configReducer(
 
 export function getInitialConfig(): PictConfig {
   return {
+    enableSubModels: false,
     enableConstraints: false,
     showModelFile: false,
     orderOfCombinations: 2,
