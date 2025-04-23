@@ -47,7 +47,6 @@ const invalidConstraintCharacters = [
   '(', // values weight identifier
   ')', // values weight identifier
   '|', // values alias identifier
-  ',', // values separator
   '~', // values negation identifier
   '{', // sub-models identifier
   '}', // sub-models identifier
