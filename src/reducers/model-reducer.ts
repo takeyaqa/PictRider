@@ -67,10 +67,10 @@ type ModelAction =
       }
     }
   | {
-      type: 'changeSubModelParameters'
+      type: 'clickSubModelParameters'
       payload: {
         id: string
-        e: React.ChangeEvent<HTMLSelectElement>
+        e: React.ChangeEvent<HTMLInputElement>
       }
     }
   | {
@@ -293,7 +293,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       }
     }
 
-    case 'changeSubModelParameters': {
+    case 'clickSubModelParameters': {
       const { id, e } = action.payload
       const target = newSubModels.find((m) => m.id === id)
       if (!target) {
@@ -305,18 +305,31 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           constraintErrors: newConstraintErrors,
         }
       }
-      target.parameterIds = Array.from(e.target.selectedOptions).map(
-        (option) => option.value,
-      )
+      if (target.parameterIds.includes(e.target.value)) {
+        const newParameterIds = target.parameterIds.filter(
+          (paramId) => paramId !== e.target.value,
+        )
+        return {
+          parameters: newParameters,
+          constraints: newConstraints,
+          subModels: newSubModels.map((m) =>
+            m.id === id ? { ...m, parameterIds: newParameterIds } : m,
+          ),
+          parameterErrors: newParameterErrors,
+          constraintErrors: newConstraintErrors,
+        }
+      } else {
+        const newParameterIds = [...target.parameterIds, e.target.value]
 
-      return {
-        parameters: newParameters,
-        constraints: newConstraints,
-        subModels: newSubModels.map((m) =>
-          m.id === id ? { ...m, parameterIds: target.parameterIds } : m,
-        ),
-        parameterErrors: newParameterErrors,
-        constraintErrors: newConstraintErrors,
+        return {
+          parameters: newParameters,
+          constraints: newConstraints,
+          subModels: newSubModels.map((m) =>
+            m.id === id ? { ...m, parameterIds: newParameterIds } : m,
+          ),
+          parameterErrors: newParameterErrors,
+          constraintErrors: newConstraintErrors,
+        }
       }
     }
 

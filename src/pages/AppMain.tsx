@@ -73,12 +73,12 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     })
   }
 
-  function handleChangeSubModelParameters(
+  function handleClickSubModelParameters(
     id: string,
-    e: React.ChangeEvent<HTMLSelectElement>,
+    e: React.ChangeEvent<HTMLInputElement>,
   ) {
     dispatchModel({
-      type: 'changeSubModelParameters',
+      type: 'clickSubModelParameters',
       payload: { id, e },
     })
   }
@@ -217,7 +217,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         config={config}
         parameters={model.parameters}
         subModels={model.subModels}
-        handleChangeSubModelParameters={handleChangeSubModelParameters}
+        handleClickSubModelParameters={handleClickSubModelParameters}
         handleChangeSubModelOrder={handleChangeSubModelOrder}
       />
       <ConstraintsArea
