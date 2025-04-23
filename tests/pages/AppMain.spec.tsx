@@ -578,7 +578,7 @@ describe('AppMain', () => {
 
       await user.type(inputs[0], '@')
       expect(screen.getByRole('alert')).toHaveTextContent(
-        'Constraints cannot contain special characters: ":", "(", ")", "|", ",", "~", "{", "}", "@", "[", "]", ";',
+        'Constraints cannot contain special characters: ":", "(", ")", "|", "~", "{", "}", "@", "[", "]", ";',
       )
       expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
 
