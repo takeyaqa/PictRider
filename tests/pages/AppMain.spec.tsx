@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/unbound-method, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/unbound-method, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import userEvent, { UserEvent } from '@testing-library/user-event'
 import AppMain from '../../src/pages/AppMain'
 import { PictRunner } from '../../src/pict/pict-runner'
 
 describe('AppMain', () => {
   describe('ParametersArea', () => {
-    let user: any
+    let user: UserEvent
     let pictRunnerMock: PictRunner
 
     beforeEach(() => {
@@ -27,13 +27,22 @@ describe('AppMain', () => {
 
     it('Should display PictRider title and default parameter values', () => {
       // assert - only checking default text and values
-      expect(screen.getAllByRole('textbox')).toHaveLength(12)
-      expect(screen.getAllByRole('textbox')[0]).toHaveValue('Type')
-      expect(screen.getAllByRole('textbox')[1]).toHaveValue(
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' }),
+      ).toHaveLength(6)
+      expect(screen.getAllByRole('textbox', { name: 'Values' })).toHaveLength(6)
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' })[0],
+      ).toHaveValue('Type')
+      expect(screen.getAllByRole('textbox', { name: 'Values' })[0]).toHaveValue(
         'Single, Span, Stripe, Mirror, RAID-5',
       )
-      expect(screen.getAllByRole('textbox')[10]).toHaveValue('Compression')
-      expect(screen.getAllByRole('textbox')[11]).toHaveValue('ON, OFF')
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' })[5],
+      ).toHaveValue('Compression')
+      expect(screen.getAllByRole('textbox', { name: 'Values' })[5]).toHaveValue(
+        'ON, OFF',
+      )
     })
 
     it('Should add a new parameter row when clicking the add row button', async () => {
@@ -41,15 +50,28 @@ describe('AppMain', () => {
       await user.click(screen.getByText('Add Row'))
 
       // assert - check count and default values (new row should be empty)
-      expect(screen.getAllByRole('textbox')).toHaveLength(14)
-      expect(screen.getAllByRole('textbox')[0]).toHaveValue('Type')
-      expect(screen.getAllByRole('textbox')[1]).toHaveValue(
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' }),
+      ).toHaveLength(7)
+      expect(screen.getAllByRole('textbox', { name: 'Values' })).toHaveLength(7)
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' })[0],
+      ).toHaveValue('Type')
+      expect(screen.getAllByRole('textbox', { name: 'Values' })[0]).toHaveValue(
         'Single, Span, Stripe, Mirror, RAID-5',
       )
-      expect(screen.getAllByRole('textbox')[10]).toHaveValue('Compression')
-      expect(screen.getAllByRole('textbox')[11]).toHaveValue('ON, OFF')
-      expect(screen.getAllByRole('textbox')[12]).toHaveValue('')
-      expect(screen.getAllByRole('textbox')[13]).toHaveValue('')
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' })[5],
+      ).toHaveValue('Compression')
+      expect(screen.getAllByRole('textbox', { name: 'Values' })[5]).toHaveValue(
+        'ON, OFF',
+      )
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' })[6],
+      ).toHaveValue('')
+      expect(screen.getAllByRole('textbox', { name: 'Values' })[6]).toHaveValue(
+        '',
+      )
     })
 
     it('Should remove a parameter row when clicking the delete row button', async () => {
@@ -57,13 +79,20 @@ describe('AppMain', () => {
       await user.click(screen.getByText('Remove Row'))
 
       // assert - check count and default values
-      expect(screen.getAllByRole('textbox')).toHaveLength(10)
-      expect(screen.getAllByRole('textbox')[0]).toHaveValue('Type')
-      expect(screen.getAllByRole('textbox')[1]).toHaveValue(
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' }),
+      ).toHaveLength(5)
+      expect(screen.getAllByRole('textbox', { name: 'Values' })).toHaveLength(5)
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' })[0],
+      ).toHaveValue('Type')
+      expect(screen.getAllByRole('textbox', { name: 'Values' })[0]).toHaveValue(
         'Single, Span, Stripe, Mirror, RAID-5',
       )
-      expect(screen.getAllByRole('textbox')[8]).toHaveValue('Cluster size')
-      expect(screen.getAllByRole('textbox')[9]).toHaveValue(
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' })[4],
+      ).toHaveValue('Cluster size')
+      expect(screen.getAllByRole('textbox', { name: 'Values' })[4]).toHaveValue(
         '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
       )
     })
@@ -85,11 +114,22 @@ describe('AppMain', () => {
       await user.click(screen.getByRole('button', { name: 'Clear' }))
 
       // assert - check count is not changed but values is empty
-      expect(screen.getAllByRole('textbox')).toHaveLength(12)
-      expect(screen.getAllByRole('textbox')[0]).toHaveValue('')
-      expect(screen.getAllByRole('textbox')[1]).toHaveValue('')
-      expect(screen.getAllByRole('textbox')[10]).toHaveValue('')
-      expect(screen.getAllByRole('textbox')[11]).toHaveValue('')
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' }),
+      ).toHaveLength(6)
+      expect(screen.getAllByRole('textbox', { name: 'Values' })).toHaveLength(6)
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' })[0],
+      ).toHaveValue('')
+      expect(screen.getAllByRole('textbox', { name: 'Values' })[0]).toHaveValue(
+        '',
+      )
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' })[5],
+      ).toHaveValue('')
+      expect(screen.getAllByRole('textbox', { name: 'Values' })[5]).toHaveValue(
+        '',
+      )
     })
 
     it('Should handle adding and removing multiple parameter rows', async () => {
@@ -124,12 +164,18 @@ describe('AppMain', () => {
       expect(screen.getAllByRole('textbox')).toHaveLength(14)
 
       // Verify we still have the correct values in the remaining textbox
-      expect(screen.getAllByRole('textbox')[0]).toHaveValue('Type')
-      expect(screen.getAllByRole('textbox')[1]).toHaveValue(
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' })[0],
+      ).toHaveValue('Type')
+      expect(screen.getAllByRole('textbox', { name: 'Values' })[0]).toHaveValue(
         'Single, Span, Stripe, Mirror, RAID-5',
       )
-      expect(screen.getAllByRole('textbox')[12]).toHaveValue('')
-      expect(screen.getAllByRole('textbox')[13]).toHaveValue('')
+      expect(
+        screen.getAllByRole('textbox', { name: 'Parameters' })[6],
+      ).toHaveValue('')
+      expect(screen.getAllByRole('textbox', { name: 'Values' })[6]).toHaveValue(
+        '',
+      )
     })
 
     it('Should disable add row button when maximum row limit (50) is reached', async () => {
@@ -151,7 +197,9 @@ describe('AppMain', () => {
 
     it('Should display error message when duplicate parameter names are found (single)', async () => {
       // act - edit parameter name to create a duplicate
-      const nameInput = screen.getAllByRole('textbox')[2]
+      const nameInput = screen.getAllByRole('textbox', {
+        name: 'Parameters',
+      })[1]
       await user.clear(nameInput)
       await user.type(nameInput, 'Type') // Set to 'Type' which already exists
 
@@ -172,10 +220,14 @@ describe('AppMain', () => {
 
     it('Should display error message when duplicate parameter names are found (double)', async () => {
       // act - edit parameter name to create a duplicate
-      const nameInput0 = screen.getAllByRole('textbox')[0]
+      const nameInput0 = screen.getAllByRole('textbox', {
+        name: 'Parameters',
+      })[0]
       await user.clear(nameInput0)
       await user.type(nameInput0, 'Type')
-      const nameInput1 = screen.getAllByRole('textbox')[2]
+      const nameInput1 = screen.getAllByRole('textbox', {
+        name: 'Parameters',
+      })[1]
       await user.clear(nameInput1)
       await user.type(nameInput1, 'Type')
 
@@ -186,10 +238,14 @@ describe('AppMain', () => {
       expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
 
       // act - edit parameter name to create a duplicate twice
-      const nameInput2 = screen.getAllByRole('textbox')[4]
+      const nameInput2 = screen.getAllByRole('textbox', {
+        name: 'Parameters',
+      })[2]
       await user.clear(nameInput2)
       await user.type(nameInput2, 'Duplicate')
-      const nameInput3 = screen.getAllByRole('textbox')[6]
+      const nameInput3 = screen.getAllByRole('textbox', {
+        name: 'Parameters',
+      })[3]
       await user.clear(nameInput3)
       await user.type(nameInput3, 'Duplicate')
 
@@ -218,7 +274,9 @@ describe('AppMain', () => {
 
     it('Should display error message when invalid character in parameter name', async () => {
       // act - edit parameter name to create invalid character
-      const nameInput = screen.getAllByRole('textbox')[0]
+      const nameInput = screen.getAllByRole('textbox', {
+        name: 'Parameters',
+      })[0]
       await user.clear(nameInput)
       await user.type(nameInput, 'Ty#:()|,~{{}}@[[]]:=!+&*?pe')
 
@@ -239,7 +297,9 @@ describe('AppMain', () => {
 
     it('Should display error message when invalid character in parameter values', async () => {
       // act - edit parameter name to create invalid character
-      const nameInput = screen.getAllByRole('textbox')[1]
+      const nameInput = screen.getAllByRole('textbox', {
+        name: 'Values',
+      })[0]
       await user.clear(nameInput)
       await user.type(nameInput, 'Type, a#:,{{}}@[[]]=!+&*?')
       // assert - check error message is displayed
@@ -259,7 +319,7 @@ describe('AppMain', () => {
   })
 
   describe('SubModelArea', () => {
-    let user: any
+    let user: UserEvent
     let pictRunnerMock: PictRunner
 
     beforeEach(() => {
@@ -318,7 +378,7 @@ describe('AppMain', () => {
   })
 
   describe('ConstraintsArea', () => {
-    let user: any
+    let user: UserEvent
     let pictRunnerMock: PictRunner
 
     beforeEach(() => {
@@ -347,7 +407,7 @@ describe('AppMain', () => {
 
     it('Should render constraints area when enabled', async () => {
       // act - enable constraints area by clicking the checkbox
-      await user.click(screen.getByLabelText('Constraints'))
+      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
 
       // assert - verify constraints area is rendered
       expect(
@@ -363,7 +423,7 @@ describe('AppMain', () => {
 
     it('Should add a new constraint when add constraint button is clicked', async () => {
       // arrange -  enable constraints area
-      await user.click(screen.getByLabelText('Constraints'))
+      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
 
       // assume - initially there should be one constraint
       expect(screen.getByText('Constraint 1')).toBeInTheDocument()
@@ -380,8 +440,8 @@ describe('AppMain', () => {
 
     it('Should remove a constraint when remove constraint button is clicked', async () => {
       // arrange - enable constraints area and add a constraint so we have two
-      await user.click(screen.getByLabelText('Constraints'))
-      await user.click(screen.getByText('Add Constraint'))
+      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(screen.getByRole('button', { name: 'Add Constraint' }))
 
       // assume - there should be two constraints
       expect(screen.getByText('Constraint 2')).toBeInTheDocument()
@@ -404,7 +464,7 @@ describe('AppMain', () => {
 
     it('Should disable remove constraint button when only one constraint exists', async () => {
       // act - enable constraints area
-      await user.click(screen.getByLabelText('Constraints'))
+      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
 
       // assert - by default there's only one constraint, so remove button should be disabled
       expect(
@@ -432,7 +492,7 @@ describe('AppMain', () => {
 
     it('Should disable add constraint button when maximum constraint limit (50) is reached', async () => {
       // arrange - enable constraints area
-      await user.click(screen.getByLabelText('Constraints'))
+      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
 
       // Initial state - should have 1 constraint
       expect(screen.getByText('Constraint 1')).toBeInTheDocument()
@@ -455,7 +515,7 @@ describe('AppMain', () => {
 
     it('Should toggle condition between if and then when clicked', async () => {
       // arrange - enable constraints area
-      await user.click(screen.getByLabelText('Constraints'))
+      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
       const firstIfButton = screen.getAllByRole('button', { name: 'if' })[0] // Get the first 'if' button
 
       // act - click it to toggle to 'then'
@@ -473,14 +533,16 @@ describe('AppMain', () => {
 
     it('Should update condition predicate when input is changed', async () => {
       // arrange - enable constraints area
-      await user.click(screen.getByLabelText('Constraints'))
+      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
 
       // get the second 'if' button (for Size parameter) and change it to 'then'
       const ifButtons = screen.getAllByRole('button', { name: 'if' })
       await user.click(ifButtons[1])
 
       // find all inputs in the constraints area
-      const constraintsTable = screen.getAllByRole('table')[0]
+      const constraintsTable = screen.getByRole('table', {
+        name: 'Constraints',
+      })
       const inputs = constraintsTable.querySelectorAll('input[type="text"]')
 
       // act - type predicates in both inputs
@@ -500,14 +562,16 @@ describe('AppMain', () => {
 
     it('Should display alert when input is includes error', async () => {
       // arrange - enable constraints area
-      await user.click(screen.getByLabelText('Constraints'))
+      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
 
       // get the second 'if' button (for Size parameter) and change it to 'then'
       const ifButtons = screen.getAllByRole('button', { name: 'if' })
       await user.click(ifButtons[1])
 
       // find all inputs in the constraints area
-      const constraintsTable = screen.getAllByRole('table')[0]
+      const constraintsTable = screen.getByRole('table', {
+        name: 'Constraints',
+      })
       const inputs = constraintsTable.querySelectorAll('input[type="text"]')
 
       // act - type predicates in both inputs
@@ -529,17 +593,19 @@ describe('AppMain', () => {
 
     it('Should display complex constraints with if/then conditions', async () => {
       // arrange - enable constraints area
-      await user.click(screen.getByLabelText('Constraints'))
+      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
 
       // get the second 'if' button
-      const ifButtons = screen.getAllByText('if')
+      const ifButtons = screen.getAllByRole('button', { name: 'if' })
       const secondIfButton = ifButtons[1]
 
       // change the second to 'then'
       await user.click(secondIfButton)
 
       // find all inputs in the constraints area
-      const constraintsTable = screen.getAllByRole('table')[0]
+      const constraintsTable = screen.getByRole('table', {
+        name: 'Constraints',
+      })
       const inputs = constraintsTable.querySelectorAll('input[type="text"]')
 
       // act - type predicates
@@ -555,17 +621,19 @@ describe('AppMain', () => {
 
     it('Should change constraints when edit parameter name', async () => {
       // arrange - enable constraints area
-      await user.click(screen.getByLabelText('Constraints'))
+      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
 
       // get the second 'if' button
-      const ifButtons = screen.getAllByText('if')
+      const ifButtons = screen.getAllByRole('button', { name: 'if' })
       const secondIfButton = ifButtons[1]
 
       // change the second to 'then'
       await user.click(secondIfButton)
 
       // find all inputs in the constraints area
-      const constraintsTable = screen.getAllByRole('table')[0]
+      const constraintsTable = screen.getByRole('table', {
+        name: 'Constraints',
+      })
       const inputs = constraintsTable.querySelectorAll('input[type="text"]')
 
       // act - type predicates
@@ -581,7 +649,9 @@ describe('AppMain', () => {
       expect(beforePreElement).toBeInTheDocument()
 
       // act - edit parameter values
-      const parameterInput = screen.getAllByRole('textbox')[0]
+      const parameterInput = screen.getAllByRole('textbox', {
+        name: 'Parameters',
+      })[0]
       await user.clear(parameterInput)
       await user.type(parameterInput, 'New Type')
 
@@ -595,7 +665,7 @@ describe('AppMain', () => {
   })
 
   describe('Run Pict', () => {
-    let user: any
+    let user: UserEvent
     let pictRunnerMock: PictRunner
 
     beforeEach(() => {
@@ -620,7 +690,7 @@ describe('AppMain', () => {
 
     it('Should display result table', async () => {
       // act - click the run button
-      await user.click(screen.getByText('Run'))
+      await user.click(screen.getByRole('button', { name: 'Run' }))
 
       // assert - check result table
       expect(screen.queryByRole('alert')).not.toBeInTheDocument()
@@ -637,7 +707,7 @@ describe('AppMain', () => {
 
     it('Should have CSV and TSV buttons that are enabled after running PICT', async () => {
       // Run PICT to get results
-      await user.click(screen.getByText('Run'))
+      await user.click(screen.getByRole('button', { name: 'Run' }))
 
       // Get the CSV button and verify it exists and is enabled
       const csvButton = screen.getByRole('button', { name: 'CSV' })
@@ -652,7 +722,7 @@ describe('AppMain', () => {
 
     it('Should call with parameters when input default value', async () => {
       // act - click the run button
-      await user.click(screen.getByText('Run'))
+      await user.click(screen.getByRole('button', { name: 'Run' }))
 
       // assert - check result table
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
@@ -685,10 +755,10 @@ describe('AppMain', () => {
 
     it('Should call with parameters when add empty row', async () => {
       // arrange - add empty row
-      await user.click(screen.getByText('Add Row'))
+      await user.click(screen.getByRole('button', { name: 'Add Row' }))
 
       // act - click the run button
-      await user.click(screen.getByText('Run'))
+      await user.click(screen.getByRole('button', { name: 'Run' }))
 
       // assert - check result table
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
@@ -722,10 +792,10 @@ describe('AppMain', () => {
 
     it('Should call with parameters when delete existing row', async () => {
       // arrange - delete existing row
-      await user.click(screen.getByText('Remove Row'))
+      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
 
       // act - click the run button
-      await user.click(screen.getByText('Run'))
+      await user.click(screen.getByRole('button', { name: 'Run' }))
 
       // assert - check result table
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
@@ -757,12 +827,12 @@ describe('AppMain', () => {
 
     it('Should call with parameters when editing value', async () => {
       // arrange - edit existing value
-      const input = screen.getAllByRole('textbox')[1]
+      const input = screen.getAllByRole('textbox', { name: 'Values' })[0]
       await user.clear(input)
       await user.type(input, 'Double, Span, Stripe, Mirror, RAID-5000')
 
       // act - click the run button
-      await user.click(screen.getByText('Run'))
+      await user.click(screen.getByRole('button', { name: 'Run' }))
 
       // assert - check result table
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
@@ -795,11 +865,11 @@ describe('AppMain', () => {
 
     it('Should call with parameters when editing parameter to empty', async () => {
       // arrange - edit existing value
-      const input = screen.getAllByRole('textbox')[2]
+      const input = screen.getAllByRole('textbox', { name: 'Parameters' })[1]
       await user.clear(input)
 
       // act - click the run button
-      await user.click(screen.getByText('Run'))
+      await user.click(screen.getByRole('button', { name: 'Run' }))
 
       // assert - check result table
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
@@ -829,11 +899,11 @@ describe('AppMain', () => {
 
     it('Should call with parameters when editing values to empty', async () => {
       // arrange - edit existing value
-      const input = screen.getAllByRole('textbox')[5]
+      const input = screen.getAllByRole('textbox', { name: 'Values' })[2]
       await user.clear(input)
 
       // act - click the run button
-      await user.click(screen.getByText('Run'))
+      await user.click(screen.getByRole('button', { name: 'Run' }))
 
       // assert - check result table
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
@@ -863,7 +933,7 @@ describe('AppMain', () => {
 
     it('Should call with sub-models when enable sub-models', async () => {
       // arrange - enable sub-models
-      await user.click(screen.getByLabelText('Sub-models'))
+      await user.click(screen.getByRole('checkbox', { name: 'Sub-models' }))
       await user.click(screen.getByRole('checkbox', { name: 'Type' }))
       await user.click(screen.getByRole('checkbox', { name: 'Size' }))
       await user.click(screen.getByRole('checkbox', { name: 'Format method' }))
@@ -871,7 +941,7 @@ describe('AppMain', () => {
       await user.type(screen.getByRole('spinbutton', { name: 'Order' }), '3')
 
       // act - click the run button
-      await user.click(screen.getByText('Run'))
+      await user.click(screen.getByRole('button', { name: 'Run' }))
 
       // assert - check result table
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
@@ -912,7 +982,7 @@ describe('AppMain', () => {
 
     it('Should call with sub-models when enable sub-models and delete parameter rows', async () => {
       // arrange - enable sub-models
-      await user.click(screen.getByLabelText('Sub-models'))
+      await user.click(screen.getByRole('checkbox', { name: 'Sub-models' }))
       await user.click(screen.getByRole('checkbox', { name: 'Type' }))
       await user.click(screen.getByRole('checkbox', { name: 'Size' }))
       await user.click(screen.getByRole('checkbox', { name: 'Format method' }))
@@ -921,8 +991,8 @@ describe('AppMain', () => {
       await user.type(screen.getByRole('spinbutton', { name: 'Order' }), '3')
 
       // act - click the run button
-      await user.click(screen.getByText('Remove Row'))
-      await user.click(screen.getByText('Run'))
+      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
+      await user.click(screen.getByRole('button', { name: 'Run' }))
 
       // assert - check result table
       expect(pictRunnerMock.run).toHaveBeenCalledWith(
