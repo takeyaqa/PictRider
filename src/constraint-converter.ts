@@ -10,16 +10,16 @@ import {
   InTerm,
   Term,
   LogicalOperator,
-  NotLikeTerm,
   Clause,
+  NotClause,
 } from './pict-constraints-parser/types'
 
 type UnfixedTerm =
   | RelationTerm
   | LikeTerm
-  | NotLikeTerm
   | InTerm
   | UnfixedRelationTerm
+  | NotClause
 
 type UnfixedRelation = Relation | '&=' | '&!'
 
@@ -123,7 +123,7 @@ function convertPredicate(
     predicate = fixFirstTerm(terms[0], isAllNegated)
   } else {
     const firstTerm = fixFirstTerm(terms[0], isAllNegated)
-    let secondTerm: Term
+    let secondTerm: Clause
     let operator: LogicalOperator = 'OR'
     if (terms[1].type === 'UnfixedRelationTerm') {
       ;[operator, secondTerm] = fixRestTerm(terms[1], isAllNegated)
@@ -139,7 +139,7 @@ function convertPredicate(
     for (let i = 2; i < terms.length; i++) {
       let operator: LogicalOperator = 'OR'
       const targetTerm = terms[i]
-      let fixedTerm: Term
+      let fixedTerm: Clause
       if (targetTerm.type === 'UnfixedRelationTerm') {
         ;[operator, fixedTerm] = fixRestTerm(targetTerm, isAllNegated)
       } else {
@@ -159,7 +159,7 @@ function convertPredicate(
   return predicate
 }
 
-function fixFirstTerm(unfixedTerm: UnfixedTerm, isAllNegated: boolean): Term {
+function fixFirstTerm(unfixedTerm: UnfixedTerm, isAllNegated: boolean): Clause {
   if (unfixedTerm.type === 'UnfixedRelationTerm') {
     if (unfixedTerm.relation === '&=' || unfixedTerm.relation === '&!') {
       throw new Error('Invalid predicate format')
@@ -258,9 +258,12 @@ function convertTerm(
       }
     } else if (relation === 'NOT LIKE') {
       return {
-        type: 'NotLikeTerm',
-        parameter: parameter,
-        patternString: value,
+        type: 'NotClause',
+        predicate: {
+          type: 'LikeTerm',
+          parameter: parameter,
+          patternString: value,
+        },
       }
     } else {
       return {

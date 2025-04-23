@@ -467,7 +467,7 @@ describe('convertConstraints', () => {
     ]
 
     const result = printConstraints(constraints, ['A', 'B', 'C'])
-    expect(result).toBe('IF [B] LIKE "*B*" THEN [C] NOT LIKE "C??";')
+    expect(result).toBe('IF [B] LIKE "*B*" THEN NOT [C] LIKE "C??";')
   })
 
   it('should convert a simple constraint with one if and one then condition', () => {

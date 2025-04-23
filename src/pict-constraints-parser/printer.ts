@@ -46,8 +46,6 @@ function printTerm(term: Term): string {
     }
     case 'LikeTerm':
       return `[${term.parameter}] LIKE "${term.patternString}"`
-    case 'NotLikeTerm':
-      return `[${term.parameter}] NOT LIKE "${term.patternString}"`
     case 'InTerm':
       return `[${term.parameter}] IN { ${generateValueSet(term.values)} }`
     default:
