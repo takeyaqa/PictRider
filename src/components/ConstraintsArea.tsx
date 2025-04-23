@@ -83,7 +83,9 @@ function ConstraintsArea({
     <section className="mx-2 mb-10 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
       <div className="mb-5 grid grid-cols-12 gap-5">
         <div className="col-span-6">
-          <h2 className="text-lg font-bold">Constraints</h2>
+          <h2 className="text-lg font-bold" id="constraints-heading">
+            Constraints
+          </h2>
         </div>
         <div className="col-span-6 flex items-center justify-end gap-5">
           <button
@@ -106,7 +108,10 @@ function ConstraintsArea({
       </div>
       <div className="">
         <div className="overflow-x-auto">
-          <table className="border-collapse border border-black">
+          <table
+            className="border-collapse border border-black"
+            aria-labelledby="constraints-heading"
+          >
             <thead>
               <tr className="border border-black bg-gray-200 text-left">
                 <th className="px-4 py-2">Parameter</th>

@@ -36,28 +36,40 @@ test('should display result after clicking Run (edit values)', async ({
   // arrange
   await page.goto('/')
   await page.getByRole('button', { name: 'Clear' }).click()
-  await page.getByRole('textbox').nth(0).fill('null')
+  await page.getByRole('textbox', { name: 'Parameters' }).nth(0).fill('null')
   await page
-    .getByRole('textbox')
-    .nth(1)
+    .getByRole('textbox', { name: 'Values' })
+    .nth(0)
     .fill('undefined, true, false, NaN, Infinity, eval')
-  await page.getByRole('textbox').nth(2).fill('⅛⅜⅝⅞')
+  await page.getByRole('textbox', { name: 'Parameters' }).nth(1).fill('⅛⅜⅝⅞')
   await page
-    .getByRole('textbox')
-    .nth(3)
+    .getByRole('textbox', { name: 'Values' })
+    .nth(1)
     .fill('Ω≈ç√∫˜µ≤≥÷, ٠١٢٣٤٥٦٧٨٩, ¡™£¢∞§¶•ªº–≠')
-  await page.getByRole('textbox').nth(4).fill('社會科學院語學研究所')
   await page
-    .getByRole('textbox')
-    .nth(5)
+    .getByRole('textbox', { name: 'Parameters' })
+    .nth(2)
+    .fill('社會科學院語學研究所')
+  await page
+    .getByRole('textbox', { name: 'Values' })
+    .nth(2)
     .fill('表ポあA鷗ŒéＢ逍Üßªąñ丂㐀𠀀, 캄사함니다')
-  await page.getByRole('textbox').nth(6).fill('╯°□°）╯︵ ┻━┻')
   await page
-    .getByRole('textbox')
-    .nth(7)
+    .getByRole('textbox', { name: 'Parameters' })
+    .nth(3)
+    .fill('╯°□°）╯︵ ┻━┻')
+  await page
+    .getByRole('textbox', { name: 'Values' })
+    .nth(3)
     .fill('👾 🙇 💁 🙅 🙆 🙋 🙎 🙍, ✋🏿 💪🏿 👐🏿 🙌🏿 👏🏿 🙏🏿, 🇺🇸🇷🇺🇸🇦')
-  await page.getByRole('textbox').nth(8).fill('script alert0 /script')
-  await page.getByRole('textbox').nth(9).fill('مرحبًا, בְּרֵאשִׁית')
+  await page
+    .getByRole('textbox', { name: 'Parameters' })
+    .nth(4)
+    .fill('script alert0 /script')
+  await page
+    .getByRole('textbox', { name: 'Values' })
+    .nth(4)
+    .fill('مرحبًا, בְּרֵאשִׁית')
 
   // act
   await page.getByRole('button', { name: 'Run' }).click()
@@ -104,7 +116,7 @@ test('should display result after clicking Run with constraints', async ({
   // arrange
   await page.goto('/')
   await page.getByText('Constraints').click()
-  const constraintTable = page.getByRole('table').first()
+  const constraintTable = page.getByRole('table', { name: 'Constraints' })
 
   // input first constraint
   const firstFileSystemCondition = constraintTable
@@ -184,7 +196,9 @@ test('should display result after clicking Run (with display model file)', async
   await page.getByRole('button', { name: 'Run' }).click()
 
   // assert
-  await expect(page.getByRole('heading', { name: 'Model File' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Model File', level: 2 }),
+  ).toBeVisible()
   await expect(page.getByRole('table', { name: 'Result' })).toBeVisible()
 })
 
