@@ -1,5 +1,5 @@
 import { Parameter, Constraint, Config } from '../types'
-import { printConstraints } from '../pict/pict-helper'
+import { fixConstraint, printConstraints } from '../helpers'
 
 interface ConstraintTableCell {
   constraintId: string
@@ -49,30 +49,6 @@ function buildConstraintTable(
       cells,
     }
   })
-}
-
-function convertConstraintWrapper(
-  constraints: Constraint[],
-  parameters: Parameter[],
-): string {
-  return printConstraints(
-    constraints.map((c) => ({
-      conditions: c.conditions.map((cond) => {
-        const parameter = parameters.find((p) => p.id === cond.parameterId)
-        if (!parameter) {
-          throw new Error(
-            `Parameter not found for condition: ${cond.parameterId}`,
-          )
-        }
-        return {
-          ifOrThen: cond.ifOrThen,
-          predicate: cond.predicate,
-          parameter: parameter.name,
-        }
-      }),
-    })),
-    parameters.map((p) => p.name),
-  )
 }
 
 interface ConstraintsAreaProps {
@@ -198,7 +174,10 @@ function ConstraintsArea({
       </div>
       <div className="mt-3">
         <pre className="max-h-50 min-h-30 overflow-x-auto rounded bg-gray-100 p-4 font-mono text-sm text-black">
-          {convertConstraintWrapper(constraints, parameters)}
+          {printConstraints(
+            fixConstraint(constraints, parameters),
+            parameters.map((p) => p.name),
+          )}
         </pre>
       </div>
       {messages.length > 0 && (

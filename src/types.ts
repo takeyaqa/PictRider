@@ -19,9 +19,19 @@ export interface Condition {
   isValid: boolean
 }
 
+export interface FixedCondition {
+  ifOrThen: 'if' | 'then'
+  predicate: string
+  parameterName: string
+}
+
 export interface Constraint {
   id: string
   conditions: Condition[]
+}
+
+export interface FixedConstraint {
+  conditions: FixedCondition[]
 }
 
 export interface Model {
