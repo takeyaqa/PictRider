@@ -101,14 +101,17 @@ describe('printCodeFromAST', () => {
       const constraint: PredicateConstraint = {
         type: 'PredicateConstraint',
         predicate: {
-          type: 'NotLikeTerm',
-          parameter: 'Parameter1',
-          patternString: 'pattern*',
+          type: 'NotClause',
+          predicate: {
+            type: 'LikeTerm',
+            parameter: 'Parameter1',
+            patternString: 'pattern*',
+          },
         },
       }
 
       const result = printCodeFromAST([constraint])
-      expect(result).toBe('[Parameter1] NOT LIKE "pattern*";')
+      expect(result).toBe('NOT [Parameter1] LIKE "pattern*";')
     })
 
     it('should print an IN term', () => {

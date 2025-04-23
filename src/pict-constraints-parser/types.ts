@@ -39,7 +39,7 @@ export interface NotClause {
 }
 
 // Term
-export type Term = RelationTerm | LikeTerm | NotLikeTerm | InTerm
+export type Term = RelationTerm | LikeTerm | InTerm
 
 export interface RelationTerm {
   type: 'RelationTerm'
@@ -50,12 +50,6 @@ export interface RelationTerm {
 
 export interface LikeTerm {
   type: 'LikeTerm'
-  parameter: string
-  patternString: string
-}
-
-export interface NotLikeTerm {
-  type: 'NotLikeTerm'
   parameter: string
   patternString: string
 }
