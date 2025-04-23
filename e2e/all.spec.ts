@@ -196,9 +196,23 @@ test('should display result after clicking Run (with randomize generation)', asy
 
   // act
   await page.getByRole('checkbox', { name: 'Randomize generation' }).click()
-  await page.getByRole('spinbutton', { name: 'Seed' }).fill('1234')
   await page.getByRole('button', { name: 'Run' }).click()
 
   // assert
-  await expect(page.getByRole('alert')).toContainText('Used seed: 1234')
+  await expect(page.getByRole('alert')).toContainText(/Used seed: [0-9]+/)
+})
+
+test('should display result after clicking Run (with randomize generation and define seed)', async ({
+  page,
+}) => {
+  // arrange
+  await page.goto('/')
+
+  // act
+  await page.getByRole('checkbox', { name: 'Randomize generation' }).click()
+  await page.getByRole('spinbutton', { name: 'Seed' }).fill('0')
+  await page.getByRole('button', { name: 'Run' }).click()
+
+  // assert
+  await expect(page.getByRole('alert')).toContainText('Used seed: 0')
 })
