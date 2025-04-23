@@ -305,10 +305,8 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           constraintErrors: newConstraintErrors,
         }
       }
-      if (target.parameterIds.includes(e.target.value)) {
-        const newParameterIds = target.parameterIds.filter(
-          (paramId) => paramId !== e.target.value,
-        )
+      if (e.target.checked) {
+        const newParameterIds = [...target.parameterIds, e.target.value]
         return {
           parameters: newParameters,
           constraints: newConstraints,
@@ -319,8 +317,9 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           constraintErrors: newConstraintErrors,
         }
       } else {
-        const newParameterIds = [...target.parameterIds, e.target.value]
-
+        const newParameterIds = target.parameterIds.filter(
+          (paramId) => paramId !== e.target.value,
+        )
         return {
           parameters: newParameters,
           constraints: newConstraints,
