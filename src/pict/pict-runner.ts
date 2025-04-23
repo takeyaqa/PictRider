@@ -22,11 +22,11 @@ export class PictRunner {
     parameters: PictParameter[],
     {
       subModels,
-      constraints,
+      constraintsText,
       options,
     }: {
       subModels?: PictSubModel[]
-      constraints?: string
+      constraintsText?: string
       options?: PictOptions
     },
   ): PictOutput {
@@ -48,8 +48,8 @@ export class PictRunner {
     if (subModelsText) {
       model = `${model}\n\n${subModelsText}`
     }
-    if (constraints) {
-      model = `${model}\n\n${constraints}`
+    if (constraintsText) {
+      model = `${model}\n\n${constraintsText}`
     }
     this.pict.FS.writeFile('model.txt', model)
 

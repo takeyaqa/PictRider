@@ -158,7 +158,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
           order: s.order,
         }))
       : undefined
-    const constraintTexts = printConstraints(
+    const constraintsText = printConstraints(
       fixConstraint(model.constraints, model.parameters),
       model.parameters.map((p) => p.name),
     )
@@ -173,7 +173,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     const output = config.enableConstraints
       ? pictRunner.current.run(fixedParameters, {
           subModels: fixedSubModels,
-          constraints: constraintTexts,
+          constraintsText: constraintsText,
           options: pictOptions,
         })
       : pictRunner.current.run(fixedParameters, {

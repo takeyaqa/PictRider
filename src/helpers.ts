@@ -28,8 +28,8 @@ export function fixConstraint(
 }
 
 export function printConstraints(
-  constraint: FixedConstraint[],
+  constraints: FixedConstraint[],
   parameters: string[],
 ): string {
-  return printCodeFromAST(convertTableToConstraints(constraint, parameters))
+  return printCodeFromAST(convertTableToConstraints(constraints, parameters))
 }
