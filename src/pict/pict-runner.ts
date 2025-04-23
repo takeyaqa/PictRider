@@ -60,7 +60,7 @@ export class PictRunner {
         switches.push(`/o:${options.orderOfCombinations.toString()}`)
       }
       if (options.randomizeGeneration) {
-        if (options.randomizeSeed) {
+        if (options.randomizeSeed === 0 || options.randomizeSeed) {
           switches.push(`/r:${options.randomizeSeed.toString()}`)
         } else {
           switches.push('/r')
