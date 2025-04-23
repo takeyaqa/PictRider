@@ -9,7 +9,8 @@ import {
   SubModelsArea,
 } from '../components'
 import { Result } from '../types'
-import { getInitialModel, modelReducer } from '../reducers/model-reducer'
+import { fixConstraint, printConstraints } from '../helpers'
+import { modelReducer, getInitialModel } from '../reducers/model-reducer'
 import { configReducer, getInitialConfig } from '../reducers/config-reducer'
 
 interface AppMainProps {
@@ -157,23 +158,10 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
           order: s.order,
         }))
       : undefined
-    const fixedConstraints = model.constraints.map((c) => ({
-      conditions: c.conditions.map((cond) => {
-        const parameter = model.parameters.find(
-          (p) => p.id === cond.parameterId,
-        )
-        if (!parameter) {
-          throw new Error(
-            `Parameter not found for condition: ${cond.parameterId}`,
-          )
-        }
-        return {
-          ifOrThen: cond.ifOrThen,
-          predicate: cond.predicate,
-          parameter: parameter.name,
-        }
-      }),
-    }))
+    const constraintTexts = printConstraints(
+      fixConstraint(model.constraints, model.parameters),
+      model.parameters.map((p) => p.name),
+    )
     const pictOptions = {
       orderOfCombinations: config.orderOfCombinations,
       randomizeGeneration: config.randomizeGeneration,
@@ -185,7 +173,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     const output = config.enableConstraints
       ? pictRunner.current.run(fixedParameters, {
           subModels: fixedSubModels,
-          constraints: fixedConstraints,
+          constraints: constraintTexts,
           options: pictOptions,
         })
       : pictRunner.current.run(fixedParameters, {

@@ -1,20 +1,20 @@
 import { it, describe, expect } from 'vitest'
-import { printConstraints } from '../../src/pict/pict-helper'
-import { PictConstraint } from '../../src/pict/pict-types'
+import { printConstraints } from '../src/helpers'
+import { FixedConstraint } from '../src/types'
 
 describe('convertConstraints', () => {
   it('should convert basic constraint (1)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: 'a1',
           },
           {
             ifOrThen: 'then',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: 'b1',
           },
         ],
@@ -26,17 +26,17 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (2)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: '#a1',
           },
           {
             ifOrThen: 'then',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: '#b1',
           },
         ],
@@ -48,17 +48,17 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (3)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: 'a1, a2',
           },
           {
             ifOrThen: 'then',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: 'b1',
           },
         ],
@@ -70,17 +70,17 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (4)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: 'a3',
           },
           {
             ifOrThen: 'then',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: '#b1',
           },
         ],
@@ -92,22 +92,22 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (5)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: 'a1,a2',
           },
           {
             ifOrThen: 'if',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: 'b1',
           },
           {
             ifOrThen: 'then',
-            parameter: 'C',
+            parameterName: 'C',
             predicate: '#c2,c3',
           },
         ],
@@ -121,22 +121,22 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (6)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: 'a3',
           },
           {
             ifOrThen: 'then',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: '#b1',
           },
           {
             ifOrThen: 'then',
-            parameter: 'C',
+            parameterName: 'C',
             predicate: 'c2,c3',
           },
         ],
@@ -150,17 +150,17 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (7)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: 'b1',
           },
           {
             ifOrThen: 'then',
-            parameter: 'C',
+            parameterName: 'C',
             predicate: 'c1',
           },
         ],
@@ -172,22 +172,22 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (8)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: 'a1,<a2',
           },
           {
             ifOrThen: 'if',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: 'b1',
           },
           {
             ifOrThen: 'then',
-            parameter: 'C',
+            parameterName: 'C',
             predicate: '#c2,c3',
           },
         ],
@@ -201,22 +201,22 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (9)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: 'a1,a2,< a3',
           },
           {
             ifOrThen: 'if',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: 'b1',
           },
           {
             ifOrThen: 'then',
-            parameter: 'C',
+            parameterName: 'C',
             predicate: '#c2,c3',
           },
         ],
@@ -230,22 +230,22 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (10)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: 'a1,<=a2,a3',
           },
           {
             ifOrThen: 'if',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: 'b1',
           },
           {
             ifOrThen: 'then',
-            parameter: 'C',
+            parameterName: 'C',
             predicate: '#c2,c3',
           },
         ],
@@ -259,22 +259,22 @@ describe('convertConstraints', () => {
   })
 
   it('should convert basic constraint (11)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: '>a1,a2,a3',
           },
           {
             ifOrThen: 'if',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: 'b1',
           },
           {
             ifOrThen: 'then',
-            parameter: 'C',
+            parameterName: 'C',
             predicate: '#c2,c3',
           },
         ],
@@ -288,17 +288,17 @@ describe('convertConstraints', () => {
   })
 
   it('should not convert error constraint', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: 'a1,a2',
           },
           {
             ifOrThen: 'then',
-            parameter: 'C',
+            parameterName: 'C',
             predicate: 'c2,#c3',
           },
         ],
@@ -310,17 +310,17 @@ describe('convertConstraints', () => {
   })
 
   it('should convert parameter and parameter constraint (1)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: 'a1',
           },
           {
             ifOrThen: 'then',
-            parameter: 'C',
+            parameterName: 'C',
             predicate: '!B',
           },
         ],
@@ -332,17 +332,17 @@ describe('convertConstraints', () => {
   })
 
   it('should convert parameter and parameter constraint (2)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: '=C',
           },
           {
             ifOrThen: 'then',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: 'a3',
           },
         ],
@@ -354,17 +354,17 @@ describe('convertConstraints', () => {
   })
 
   it('should convert parameter and parameter constraint (3)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'then',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: 'a1',
           },
           {
             ifOrThen: 'if',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: '=C, &=D',
           },
         ],
@@ -376,17 +376,17 @@ describe('convertConstraints', () => {
   })
 
   it('should convert parameter and parameter constraint (4)', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'then',
-            parameter: 'A',
+            parameterName: 'A',
             predicate: '#a1',
           },
           {
             ifOrThen: 'if',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: '!C, !D',
           },
         ],
@@ -398,22 +398,22 @@ describe('convertConstraints', () => {
   })
 
   it('should convert condition less constraint 1', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'then',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: '!C',
           },
           {
             ifOrThen: 'then',
-            parameter: 'C',
+            parameterName: 'C',
             predicate: '!D',
           },
           {
             ifOrThen: 'then',
-            parameter: 'D',
+            parameterName: 'D',
             predicate: '!B',
           },
         ],
@@ -425,17 +425,17 @@ describe('convertConstraints', () => {
   })
 
   it('should convert condition less constraint 2', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'then',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: '=C, !D',
           },
           {
             ifOrThen: 'then',
-            parameter: 'D',
+            parameterName: 'D',
             predicate: '!E, &=F',
           },
         ],
@@ -449,17 +449,17 @@ describe('convertConstraints', () => {
   })
 
   it('should convert wildcard constraint', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'B',
+            parameterName: 'B',
             predicate: '*B*',
           },
           {
             ifOrThen: 'then',
-            parameter: 'C',
+            parameterName: 'C',
             predicate: '#C??',
           },
         ],
@@ -471,17 +471,17 @@ describe('convertConstraints', () => {
   })
 
   it('should convert a simple constraint with one if and one then condition', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'Type',
+            parameterName: 'Type',
             predicate: 'RAID-5',
           },
           {
             ifOrThen: 'then',
-            parameter: 'Size',
+            parameterName: 'Size',
             predicate: '> 1000',
           },
         ],
@@ -493,22 +493,22 @@ describe('convertConstraints', () => {
   })
 
   it('should convert a constraint with double if conditions', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'Type',
+            parameterName: 'Type',
             predicate: 'RAID-5',
           },
           {
             ifOrThen: 'if',
-            parameter: 'Format method',
+            parameterName: 'Format method',
             predicate: 'Quick',
           },
           {
             ifOrThen: 'then',
-            parameter: 'Size',
+            parameterName: 'Size',
             predicate: '>1000',
           },
         ],
@@ -526,27 +526,27 @@ describe('convertConstraints', () => {
   })
 
   it('should convert a constraint with triple if conditions', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'Type',
+            parameterName: 'Type',
             predicate: 'RAID-5',
           },
           {
             ifOrThen: 'if',
-            parameter: 'Format method',
+            parameterName: 'Format method',
             predicate: 'Quick',
           },
           {
             ifOrThen: 'then',
-            parameter: 'Size',
+            parameterName: 'Size',
             predicate: '>  1000',
           },
           {
             ifOrThen: 'if',
-            parameter: 'Compression',
+            parameterName: 'Compression',
             predicate: 'ON',
           },
         ],
@@ -565,22 +565,22 @@ describe('convertConstraints', () => {
   })
 
   it('should convert a constraint with multiple then conditions', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'Type',
+            parameterName: 'Type',
             predicate: 'RAID-5',
           },
           {
             ifOrThen: 'then',
-            parameter: 'Size',
+            parameterName: 'Size',
             predicate: '> 1000',
           },
           {
             ifOrThen: 'then',
-            parameter: 'Compression',
+            parameterName: 'Compression',
             predicate: 'OFF',
           },
         ],
@@ -598,27 +598,27 @@ describe('convertConstraints', () => {
   })
 
   it('should ignore conditions with empty predicates', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'Type',
+            parameterName: 'Type',
             predicate: 'RAID-5',
           },
           {
             ifOrThen: 'if',
-            parameter: 'Format method',
+            parameterName: 'Format method',
             predicate: '', // Empty predicate should be ignored
           },
           {
             ifOrThen: 'then',
-            parameter: 'Size',
+            parameterName: 'Size',
             predicate: '> 1000',
           },
           {
             ifOrThen: 'then',
-            parameter: 'Compression',
+            parameterName: 'Compression',
             predicate: '', // Empty predicate should be ignored
           },
         ],
@@ -635,17 +635,17 @@ describe('convertConstraints', () => {
   })
 
   it('should return an empty string when no valid conditions exist', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'Type',
+            parameterName: 'Type',
             predicate: '',
           },
           {
             ifOrThen: 'then',
-            parameter: 'Size',
+            parameterName: 'Size',
             predicate: '',
           },
         ],
@@ -657,17 +657,17 @@ describe('convertConstraints', () => {
   })
 
   it('should return an empty string with only if conditions', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'if',
-            parameter: 'Type',
+            parameterName: 'Type',
             predicate: 'RAID-5',
           },
           {
             ifOrThen: 'if',
-            parameter: 'Format method',
+            parameterName: 'Format method',
             predicate: 'Quick',
           },
         ],
@@ -680,27 +680,24 @@ describe('convertConstraints', () => {
   })
 
   it('should handle a constraint with only then conditions', () => {
-    const constraints: PictConstraint[] = [
+    const constraints: FixedConstraint[] = [
       {
         conditions: [
           {
             ifOrThen: 'then',
-            parameter: 'Size',
+            parameterName: 'Size',
             predicate: '> 1000',
           },
           {
             ifOrThen: 'then',
-            parameter: 'Compression',
+            parameterName: 'Compression',
             predicate: 'OFF',
           },
         ],
       },
     ]
 
-    const result = printConstraints(
-      constraints,
-      constraints[0].conditions.map((c) => c.parameter),
-    )
+    const result = printConstraints(constraints, ['Size', 'Compression'])
     // Since there are no IF conditions, it should just return the THEN part
     expect(result).toBe('[Size] > 1000 AND [Compression] = "OFF";')
   })

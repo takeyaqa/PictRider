@@ -1,4 +1,4 @@
-import { PictCondition, PictConstraint } from './pict-types'
+import { FixedCondition, FixedConstraint } from './types'
 import {
   Constraints as ConstraintsAst,
   Predicate,
@@ -12,8 +12,7 @@ import {
   LogicalOperator,
   NotLikeTerm,
   Clause,
-} from '../pict-constraints-parser/types'
-import { printCodeFromAST } from '../pict-constraints-parser/printer'
+} from './pict-constraints-parser/types'
 
 type UnfixedTerm =
   | RelationTerm
@@ -31,15 +30,8 @@ interface UnfixedRelationTerm {
   right: Value | ParameterName
 }
 
-export function printConstraints(
-  constraint: PictConstraint[],
-  parameters: string[],
-): string {
-  return printCodeFromAST(convertTableToConstraints(constraint, parameters))
-}
-
-function convertTableToConstraints(
-  constraints: PictConstraint[],
+export function convertTableToConstraints(
+  constraints: FixedConstraint[],
   parameters: string[],
 ): ConstraintsAst {
   const constraintsAst: ConstraintsAst = []
@@ -118,13 +110,13 @@ function convertIfOrThenConstraint(predicates: Predicate[]): Predicate {
 }
 
 function convertPredicate(
-  condition: PictCondition,
+  condition: FixedCondition,
   parameters: Set<string>,
 ): Predicate {
   const tokens = condition.predicate.split(',').map((token) => token.trim())
   const isAllNegated = tokens[0].startsWith('#')
   const terms = tokens.map((token) => {
-    return convertTerm(token, condition.parameter, parameters)
+    return convertTerm(token, condition.parameterName, parameters)
   })
   let predicate: Predicate
   if (terms.length === 1) {
@@ -217,7 +209,7 @@ function fixRestTerm(
   ]
 }
 
-function isError(conditions: PictCondition[]): boolean {
+function isError(conditions: FixedCondition[]): boolean {
   for (const cond of conditions) {
     // '#' is only allowed at the beginning of the predicate
     if (cond.predicate.includes('#') && !cond.predicate.startsWith('#')) {
