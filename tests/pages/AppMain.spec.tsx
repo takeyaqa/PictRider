@@ -289,10 +289,10 @@ describe('AppMain', () => {
 
       // assert - verify sub-models area is rendered
       expect(
-        screen.queryByRole('heading', { name: 'Sub-Models' }),
+        screen.queryByRole('heading', { level: 2, name: 'Sub-Models' }),
       ).toBeInTheDocument()
       expect(
-        screen.queryByRole('listbox', { name: 'Parameters' }),
+        screen.queryByRole('heading', { level: 3, name: 'Parameters' }),
       ).toBeInTheDocument()
       expect(
         screen.queryByRole('spinbutton', { name: 'Order' }),
@@ -312,7 +312,7 @@ describe('AppMain', () => {
 
       // assert - the sub-model name should be updated
       expect(
-        screen.queryByRole('option', { name: 'TypeTypeType' }),
+        screen.queryByRole('checkbox', { name: 'TypeTypeType' }),
       ).toBeInTheDocument()
     })
   })
@@ -864,10 +864,9 @@ describe('AppMain', () => {
     it('Should call with sub-models when enable sub-models', async () => {
       // arrange - enable sub-models
       await user.click(screen.getByLabelText('Sub-models'))
-      await user.selectOptions(
-        screen.getByRole('listbox', { name: 'Parameters' }),
-        ['Type', 'Size', 'Format method'],
-      )
+      await user.click(screen.getByRole('checkbox', { name: 'Type' }))
+      await user.click(screen.getByRole('checkbox', { name: 'Size' }))
+      await user.click(screen.getByRole('checkbox', { name: 'Format method' }))
       await user.clear(screen.getByRole('spinbutton', { name: 'Order' }))
       await user.type(screen.getByRole('spinbutton', { name: 'Order' }), '3')
 
@@ -914,10 +913,10 @@ describe('AppMain', () => {
     it('Should call with sub-models when enable sub-models and delete parameter rows', async () => {
       // arrange - enable sub-models
       await user.click(screen.getByLabelText('Sub-models'))
-      await user.selectOptions(
-        screen.getByRole('listbox', { name: 'Parameters' }),
-        ['Type', 'Size', 'Format method', 'Compression'],
-      )
+      await user.click(screen.getByRole('checkbox', { name: 'Type' }))
+      await user.click(screen.getByRole('checkbox', { name: 'Size' }))
+      await user.click(screen.getByRole('checkbox', { name: 'Format method' }))
+
       await user.clear(screen.getByRole('spinbutton', { name: 'Order' }))
       await user.type(screen.getByRole('spinbutton', { name: 'Order' }), '3')
 

@@ -4,9 +4,9 @@ interface SubModelsAreaProps {
   config: Config
   parameters: Parameter[]
   subModels: SubModel[]
-  handleChangeSubModelParameters: (
+  handleClickSubModelParameters: (
     id: string,
-    e: React.ChangeEvent<HTMLSelectElement>,
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => void
   handleChangeSubModelOrder: (
     id: string,
@@ -18,7 +18,7 @@ function SubModelsArea({
   config,
   parameters,
   subModels,
-  handleChangeSubModelParameters,
+  handleClickSubModelParameters,
   handleChangeSubModelOrder,
 }: SubModelsAreaProps) {
   if (!config.enableSubModels) {
@@ -30,25 +30,29 @@ function SubModelsArea({
       {subModels.map((subModel) => (
         <div className="mb-5 grid grid-cols-12 gap-5" key={subModel.id}>
           <div className="col-span-3">
-            <label htmlFor="sub-model-names" className="flex gap-2 align-top">
-              Parameters
-              <select
-                multiple={true}
-                value={subModel.parameterIds}
-                className="col-span-3 rounded-md border-2 bg-white p-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:outline-none"
-                id="sub-model-names"
-                autoComplete="off"
-                onChange={(e) => {
-                  handleChangeSubModelParameters(subModel.id, e)
-                }}
-              >
-                {parameters.map((parameter) => (
-                  <option key={parameter.id} value={parameter.id}>
+            <div className="flex flex-col">
+              <h3 className="mb-2">Parameters</h3>
+              {parameters.map((parameter) => (
+                <div key={parameter.id} className="mb-1 items-center">
+                  <label
+                    htmlFor={`${subModel.id}-${parameter.id}`}
+                    className="text-sm"
+                  >
+                    <input
+                      type="checkbox"
+                      id={`${subModel.id}-${parameter.id}`}
+                      value={parameter.id}
+                      checked={subModel.parameterIds.includes(parameter.id)}
+                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500"
+                      onChange={(e) => {
+                        handleClickSubModelParameters(subModel.id, e)
+                      }}
+                    />
                     {parameter.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+                  </label>
+                </div>
+              ))}
+            </div>
           </div>
           <div className="col-span-2">
             <label htmlFor="sub-model-order">
