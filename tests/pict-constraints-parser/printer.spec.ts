@@ -8,8 +8,8 @@ import {
 
 describe('printCodeFromAST', () => {
   it('should return an empty string for an empty array', () => {
-    const result = printCodeFromAST([])
-    expect(result).toBe('')
+    const result = printCodeFromAST([])[0]
+    expect(result).toBeUndefined()
   })
 
   describe('Simple Predicate Constraints', () => {
@@ -24,7 +24,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe('[Parameter1] = "Value1";')
     })
 
@@ -39,7 +39,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe('[Parameter1] = 42;')
     })
 
@@ -54,7 +54,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe('[Parameter1] = [Parameter2];')
     })
 
@@ -78,7 +78,7 @@ describe('printCodeFromAST', () => {
           },
         }
 
-        const result = printCodeFromAST([constraint])
+        const result = printCodeFromAST([constraint])[0]
         expect(result).toBe(expected)
       })
     })
@@ -93,7 +93,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe('[Parameter1] LIKE "pattern*";')
     })
 
@@ -110,7 +110,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe('NOT [Parameter1] LIKE "pattern*";')
     })
 
@@ -128,7 +128,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe('[Parameter1] IN { "Value1", "Value2", 42 };')
     })
   })
@@ -151,7 +151,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe(
         'IF [Parameter1] = "Value1" THEN [Parameter2] = "Value2";',
       )
@@ -180,7 +180,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe(
         '[Parameter1] = "Value1" AND [Parameter2] = "Value2";',
       )
@@ -207,7 +207,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe('[Parameter1] = "Value1" OR [Parameter2] = "Value2";')
     })
 
@@ -242,7 +242,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe(
         '[Parameter1] = "Value1" AND ([Parameter2] = "Value2" OR [Parameter3] = "Value3");',
       )
@@ -264,7 +264,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe('([Parameter1] = "Value1");')
     })
 
@@ -282,7 +282,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe('NOT [Parameter1] = "Value1";')
     })
   })
@@ -315,7 +315,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint1, constraint2])
+      const result = printCodeFromAST([constraint1, constraint2]).join('\n')
       expect(result).toBe(
         '[Parameter1] = "Value1";\nIF [Parameter2] = "Value2" THEN [Parameter3] = "Value3";',
       )
@@ -362,7 +362,7 @@ describe('printCodeFromAST', () => {
         },
       }
 
-      const result = printCodeFromAST([constraint])
+      const result = printCodeFromAST([constraint])[0]
       expect(result).toBe(
         'IF [Parameter1] = "Value1" AND NOT [Parameter2] = "Value2" THEN [Parameter3] IN { "Value3", "Value4" } OR [Parameter4] LIKE "pattern*";',
       )

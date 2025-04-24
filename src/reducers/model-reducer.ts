@@ -1,5 +1,5 @@
 import { Constraint, Parameter, Condition, Model } from '../types'
-import { uuidv4 } from '../helpers'
+import { fixConstraint, printConstraints, uuidv4 } from '../helpers'
 
 const invalidParameterNameCharacters = [
   '#', // comments identifier, constraints operator
@@ -118,6 +118,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       ...condition,
     })),
   }))
+  const newConstraintsText = [...state.constraintTexts]
   const newParameterErrors = [...state.parameterErrors]
   const newConstraintErrors = [...state.constraintErrors]
 
@@ -133,8 +134,9 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       if (!newParameter) {
         return {
           parameters: newParameters,
-          constraints: newConstraints,
           subModels: newSubModels,
+          constraints: newConstraints,
+          constraintTexts: newConstraintsText,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -192,8 +194,15 @@ export function modelReducer(state: Model, action: ModelAction): Model {
 
       return {
         parameters: newParameters,
-        constraints: newConstraints,
         subModels: newSubModels,
+        constraints: newConstraints,
+        constraintTexts: printConstraints(
+          fixConstraint(newConstraints, newParameters),
+          newParameters.map((p) => p.name),
+        ).map((text) => ({
+          id: uuidv4(),
+          text,
+        })),
         parameterErrors: errors,
         constraintErrors: newConstraintErrors,
       }
@@ -204,8 +213,9 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       if (state.parameters.length >= 50) {
         return {
           parameters: newParameters,
-          constraints: newConstraints,
           subModels: newSubModels,
+          constraints: newConstraints,
+          constraintTexts: newConstraintsText,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -228,8 +238,9 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       }
       return {
         parameters: [...newParameters, newParameter],
-        constraints: newConstraints,
         subModels: newSubModels,
+        constraints: newConstraints,
+        constraintTexts: newConstraintsText,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -239,8 +250,9 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       if (state.parameters.length <= 1) {
         return {
           parameters: newParameters,
-          constraints: newConstraints,
           subModels: newSubModels,
+          constraints: newConstraints,
+          constraintTexts: newConstraintsText,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -262,8 +274,9 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       })
       return {
         parameters: newParameters,
-        constraints: newConstraints,
         subModels: fixedSubModels,
+        constraints: newConstraints,
+        constraintTexts: newConstraintsText,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -279,7 +292,6 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       }))
       return {
         parameters: emptyParameters,
-        constraints: [createConstraintFromParameters(emptyParameters)],
         subModels: [
           {
             id: uuidv4(),
@@ -287,6 +299,8 @@ export function modelReducer(state: Model, action: ModelAction): Model {
             order: 2,
           },
         ],
+        constraints: [createConstraintFromParameters(emptyParameters)],
+        constraintTexts: [],
         parameterErrors: [],
         constraintErrors: [],
       }
@@ -298,8 +312,9 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       if (!target) {
         return {
           parameters: newParameters,
-          constraints: newConstraints,
           subModels: newSubModels,
+          constraints: newConstraints,
+          constraintTexts: newConstraintsText,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -308,10 +323,11 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         const newParameterIds = [...target.parameterIds, e.target.value]
         return {
           parameters: newParameters,
-          constraints: newConstraints,
           subModels: newSubModels.map((m) =>
             m.id === id ? { ...m, parameterIds: newParameterIds } : m,
           ),
+          constraints: newConstraints,
+          constraintTexts: newConstraintsText,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -321,10 +337,11 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         )
         return {
           parameters: newParameters,
-          constraints: newConstraints,
           subModels: newSubModels.map((m) =>
             m.id === id ? { ...m, parameterIds: newParameterIds } : m,
           ),
+          constraints: newConstraints,
+          constraintTexts: newConstraintsText,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -337,8 +354,9 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       if (!target) {
         return {
           parameters: newParameters,
-          constraints: newConstraints,
           subModels: newSubModels,
+          constraints: newConstraints,
+          constraintTexts: newConstraintsText,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -346,10 +364,11 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       const newOrder = Number(e.target.value)
       return {
         parameters: newParameters,
-        constraints: newConstraints,
         subModels: newSubModels.map((m) =>
           m.id === id ? { ...m, order: newOrder } : m,
         ),
+        constraints: newConstraints,
+        constraintTexts: newConstraintsText,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -366,8 +385,15 @@ export function modelReducer(state: Model, action: ModelAction): Model {
 
       return {
         parameters: newParameters,
-        constraints: newConstraints,
         subModels: newSubModels,
+        constraints: newConstraints,
+        constraintTexts: printConstraints(
+          fixConstraint(newConstraints, newParameters),
+          newParameters.map((p) => p.name),
+        ).map((text) => ({
+          id: uuidv4(),
+          text,
+        })),
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -409,8 +435,15 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       }
       return {
         parameters: newParameters,
-        constraints: newConstraints,
         subModels: newSubModels,
+        constraints: newConstraints,
+        constraintTexts: printConstraints(
+          fixConstraint(newConstraints, newParameters),
+          newParameters.map((p) => p.name),
+        ).map((text) => ({
+          id: uuidv4(),
+          text,
+        })),
         parameterErrors: newParameterErrors,
         constraintErrors: errors,
       }
@@ -421,19 +454,27 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       if (state.constraints.length >= 50) {
         return {
           parameters: newParameters,
-          constraints: newConstraints,
           subModels: newSubModels,
+          constraints: newConstraints,
+          constraintTexts: newConstraintsText,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
       }
       return {
         parameters: newParameters,
+        subModels: newSubModels,
         constraints: [
           ...newConstraints,
           createConstraintFromParameters(state.parameters),
         ],
-        subModels: newSubModels,
+        constraintTexts: [
+          ...newConstraintsText,
+          {
+            id: uuidv4(),
+            text: '',
+          },
+        ],
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -443,17 +484,20 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       if (state.constraints.length <= 1) {
         return {
           parameters: newParameters,
-          constraints: newConstraints,
           subModels: newSubModels,
+          constraints: newConstraints,
+          constraintTexts: newConstraintsText,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
       }
       newConstraints.pop()
+      newConstraintsText.pop()
       return {
         parameters: newParameters,
-        constraints: newConstraints,
         subModels: newSubModels,
+        constraints: newConstraints,
+        constraintTexts: newConstraintsText,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -510,6 +554,7 @@ export function getInitialModel(): Model {
     parameters: initialParameters,
     parameterErrors: [],
     constraints: [createConstraintFromParameters(initialParameters)],
+    constraintTexts: [],
     constraintErrors: [],
     subModels: [
       {

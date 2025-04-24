@@ -9,7 +9,6 @@ import {
   SubModelsArea,
 } from '../components'
 import { Result } from '../types'
-import { fixConstraint, printConstraints } from '../helpers'
 import { modelReducer, getInitialModel } from '../reducers/model-reducer'
 import { configReducer, getInitialConfig } from '../reducers/config-reducer'
 
@@ -158,10 +157,6 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
           order: s.order,
         }))
       : undefined
-    const constraintsText = printConstraints(
-      fixConstraint(model.constraints, model.parameters),
-      model.parameters.map((p) => p.name),
-    )
     const pictOptions = {
       orderOfCombinations: config.orderOfCombinations,
       randomizeGeneration: config.randomizeGeneration,
@@ -173,7 +168,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     const output = config.enableConstraints
       ? pictRunner.current.run(fixedParameters, {
           subModels: fixedSubModels,
-          constraintsText: constraintsText,
+          constraintsText: model.constraintTexts.map((c) => c.text).join('\n'),
           options: pictOptions,
         })
       : pictRunner.current.run(fixedParameters, {
@@ -224,6 +219,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         config={config}
         parameters={model.parameters}
         constraints={model.constraints}
+        constraintTexts={model.constraintTexts}
         messages={model.constraintErrors}
         handleToggleCondition={handleToggleCondition}
         handleChangeCondition={handleChangeCondition}
