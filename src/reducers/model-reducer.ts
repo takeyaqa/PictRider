@@ -95,12 +95,19 @@ type ModelAction =
       }
     }
   | {
+      type: 'changeConstraintFormula'
+      payload: {
+        e: React.ChangeEvent<HTMLTextAreaElement>
+      }
+    }
+  | {
       type:
         | 'clickAddRow'
         | 'clickRemoveRow'
         | 'clickClear'
         | 'clickAddConstraint'
         | 'clickRemoveConstraint'
+        | 'toggleConstraintDirectEditMode'
     }
 
 export function modelReducer(state: Model, action: ModelAction): Model {
@@ -137,6 +144,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           subModels: newSubModels,
           constraints: newConstraints,
           constraintTexts: newConstraintsText,
+          constraintDirectEditMode: state.constraintDirectEditMode,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -196,13 +204,16 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         parameters: newParameters,
         subModels: newSubModels,
         constraints: newConstraints,
-        constraintTexts: printConstraints(
-          fixConstraint(newConstraints, newParameters),
-          newParameters.map((p) => p.name),
-        ).map((text) => ({
-          id: uuidv4(),
-          text,
-        })),
+        constraintTexts: state.constraintDirectEditMode
+          ? newConstraintsText
+          : printConstraints(
+              fixConstraint(newConstraints, newParameters),
+              newParameters.map((p) => p.name),
+            ).map((text) => ({
+              id: uuidv4(),
+              text,
+            })),
+        constraintDirectEditMode: state.constraintDirectEditMode,
         parameterErrors: errors,
         constraintErrors: newConstraintErrors,
       }
@@ -216,6 +227,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           subModels: newSubModels,
           constraints: newConstraints,
           constraintTexts: newConstraintsText,
+          constraintDirectEditMode: state.constraintDirectEditMode,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -241,6 +253,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         subModels: newSubModels,
         constraints: newConstraints,
         constraintTexts: newConstraintsText,
+        constraintDirectEditMode: state.constraintDirectEditMode,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -253,6 +266,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           subModels: newSubModels,
           constraints: newConstraints,
           constraintTexts: newConstraintsText,
+          constraintDirectEditMode: state.constraintDirectEditMode,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -277,6 +291,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         subModels: fixedSubModels,
         constraints: newConstraints,
         constraintTexts: newConstraintsText,
+        constraintDirectEditMode: state.constraintDirectEditMode,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -301,6 +316,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         ],
         constraints: [createConstraintFromParameters(emptyParameters)],
         constraintTexts: [],
+        constraintDirectEditMode: state.constraintDirectEditMode,
         parameterErrors: [],
         constraintErrors: [],
       }
@@ -315,6 +331,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           subModels: newSubModels,
           constraints: newConstraints,
           constraintTexts: newConstraintsText,
+          constraintDirectEditMode: state.constraintDirectEditMode,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -328,6 +345,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           ),
           constraints: newConstraints,
           constraintTexts: newConstraintsText,
+          constraintDirectEditMode: state.constraintDirectEditMode,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -342,6 +360,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           ),
           constraints: newConstraints,
           constraintTexts: newConstraintsText,
+          constraintDirectEditMode: state.constraintDirectEditMode,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -357,6 +376,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           subModels: newSubModels,
           constraints: newConstraints,
           constraintTexts: newConstraintsText,
+          constraintDirectEditMode: state.constraintDirectEditMode,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -369,6 +389,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         ),
         constraints: newConstraints,
         constraintTexts: newConstraintsText,
+        constraintDirectEditMode: state.constraintDirectEditMode,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -394,6 +415,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           id: uuidv4(),
           text,
         })),
+        constraintDirectEditMode: state.constraintDirectEditMode,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -444,8 +466,25 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           id: uuidv4(),
           text,
         })),
+        constraintDirectEditMode: state.constraintDirectEditMode,
         parameterErrors: newParameterErrors,
         constraintErrors: errors,
+      }
+    }
+
+    case 'changeConstraintFormula': {
+      const { e } = action.payload
+      return {
+        parameters: newParameters,
+        subModels: newSubModels,
+        constraints: newConstraints,
+        constraintTexts: e.target.value.split('\n').map((text) => ({
+          id: uuidv4(),
+          text,
+        })),
+        constraintDirectEditMode: state.constraintDirectEditMode,
+        parameterErrors: newParameterErrors,
+        constraintErrors: newConstraintErrors,
       }
     }
 
@@ -457,6 +496,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           subModels: newSubModels,
           constraints: newConstraints,
           constraintTexts: newConstraintsText,
+          constraintDirectEditMode: state.constraintDirectEditMode,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -475,6 +515,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
             text: '',
           },
         ],
+        constraintDirectEditMode: state.constraintDirectEditMode,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -487,6 +528,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           subModels: newSubModels,
           constraints: newConstraints,
           constraintTexts: newConstraintsText,
+          constraintDirectEditMode: state.constraintDirectEditMode,
           parameterErrors: newParameterErrors,
           constraintErrors: newConstraintErrors,
         }
@@ -498,6 +540,19 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         subModels: newSubModels,
         constraints: newConstraints,
         constraintTexts: newConstraintsText,
+        constraintDirectEditMode: state.constraintDirectEditMode,
+        parameterErrors: newParameterErrors,
+        constraintErrors: newConstraintErrors,
+      }
+    }
+
+    case 'toggleConstraintDirectEditMode': {
+      return {
+        parameters: newParameters,
+        subModels: newSubModels,
+        constraints: newConstraints,
+        constraintTexts: newConstraintsText,
+        constraintDirectEditMode: !state.constraintDirectEditMode,
         parameterErrors: newParameterErrors,
         constraintErrors: newConstraintErrors,
       }
@@ -552,10 +607,6 @@ export function getInitialModel(): Model {
   ]
   return {
     parameters: initialParameters,
-    parameterErrors: [],
-    constraints: [createConstraintFromParameters(initialParameters)],
-    constraintTexts: [],
-    constraintErrors: [],
     subModels: [
       {
         id: uuidv4(),
@@ -563,6 +614,11 @@ export function getInitialModel(): Model {
         order: 2,
       },
     ],
+    constraints: [createConstraintFromParameters(initialParameters)],
+    constraintTexts: [],
+    constraintDirectEditMode: false,
+    parameterErrors: [],
+    constraintErrors: [],
   }
 }
 

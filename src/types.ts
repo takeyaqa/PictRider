@@ -44,6 +44,7 @@ export interface Model {
   subModels: SubModel[]
   constraints: Constraint[]
   constraintTexts: ConstraintText[]
+  constraintDirectEditMode: boolean
   parameterErrors: string[]
   constraintErrors: string[]
 }

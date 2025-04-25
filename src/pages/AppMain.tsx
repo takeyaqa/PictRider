@@ -110,6 +110,15 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
     })
   }
 
+  function handleChangeConstraintFormula(
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) {
+    dispatchModel({
+      type: 'changeConstraintFormula',
+      payload: { e },
+    })
+  }
+
   function handleClickAddConstraint() {
     dispatchModel({
       type: 'clickAddConstraint',
@@ -119,6 +128,12 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
   function handleClickRemoveConstraint() {
     dispatchModel({
       type: 'clickRemoveConstraint',
+    })
+  }
+
+  function handleToggleConstraintDirectEditMode() {
+    dispatchModel({
+      type: 'toggleConstraintDirectEditMode',
     })
   }
 
@@ -220,11 +235,14 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         parameters={model.parameters}
         constraints={model.constraints}
         constraintTexts={model.constraintTexts}
+        constraintDirectEditMode={model.constraintDirectEditMode}
         messages={model.constraintErrors}
         handleToggleCondition={handleToggleCondition}
         handleChangeCondition={handleChangeCondition}
+        handleChangeConstraintFormula={handleChangeConstraintFormula}
         handleClickAddConstraint={handleClickAddConstraint}
         handleClickRemoveConstraint={handleClickRemoveConstraint}
+        toggleConstraintDirectEditMode={handleToggleConstraintDirectEditMode}
       />
       <RunButtonArea
         parameters={model.parameters}

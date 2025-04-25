@@ -56,6 +56,7 @@ interface ConstraintsAreaProps {
   parameters: Parameter[]
   constraints: Constraint[]
   constraintTexts: ConstraintText[]
+  constraintDirectEditMode: boolean
   messages: string[]
   handleToggleCondition: (constraintId: string, parameterId: string) => void
   handleChangeCondition: (
@@ -63,8 +64,12 @@ interface ConstraintsAreaProps {
     parameterId: string,
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
+  handleChangeConstraintFormula: (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => void
   handleClickAddConstraint: () => void
   handleClickRemoveConstraint: () => void
+  toggleConstraintDirectEditMode: () => void
 }
 
 function ConstraintsArea({
@@ -72,13 +77,16 @@ function ConstraintsArea({
   parameters,
   constraints,
   constraintTexts,
+  constraintDirectEditMode,
   messages,
   handleToggleCondition,
   handleChangeCondition,
+  handleChangeConstraintFormula,
   handleClickAddConstraint,
   handleClickRemoveConstraint,
+  toggleConstraintDirectEditMode,
 }: ConstraintsAreaProps) {
-  const [directEditMode, setDirectEditMode] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   if (!config.enableConstraints) {
     return null
   }
@@ -92,7 +100,7 @@ function ConstraintsArea({
           </h2>
         </div>
         <div className="col-span-6 flex items-center justify-end gap-5">
-          {!directEditMode && (
+          {!constraintDirectEditMode && (
             <>
               <button
                 type="button"
@@ -114,7 +122,8 @@ function ConstraintsArea({
                 type="button"
                 className="w-25 cursor-pointer rounded bg-red-500 px-3 py-2 text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-50"
                 onClick={() => {
-                  setDirectEditMode(!directEditMode)
+                  toggleConstraintDirectEditMode()
+                  setIsEditing(true)
                 }}
               >
                 Edit Directly
@@ -123,7 +132,7 @@ function ConstraintsArea({
           )}
         </div>
       </div>
-      {!directEditMode && (
+      {!constraintDirectEditMode && (
         <div>
           <div className="overflow-x-auto">
             <table
@@ -197,11 +206,34 @@ function ConstraintsArea({
         </div>
       )}
       <div className="mt-3">
-        <pre className="max-h-50 min-h-30 overflow-x-auto rounded bg-gray-100 p-4 font-mono text-sm text-black">
-          {constraintTexts.map((constraintText) => (
-            <code key={constraintText.id}>{`${constraintText.text}\n`}</code>
-          ))}
-        </pre>
+        {isEditing ? (
+          <textarea
+            className="max-h-50 min-h-30 w-full rounded border border-black bg-white p-4 font-mono text-sm text-black focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none"
+            value={constraintTexts.map((c) => c.text).join('\n')}
+            autoFocus={true}
+            onChange={(e) => {
+              handleChangeConstraintFormula(e)
+            }}
+            onBlur={() => {
+              setIsEditing(false)
+            }}
+          ></textarea>
+        ) : (
+          <pre
+            className={
+              constraintDirectEditMode
+                ? 'max-h-50 min-h-30 overflow-x-auto rounded bg-white p-4 font-mono text-sm text-black'
+                : 'max-h-50 min-h-30 overflow-x-auto rounded bg-gray-100 p-4 font-mono text-sm text-black'
+            }
+            onClick={() => {
+              setIsEditing(true)
+            }}
+          >
+            {constraintTexts.map((constraintText) => (
+              <code key={constraintText.id}>{`${constraintText.text}\n`}</code>
+            ))}
+          </pre>
+        )}
       </div>
       {messages.length > 0 && (
         <div
