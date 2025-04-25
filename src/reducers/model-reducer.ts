@@ -316,7 +316,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         ],
         constraints: [createConstraintFromParameters(emptyParameters)],
         constraintTexts: [],
-        constraintDirectEditMode: state.constraintDirectEditMode,
+        constraintDirectEditMode: false,
         parameterErrors: [],
         constraintErrors: [],
       }
