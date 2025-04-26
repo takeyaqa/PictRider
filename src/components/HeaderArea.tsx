@@ -1,5 +1,3 @@
-import { NavLink } from 'react-router'
-
 function HeaderArea() {
   return (
     <header>
@@ -16,25 +14,9 @@ function HeaderArea() {
         </h1>
         <ul className="mt-auto mb-auto flex space-x-6 text-lg font-bold">
           <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                isActive ? 'text-gray-500' : 'text-black'
-              }
-            >
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/about"
-              className={({ isActive }) =>
-                isActive ? 'text-gray-500' : 'text-black'
-              }
-              end
-            >
+            <a href="/about.html" target="_blank">
               About
-            </NavLink>
+            </a>
           </li>
         </ul>
         <ul className="ml-auto flex items-center justify-end gap-3 pr-5">
