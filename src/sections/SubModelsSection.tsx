@@ -1,3 +1,4 @@
+import { NumberInput } from '../components'
 import { Config, Parameter, SubModel } from '../types'
 
 interface SubModelsSectionProps {
@@ -57,11 +58,8 @@ function SubModelsSection({
           <div className="col-span-2">
             <label htmlFor="sub-model-order">
               Order
-              <input
-                type="number"
-                className="ml-3 rounded border border-black bg-white pl-2 text-right focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none disabled:bg-gray-300"
+              <NumberInput
                 id="sub-model-order"
-                autoComplete="off"
                 value={subModel.order}
                 min={2}
                 max={parameters.length}
