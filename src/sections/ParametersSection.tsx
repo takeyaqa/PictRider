@@ -1,4 +1,4 @@
-import { Button } from '../components'
+import { Button, TextInput } from '../components'
 import { Parameter } from '../types'
 
 interface ParametersSectionProps {
@@ -61,34 +61,22 @@ function ParametersSection({
       {parameters.map((p) => (
         <div className="mb-1 grid grid-cols-12 gap-5" key={p.id}>
           <div className="col-span-3">
-            <input
-              type="text"
+            <TextInput
               name="parameter_name"
-              className={
-                p.isValidName
-                  ? 'w-full rounded border border-black bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none'
-                  : 'w-full rounded border border-red-500 bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:ring-red-500 focus:outline-none'
-              }
               value={p.name}
-              autoComplete="off"
-              aria-labelledby="parameters_label"
+              isValid={p.isValidName}
+              ariaLabelledby="parameters_label"
               onChange={(e) => {
                 handleChangeParameter(p.id, 'name', e)
               }}
             />
           </div>
           <div className="col-span-9">
-            <input
-              type="text"
+            <TextInput
               name="parameter_values"
-              className={
-                p.isValidValues
-                  ? 'w-full rounded border border-black bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none'
-                  : 'w-full rounded border border-red-500 bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:ring-red-500 focus:outline-none'
-              }
               value={p.values}
-              autoComplete="off"
-              aria-labelledby="values_label"
+              isValid={p.isValidValues}
+              ariaLabelledby="values_label"
               onChange={(e) => {
                 handleChangeParameter(p.id, 'values', e)
               }}

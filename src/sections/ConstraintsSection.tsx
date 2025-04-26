@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Parameter, Constraint, Config, ConstraintText } from '../types'
-import { Button } from '../components'
+import { Button, TextInput } from '../components'
 
 interface ConstraintTableCell {
   constraintId: string
@@ -175,15 +175,10 @@ function ConstraintsSection({
                               )
                             }}
                           />
-                          <input
-                            type="text"
+                          <TextInput
                             name="constraint_condition"
-                            className={
-                              cell.isValid
-                                ? 'w-auto rounded border border-black bg-white px-1 py-1 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none'
-                                : 'w-auto rounded border border-red-500 bg-white px-1 py-1 focus:border-transparent focus:ring-3 focus:ring-red-500 focus:outline-none'
-                            }
-                            autoComplete="off"
+                            value={cell.predicate}
+                            isValid={cell.isValid}
                             onChange={(e) => {
                               handleChangeCondition(
                                 cell.constraintId,
@@ -191,7 +186,6 @@ function ConstraintsSection({
                                 e,
                               )
                             }}
-                            value={cell.predicate}
                           />
                         </div>
                       </td>
