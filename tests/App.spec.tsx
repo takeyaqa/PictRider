@@ -3,10 +3,10 @@ import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
 import userEvent, { UserEvent } from '@testing-library/user-event'
-import AppMain from '../../src/pages/AppMain'
-import { PictRunner } from '../../src/pict/pict-runner'
+import App from '../src/App'
+import { PictRunner } from '../src/pict/pict-runner'
 
-describe('AppMain', () => {
+describe('App', () => {
   describe('ParametersArea', () => {
     let user: UserEvent
     let pictRunnerMock: PictRunner
@@ -17,7 +17,7 @@ describe('AppMain', () => {
       PictRunnerMock.prototype.run = vi.fn()
       pictRunnerMock = new PictRunner()
       user = userEvent.setup()
-      render(<AppMain pictRunnerInjection={pictRunnerMock} />)
+      render(<App pictRunnerInjection={pictRunnerMock} />)
     })
 
     afterEach(() => {
@@ -328,7 +328,7 @@ describe('AppMain', () => {
       PictRunnerMock.prototype.run = vi.fn()
       pictRunnerMock = new PictRunner()
       user = userEvent.setup()
-      render(<AppMain pictRunnerInjection={pictRunnerMock} />)
+      render(<App pictRunnerInjection={pictRunnerMock} />)
     })
 
     afterEach(() => {
@@ -387,7 +387,7 @@ describe('AppMain', () => {
       PictRunnerMock.prototype.run = vi.fn()
       pictRunnerMock = new PictRunnerMock()
       user = userEvent.setup()
-      render(<AppMain pictRunnerInjection={pictRunnerMock} />)
+      render(<App pictRunnerInjection={pictRunnerMock} />)
     })
 
     afterEach(() => {
@@ -699,7 +699,7 @@ describe('AppMain', () => {
       }))
       pictRunnerMock = new PictRunnerMock()
       user = userEvent.setup()
-      render(<AppMain pictRunnerInjection={pictRunnerMock} />)
+      render(<App pictRunnerInjection={pictRunnerMock} />)
     })
 
     afterEach(() => {
