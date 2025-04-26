@@ -177,7 +177,8 @@ function App({ pictRunnerInjection }: AppProps) {
         }))
       : undefined
     const pictOptions = {
-      orderOfCombinations: config.orderOfCombinations,
+      orderOfCombinations:
+        config.orderOfCombinations !== '' ? config.orderOfCombinations : 2,
       randomizeGeneration: config.randomizeGeneration,
       randomizeSeed:
         config.randomizeGeneration && config.randomizeSeed !== ''

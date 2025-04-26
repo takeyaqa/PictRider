@@ -34,12 +34,10 @@ export function configReducer(state: Config, action: ConfigAction): Config {
     case 'orderOfCombinations': {
       const { e } = action.payload
       let orderOfCombinations = state.orderOfCombinations
-      try {
-        if (e.target.value !== '') {
-          orderOfCombinations = Number(e.target.value)
-        }
-      } catch {
-        orderOfCombinations = 2
+      if (e.target.value !== '') {
+        orderOfCombinations = Number(e.target.value)
+      } else {
+        orderOfCombinations = ''
       }
       return {
         ...state,
