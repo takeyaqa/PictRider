@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Parameter, Constraint, Config, ConstraintText } from '../types'
+import { Button, Section, TextInput } from '../components'
 
 interface ConstraintTableCell {
   constraintId: string
@@ -51,7 +52,7 @@ function buildConstraintTable(
   })
 }
 
-interface ConstraintsAreaProps {
+interface ConstraintsSectionProps {
   config: Config
   parameters: Parameter[]
   constraints: Constraint[]
@@ -72,7 +73,7 @@ interface ConstraintsAreaProps {
   toggleConstraintDirectEditMode: () => void
 }
 
-function ConstraintsArea({
+function ConstraintsSection({
   config,
   parameters,
   constraints,
@@ -85,14 +86,14 @@ function ConstraintsArea({
   handleClickAddConstraint,
   handleClickRemoveConstraint,
   toggleConstraintDirectEditMode,
-}: ConstraintsAreaProps) {
+}: ConstraintsSectionProps) {
   const [isEditing, setIsEditing] = useState(false)
   if (!config.enableConstraints) {
     return null
   }
 
   return (
-    <section className="mx-2 mb-10 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
+    <Section>
       <div className="mb-5 grid grid-cols-12 gap-5">
         <div className="col-span-6">
           <h2 className="text-lg font-bold" id="constraints-heading">
@@ -102,32 +103,29 @@ function ConstraintsArea({
         <div className="col-span-6 flex items-center justify-end gap-5">
           {!constraintDirectEditMode && (
             <>
-              <button
-                type="button"
-                className="w-25 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-50"
-                onClick={handleClickAddConstraint}
+              <Button
+                type="secondary"
+                label="Add Constraint"
+                size="md"
                 disabled={constraints.length >= 50}
-              >
-                Add Constraint
-              </button>
-              <button
-                type="button"
-                className="w-25 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-50"
-                onClick={handleClickRemoveConstraint}
+                onClick={handleClickAddConstraint}
+              />
+              <Button
+                type="secondary"
+                label="Remove Constraint"
+                size="md"
                 disabled={constraints.length <= 1}
-              >
-                Remove Constraint
-              </button>
-              <button
-                type="button"
-                className="w-25 cursor-pointer rounded bg-red-500 px-3 py-2 text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-50"
+                onClick={handleClickRemoveConstraint}
+              />
+              <Button
+                type="danger"
+                label="Edit Directly"
+                size="md"
                 onClick={() => {
                   toggleConstraintDirectEditMode()
                   setIsEditing(true)
                 }}
-              >
-                Edit Directly
-              </button>
+              />
             </>
           )}
         </div>
@@ -165,27 +163,22 @@ function ConstraintsArea({
                         }
                       >
                         <div className="flex gap-1">
-                          <button
-                            type="button"
-                            className="w-15 cursor-pointer rounded bg-gray-500 px-3 py-1 font-mono text-sm text-white hover:bg-gray-600"
+                          <Button
+                            type="secondary"
+                            label={cell.ifOrThen ?? ''}
+                            size="xs"
+                            fontMono={true}
                             onClick={() => {
                               handleToggleCondition(
                                 cell.constraintId,
                                 row.parameterId,
                               )
                             }}
-                          >
-                            {cell.ifOrThen}
-                          </button>
-                          <input
-                            type="text"
+                          />
+                          <TextInput
                             name="constraint_condition"
-                            className={
-                              cell.isValid
-                                ? 'w-auto rounded border border-black bg-white px-1 py-1 focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none'
-                                : 'w-auto rounded border border-red-500 bg-white px-1 py-1 focus:border-transparent focus:ring-3 focus:ring-red-500 focus:outline-none'
-                            }
-                            autoComplete="off"
+                            value={cell.predicate}
+                            isValid={cell.isValid}
                             onChange={(e) => {
                               handleChangeCondition(
                                 cell.constraintId,
@@ -193,7 +186,6 @@ function ConstraintsArea({
                                 e,
                               )
                             }}
-                            value={cell.predicate}
                           />
                         </div>
                       </td>
@@ -262,8 +254,8 @@ function ConstraintsArea({
           ))}
         </div>
       )}
-    </section>
+    </Section>
   )
 }
 
-export default ConstraintsArea
+export default ConstraintsSection

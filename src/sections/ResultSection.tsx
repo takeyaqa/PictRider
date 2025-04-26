@@ -1,3 +1,4 @@
+import { Button, Section } from '../components'
 import { Config, Output } from '../types'
 
 function createCsvContent(output: Output) {
@@ -16,12 +17,12 @@ function createTsvContent(output: Output) {
   return [headerRow, ...bodyRows].join('\n')
 }
 
-interface ResultAreaProps {
+interface ResultSectionProps {
   config: Config
   output: Output | null
 }
 
-function ResultArea({ config, output }: ResultAreaProps) {
+function ResultSection({ config, output }: ResultSectionProps) {
   function handleDownload(type: 'csv' | 'tsv') {
     if (!output) {
       return
@@ -65,31 +66,29 @@ function ResultArea({ config, output }: ResultAreaProps) {
   }
 
   return (
-    <section className="mx-2 mb-10 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
+    <Section>
       {modelFile}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-xl font-bold" id="result_heading">
           Result
         </h2>
         <div className="flex gap-2">
-          <button
-            type="button"
-            className="cursor-pointer rounded bg-green-600 px-3 py-2 text-white hover:bg-green-700"
+          <Button
+            type="success"
+            label="CSV"
+            size="sm"
             onClick={() => {
               handleDownload('csv')
             }}
-          >
-            CSV
-          </button>
-          <button
-            type="button"
-            className="cursor-pointer rounded bg-green-600 px-3 py-2 text-white hover:bg-green-700"
+          />
+          <Button
+            type="success"
+            label="TSV"
+            size="sm"
             onClick={() => {
               handleDownload('tsv')
             }}
-          >
-            TSV
-          </button>
+          />
         </div>
       </div>
       {output.message && (
@@ -136,8 +135,8 @@ function ResultArea({ config, output }: ResultAreaProps) {
           </tbody>
         </table>
       </div>
-    </section>
+    </Section>
   )
 }
 
-export default ResultArea
+export default ResultSection

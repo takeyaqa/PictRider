@@ -1,18 +1,19 @@
+import { Button } from '../components'
 import { Constraint, Parameter } from '../types'
 
-interface RunButtonAreaProps {
+interface RunButtonSectionProps {
   parameters: Parameter[]
   constraints: Constraint[]
   pictRunnerLoaded: boolean
   onClickRun: () => void
 }
 
-function RunButtonArea({
+function RunButtonSection({
   parameters,
   constraints,
   pictRunnerLoaded,
   onClickRun,
-}: RunButtonAreaProps) {
+}: RunButtonSectionProps) {
   const containsInvalidValues = parameters.some(
     (p) => !p.isValidName || !p.isValidValues,
   )
@@ -22,10 +23,10 @@ function RunButtonArea({
   return (
     <section className="mx-10 my-10">
       <div>
-        <input
-          type="submit"
-          value="Run"
-          className="w-full cursor-pointer rounded bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+        <Button
+          type="primary"
+          label="Run"
+          size="full"
           disabled={
             containsInvalidValues ||
             containsInvalidConstraints ||
@@ -38,4 +39,4 @@ function RunButtonArea({
   )
 }
 
-export default RunButtonArea
+export default RunButtonSection

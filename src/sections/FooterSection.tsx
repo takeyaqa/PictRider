@@ -1,4 +1,4 @@
-function FooterArea() {
+function FooterSection() {
   return (
     <footer>
       <div className="mx-10 mb-10 px-4 text-center">
@@ -8,4 +8,4 @@ function FooterArea() {
   )
 }
 
-export default FooterArea
+export default FooterSection

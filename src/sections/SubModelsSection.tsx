@@ -1,6 +1,7 @@
+import { Checkbox, NumberInput, Section } from '../components'
 import { Config, Parameter, SubModel } from '../types'
 
-interface SubModelsAreaProps {
+interface SubModelsSectionProps {
   config: Config
   parameters: Parameter[]
   subModels: SubModel[]
@@ -14,18 +15,18 @@ interface SubModelsAreaProps {
   ) => void
 }
 
-function SubModelsArea({
+function SubModelsSection({
   config,
   parameters,
   subModels,
   handleClickSubModelParameters,
   handleChangeSubModelOrder,
-}: SubModelsAreaProps) {
+}: SubModelsSectionProps) {
   if (!config.enableSubModels) {
     return null
   }
   return (
-    <section className="mx-2 mt-5 mb-5 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
+    <Section>
       <h2 className="mb-5 text-lg font-bold">Sub-Models</h2>
       {subModels.map((subModel) => (
         <div className="mb-5 grid grid-cols-12 gap-5" key={subModel.id}>
@@ -33,23 +34,19 @@ function SubModelsArea({
             <div className="flex flex-col">
               <h3 className="mb-2">Parameters</h3>
               {parameters.map((parameter) => (
-                <div key={parameter.id} className="mb-1 items-center">
-                  <label
-                    htmlFor={`${subModel.id}-${parameter.id}`}
-                    className="text-sm"
-                  >
-                    <input
-                      type="checkbox"
-                      id={`${subModel.id}-${parameter.id}`}
-                      value={parameter.id}
-                      checked={subModel.parameterIds.includes(parameter.id)}
-                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500"
-                      onChange={(e) => {
-                        handleClickSubModelParameters(subModel.id, e)
-                      }}
-                    />
-                    {parameter.name}
-                  </label>
+                <div
+                  key={`${subModel.id}-${parameter.id}`}
+                  className="mb-1 items-center"
+                >
+                  <Checkbox
+                    id={`${subModel.id}-${parameter.id}`}
+                    label={parameter.name}
+                    value={parameter.id}
+                    checked={subModel.parameterIds.includes(parameter.id)}
+                    onChange={(e) => {
+                      handleClickSubModelParameters(subModel.id, e)
+                    }}
+                  />
                 </div>
               ))}
             </div>
@@ -57,11 +54,8 @@ function SubModelsArea({
           <div className="col-span-2">
             <label htmlFor="sub-model-order">
               Order
-              <input
-                type="number"
-                className="ml-3 rounded border border-black bg-white pl-2 text-right focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none disabled:bg-gray-300"
+              <NumberInput
                 id="sub-model-order"
-                autoComplete="off"
                 value={subModel.order}
                 min={2}
                 max={parameters.length}
@@ -73,8 +67,8 @@ function SubModelsArea({
           </div>
         </div>
       ))}
-    </section>
+    </Section>
   )
 }
 
-export default SubModelsArea
+export default SubModelsSection

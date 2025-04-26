@@ -1,4 +1,4 @@
-function HeaderArea() {
+function HeaderSection() {
   return (
     <header>
       <nav className="top-0 left-0 mb-10 flex h-15 w-full bg-white text-black shadow-sm">
@@ -36,4 +36,4 @@ function HeaderArea() {
   )
 }
 
-export default HeaderArea
+export default HeaderSection
