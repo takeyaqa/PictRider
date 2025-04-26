@@ -1,4 +1,4 @@
-interface ButtonProps {
+interface TextInputProps {
   name: string
   value: string
   isValid: boolean
@@ -12,7 +12,7 @@ function TextInput({
   isValid,
   ariaLabelledby,
   onChange,
-}: ButtonProps) {
+}: TextInputProps) {
   const validClass = isValid
     ? 'border-black focus:ring-blue-500'
     : 'border-red-500 focus:ring-red-500'
