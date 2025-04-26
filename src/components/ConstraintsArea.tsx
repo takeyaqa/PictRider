@@ -207,32 +207,48 @@ function ConstraintsArea({
       )}
       <div className="mt-3">
         {isEditing ? (
-          <textarea
-            className="max-h-50 min-h-30 w-full rounded border border-black bg-white p-4 font-mono text-sm text-black focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none"
-            value={constraintTexts.map((c) => c.text).join('\n')}
-            autoFocus={true}
-            onChange={(e) => {
-              handleChangeConstraintFormula(e)
-            }}
-            onBlur={() => {
-              setIsEditing(false)
-            }}
-          ></textarea>
+          <>
+            <label
+              className="mb-2 block text-sm font-bold text-gray-900"
+              htmlFor="constraint_formula"
+            >
+              Constraint Formula
+            </label>
+            <textarea
+              className="max-h-50 min-h-30 w-full rounded border border-black bg-white p-4 font-mono text-sm text-black focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none"
+              value={constraintTexts.map((c) => c.text).join('\n')}
+              id="constraint_formula"
+              autoFocus={true}
+              onChange={(e) => {
+                handleChangeConstraintFormula(e)
+              }}
+              onBlur={() => {
+                setIsEditing(false)
+              }}
+            ></textarea>
+          </>
         ) : (
-          <pre
-            className={
-              constraintDirectEditMode
-                ? 'max-h-50 min-h-30 overflow-x-auto rounded bg-white p-4 font-mono text-sm text-black'
-                : 'max-h-50 min-h-30 overflow-x-auto rounded bg-gray-100 p-4 font-mono text-sm text-black'
-            }
-            onClick={() => {
-              setIsEditing(true)
-            }}
-          >
-            {constraintTexts.map((constraintText) => (
-              <code key={constraintText.id}>{`${constraintText.text}\n`}</code>
-            ))}
-          </pre>
+          <>
+            <span className="mb-2 block text-sm font-bold text-gray-900">
+              Constraint Formula
+            </span>
+            <pre
+              className={
+                constraintDirectEditMode
+                  ? 'max-h-50 min-h-30 overflow-x-auto rounded bg-white p-4 font-mono text-sm text-black'
+                  : 'max-h-50 min-h-30 overflow-x-auto rounded bg-gray-100 p-4 font-mono text-sm text-black'
+              }
+              onClick={() => {
+                setIsEditing(true)
+              }}
+            >
+              {constraintTexts.map((constraintText) => (
+                <code
+                  key={constraintText.id}
+                >{`${constraintText.text}\n`}</code>
+              ))}
+            </pre>
+          </>
         )}
       </div>
       {messages.length > 0 && (
