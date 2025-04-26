@@ -662,6 +662,25 @@ describe('AppMain', () => {
       )
       expect(afterPreElement).toBeInTheDocument()
     })
+
+    it('Should change direct edit mode when click button', async () => {
+      // arrange
+      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+
+      // act
+      await user.click(screen.getByRole('button', { name: 'Edit Directly' }))
+
+      // assert
+      expect(
+        screen.getByRole('textbox', { name: 'Constraint Formula' }),
+      ).toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: 'Add Constraint' }),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: 'Remove Constraint' }),
+      ).not.toBeInTheDocument()
+    })
   })
 
   describe('Run Pict', () => {
@@ -1025,6 +1044,51 @@ describe('AppMain', () => {
               order: 3,
             },
           ],
+          options: expect.anything(),
+        },
+      )
+    })
+
+    it('Should call with constraints when constraints direct editing mode', async () => {
+      // arrange
+      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(screen.getByRole('button', { name: 'Edit Directly' }))
+
+      // act
+      await user.type(
+        screen.getByRole('textbox', { name: 'Constraint Formula' }),
+        'IF [[Type] = "RAID-5" THEN [[Size] > 1000;',
+      )
+      await user.click(screen.getByRole('button', { name: 'Run' }))
+
+      // assert
+      expect(pictRunnerMock.run).toHaveBeenCalledWith(
+        [
+          {
+            name: 'Type',
+            values: 'Single, Span, Stripe, Mirror, RAID-5',
+          },
+          {
+            name: 'Size',
+            values: '10, 100, 500, 1000, 5000, 10000, 40000',
+          },
+          {
+            name: 'Format method',
+            values: 'Quick, Slow',
+          },
+          {
+            name: 'File system',
+            values: 'FAT, FAT32, NTFS',
+          },
+          {
+            name: 'Cluster size',
+            values: '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
+          },
+          { name: 'Compression', values: 'ON, OFF' },
+        ],
+        {
+          constraintsText: 'IF [Type] = "RAID-5" THEN [Size] > 1000;',
+          subModels: undefined,
           options: expect.anything(),
         },
       )

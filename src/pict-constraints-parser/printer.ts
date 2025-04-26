@@ -1,7 +1,7 @@
 import { Constraint, Predicate, Clause, Term, Value } from './types'
 
-export function printCodeFromAST(ast: Constraint[]): string {
-  return ast.map(printConstraint).join('\n')
+export function printCodeFromAST(ast: Constraint[]): string[] {
+  return ast.map(printConstraint)
 }
 
 function printConstraint(constraint: Constraint): string {

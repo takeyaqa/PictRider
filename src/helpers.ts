@@ -30,6 +30,6 @@ export function fixConstraint(
 export function printConstraints(
   constraints: FixedConstraint[],
   parameters: string[],
-): string {
+): string[] {
   return printCodeFromAST(convertTableToConstraints(constraints, parameters))
 }

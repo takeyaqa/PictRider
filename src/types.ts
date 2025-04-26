@@ -34,10 +34,17 @@ export interface FixedConstraint {
   conditions: FixedCondition[]
 }
 
+export interface ConstraintText {
+  id: string
+  text: string
+}
+
 export interface Model {
   parameters: Parameter[]
-  constraints: Constraint[]
   subModels: SubModel[]
+  constraints: Constraint[]
+  constraintTexts: ConstraintText[]
+  constraintDirectEditMode: boolean
   parameterErrors: string[]
   constraintErrors: string[]
 }

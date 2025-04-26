@@ -21,7 +21,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe('IF [A] = "a1" THEN [B] = "b1";')
   })
 
@@ -43,7 +43,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe('IF [A] <> "a1" THEN [B] <> "b1";')
   })
 
@@ -65,7 +65,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe('IF [A] = "a1" OR [A] = "a2" THEN [B] = "b1";')
   })
 
@@ -87,7 +87,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe('IF [A] = "a3" THEN [B] <> "b1";')
   })
 
@@ -114,7 +114,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe(
       'IF ([A] = "a1" OR [A] = "a2") AND [B] = "b1" THEN [C] <> "c2" AND [C] <> "c3";',
     )
@@ -143,7 +143,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe(
       'IF [A] = "a3" THEN [B] <> "b1" AND ([C] = "c2" OR [C] = "c3");',
     )
@@ -167,7 +167,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe('IF [B] = "b1" THEN [C] = "c1";')
   })
 
@@ -194,7 +194,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe(
       'IF ([A] = "a1" AND [A] < "a2") AND [B] = "b1" THEN [C] <> "c2" AND [C] <> "c3";',
     )
@@ -223,7 +223,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe(
       'IF (([A] = "a1" OR [A] = "a2") AND [A] < "a3") AND [B] = "b1" THEN [C] <> "c2" AND [C] <> "c3";',
     )
@@ -252,7 +252,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe(
       'IF (([A] = "a1" AND [A] <= "a2") OR [A] = "a3") AND [B] = "b1" THEN [C] <> "c2" AND [C] <> "c3";',
     )
@@ -281,7 +281,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe(
       'IF (([A] > "a1" OR [A] = "a2") OR [A] = "a3") AND [B] = "b1" THEN [C] <> "c2" AND [C] <> "c3";',
     )
@@ -305,8 +305,8 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
-    expect(result).toBe('')
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
+    expect(result).toBeUndefined()
   })
 
   it('should convert parameter and parameter constraint (1)', () => {
@@ -327,7 +327,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe('IF [A] = "a1" THEN [C] <> [B];')
   })
 
@@ -349,7 +349,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe('IF [B] = [C] THEN [A] = "a3";')
   })
 
@@ -371,7 +371,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe('IF [B] = [C] AND [B] = [D] THEN [A] = "a1";')
   })
 
@@ -393,7 +393,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe('IF [B] <> [C] OR [B] <> [D] THEN [A] <> "a1";')
   })
 
@@ -420,7 +420,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
     expect(result).toBe('([B] <> [C] AND [C] <> [D]) AND [D] <> [B];')
   })
 
@@ -442,7 +442,14 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C', 'D', 'E', 'F'])
+    const result = printConstraints(constraints, [
+      'A',
+      'B',
+      'C',
+      'D',
+      'E',
+      'F',
+    ])[0]
     expect(result).toBe(
       '([B] = [C] OR [B] <> [D]) AND ([D] <> [E] AND [D] = [F]);',
     )
@@ -466,7 +473,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['A', 'B', 'C'])
+    const result = printConstraints(constraints, ['A', 'B', 'C'])[0]
     expect(result).toBe('IF [B] LIKE "*B*" THEN NOT [C] LIKE "C??";')
   })
 
@@ -488,7 +495,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['Type', 'Size'])
+    const result = printConstraints(constraints, ['Type', 'Size'])[0]
     expect(result).toBe('IF [Type] = "RAID-5" THEN [Size] > 1000;')
   })
 
@@ -519,7 +526,7 @@ describe('convertConstraints', () => {
       'Type',
       'Format method',
       'Size',
-    ])
+    ])[0]
     expect(result).toBe(
       'IF [Type] = "RAID-5" AND [Format method] = "Quick" THEN [Size] > 1000;',
     )
@@ -558,7 +565,7 @@ describe('convertConstraints', () => {
       'Format method',
       'Size',
       'Compression',
-    ])
+    ])[0]
     expect(result).toBe(
       'IF ([Type] = "RAID-5" AND [Format method] = "Quick") AND [Compression] = "ON" THEN [Size] > 1000;',
     )
@@ -591,7 +598,7 @@ describe('convertConstraints', () => {
       'Type',
       'Size',
       'Compression',
-    ])
+    ])[0]
     expect(result).toBe(
       'IF [Type] = "RAID-5" THEN [Size] > 1000 AND [Compression] = "OFF";',
     )
@@ -630,7 +637,7 @@ describe('convertConstraints', () => {
       'Format method',
       'Size',
       'Compression',
-    ])
+    ])[0]
     expect(result).toBe('IF [Type] = "RAID-5" THEN [Size] > 1000;')
   })
 
@@ -652,8 +659,8 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['Type', 'Size'])
-    expect(result).toBe('')
+    const result = printConstraints(constraints, ['Type', 'Size'])[0]
+    expect(result).toBeUndefined()
   })
 
   it('should return an empty string with only if conditions', () => {
@@ -674,9 +681,9 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['Type', 'Format method'])
+    const result = printConstraints(constraints, ['Type', 'Format method'])[0]
     // Since there are no THEN conditions, it should just return the IF part
-    expect(result).toBe('')
+    expect(result).toBeUndefined()
   })
 
   it('should handle a constraint with only then conditions', () => {
@@ -697,7 +704,7 @@ describe('convertConstraints', () => {
       },
     ]
 
-    const result = printConstraints(constraints, ['Size', 'Compression'])
+    const result = printConstraints(constraints, ['Size', 'Compression'])[0]
     // Since there are no IF conditions, it should just return the THEN part
     expect(result).toBe('[Size] > 1000 AND [Compression] = "OFF";')
   })
