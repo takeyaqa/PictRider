@@ -1,4 +1,11 @@
-import { Constraint, Parameter, Condition, Model } from '../types'
+import {
+  Constraint,
+  Parameter,
+  Condition,
+  Model,
+  SubModel,
+  ConstraintText,
+} from '../types'
 import { fixConstraint, printConstraints, uuidv4 } from '../helpers'
 
 const invalidParameterNameCharacters = [
@@ -111,27 +118,10 @@ type ModelAction =
     }
 
 export function modelReducer(state: Model, action: ModelAction): Model {
-  // Copy the state to avoid mutating it directly
-  const newParameters = state.parameters.map((parameter) => ({
-    ...parameter,
-  }))
-  const newSubModels = state.subModels.map((subModel) => ({
-    ...subModel,
-    parameterIds: [...subModel.parameterIds],
-  }))
-  const newConstraints = state.constraints.map((constraint) => ({
-    ...constraint,
-    conditions: constraint.conditions.map((condition) => ({
-      ...condition,
-    })),
-  }))
-  const newConstraintsText = [...state.constraintTexts]
-  const newParameterErrors = [...state.parameterErrors]
-  const newConstraintErrors = [...state.constraintErrors]
-
   switch (action.type) {
     case 'changeParameter': {
       const { id, field, e } = action.payload
+      const newParameters = copyParameters(state.parameters)
       // Reset validation flags
       for (const parameter of newParameters) {
         parameter.isValidName = true
@@ -139,15 +129,8 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       }
       const newParameter = newParameters.find((p) => p.id === id)
       if (!newParameter) {
-        return {
-          parameters: newParameters,
-          subModels: newSubModels,
-          constraints: newConstraints,
-          constraintTexts: newConstraintsText,
-          constraintDirectEditMode: state.constraintDirectEditMode,
-          parameterErrors: newParameterErrors,
-          constraintErrors: newConstraintErrors,
-        }
+        // may not be reached
+        return copyModel(state)
       }
       newParameter[field] = e.target.value
       const errors: string[] = []
@@ -201,36 +184,25 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       }
 
       return {
+        ...copyModel(state),
         parameters: newParameters,
-        subModels: newSubModels,
-        constraints: newConstraints,
         constraintTexts: state.constraintDirectEditMode
-          ? newConstraintsText
+          ? copyConstraintTexts(state.constraintTexts)
           : printConstraints(
-              fixConstraint(newConstraints, newParameters),
+              fixConstraint(state.constraints, newParameters),
               newParameters.map((p) => p.name),
             ).map((text) => ({
               id: uuidv4(),
               text,
             })),
-        constraintDirectEditMode: state.constraintDirectEditMode,
         parameterErrors: errors,
-        constraintErrors: newConstraintErrors,
       }
     }
 
     case 'clickAddRow': {
-      // Limit to maximum 50 rows
       if (state.parameters.length >= 50) {
-        return {
-          parameters: newParameters,
-          subModels: newSubModels,
-          constraints: newConstraints,
-          constraintTexts: newConstraintsText,
-          constraintDirectEditMode: state.constraintDirectEditMode,
-          parameterErrors: newParameterErrors,
-          constraintErrors: newConstraintErrors,
-        }
+        // may not be reached
+        return copyModel(state)
       }
 
       const newParameter = {
@@ -240,6 +212,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         isValidName: true,
         isValidValues: true,
       }
+      const newConstraints = copyConstraints(state.constraints)
       for (const newConstraint of newConstraints) {
         newConstraint.conditions.push({
           ifOrThen: 'if',
@@ -249,51 +222,34 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         })
       }
       return {
-        parameters: [...newParameters, newParameter],
-        subModels: newSubModels,
+        ...copyModel(state),
+        parameters: [...copyParameters(state.parameters), newParameter],
         constraints: newConstraints,
-        constraintTexts: newConstraintsText,
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        parameterErrors: newParameterErrors,
-        constraintErrors: newConstraintErrors,
       }
     }
 
     case 'clickRemoveRow': {
       if (state.parameters.length <= 1) {
-        return {
-          parameters: newParameters,
-          subModels: newSubModels,
-          constraints: newConstraints,
-          constraintTexts: newConstraintsText,
-          constraintDirectEditMode: state.constraintDirectEditMode,
-          parameterErrors: newParameterErrors,
-          constraintErrors: newConstraintErrors,
-        }
+        // may not be reached
+        return copyModel(state)
       }
-
+      const newParameters = copyParameters(state.parameters)
       const removedParameter = newParameters.pop()
-      // eslint-disable-next-line @typescript-eslint/prefer-for-of
-      for (let i = 0; i < newConstraints.length; i++) {
-        newConstraints[i].conditions.pop()
-      }
-      const fixedSubModels = newSubModels.map((subModel) => {
-        const newParameterIds = subModel.parameterIds.filter(
-          (id) => id !== removedParameter?.id,
-        )
+      const newConstraints = copyConstraints(state.constraints)
+      newConstraints.forEach((c) => c.conditions.pop())
+      const newSubModels = state.subModels.map((subModel) => {
         return {
           ...subModel,
-          parameterIds: newParameterIds,
+          parameterIds: subModel.parameterIds.filter(
+            (id) => id !== removedParameter?.id,
+          ),
         }
       })
       return {
+        ...copyModel(state),
         parameters: newParameters,
-        subModels: fixedSubModels,
+        subModels: newSubModels,
         constraints: newConstraints,
-        constraintTexts: newConstraintsText,
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        parameterErrors: newParameterErrors,
-        constraintErrors: newConstraintErrors,
       }
     }
 
@@ -324,79 +280,53 @@ export function modelReducer(state: Model, action: ModelAction): Model {
 
     case 'clickSubModelParameters': {
       const { id, e } = action.payload
+      const newSubModels = copySubModels(state.subModels)
       const target = newSubModels.find((m) => m.id === id)
       if (!target) {
-        return {
-          parameters: newParameters,
-          subModels: newSubModels,
-          constraints: newConstraints,
-          constraintTexts: newConstraintsText,
-          constraintDirectEditMode: state.constraintDirectEditMode,
-          parameterErrors: newParameterErrors,
-          constraintErrors: newConstraintErrors,
-        }
+        // may not be reached
+        return copyModel(state)
       }
       if (e.target.checked) {
         const newParameterIds = [...target.parameterIds, e.target.value]
         return {
-          parameters: newParameters,
+          ...copyModel(state),
           subModels: newSubModels.map((m) =>
             m.id === id ? { ...m, parameterIds: newParameterIds } : m,
           ),
-          constraints: newConstraints,
-          constraintTexts: newConstraintsText,
-          constraintDirectEditMode: state.constraintDirectEditMode,
-          parameterErrors: newParameterErrors,
-          constraintErrors: newConstraintErrors,
         }
       } else {
         const newParameterIds = target.parameterIds.filter(
           (paramId) => paramId !== e.target.value,
         )
         return {
-          parameters: newParameters,
+          ...copyModel(state),
           subModels: newSubModels.map((m) =>
             m.id === id ? { ...m, parameterIds: newParameterIds } : m,
           ),
-          constraints: newConstraints,
-          constraintTexts: newConstraintsText,
-          constraintDirectEditMode: state.constraintDirectEditMode,
-          parameterErrors: newParameterErrors,
-          constraintErrors: newConstraintErrors,
         }
       }
     }
 
     case 'changeSubModelOrder': {
       const { id, e } = action.payload
+      const newSubModels = copySubModels(state.subModels)
       const target = newSubModels.find((m) => m.id === id)
       if (!target) {
-        return {
-          parameters: newParameters,
-          subModels: newSubModels,
-          constraints: newConstraints,
-          constraintTexts: newConstraintsText,
-          constraintDirectEditMode: state.constraintDirectEditMode,
-          parameterErrors: newParameterErrors,
-          constraintErrors: newConstraintErrors,
-        }
+        // may not be reached
+        return copyModel(state)
       }
       const newOrder = Number(e.target.value)
       return {
-        parameters: newParameters,
+        ...copyModel(state),
         subModels: newSubModels.map((m) =>
           m.id === id ? { ...m, order: newOrder } : m,
         ),
-        constraints: newConstraints,
-        constraintTexts: newConstraintsText,
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        parameterErrors: newParameterErrors,
-        constraintErrors: newConstraintErrors,
       }
     }
 
     case 'toggleCondition': {
       const { constraintId, parameterId } = action.payload
+      const newConstraints = copyConstraints(state.constraints)
       const newCondition = searchCondition(
         newConstraints,
         constraintId,
@@ -405,24 +335,21 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       newCondition.ifOrThen = newCondition.ifOrThen === 'if' ? 'then' : 'if'
 
       return {
-        parameters: newParameters,
-        subModels: newSubModels,
+        ...copyModel(state),
         constraints: newConstraints,
         constraintTexts: printConstraints(
-          fixConstraint(newConstraints, newParameters),
-          newParameters.map((p) => p.name),
+          fixConstraint(newConstraints, state.parameters),
+          state.parameters.map((p) => p.name),
         ).map((text) => ({
           id: uuidv4(),
           text,
         })),
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        parameterErrors: newParameterErrors,
-        constraintErrors: newConstraintErrors,
       }
     }
 
     case 'changeCondition': {
       const { constraintId, parameterId, e } = action.payload
+      const newConstraints = copyConstraints(state.constraints)
       const newCondition = searchCondition(
         newConstraints,
         constraintId,
@@ -456,18 +383,15 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         )
       }
       return {
-        parameters: newParameters,
-        subModels: newSubModels,
+        ...copyModel(state),
         constraints: newConstraints,
         constraintTexts: printConstraints(
-          fixConstraint(newConstraints, newParameters),
-          newParameters.map((p) => p.name),
+          fixConstraint(newConstraints, state.parameters),
+          state.parameters.map((p) => p.name),
         ).map((text) => ({
           id: uuidv4(),
           text,
         })),
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        parameterErrors: newParameterErrors,
         constraintErrors: errors,
       }
     }
@@ -475,88 +399,93 @@ export function modelReducer(state: Model, action: ModelAction): Model {
     case 'changeConstraintFormula': {
       const { e } = action.payload
       return {
-        parameters: newParameters,
-        subModels: newSubModels,
-        constraints: newConstraints,
+        ...copyModel(state),
         constraintTexts: e.target.value.split('\n').map((text) => ({
           id: uuidv4(),
           text,
         })),
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        parameterErrors: newParameterErrors,
-        constraintErrors: newConstraintErrors,
       }
     }
 
     case 'clickAddConstraint': {
-      // Limit to maximum 50 constraints
       if (state.constraints.length >= 50) {
-        return {
-          parameters: newParameters,
-          subModels: newSubModels,
-          constraints: newConstraints,
-          constraintTexts: newConstraintsText,
-          constraintDirectEditMode: state.constraintDirectEditMode,
-          parameterErrors: newParameterErrors,
-          constraintErrors: newConstraintErrors,
-        }
+        // may not be reached
+        return copyModel(state)
       }
       return {
-        parameters: newParameters,
-        subModels: newSubModels,
+        ...copyModel(state),
         constraints: [
-          ...newConstraints,
+          ...copyConstraints(state.constraints),
           createConstraintFromParameters(state.parameters),
         ],
         constraintTexts: [
-          ...newConstraintsText,
+          ...copyConstraintTexts(state.constraintTexts),
           {
             id: uuidv4(),
             text: '',
           },
         ],
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        parameterErrors: newParameterErrors,
-        constraintErrors: newConstraintErrors,
       }
     }
 
     case 'clickRemoveConstraint': {
       if (state.constraints.length <= 1) {
-        return {
-          parameters: newParameters,
-          subModels: newSubModels,
-          constraints: newConstraints,
-          constraintTexts: newConstraintsText,
-          constraintDirectEditMode: state.constraintDirectEditMode,
-          parameterErrors: newParameterErrors,
-          constraintErrors: newConstraintErrors,
-        }
+        // may not be reached
+        return copyModel(state)
       }
+      const newConstraints = copyConstraints(state.constraints)
+      const newConstraintsText = copyConstraintTexts(state.constraintTexts)
       newConstraints.pop()
       newConstraintsText.pop()
       return {
-        parameters: newParameters,
-        subModels: newSubModels,
+        ...copyModel(state),
         constraints: newConstraints,
         constraintTexts: newConstraintsText,
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        parameterErrors: newParameterErrors,
-        constraintErrors: newConstraintErrors,
       }
     }
 
     case 'toggleConstraintDirectEditMode': {
       return {
-        parameters: newParameters,
-        subModels: newSubModels,
-        constraints: newConstraints,
-        constraintTexts: newConstraintsText,
+        ...copyModel(state),
         constraintDirectEditMode: !state.constraintDirectEditMode,
-        parameterErrors: newParameterErrors,
-        constraintErrors: newConstraintErrors,
       }
     }
+  }
+}
+
+function copyParameters(parameters: Parameter[]): Parameter[] {
+  return parameters.map((p) => ({ ...p }))
+}
+
+function copySubModels(subModels: SubModel[]): SubModel[] {
+  return subModels.map((m) => ({
+    ...m,
+    parameterIds: [...m.parameterIds],
+  }))
+}
+
+function copyConstraints(constraints: Constraint[]): Constraint[] {
+  return constraints.map((c) => ({
+    ...c,
+    conditions: c.conditions.map((cc) => ({ ...cc })),
+  }))
+}
+
+function copyConstraintTexts(
+  constraintTexts: ConstraintText[],
+): ConstraintText[] {
+  return constraintTexts.map((c) => ({ ...c }))
+}
+
+function copyModel(state: Model): Model {
+  return {
+    parameters: copyParameters(state.parameters),
+    subModels: copySubModels(state.subModels),
+    constraints: copyConstraints(state.constraints),
+    constraintTexts: copyConstraintTexts(state.constraintTexts),
+    constraintDirectEditMode: state.constraintDirectEditMode,
+    parameterErrors: [...state.parameterErrors],
+    constraintErrors: [...state.constraintErrors],
   }
 }
 

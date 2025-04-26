@@ -65,7 +65,7 @@ export interface Config {
   enableSubModels: boolean
   enableConstraints: boolean
   showModelFile: boolean
-  orderOfCombinations: number
+  orderOfCombinations: number | ''
   randomizeGeneration: boolean
   randomizeSeed: number | ''
 }
