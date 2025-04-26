@@ -33,15 +33,10 @@ export function configReducer(state: Config, action: ConfigAction): Config {
     }
     case 'orderOfCombinations': {
       const { e } = action.payload
-      let orderOfCombinations = state.orderOfCombinations
-      if (e.target.value !== '') {
-        orderOfCombinations = Number(e.target.value)
-      } else {
-        orderOfCombinations = ''
-      }
       return {
         ...state,
-        orderOfCombinations,
+        orderOfCombinations:
+          e.target.value !== '' ? Number(e.target.value) : '',
       }
     }
     case 'randomizeGeneration': {
@@ -52,15 +47,9 @@ export function configReducer(state: Config, action: ConfigAction): Config {
     }
     case 'randomizeSeed': {
       const { e } = action.payload
-      let randomizeSeed = state.randomizeSeed
-      if (e.target.value !== '') {
-        randomizeSeed = Number(e.target.value)
-      } else {
-        randomizeSeed = ''
-      }
       return {
         ...state,
-        randomizeSeed,
+        randomizeSeed: e.target.value !== '' ? Number(e.target.value) : '',
       }
     }
   }
