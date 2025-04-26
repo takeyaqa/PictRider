@@ -12,43 +12,58 @@ interface ConfigAction {
 }
 
 export function configReducer(state: Config, action: ConfigAction): Config {
-  const newConfig = { ...state }
   switch (action.type) {
     case 'enableSubModels': {
-      newConfig.enableSubModels = !newConfig.enableSubModels
-      return newConfig
+      return {
+        ...state,
+        enableSubModels: !state.enableSubModels,
+      }
     }
     case 'enableConstraints': {
-      newConfig.enableConstraints = !newConfig.enableConstraints
-      return newConfig
+      return {
+        ...state,
+        enableConstraints: !state.enableConstraints,
+      }
     }
     case 'showModelFile': {
-      newConfig.showModelFile = !newConfig.showModelFile
-      return newConfig
+      return {
+        ...state,
+        showModelFile: !state.showModelFile,
+      }
     }
     case 'orderOfCombinations': {
       const { e } = action.payload
+      let orderOfCombinations = state.orderOfCombinations
       try {
         if (e.target.value !== '') {
-          newConfig.orderOfCombinations = Number(e.target.value)
+          orderOfCombinations = Number(e.target.value)
         }
       } catch {
-        newConfig.orderOfCombinations = 2
+        orderOfCombinations = 2
       }
-      return newConfig
+      return {
+        ...state,
+        orderOfCombinations,
+      }
     }
     case 'randomizeGeneration': {
-      newConfig.randomizeGeneration = !newConfig.randomizeGeneration
-      return newConfig
+      return {
+        ...state,
+        randomizeGeneration: !state.randomizeGeneration,
+      }
     }
     case 'randomizeSeed': {
       const { e } = action.payload
+      let randomizeSeed = state.randomizeSeed
       if (e.target.value !== '') {
-        newConfig.randomizeSeed = Number(e.target.value)
+        randomizeSeed = Number(e.target.value)
       } else {
-        newConfig.randomizeSeed = ''
+        randomizeSeed = ''
       }
-      return newConfig
+      return {
+        ...state,
+        randomizeSeed,
+      }
     }
   }
 }
