@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@takeyaqa/pict-browser':
-        specifier: 3.7.4-fork.5
-        version: 3.7.4-fork.5
+        specifier: 3.7.4-fork.7
+        version: 3.7.4-fork.7
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -718,8 +718,8 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6
 
-  '@takeyaqa/pict-browser@3.7.4-fork.5':
-    resolution: {integrity: sha512-PtU9tdRTY3/GjZsk6Xbwz8uhZtjA3iGR6bEgaR47CP0jYyDL12aWxt8zH25Afwfii3CaLQEMAhJN/4E6vJHeFQ==}
+  '@takeyaqa/pict-browser@3.7.4-fork.7':
+    resolution: {integrity: sha512-8F9HdOtq9Kx17wxrNrXnMfnT1r3BYB5XCuunyWFuXN5bxQRC7AEYrB6DdXLy9eAtmHGx6f5ytqJKKu8kSe+4+w==}
 
   '@testing-library/dom@10.4.0':
     resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
@@ -2588,7 +2588,7 @@ snapshots:
       tailwindcss: 4.1.4
       vite: 6.3.3(@types/node@22.14.1)(jiti@2.4.2)(lightningcss@1.29.2)
 
-  '@takeyaqa/pict-browser@3.7.4-fork.5': {}
+  '@takeyaqa/pict-browser@3.7.4-fork.7': {}
 
   '@testing-library/dom@10.4.0':
     dependencies:

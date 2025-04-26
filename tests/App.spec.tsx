@@ -3,8 +3,8 @@ import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
 import userEvent, { UserEvent } from '@testing-library/user-event'
+import { PictRunner } from '@takeyaqa/pict-browser'
 import App from '../src/App'
-import { PictRunner } from '../src/pict/pict-runner'
 
 describe('App', () => {
   describe('ParametersArea', () => {
