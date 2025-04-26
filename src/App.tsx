@@ -4,7 +4,7 @@ import {
   FooterArea,
   Analytics,
 } from './components'
-import { Outlet } from 'react-router'
+import { AppMain } from './pages'
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
       <NotificationMessageArea
         message={import.meta.env.VITE_NOTIFICATION_MESSAGE}
       />
-      <Outlet />
+      <AppMain />
       <FooterArea />
       <Analytics />
     </>
