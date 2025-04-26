@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useReducer } from 'react'
-import { PictRunner } from './pict/pict-runner'
+import { PictRunner } from '@takeyaqa/pict-browser'
 import { Analytics } from './components'
 import {
   HeaderSection,
