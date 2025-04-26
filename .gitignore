@@ -13,6 +13,7 @@ dist-ssr
 *.local
 .pnpm-store/
 .env
+coverage/
 
 # Editor directories and files
 .vscode/*
