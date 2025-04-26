@@ -1,3 +1,4 @@
+import { NumberInput } from '../components'
 import { Config } from '../types'
 
 interface OptionsSectionProps {
@@ -67,11 +68,8 @@ function OptionsSection({ config, handleChangeConfig }: OptionsSectionProps) {
         <div>
           <label htmlFor="order-of-combinations">
             Order of combinations
-            <input
-              type="number"
-              className="ml-3 rounded border border-black bg-white pl-2 text-right focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none"
+            <NumberInput
               id="order-of-combinations"
-              autoComplete="off"
               value={config.orderOfCombinations}
               min={1}
               max={50}
@@ -102,11 +100,8 @@ function OptionsSection({ config, handleChangeConfig }: OptionsSectionProps) {
         <div>
           <label htmlFor="randomize-seed">
             Seed
-            <input
-              type="number"
-              className="ml-3 rounded border border-black bg-white pl-2 text-right focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none disabled:bg-gray-300"
+            <NumberInput
               id="randomize-seed"
-              autoComplete="off"
               value={config.randomizeSeed}
               min={0}
               max={65535}
