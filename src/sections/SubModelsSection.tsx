@@ -1,4 +1,4 @@
-import { Checkbox, NumberInput } from '../components'
+import { Checkbox, NumberInput, Section } from '../components'
 import { Config, Parameter, SubModel } from '../types'
 
 interface SubModelsSectionProps {
@@ -26,7 +26,7 @@ function SubModelsSection({
     return null
   }
   return (
-    <section className="mx-2 mt-5 mb-5 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
+    <Section>
       <h2 className="mb-5 text-lg font-bold">Sub-Models</h2>
       {subModels.map((subModel) => (
         <div className="mb-5 grid grid-cols-12 gap-5" key={subModel.id}>
@@ -67,7 +67,7 @@ function SubModelsSection({
           </div>
         </div>
       ))}
-    </section>
+    </Section>
   )
 }
 

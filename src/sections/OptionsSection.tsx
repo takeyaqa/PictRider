@@ -1,4 +1,4 @@
-import { Checkbox, NumberInput } from '../components'
+import { Checkbox, NumberInput, Section } from '../components'
 import { Config } from '../types'
 
 interface OptionsSectionProps {
@@ -17,7 +17,7 @@ interface OptionsSectionProps {
 
 function OptionsSection({ config, handleChangeConfig }: OptionsSectionProps) {
   return (
-    <section className="mx-2 mb-5 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
+    <Section>
       <h2 className="mb-5 text-lg font-bold">Options</h2>
       <div className="mb-5 flex items-center gap-5">
         <div>
@@ -90,7 +90,7 @@ function OptionsSection({ config, handleChangeConfig }: OptionsSectionProps) {
           </label>
         </div>
       </div>
-    </section>
+    </Section>
   )
 }
 

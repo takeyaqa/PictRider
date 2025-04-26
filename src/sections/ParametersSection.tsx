@@ -1,4 +1,4 @@
-import { Button, TextInput } from '../components'
+import { Button, Section, TextInput } from '../components'
 import { Parameter } from '../types'
 
 interface ParametersSectionProps {
@@ -23,7 +23,7 @@ function ParametersSection({
   handleClickClear,
 }: ParametersSectionProps) {
   return (
-    <section className="mx-2 mt-5 mb-5 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
+    <Section>
       <div className="mb-5 grid grid-cols-12 gap-5">
         <div className="col-span-3">
           <h2 className="text-lg font-bold" id="parameters_label">
@@ -95,7 +95,7 @@ function ParametersSection({
           ))}
         </div>
       )}
-    </section>
+    </Section>
   )
 }
 

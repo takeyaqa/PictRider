@@ -1,4 +1,4 @@
-import { Button } from '../components'
+import { Button, Section } from '../components'
 import { Config, Output } from '../types'
 
 function createCsvContent(output: Output) {
@@ -66,7 +66,7 @@ function ResultSection({ config, output }: ResultSectionProps) {
   }
 
   return (
-    <section className="mx-2 mb-10 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
+    <Section>
       {modelFile}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-xl font-bold" id="result_heading">
@@ -135,7 +135,7 @@ function ResultSection({ config, output }: ResultSectionProps) {
           </tbody>
         </table>
       </div>
-    </section>
+    </Section>
   )
 }
 

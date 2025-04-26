@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Parameter, Constraint, Config, ConstraintText } from '../types'
-import { Button, TextInput } from '../components'
+import { Button, Section, TextInput } from '../components'
 
 interface ConstraintTableCell {
   constraintId: string
@@ -93,7 +93,7 @@ function ConstraintsSection({
   }
 
   return (
-    <section className="mx-2 mb-10 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
+    <Section>
       <div className="mb-5 grid grid-cols-12 gap-5">
         <div className="col-span-6">
           <h2 className="text-lg font-bold" id="constraints-heading">
@@ -254,7 +254,7 @@ function ConstraintsSection({
           ))}
         </div>
       )}
-    </section>
+    </Section>
   )
 }
 
