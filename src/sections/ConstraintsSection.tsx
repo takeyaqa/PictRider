@@ -51,7 +51,7 @@ function buildConstraintTable(
   })
 }
 
-interface ConstraintsAreaProps {
+interface ConstraintsSectionProps {
   config: Config
   parameters: Parameter[]
   constraints: Constraint[]
@@ -72,7 +72,7 @@ interface ConstraintsAreaProps {
   toggleConstraintDirectEditMode: () => void
 }
 
-function ConstraintsArea({
+function ConstraintsSection({
   config,
   parameters,
   constraints,
@@ -85,7 +85,7 @@ function ConstraintsArea({
   handleClickAddConstraint,
   handleClickRemoveConstraint,
   toggleConstraintDirectEditMode,
-}: ConstraintsAreaProps) {
+}: ConstraintsSectionProps) {
   const [isEditing, setIsEditing] = useState(false)
   if (!config.enableConstraints) {
     return null
@@ -266,4 +266,4 @@ function ConstraintsArea({
   )
 }
 
-export default ConstraintsArea
+export default ConstraintsSection

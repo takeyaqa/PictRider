@@ -1,6 +1,6 @@
 import { Config, Parameter, SubModel } from '../types'
 
-interface SubModelsAreaProps {
+interface SubModelsSectionProps {
   config: Config
   parameters: Parameter[]
   subModels: SubModel[]
@@ -14,13 +14,13 @@ interface SubModelsAreaProps {
   ) => void
 }
 
-function SubModelsArea({
+function SubModelsSection({
   config,
   parameters,
   subModels,
   handleClickSubModelParameters,
   handleChangeSubModelOrder,
-}: SubModelsAreaProps) {
+}: SubModelsSectionProps) {
   if (!config.enableSubModels) {
     return null
   }
@@ -77,4 +77,4 @@ function SubModelsArea({
   )
 }
 
-export default SubModelsArea
+export default SubModelsSection

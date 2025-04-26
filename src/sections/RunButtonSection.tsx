@@ -1,18 +1,18 @@
 import { Constraint, Parameter } from '../types'
 
-interface RunButtonAreaProps {
+interface RunButtonSectionProps {
   parameters: Parameter[]
   constraints: Constraint[]
   pictRunnerLoaded: boolean
   onClickRun: () => void
 }
 
-function RunButtonArea({
+function RunButtonSection({
   parameters,
   constraints,
   pictRunnerLoaded,
   onClickRun,
-}: RunButtonAreaProps) {
+}: RunButtonSectionProps) {
   const containsInvalidValues = parameters.some(
     (p) => !p.isValidName || !p.isValidValues,
   )
@@ -38,4 +38,4 @@ function RunButtonArea({
   )
 }
 
-export default RunButtonArea
+export default RunButtonSection

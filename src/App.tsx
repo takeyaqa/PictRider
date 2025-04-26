@@ -1,20 +1,20 @@
+import { Analytics } from './components'
 import {
-  HeaderArea,
-  NotificationMessageArea,
-  FooterArea,
-  Analytics,
-} from './components'
+  HeaderSection,
+  NotificationMessageSection,
+  FooterSection,
+} from './sections'
 import { AppMain } from './pages'
 
 function App() {
   return (
     <>
-      <HeaderArea />
-      <NotificationMessageArea
+      <HeaderSection />
+      <NotificationMessageSection
         message={import.meta.env.VITE_NOTIFICATION_MESSAGE}
       />
       <AppMain />
-      <FooterArea />
+      <FooterSection />
       <Analytics />
     </>
   )

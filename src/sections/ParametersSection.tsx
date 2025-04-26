@@ -1,6 +1,6 @@
 import { Parameter } from '../types'
 
-interface ParametersAreaProps {
+interface ParametersSectionProps {
   parameters: Parameter[]
   messages: string[]
   handleChangeParameter: (
@@ -13,14 +13,14 @@ interface ParametersAreaProps {
   handleClickClear: () => void
 }
 
-function ParametersArea({
+function ParametersSection({
   parameters,
   messages,
   handleChangeParameter,
   handleClickAddRow,
   handleClickRemoveRow,
   handleClickClear,
-}: ParametersAreaProps) {
+}: ParametersSectionProps) {
   return (
     <section className="mx-2 mt-5 mb-5 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10">
       <div className="mb-5 grid grid-cols-12 gap-5">
@@ -113,4 +113,4 @@ function ParametersArea({
   )
 }
 
-export default ParametersArea
+export default ParametersSection

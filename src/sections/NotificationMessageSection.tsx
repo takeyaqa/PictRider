@@ -1,8 +1,10 @@
-interface NotificationMessageAreaProps {
+interface NotificationMessageSectionProps {
   message: string
 }
 
-function NotificationMessageArea({ message }: NotificationMessageAreaProps) {
+function NotificationMessageSection({
+  message,
+}: NotificationMessageSectionProps) {
   if (!message) {
     return null
   }
@@ -13,4 +15,4 @@ function NotificationMessageArea({ message }: NotificationMessageAreaProps) {
   )
 }
 
-export default NotificationMessageArea
+export default NotificationMessageSection

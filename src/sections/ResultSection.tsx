@@ -16,12 +16,12 @@ function createTsvContent(output: Output) {
   return [headerRow, ...bodyRows].join('\n')
 }
 
-interface ResultAreaProps {
+interface ResultSectionProps {
   config: Config
   output: Output | null
 }
 
-function ResultArea({ config, output }: ResultAreaProps) {
+function ResultSection({ config, output }: ResultSectionProps) {
   function handleDownload(type: 'csv' | 'tsv') {
     if (!output) {
       return
@@ -140,4 +140,4 @@ function ResultArea({ config, output }: ResultAreaProps) {
   )
 }
 
-export default ResultArea
+export default ResultSection

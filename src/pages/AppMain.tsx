@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef, useReducer } from 'react'
 import { PictRunner } from '../pict/pict-runner'
 import {
-  ParametersArea,
-  OptionsArea,
-  ConstraintsArea,
-  RunButtonArea,
-  ResultArea,
-  SubModelsArea,
-} from '../components'
+  ParametersSection,
+  OptionsSection,
+  SubModelsSection,
+  ConstraintsSection,
+  RunButtonSection,
+  ResultSection,
+} from '../sections'
 import { Result } from '../types'
 import { modelReducer, getInitialModel } from '../reducers/model-reducer'
 import { configReducer, getInitialConfig } from '../reducers/config-reducer'
@@ -214,7 +214,7 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
 
   return (
     <main className="bg-white">
-      <ParametersArea
+      <ParametersSection
         parameters={model.parameters}
         messages={model.parameterErrors}
         handleChangeParameter={handleChangeParameter}
@@ -222,15 +222,15 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         handleClickRemoveRow={handleClickRemoveRow}
         handleClickClear={handleClickClear}
       />
-      <OptionsArea config={config} handleChangeConfig={handleChangeConfig} />
-      <SubModelsArea
+      <OptionsSection config={config} handleChangeConfig={handleChangeConfig} />
+      <SubModelsSection
         config={config}
         parameters={model.parameters}
         subModels={model.subModels}
         handleClickSubModelParameters={handleClickSubModelParameters}
         handleChangeSubModelOrder={handleChangeSubModelOrder}
       />
-      <ConstraintsArea
+      <ConstraintsSection
         config={config}
         parameters={model.parameters}
         constraints={model.constraints}
@@ -244,13 +244,13 @@ function AppMain({ pictRunnerInjection }: AppMainProps) {
         handleClickRemoveConstraint={handleClickRemoveConstraint}
         toggleConstraintDirectEditMode={handleToggleConstraintDirectEditMode}
       />
-      <RunButtonArea
+      <RunButtonSection
         parameters={model.parameters}
         constraints={model.constraints}
         pictRunnerLoaded={pictRunnerLoaded}
         onClickRun={runPict}
       />
-      <ResultArea config={config} output={result.output} />
+      <ResultSection config={config} output={result.output} />
     </main>
   )
 }
