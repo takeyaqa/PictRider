@@ -1,4 +1,4 @@
-import { NumberInput } from '../components'
+import { Checkbox, NumberInput } from '../components'
 import { Config, Parameter, SubModel } from '../types'
 
 interface SubModelsSectionProps {
@@ -34,23 +34,19 @@ function SubModelsSection({
             <div className="flex flex-col">
               <h3 className="mb-2">Parameters</h3>
               {parameters.map((parameter) => (
-                <div key={parameter.id} className="mb-1 items-center">
-                  <label
-                    htmlFor={`${subModel.id}-${parameter.id}`}
-                    className="text-sm"
-                  >
-                    <input
-                      type="checkbox"
-                      id={`${subModel.id}-${parameter.id}`}
-                      value={parameter.id}
-                      checked={subModel.parameterIds.includes(parameter.id)}
-                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500"
-                      onChange={(e) => {
-                        handleClickSubModelParameters(subModel.id, e)
-                      }}
-                    />
-                    {parameter.name}
-                  </label>
+                <div
+                  key={`${subModel.id}-${parameter.id}`}
+                  className="mb-1 items-center"
+                >
+                  <Checkbox
+                    id={`${subModel.id}-${parameter.id}`}
+                    label={parameter.name}
+                    value={parameter.id}
+                    checked={subModel.parameterIds.includes(parameter.id)}
+                    onChange={(e) => {
+                      handleClickSubModelParameters(subModel.id, e)
+                    }}
+                  />
                 </div>
               ))}
             </div>

@@ -1,4 +1,4 @@
-import { NumberInput } from '../components'
+import { Checkbox, NumberInput } from '../components'
 import { Config } from '../types'
 
 interface OptionsSectionProps {
@@ -21,49 +21,34 @@ function OptionsSection({ config, handleChangeConfig }: OptionsSectionProps) {
       <h2 className="mb-5 text-lg font-bold">Options</h2>
       <div className="mb-5 flex items-center gap-5">
         <div>
-          <label className="cursor-pointer" htmlFor="enable-sub-models-button">
-            <input
-              type="checkbox"
-              className="mr-1 cursor-pointer rounded"
-              id="enable-sub-models-button"
-              autoComplete="off"
-              checked={config.enableSubModels}
-              onChange={(e) => {
-                handleChangeConfig('enableSubModels', e)
-              }}
-            />
-            Sub-models
-          </label>
+          <Checkbox
+            id="enable-sub-models-button"
+            label="Sub-models"
+            checked={config.enableSubModels}
+            onChange={(e) => {
+              handleChangeConfig('enableSubModels', e)
+            }}
+          />
         </div>
         <div>
-          <label className="cursor-pointer" htmlFor="enable-constraints-button">
-            <input
-              type="checkbox"
-              className="mr-1 cursor-pointer rounded"
-              id="enable-constraints-button"
-              autoComplete="off"
-              checked={config.enableConstraints}
-              onChange={(e) => {
-                handleChangeConfig('enableConstraints', e)
-              }}
-            />
-            Constraints
-          </label>
+          <Checkbox
+            id="enable-constraints-button"
+            label="Constraints"
+            checked={config.enableConstraints}
+            onChange={(e) => {
+              handleChangeConfig('enableConstraints', e)
+            }}
+          />
         </div>
         <div>
-          <label className="cursor-pointer" htmlFor="show-model-file-button">
-            <input
-              type="checkbox"
-              className="mr-1 cursor-pointer rounded"
-              id="show-model-file-button"
-              autoComplete="off"
-              checked={config.showModelFile}
-              onChange={(e) => {
-                handleChangeConfig('showModelFile', e)
-              }}
-            />
-            Show model file
-          </label>
+          <Checkbox
+            id="show-model-file-button"
+            label="Show model file"
+            checked={config.showModelFile}
+            onChange={(e) => {
+              handleChangeConfig('showModelFile', e)
+            }}
+          />
         </div>
         <div>
           <label htmlFor="order-of-combinations">
@@ -80,22 +65,14 @@ function OptionsSection({ config, handleChangeConfig }: OptionsSectionProps) {
           </label>
         </div>
         <div>
-          <label
-            className="cursor-pointer"
-            htmlFor="randomize-generation-button"
-          >
-            <input
-              type="checkbox"
-              className="mr-1 cursor-pointer rounded"
-              id="randomize-generation-button"
-              autoComplete="off"
-              checked={config.randomizeGeneration}
-              onChange={(e) => {
-                handleChangeConfig('randomizeGeneration', e)
-              }}
-            />
-            Randomize generation
-          </label>
+          <Checkbox
+            id="randomize-generation-button"
+            label="Randomize generation"
+            checked={config.randomizeGeneration}
+            onChange={(e) => {
+              handleChangeConfig('randomizeGeneration', e)
+            }}
+          />
         </div>
         <div>
           <label htmlFor="randomize-seed">
