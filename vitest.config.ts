@@ -7,5 +7,8 @@ export default defineConfig({
     include: ['tests/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     environment: 'jsdom',
     testTimeout: 10000,
+    coverage: {
+      provider: 'istanbul',
+    },
   },
 })
