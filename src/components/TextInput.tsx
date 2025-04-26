@@ -23,7 +23,7 @@ function TextInput({
       value={value}
       className={`w-full rounded border bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:outline-none ${validClass}`}
       aria-labelledby={ariaLabelledby}
-      autoComplete="false"
+      autoComplete="off"
       onChange={onChange}
     />
   )

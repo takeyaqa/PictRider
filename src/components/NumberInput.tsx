@@ -24,7 +24,7 @@ function NumberInput({
       min={min}
       max={max}
       disabled={disabled}
-      autoComplete="false"
+      autoComplete="off"
       onChange={onChange}
     />
   )
