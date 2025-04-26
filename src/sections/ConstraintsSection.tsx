@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Parameter, Constraint, Config, ConstraintText } from '../types'
+import { Button } from '../components'
 
 interface ConstraintTableCell {
   constraintId: string
@@ -102,32 +103,29 @@ function ConstraintsSection({
         <div className="col-span-6 flex items-center justify-end gap-5">
           {!constraintDirectEditMode && (
             <>
-              <button
-                type="button"
-                className="w-25 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-50"
-                onClick={handleClickAddConstraint}
+              <Button
+                type="secondary"
+                label="Add Constraint"
+                size="md"
                 disabled={constraints.length >= 50}
-              >
-                Add Constraint
-              </button>
-              <button
-                type="button"
-                className="w-25 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-50"
-                onClick={handleClickRemoveConstraint}
+                onClick={handleClickAddConstraint}
+              />
+              <Button
+                type="secondary"
+                label="Remove Constraint"
+                size="md"
                 disabled={constraints.length <= 1}
-              >
-                Remove Constraint
-              </button>
-              <button
-                type="button"
-                className="w-25 cursor-pointer rounded bg-red-500 px-3 py-2 text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-50"
+                onClick={handleClickRemoveConstraint}
+              />
+              <Button
+                type="danger"
+                label="Edit Directly"
+                size="md"
                 onClick={() => {
                   toggleConstraintDirectEditMode()
                   setIsEditing(true)
                 }}
-              >
-                Edit Directly
-              </button>
+              />
             </>
           )}
         </div>
@@ -165,18 +163,18 @@ function ConstraintsSection({
                         }
                       >
                         <div className="flex gap-1">
-                          <button
-                            type="button"
-                            className="w-15 cursor-pointer rounded bg-gray-500 px-3 py-1 font-mono text-sm text-white hover:bg-gray-600"
+                          <Button
+                            type="secondary"
+                            label={cell.ifOrThen ?? ''}
+                            size="xs"
+                            fontMono={true}
                             onClick={() => {
                               handleToggleCondition(
                                 cell.constraintId,
                                 row.parameterId,
                               )
                             }}
-                          >
-                            {cell.ifOrThen}
-                          </button>
+                          />
                           <input
                             type="text"
                             name="constraint_condition"

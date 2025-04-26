@@ -1,3 +1,4 @@
+import { Button } from '../components'
 import { Config, Output } from '../types'
 
 function createCsvContent(output: Output) {
@@ -72,24 +73,22 @@ function ResultSection({ config, output }: ResultSectionProps) {
           Result
         </h2>
         <div className="flex gap-2">
-          <button
-            type="button"
-            className="cursor-pointer rounded bg-green-600 px-3 py-2 text-white hover:bg-green-700"
+          <Button
+            type="success"
+            label="CSV"
+            size="sm"
             onClick={() => {
               handleDownload('csv')
             }}
-          >
-            CSV
-          </button>
-          <button
-            type="button"
-            className="cursor-pointer rounded bg-green-600 px-3 py-2 text-white hover:bg-green-700"
+          />
+          <Button
+            type="success"
+            label="TSV"
+            size="sm"
             onClick={() => {
               handleDownload('tsv')
             }}
-          >
-            TSV
-          </button>
+          />
         </div>
       </div>
       {output.message && (

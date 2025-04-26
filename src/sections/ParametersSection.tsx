@@ -1,3 +1,4 @@
+import { Button } from '../components'
 import { Parameter } from '../types'
 
 interface ParametersSectionProps {
@@ -35,29 +36,26 @@ function ParametersSection({
           </h2>
         </div>
         <div className="col-span-7 flex items-center justify-end gap-5">
-          <button
-            type="button"
-            className="w-20 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-30"
-            onClick={handleClickAddRow}
+          <Button
+            type="secondary"
+            label="Add Row"
+            size="sm"
             disabled={parameters.length >= 50}
-          >
-            Add Row
-          </button>
-          <button
-            type="button"
-            className="w-20 cursor-pointer rounded bg-gray-500 px-3 py-2 text-white hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50 lg:w-30"
-            onClick={handleClickRemoveRow}
+            onClick={handleClickAddRow}
+          />
+          <Button
+            type="secondary"
+            label="Remove Row"
+            size="sm"
             disabled={parameters.length <= 1}
-          >
-            Remove Row
-          </button>
-          <button
-            type="button"
-            className="w-20 cursor-pointer rounded bg-yellow-500 px-3 py-2 text-white hover:bg-yellow-600"
+            onClick={handleClickRemoveRow}
+          />
+          <Button
+            type="warning"
+            label="Clear"
+            size="sm"
             onClick={handleClickClear}
-          >
-            Clear
-          </button>
+          />
         </div>
       </div>
       {parameters.map((p) => (
