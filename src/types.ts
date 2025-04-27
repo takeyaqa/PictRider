@@ -39,14 +39,19 @@ export interface ConstraintText {
   text: string
 }
 
+export interface Message {
+  id: string
+  text: string
+}
+
 export interface Model {
   parameters: Parameter[]
   subModels: SubModel[]
   constraints: Constraint[]
   constraintTexts: ConstraintText[]
   constraintDirectEditMode: boolean
-  parameterErrors: string[]
-  constraintErrors: string[]
+  parameterErrors: Message[]
+  constraintErrors: Message[]
 }
 
 export interface Output {

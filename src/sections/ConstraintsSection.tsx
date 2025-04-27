@@ -1,5 +1,11 @@
 import { useState } from 'react'
-import { Parameter, Constraint, Config, ConstraintText } from '../types'
+import {
+  Parameter,
+  Constraint,
+  Config,
+  ConstraintText,
+  Message,
+} from '../types'
 import { Button, Section, TextInput } from '../components'
 
 interface ConstraintTableCell {
@@ -58,7 +64,7 @@ interface ConstraintsSectionProps {
   constraints: Constraint[]
   constraintTexts: ConstraintText[]
   constraintDirectEditMode: boolean
-  messages: string[]
+  messages: Message[]
   handleToggleCondition: (constraintId: string, parameterId: string) => void
   handleChangeCondition: (
     constraintId: string,
@@ -248,9 +254,8 @@ function ConstraintsSection({
           className="mt-5 rounded-md border-2 border-red-400 bg-red-100 p-7 text-red-700"
           role="alert"
         >
-          {messages.map((message, index) => (
-            // eslint-disable-next-line react-x/no-array-index-key
-            <p key={index}>{message}</p>
+          {messages.map((message) => (
+            <p key={message.id}>{message.text}</p>
           ))}
         </div>
       )}
