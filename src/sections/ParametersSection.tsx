@@ -1,9 +1,9 @@
-import { Button, Section, TextInput } from '../components'
-import { Parameter } from '../types'
+import { AlertMessage, Button, Section, TextInput } from '../components'
+import { Message, Parameter } from '../types'
 
 interface ParametersSectionProps {
   parameters: Parameter[]
-  messages: string[]
+  messages: Message[]
   handleChangeParameter: (
     id: string,
     field: 'name' | 'values',
@@ -84,17 +84,7 @@ function ParametersSection({
           </div>
         </div>
       ))}
-      {messages.length > 0 && (
-        <div
-          className="mt-5 rounded-md border-2 border-red-400 bg-red-100 p-7 text-red-700"
-          role="alert"
-        >
-          {messages.map((message, index) => (
-            // eslint-disable-next-line react-x/no-array-index-key
-            <p key={index}>{message}</p>
-          ))}
-        </div>
-      )}
+      <AlertMessage messages={messages} />
     </Section>
   )
 }

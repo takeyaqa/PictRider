@@ -1,17 +1,17 @@
-import { Button, Section } from '../components'
-import { Config, Output } from '../types'
+import { AlertMessage, Button, Section } from '../components'
+import { Config, Result } from '../types'
 
-function createCsvContent(output: Output) {
-  const headerRow = output.header.map((h) => `"${h.name}"`).join(',')
-  const bodyRows = output.body.map((row) =>
+function createCsvContent(result: Result) {
+  const headerRow = result.header.map((h) => `"${h.name}"`).join(',')
+  const bodyRows = result.body.map((row) =>
     row.values.map((col) => `"${col.value}"`).join(','),
   )
   return [headerRow, ...bodyRows].join('\n')
 }
 
-function createTsvContent(output: Output) {
-  const headerRow = output.header.map((h) => h.name).join('\t')
-  const bodyRows = output.body.map((row) =>
+function createTsvContent(result: Result) {
+  const headerRow = result.header.map((h) => h.name).join('\t')
+  const bodyRows = result.body.map((row) =>
     row.values.map((col) => col.value).join('\t'),
   )
   return [headerRow, ...bodyRows].join('\n')
@@ -19,17 +19,17 @@ function createTsvContent(output: Output) {
 
 interface ResultSectionProps {
   config: Config
-  output: Output | null
+  result: Result | null
 }
 
-function ResultSection({ config, output }: ResultSectionProps) {
+function ResultSection({ config, result }: ResultSectionProps) {
   function handleDownload(type: 'csv' | 'tsv') {
-    if (!output) {
+    if (!result) {
       return
     }
 
     const content =
-      type === 'csv' ? createCsvContent(output) : createTsvContent(output)
+      type === 'csv' ? createCsvContent(result) : createTsvContent(result)
     const mimeType = type === 'csv' ? 'text/csv' : 'text/tab-separated-values'
     const fileName = type === 'csv' ? 'result.csv' : 'result.tsv'
 
@@ -45,7 +45,7 @@ function ResultSection({ config, output }: ResultSectionProps) {
     document.body.removeChild(link)
   }
 
-  if (!output) {
+  if (!result) {
     return null
   }
 
@@ -58,7 +58,7 @@ function ResultSection({ config, output }: ResultSectionProps) {
         </h2>
         <div>
           <pre className="my-3 rounded-md border-2 bg-white p-4 font-mono">
-            {output.modelFile}
+            {result.modelFile}
           </pre>
         </div>
       </div>
@@ -91,14 +91,7 @@ function ResultSection({ config, output }: ResultSectionProps) {
           />
         </div>
       </div>
-      {output.message && (
-        <div
-          className="my-5 rounded-md border-2 border-red-400 bg-red-100 p-7 text-red-700"
-          role="alert"
-        >
-          {output.message}
-        </div>
-      )}
+      <AlertMessage messages={result.messages} />
       <div className="overflow-x-auto">
         <table
           className="w-full table-fixed border-collapse"
@@ -109,7 +102,7 @@ function ResultSection({ config, output }: ResultSectionProps) {
               <th className="border border-black px-4 py-2 text-left font-bold">
                 #
               </th>
-              {output.header.map((h) => (
+              {result.header.map((h) => (
                 <th
                   key={h.id}
                   className="border border-black px-4 py-2 text-left"
@@ -120,7 +113,7 @@ function ResultSection({ config, output }: ResultSectionProps) {
             </tr>
           </thead>
           <tbody>
-            {output.body.map((row) => (
+            {result.body.map((row) => (
               <tr key={row.id} className="bg-white">
                 <th className="border border-black px-4 py-2 text-left font-bold">
                   {row.id}

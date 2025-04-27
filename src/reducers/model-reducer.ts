@@ -5,6 +5,7 @@ import {
   Model,
   SubModel,
   ConstraintText,
+  Message,
 } from '../types'
 import { fixConstraint, printConstraints, uuidv4 } from '../helpers'
 
@@ -133,7 +134,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         return copyModel(state)
       }
       newParameter[field] = e.target.value
-      const errors: string[] = []
+      const errors: Message[] = []
 
       // Check for duplicate parameter
       if (field === 'name') {
@@ -147,7 +148,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
               parameter.isValidName = false
             }
           }
-          errors.push('Parameter names must be unique.')
+          errors.push({ id: uuidv4(), text: 'Parameter names must be unique.' })
         }
       }
 
@@ -173,14 +174,16 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         }
       }
       if (invalidParameterName) {
-        errors.push(
-          `Parameter name cannot contain special characters: ${invalidParameterNameCharacters.map((s) => `"${s}"`).join(', ')}`,
-        )
+        errors.push({
+          id: uuidv4(),
+          text: `Parameter name cannot contain special characters: ${invalidParameterNameCharacters.map((s) => `"${s}"`).join(', ')}`,
+        })
       }
       if (invalidParameterValues) {
-        errors.push(
-          `Parameter values cannot contain special characters: ${invalidParameterValuesCharacters.map((s) => `"${s}"`).join(', ')}`,
-        )
+        errors.push({
+          id: uuidv4(),
+          text: `Parameter values cannot contain special characters: ${invalidParameterValuesCharacters.map((s) => `"${s}"`).join(', ')}`,
+        })
       }
 
       return {
@@ -363,7 +366,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         }
       }
       // Check for invalid characters
-      const errors: string[] = []
+      const errors: Message[] = []
       let invalidConstraint = false
       for (const constraint of newConstraints) {
         for (const condition of constraint.conditions) {
@@ -378,9 +381,10 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         }
       }
       if (invalidConstraint) {
-        errors.push(
-          `Constraints cannot contain special characters: ${invalidConstraintCharacters.map((s) => `"${s}"`).join(', ')}`,
-        )
+        errors.push({
+          id: uuidv4(),
+          text: `Constraints cannot contain special characters: ${invalidConstraintCharacters.map((s) => `"${s}"`).join(', ')}`,
+        })
       }
       return {
         ...copyModel(state),
@@ -453,8 +457,12 @@ export function modelReducer(state: Model, action: ModelAction): Model {
   }
 }
 
+function deepCopyArray<T>(array: T[]): T[] {
+  return array.map((item) => ({ ...item }))
+}
+
 function copyParameters(parameters: Parameter[]): Parameter[] {
-  return parameters.map((p) => ({ ...p }))
+  return deepCopyArray(parameters)
 }
 
 function copySubModels(subModels: SubModel[]): SubModel[] {
@@ -474,7 +482,11 @@ function copyConstraints(constraints: Constraint[]): Constraint[] {
 function copyConstraintTexts(
   constraintTexts: ConstraintText[],
 ): ConstraintText[] {
-  return constraintTexts.map((c) => ({ ...c }))
+  return deepCopyArray(constraintTexts)
+}
+
+function copyMessage(messages: Message[]): Message[] {
+  return deepCopyArray(messages)
 }
 
 function copyModel(state: Model): Model {
@@ -484,8 +496,8 @@ function copyModel(state: Model): Model {
     constraints: copyConstraints(state.constraints),
     constraintTexts: copyConstraintTexts(state.constraintTexts),
     constraintDirectEditMode: state.constraintDirectEditMode,
-    parameterErrors: [...state.parameterErrors],
-    constraintErrors: [...state.constraintErrors],
+    parameterErrors: copyMessage(state.parameterErrors),
+    constraintErrors: copyMessage(state.constraintErrors),
   }
 }
 

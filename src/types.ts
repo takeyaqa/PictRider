@@ -39,26 +39,26 @@ export interface ConstraintText {
   text: string
 }
 
+export interface Message {
+  id: string
+  text: string
+}
+
 export interface Model {
   parameters: Parameter[]
   subModels: SubModel[]
   constraints: Constraint[]
   constraintTexts: ConstraintText[]
   constraintDirectEditMode: boolean
-  parameterErrors: string[]
-  constraintErrors: string[]
-}
-
-export interface Output {
-  header: { id: number; name: string }[]
-  body: { id: number; values: { id: number; value: string }[] }[]
-  modelFile: string
-  message?: string
+  parameterErrors: Message[]
+  constraintErrors: Message[]
 }
 
 export interface Result {
-  output: Output | null
-  errorMessage: string
+  header: { id: number; name: string }[]
+  body: { id: number; values: { id: number; value: string }[] }[]
+  modelFile: string
+  messages: Message[]
 }
 
 export interface Config {
