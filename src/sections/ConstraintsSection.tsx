@@ -6,7 +6,7 @@ import {
   ConstraintText,
   Message,
 } from '../types'
-import { Button, Section, TextInput } from '../components'
+import { AlertMessage, Button, Section, TextInput } from '../components'
 
 interface ConstraintTableCell {
   constraintId: string
@@ -249,16 +249,7 @@ function ConstraintsSection({
           </>
         )}
       </div>
-      {messages.length > 0 && (
-        <div
-          className="mt-5 rounded-md border-2 border-red-400 bg-red-100 p-7 text-red-700"
-          role="alert"
-        >
-          {messages.map((message) => (
-            <p key={message.id}>{message.text}</p>
-          ))}
-        </div>
-      )}
+      <AlertMessage messages={messages} />
     </Section>
   )
 }

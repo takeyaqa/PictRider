@@ -54,16 +54,11 @@ export interface Model {
   constraintErrors: Message[]
 }
 
-export interface Output {
+export interface Result {
   header: { id: number; name: string }[]
   body: { id: number; values: { id: number; value: string }[] }[]
   modelFile: string
-  message?: string
-}
-
-export interface Result {
-  output: Output | null
-  errorMessage: string
+  messages: Message[]
 }
 
 export interface Config {

@@ -15,6 +15,7 @@ import {
 import { Result } from './types'
 import { modelReducer, getInitialModel } from './reducers/model-reducer'
 import { configReducer, getInitialConfig } from './reducers/config-reducer'
+import { uuidv4 } from './helpers'
 
 interface AppProps {
   pictRunnerInjection?: PictRunner // use for testing
@@ -23,10 +24,7 @@ interface AppProps {
 function App({ pictRunnerInjection }: AppProps) {
   const [model, dispatchModel] = useReducer(modelReducer, getInitialModel())
   const [config, dispatchConfig] = useReducer(configReducer, getInitialConfig())
-  const [result, setResult] = useState<Result>({
-    output: null,
-    errorMessage: '',
-  })
+  const [result, setResult] = useState<Result | null>(null)
   const [pictRunnerLoaded, setPictRunnerLoaded] = useState(false)
   const pictRunner = useRef<PictRunner>(null)
 
@@ -206,14 +204,17 @@ function App({ pictRunnerInjection }: AppProps) {
         }),
       }
     })
+    const messages = output.message
+      ? output.message.split('\n').map((m) => ({
+          id: uuidv4(),
+          text: m,
+        }))
+      : []
     setResult({
-      output: {
-        header,
-        body,
-        modelFile: output.modelFile,
-        message: output.message,
-      },
-      errorMessage: output.message ?? '',
+      header,
+      body,
+      modelFile: output.modelFile,
+      messages: messages,
     })
   }
 
@@ -263,7 +264,7 @@ function App({ pictRunnerInjection }: AppProps) {
           pictRunnerLoaded={pictRunnerLoaded}
           onClickRun={runPict}
         />
-        <ResultSection config={config} output={result.output} />
+        <ResultSection config={config} result={result} />
       </main>
       <FooterSection />
       <Analytics />
