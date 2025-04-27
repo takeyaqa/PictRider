@@ -264,7 +264,13 @@ function App({ pictRunnerInjection }: AppProps) {
           pictRunnerLoaded={pictRunnerLoaded}
           onClickRun={runPict}
         />
-        <ResultSection config={config} result={result} />
+        <ResultSection
+          config={config}
+          result={result}
+          handleClearResult={() => {
+            setResult(null)
+          }}
+        />
       </main>
       <FooterSection />
       <Analytics />

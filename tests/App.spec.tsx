@@ -739,6 +739,22 @@ describe('App', () => {
       expect(tsvButton).not.toBeDisabled()
     })
 
+    it('Should clear results when clicking the Clear Result button', async () => {
+      // Run PICT to get results
+      await user.click(screen.getByRole('button', { name: 'Run' }))
+
+      // Verify result table is displayed
+      expect(screen.getByRole('table', { name: 'Result' })).toBeInTheDocument()
+
+      // Click the Clear Result button
+      await user.click(screen.getByRole('button', { name: 'Clear Result' }))
+
+      // Verify result table is no longer displayed
+      expect(
+        screen.queryByRole('table', { name: 'Result' }),
+      ).not.toBeInTheDocument()
+    })
+
     it('Should call with parameters when input default value', async () => {
       // act - click the run button
       await user.click(screen.getByRole('button', { name: 'Run' }))

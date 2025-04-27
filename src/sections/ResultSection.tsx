@@ -20,9 +20,14 @@ function createTsvContent(result: Result) {
 interface ResultSectionProps {
   config: Config
   result: Result | null
+  handleClearResult: () => void
 }
 
-function ResultSection({ config, result }: ResultSectionProps) {
+function ResultSection({
+  config,
+  result,
+  handleClearResult,
+}: ResultSectionProps) {
   function handleDownload(type: 'csv' | 'tsv') {
     if (!result) {
       return
@@ -73,6 +78,12 @@ function ResultSection({ config, result }: ResultSectionProps) {
           Result
         </h2>
         <div className="flex gap-2">
+          <Button
+            type="warning"
+            label="Clear Result"
+            size="sm"
+            onClick={handleClearResult}
+          />
           <Button
             type="success"
             label="CSV"
