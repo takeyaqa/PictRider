@@ -1,3 +1,4 @@
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { AlertMessage, Button, Section } from '../components'
 import { Config, Result } from '../types'
 
@@ -84,22 +85,38 @@ function ResultSection({
             size="sm"
             onClick={handleClearResult}
           />
-          <Button
-            type="success"
-            label="CSV"
-            size="sm"
-            onClick={() => {
-              handleDownload('csv')
-            }}
-          />
-          <Button
-            type="success"
-            label="TSV"
-            size="sm"
-            onClick={() => {
-              handleDownload('tsv')
-            }}
-          />
+          <Menu>
+            <MenuButton className="w-20 cursor-pointer rounded bg-green-700 px-3 py-2 text-white hover:bg-green-800 disabled:cursor-not-allowed disabled:opacity-50 data-open:bg-green-800 lg:w-30">
+              Download
+            </MenuButton>
+            <MenuItems
+              anchor="bottom start"
+              className="mt-0.5 rounded border border-gray-400 bg-white py-2"
+            >
+              <MenuItem>
+                <button
+                  type="button"
+                  className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100"
+                  onClick={() => {
+                    handleDownload('csv')
+                  }}
+                >
+                  CSV
+                </button>
+              </MenuItem>
+              <MenuItem>
+                <button
+                  type="button"
+                  className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100"
+                  onClick={() => {
+                    handleDownload('tsv')
+                  }}
+                >
+                  TSV
+                </button>
+              </MenuItem>
+            </MenuItems>
+          </Menu>
         </div>
       </div>
       <AlertMessage messages={result.messages} />

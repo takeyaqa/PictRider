@@ -15,6 +15,7 @@
     "e2e": "playwright test"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.2",
     "@takeyaqa/pict-browser": "3.7.4-fork.7",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
