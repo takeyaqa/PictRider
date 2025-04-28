@@ -38,24 +38,23 @@ function ParametersSection({
         <div className="col-span-7 flex items-center justify-end gap-5">
           <Button
             type="secondary"
-            label="Add Row"
             size="sm"
             disabled={parameters.length >= 50}
             onClick={handleClickAddRow}
-          />
+          >
+            Add Row
+          </Button>
           <Button
             type="secondary"
-            label="Remove Row"
             size="sm"
             disabled={parameters.length <= 1}
             onClick={handleClickRemoveRow}
-          />
-          <Button
-            type="warning"
-            label="Clear"
-            size="sm"
-            onClick={handleClickClear}
-          />
+          >
+            Remove Row
+          </Button>
+          <Button type="warning" size="sm" onClick={handleClickClear}>
+            Clear
+          </Button>
         </div>
       </div>
       {parameters.map((p) => (

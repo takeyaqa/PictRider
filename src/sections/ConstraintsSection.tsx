@@ -111,27 +111,30 @@ function ConstraintsSection({
             <>
               <Button
                 type="secondary"
-                label="Add Constraint"
                 size="md"
                 disabled={constraints.length >= 50}
                 onClick={handleClickAddConstraint}
-              />
+              >
+                Add Constraint
+              </Button>
               <Button
                 type="secondary"
-                label="Remove Constraint"
                 size="md"
                 disabled={constraints.length <= 1}
                 onClick={handleClickRemoveConstraint}
-              />
+              >
+                Remove Constraint
+              </Button>
               <Button
                 type="danger"
-                label="Edit Directly"
                 size="md"
                 onClick={() => {
                   toggleConstraintDirectEditMode()
                   setIsEditing(true)
                 }}
-              />
+              >
+                Edit Directly
+              </Button>
             </>
           )}
         </div>
@@ -171,7 +174,6 @@ function ConstraintsSection({
                         <div className="flex gap-1">
                           <Button
                             type="secondary"
-                            label={cell.ifOrThen ?? ''}
                             size="xs"
                             fontMono={true}
                             onClick={() => {
@@ -180,7 +182,9 @@ function ConstraintsSection({
                                 row.parameterId,
                               )
                             }}
-                          />
+                          >
+                            {cell.ifOrThen ?? ''}
+                          </Button>
                           <TextInput
                             name="constraint_condition"
                             value={cell.predicate}

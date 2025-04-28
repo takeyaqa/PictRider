@@ -79,12 +79,9 @@ function ResultSection({
           Result
         </h2>
         <div className="flex gap-2">
-          <Button
-            type="warning"
-            label="Clear Result"
-            size="sm"
-            onClick={handleClearResult}
-          />
+          <Button type="warning" size="sm" onClick={handleClearResult}>
+            Clear Result
+          </Button>
           <Menu>
             <MenuButton className="w-20 cursor-pointer rounded bg-green-700 px-3 py-2 text-white hover:bg-green-800 disabled:cursor-not-allowed disabled:opacity-50 data-open:bg-green-800 lg:w-30">
               Download
