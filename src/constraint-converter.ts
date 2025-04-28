@@ -225,11 +225,11 @@ function convertTerm(
   parameters: Set<string>,
 ): UnfixedTerm {
   let isParameterName = false
-  for (const parameter of parameters) {
+  for (const p of parameters) {
     if (isPatternString(predicate)) {
       isParameterName = false
       break
-    } else if (predicate.includes(parameter) && /^[=!&].+$/.test(predicate)) {
+    } else if (predicate.includes(p) && /^[=!&].+$/.test(predicate)) {
       isParameterName = true
       break
     }
