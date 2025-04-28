@@ -309,6 +309,28 @@ describe('convertConstraints', () => {
     expect(result).toBeUndefined()
   })
 
+  it('should not convert parameter name without operator', () => {
+    const constraints: FixedConstraint[] = [
+      {
+        conditions: [
+          {
+            ifOrThen: 'if',
+            parameterName: 'A',
+            predicate: 'B',
+          },
+          {
+            ifOrThen: 'then',
+            parameterName: 'C',
+            predicate: '100',
+          },
+        ],
+      },
+    ]
+
+    const result = printConstraints(constraints, ['A', 'B', 'C', 'D'])[0]
+    expect(result).toBe('IF [A] = "B" THEN [C] = 100;')
+  })
+
   it('should convert parameter and parameter constraint (1)', () => {
     const constraints: FixedConstraint[] = [
       {
