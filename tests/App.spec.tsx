@@ -699,6 +699,11 @@ describe('App', () => {
       }))
       pictRunnerMock = new PictRunnerMock()
       user = userEvent.setup()
+      const ResizeObserverMock = vi.fn()
+      ResizeObserverMock.prototype.disconnect = vi.fn()
+      ResizeObserverMock.prototype.observe = vi.fn()
+      ResizeObserverMock.prototype.unobserve = vi.fn()
+      global.ResizeObserver = ResizeObserverMock
       render(<App pictRunnerInjection={pictRunnerMock} />)
     })
 
@@ -719,24 +724,20 @@ describe('App', () => {
       ).toBeInTheDocument()
       expect(screen.getByRole('cell', { name: '100' })).toBeInTheDocument()
 
-      // Check that the CSV and TSV buttons are present
-      expect(screen.getByRole('button', { name: 'CSV' })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: 'TSV' })).toBeInTheDocument()
+      // Check that the Download buttons are present
+      expect(
+        screen.getByRole('button', { name: 'Download' }),
+      ).toBeInTheDocument()
     })
 
-    it('Should have CSV and TSV buttons that are enabled after running PICT', async () => {
+    it('Should have Download buttons that are enabled after running PICT', async () => {
       // Run PICT to get results
       await user.click(screen.getByRole('button', { name: 'Run' }))
 
-      // Get the CSV button and verify it exists and is enabled
-      const csvButton = screen.getByRole('button', { name: 'CSV' })
+      // Get the Download button and verify it exists and is enabled
+      const csvButton = screen.getByRole('button', { name: 'Download' })
       expect(csvButton).toBeInTheDocument()
       expect(csvButton).not.toBeDisabled()
-
-      // Get the TSV button and verify it exists and is enabled
-      const tsvButton = screen.getByRole('button', { name: 'TSV' })
-      expect(tsvButton).toBeInTheDocument()
-      expect(tsvButton).not.toBeDisabled()
     })
 
     it('Should clear results when clicking the Clear Result button', async () => {
