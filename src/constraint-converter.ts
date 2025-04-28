@@ -229,7 +229,7 @@ function convertTerm(
     if (isPatternString(predicate)) {
       isParameterName = false
       break
-    } else if (predicate.includes(parameter)) {
+    } else if (predicate.includes(parameter) && /^[=!&].+$/.test(predicate)) {
       isParameterName = true
       break
     }
