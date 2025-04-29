@@ -1,3 +1,5 @@
+import { Input } from '@headlessui/react'
+
 interface TextInputProps {
   name: string
   value: string
@@ -14,14 +16,14 @@ function TextInput({
   onChange,
 }: TextInputProps) {
   const validClass = isValid
-    ? 'border-black focus:ring-blue-500'
-    : 'border-red-500 focus:ring-red-500'
+    ? 'border-black data-focus:ring-blue-500'
+    : 'border-red-500 data-focus:ring-red-500'
   return (
-    <input
+    <Input
       type="text"
       name={name}
       value={value}
-      className={`w-full rounded border bg-white px-3 py-2 focus:border-transparent focus:ring-3 focus:outline-none ${validClass}`}
+      className={`w-full rounded border bg-white px-3 py-2 data-focus:border-transparent data-focus:ring-3 data-focus:outline-none ${validClass}`}
       aria-labelledby={ariaLabelledby}
       autoComplete="off"
       onChange={onChange}
