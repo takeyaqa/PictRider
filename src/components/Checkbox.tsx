@@ -1,25 +1,24 @@
+import { Checkbox as HeadlessUiCheckbox, Field, Label } from '@headlessui/react'
+import { CheckIcon } from '@heroicons/react/16/solid'
+
 interface CheckboxProps {
-  id: string
   label: string
   checked: boolean
-  value?: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (checked: boolean) => void
 }
 
-function Checkbox({ id, label, value, checked, onChange }: CheckboxProps) {
+function Checkbox({ label, checked, onChange }: CheckboxProps) {
   return (
-    <label className="cursor-pointer" htmlFor={id}>
-      <input
-        id={id}
-        type="checkbox"
-        value={value ?? label}
+    <Field className="flex items-center">
+      <HeadlessUiCheckbox
         checked={checked}
-        className="mr-1 cursor-pointer rounded"
-        autoComplete="off"
+        className="group mr-1 flex size-5 rounded bg-white ring-1 ring-gray-400 data-checked:bg-blue-500"
         onChange={onChange}
-      />
-      {label}
-    </label>
+      >
+        <CheckIcon className="hidden fill-white group-data-checked:inline" />
+      </HeadlessUiCheckbox>
+      <Label className="cursor-pointer">{label}</Label>
+    </Field>
   )
 }
 

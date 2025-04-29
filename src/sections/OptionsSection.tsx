@@ -3,50 +3,53 @@ import { Config } from '../types'
 
 interface OptionsSectionProps {
   config: Config
-  handleChangeConfig: (
+  handleChangeConfigCheckbox: (
     type:
       | 'enableSubModels'
       | 'enableConstraints'
       | 'showModelFile'
-      | 'orderOfCombinations'
-      | 'randomizeGeneration'
-      | 'randomizeSeed',
+      | 'randomizeGeneration',
+    checked: boolean,
+  ) => void
+  handleChangeConfigInput: (
+    type: 'orderOfCombinations' | 'randomizeSeed',
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
 }
 
-function OptionsSection({ config, handleChangeConfig }: OptionsSectionProps) {
+function OptionsSection({
+  config,
+  handleChangeConfigCheckbox,
+  handleChangeConfigInput,
+}: OptionsSectionProps) {
   return (
     <Section>
       <h2 className="mb-5 text-lg font-bold">Options</h2>
       <div className="mb-5 flex items-center gap-5">
         <div>
           <Checkbox
-            id="enable-sub-models-button"
             label="Sub-models"
             checked={config.enableSubModels}
-            onChange={(e) => {
-              handleChangeConfig('enableSubModels', e)
+            onChange={(checked) => {
+              handleChangeConfigCheckbox('enableSubModels', checked)
             }}
           />
         </div>
         <div>
           <Checkbox
-            id="enable-constraints-button"
             label="Constraints"
             checked={config.enableConstraints}
-            onChange={(e) => {
-              handleChangeConfig('enableConstraints', e)
+            onChange={(checked) => {
+              handleChangeConfigCheckbox('enableConstraints', checked)
             }}
           />
         </div>
         <div>
           <Checkbox
-            id="show-model-file-button"
             label="Show model file"
             checked={config.showModelFile}
-            onChange={(e) => {
-              handleChangeConfig('showModelFile', e)
+            onChange={(checked) => {
+              handleChangeConfigCheckbox('showModelFile', checked)
             }}
           />
         </div>
@@ -59,18 +62,17 @@ function OptionsSection({ config, handleChangeConfig }: OptionsSectionProps) {
               min={1}
               max={50}
               onChange={(e) => {
-                handleChangeConfig('orderOfCombinations', e)
+                handleChangeConfigInput('orderOfCombinations', e)
               }}
             />
           </label>
         </div>
         <div>
           <Checkbox
-            id="randomize-generation-button"
             label="Randomize generation"
             checked={config.randomizeGeneration}
-            onChange={(e) => {
-              handleChangeConfig('randomizeGeneration', e)
+            onChange={(checked) => {
+              handleChangeConfigCheckbox('randomizeGeneration', checked)
             }}
           />
         </div>
@@ -84,7 +86,7 @@ function OptionsSection({ config, handleChangeConfig }: OptionsSectionProps) {
               max={65535}
               disabled={!config.randomizeGeneration}
               onChange={(e) => {
-                handleChangeConfig('randomizeSeed', e)
+                handleChangeConfigInput('randomizeSeed', e)
               }}
             />
           </label>

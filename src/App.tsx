@@ -75,12 +75,13 @@ function App({ pictRunnerInjection }: AppProps) {
   }
 
   function handleClickSubModelParameters(
-    id: string,
-    e: React.ChangeEvent<HTMLInputElement>,
+    subModelId: string,
+    parameterId: string,
+    checked: boolean,
   ) {
     dispatchModel({
       type: 'clickSubModelParameters',
-      payload: { id, e },
+      payload: { subModelId, parameterId, checked },
     })
   }
 
@@ -139,14 +140,22 @@ function App({ pictRunnerInjection }: AppProps) {
     })
   }
 
-  function handleChangeConfig(
+  function handleChangeConfigCheckbox(
     type:
       | 'enableSubModels'
       | 'enableConstraints'
       | 'showModelFile'
-      | 'orderOfCombinations'
-      | 'randomizeGeneration'
-      | 'randomizeSeed',
+      | 'randomizeGeneration',
+    checked: boolean,
+  ) {
+    dispatchConfig({
+      type,
+      payload: { checked },
+    })
+  }
+
+  function handleChangeConfigInput(
+    type: 'orderOfCombinations' | 'randomizeSeed',
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
     dispatchConfig({
@@ -235,7 +244,8 @@ function App({ pictRunnerInjection }: AppProps) {
         />
         <OptionsSection
           config={config}
-          handleChangeConfig={handleChangeConfig}
+          handleChangeConfigCheckbox={handleChangeConfigCheckbox}
+          handleChangeConfigInput={handleChangeConfigInput}
         />
         <SubModelsSection
           config={config}
