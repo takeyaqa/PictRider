@@ -111,7 +111,7 @@ describe('App', () => {
 
     it('Should clear all parameter values when clicking the clear button', async () => {
       // act
-      await user.click(screen.getByRole('button', { name: 'Clear' }))
+      await user.click(screen.getByRole('button', { name: 'Clear Input' }))
 
       // assert - check count is not changed but values is empty
       expect(

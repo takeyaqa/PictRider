@@ -1,6 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
-import { AlertMessage, Button, Section } from '../components'
+import { AlertMessage, Section } from '../components'
 import { Config, Result } from '../types'
 
 function createCsvContent(result: Result) {
@@ -22,14 +22,9 @@ function createTsvContent(result: Result) {
 interface ResultSectionProps {
   config: Config
   result: Result | null
-  handleClearResult: () => void
 }
 
-function ResultSection({
-  config,
-  result,
-  handleClearResult,
-}: ResultSectionProps) {
+function ResultSection({ config, result }: ResultSectionProps) {
   function handleDownload(type: 'csv' | 'tsv') {
     if (!result) {
       return
@@ -80,9 +75,6 @@ function ResultSection({
           Result
         </h2>
         <div className="flex gap-2">
-          <Button type="warning" size="sm" onClick={handleClearResult}>
-            Clear Result
-          </Button>
           <Menu>
             <MenuButton className="flex w-20 cursor-pointer items-center rounded bg-green-700 px-3 py-2 text-white data-disabled:cursor-not-allowed data-disabled:opacity-50 data-hover:bg-green-800 data-open:bg-green-800 lg:w-30">
               Download

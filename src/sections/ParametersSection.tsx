@@ -11,7 +11,6 @@ interface ParametersSectionProps {
   ) => void
   handleClickAddRow: () => void
   handleClickRemoveRow: () => void
-  handleClickClear: () => void
 }
 
 function ParametersSection({
@@ -20,7 +19,6 @@ function ParametersSection({
   handleChangeParameter,
   handleClickAddRow,
   handleClickRemoveRow,
-  handleClickClear,
 }: ParametersSectionProps) {
   return (
     <Section>
@@ -47,9 +45,6 @@ function ParametersSection({
             onClick={handleClickRemoveRow}
           >
             Remove Row
-          </Button>
-          <Button type="warning" size="sm" onClick={handleClickClear}>
-            Clear
           </Button>
         </div>
       </div>
