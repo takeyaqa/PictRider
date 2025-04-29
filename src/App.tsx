@@ -8,9 +8,9 @@ import {
   OptionsSection,
   SubModelsSection,
   ConstraintsSection,
-  RunButtonSection,
   ResultSection,
   FooterSection,
+  MenuSection,
 } from './sections'
 import { Result } from './types'
 import { modelReducer, getInitialModel } from './reducers/model-reducer'
@@ -227,6 +227,13 @@ function App({ pictRunnerInjection }: AppProps) {
     })
   }
 
+  const containsInvalidValues = model.parameters.some(
+    (p) => !p.isValidName || !p.isValidValues,
+  )
+  const containsInvalidConstraints = model.constraints.some((c) =>
+    c.conditions.some((cond) => !cond.isValid),
+  )
+
   return (
     <>
       <HeaderSection />
@@ -235,13 +242,23 @@ function App({ pictRunnerInjection }: AppProps) {
       />
       <main className="grid grid-cols-1 bg-white 2xl:grid-cols-2">
         <div>
+          <MenuSection
+            containsInvalidValues={
+              containsInvalidValues || containsInvalidConstraints
+            }
+            pictRunnerLoaded={pictRunnerLoaded}
+            handleClickRun={runPict}
+            handleClickClear={handleClickClear}
+            handleClearResult={() => {
+              setResult(null)
+            }}
+          />
           <ParametersSection
             parameters={model.parameters}
             messages={model.parameterErrors}
             handleChangeParameter={handleChangeParameter}
             handleClickAddRow={handleClickAddRow}
             handleClickRemoveRow={handleClickRemoveRow}
-            handleClickClear={handleClickClear}
           />
           <ConstraintsSection
             config={config}
@@ -272,21 +289,9 @@ function App({ pictRunnerInjection }: AppProps) {
             handleClickSubModelParameters={handleClickSubModelParameters}
             handleChangeSubModelOrder={handleChangeSubModelOrder}
           />
-          <RunButtonSection
-            parameters={model.parameters}
-            constraints={model.constraints}
-            pictRunnerLoaded={pictRunnerLoaded}
-            onClickRun={runPict}
-          />
         </div>
         <div>
-          <ResultSection
-            config={config}
-            result={result}
-            handleClearResult={() => {
-              setResult(null)
-            }}
-          />
+          <ResultSection config={config} result={result} />
         </div>
       </main>
       <FooterSection />

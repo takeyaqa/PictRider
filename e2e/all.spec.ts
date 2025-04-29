@@ -35,7 +35,7 @@ test('should display result after clicking Run (edit values)', async ({
 }) => {
   // arrange
   await page.goto('/')
-  await page.getByRole('button', { name: 'Clear' }).click()
+  await page.getByRole('button', { name: 'Clear Input' }).click()
   await page.getByRole('textbox', { name: 'Parameters' }).nth(0).fill('null')
   await page
     .getByRole('textbox', { name: 'Values' })
