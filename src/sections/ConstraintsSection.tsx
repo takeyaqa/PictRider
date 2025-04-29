@@ -186,7 +186,6 @@ function ConstraintsSection({
                             {cell.ifOrThen ?? ''}
                           </Button>
                           <TextInput
-                            name="constraint_condition"
                             value={cell.predicate}
                             isValid={cell.isValid}
                             onChange={(e) => {

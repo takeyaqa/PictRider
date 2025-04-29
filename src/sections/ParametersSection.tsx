@@ -61,7 +61,6 @@ function ParametersSection({
         <div className="mb-1 grid grid-cols-12 gap-5" key={p.id}>
           <div className="col-span-3">
             <TextInput
-              name="parameter_name"
               value={p.name}
               isValid={p.isValidName}
               ariaLabelledby="parameters_label"
@@ -72,7 +71,6 @@ function ParametersSection({
           </div>
           <div className="col-span-9">
             <TextInput
-              name="parameter_values"
               value={p.values}
               isValid={p.isValidValues}
               ariaLabelledby="values_label"

@@ -1,7 +1,6 @@
 import { Input } from '@headlessui/react'
 
 interface TextInputProps {
-  name: string
   value: string
   isValid: boolean
   ariaLabelledby?: string
@@ -9,7 +8,6 @@ interface TextInputProps {
 }
 
 function TextInput({
-  name,
   value,
   isValid,
   ariaLabelledby,
@@ -21,7 +19,6 @@ function TextInput({
   return (
     <Input
       type="text"
-      name={name}
       value={value}
       className={`w-full cursor-text rounded border bg-white px-3 py-2 data-focus:border-transparent data-focus:ring-3 data-focus:outline-none ${validClass}`}
       aria-labelledby={ariaLabelledby}
