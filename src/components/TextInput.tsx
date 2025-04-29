@@ -23,7 +23,7 @@ function TextInput({
       type="text"
       name={name}
       value={value}
-      className={`w-full rounded border bg-white px-3 py-2 data-focus:border-transparent data-focus:ring-3 data-focus:outline-none ${validClass}`}
+      className={`w-full cursor-text rounded border bg-white px-3 py-2 data-focus:border-transparent data-focus:ring-3 data-focus:outline-none ${validClass}`}
       aria-labelledby={ariaLabelledby}
       autoComplete="off"
       onChange={onChange}

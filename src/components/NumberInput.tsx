@@ -18,15 +18,14 @@ function NumberInput({
   onChange,
 }: NumberInputProps) {
   return (
-    <Field>
+    <Field disabled={disabled}>
       <Label>{label}</Label>
       <Input
         type="number"
         value={value}
-        className="ml-3 rounded border border-black bg-white pl-2 text-right data-disabled:bg-gray-300 data-focus:border-transparent data-focus:ring-3 data-focus:ring-blue-500 data-focus:outline-none"
+        className="ml-3 cursor-text rounded border border-black bg-white pl-2 text-right data-disabled:bg-gray-300 data-focus:border-transparent data-focus:ring-3 data-focus:ring-blue-500 data-focus:outline-none"
         min={min}
         max={max}
-        disabled={disabled}
         autoComplete="off"
         onChange={onChange}
       />
