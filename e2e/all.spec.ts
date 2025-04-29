@@ -36,39 +36,31 @@ test('should display result after clicking Run (edit values)', async ({
   // arrange
   await page.goto('/')
   await page.getByRole('button', { name: 'Clear Input' }).click()
-  await page.getByRole('textbox', { name: 'Parameters' }).nth(0).fill('null')
+  await page.getByRole('textbox', { name: 'Parameter 1 Name' }).fill('null')
   await page
-    .getByRole('textbox', { name: 'Values' })
-    .nth(0)
+    .getByRole('textbox', { name: 'Parameter 1 Values' })
     .fill('undefined, true, false, NaN, Infinity, eval')
-  await page.getByRole('textbox', { name: 'Parameters' }).nth(1).fill('⅛⅜⅝⅞')
+  await page.getByRole('textbox', { name: 'Parameter 2 Name' }).fill('⅛⅜⅝⅞')
   await page
-    .getByRole('textbox', { name: 'Values' })
-    .nth(1)
+    .getByRole('textbox', { name: 'Parameter 2 Values' })
     .fill('Ω≈ç√∫˜µ≤≥÷, ٠١٢٣٤٥٦٧٨٩, ¡™£¢∞§¶•ªº–≠')
   await page
-    .getByRole('textbox', { name: 'Parameters' })
-    .nth(2)
+    .getByRole('textbox', { name: 'Parameter 3 Name' })
     .fill('社會科學院語學研究所')
   await page
-    .getByRole('textbox', { name: 'Values' })
-    .nth(2)
+    .getByRole('textbox', { name: 'Parameter 3 Values' })
     .fill('表ポあA鷗ŒéＢ逍Üßªąñ丂㐀𠀀, 캄사함니다')
   await page
-    .getByRole('textbox', { name: 'Parameters' })
-    .nth(3)
+    .getByRole('textbox', { name: 'Parameter 4 Name' })
     .fill('╯°□°）╯︵ ┻━┻')
   await page
-    .getByRole('textbox', { name: 'Values' })
-    .nth(3)
+    .getByRole('textbox', { name: 'Parameter 4 Values' })
     .fill('👾 🙇 💁 🙅 🙆 🙋 🙎 🙍, ✋🏿 💪🏿 👐🏿 🙌🏿 👏🏿 🙏🏿, 🇺🇸🇷🇺🇸🇦')
   await page
-    .getByRole('textbox', { name: 'Parameters' })
-    .nth(4)
+    .getByRole('textbox', { name: 'Parameter 5 Name' })
     .fill('script alert0 /script')
   await page
-    .getByRole('textbox', { name: 'Values' })
-    .nth(4)
+    .getByRole('textbox', { name: 'Parameter 5 Values' })
     .fill('مرحبًا, בְּרֵאשִׁית')
 
   // act

@@ -74,6 +74,19 @@ type ModelAction =
       }
     }
   | {
+      type: 'clickAddRow'
+      payload: {
+        id: string
+        target: 'above' | 'below'
+      }
+    }
+  | {
+      type: 'clickRemoveRow'
+      payload: {
+        id: string
+      }
+    }
+  | {
       type: 'clickSubModelParameters'
       payload: {
         subModelId: string
@@ -111,8 +124,6 @@ type ModelAction =
     }
   | {
       type:
-        | 'clickAddRow'
-        | 'clickRemoveRow'
         | 'clickClear'
         | 'clickAddConstraint'
         | 'clickRemoveConstraint'
@@ -204,49 +215,92 @@ export function modelReducer(state: Model, action: ModelAction): Model {
     }
 
     case 'clickAddRow': {
+      const { id, target } = action.payload
       if (state.parameters.length >= 50) {
         // may not be reached
         return copyModel(state)
       }
 
-      const newParameter = {
-        id: uuidv4(),
-        name: '',
-        values: '',
-        isValidName: true,
-        isValidValues: true,
+      const newParameters: Parameter[] = []
+      const newParameterId = uuidv4()
+      for (const p of copyParameters(state.parameters)) {
+        if (p.id === id) {
+          const newParameter = {
+            id: newParameterId,
+            name: '',
+            values: '',
+            isValidName: true,
+            isValidValues: true,
+          }
+          switch (target) {
+            case 'above':
+              newParameters.push(newParameter)
+              newParameters.push(p)
+              break
+            case 'below':
+              newParameters.push(p)
+              newParameters.push(newParameter)
+              break
+          }
+        } else {
+          newParameters.push(p)
+        }
       }
-      const newConstraints = copyConstraints(state.constraints)
-      for (const newConstraint of newConstraints) {
-        newConstraint.conditions.push({
-          ifOrThen: 'if',
-          predicate: '',
-          parameterId: newParameter.id,
-          isValid: true,
+      const newConstraints: Constraint[] = []
+      for (const c of copyConstraints(state.constraints)) {
+        const newConditions: Condition[] = []
+        for (const cc of c.conditions) {
+          if (cc.parameterId === id) {
+            const newCondition: Condition = {
+              ifOrThen: 'if',
+              predicate: '',
+              parameterId: newParameterId,
+              isValid: true,
+            }
+            switch (target) {
+              case 'above':
+                newConditions.push(newCondition)
+                newConditions.push(cc)
+                break
+              case 'below':
+                newConditions.push(cc)
+                newConditions.push(newCondition)
+                break
+            }
+          } else {
+            newConditions.push(cc)
+          }
+        }
+        newConstraints.push({
+          ...c,
+          conditions: newConditions,
         })
       }
+
       return {
         ...copyModel(state),
-        parameters: [...copyParameters(state.parameters), newParameter],
+        parameters: newParameters,
         constraints: newConstraints,
       }
     }
 
     case 'clickRemoveRow': {
+      const { id } = action.payload
       if (state.parameters.length <= 1) {
         // may not be reached
         return copyModel(state)
       }
-      const newParameters = copyParameters(state.parameters)
-      const removedParameter = newParameters.pop()
-      const newConstraints = copyConstraints(state.constraints)
-      newConstraints.forEach((c) => c.conditions.pop())
+      const newParameters = state.parameters.filter((p) => p.id !== id)
+      const newConstraints = state.constraints.map((c) => {
+        return {
+          ...c,
+          conditions: c.conditions.filter((cc) => cc.parameterId !== id),
+        }
+      })
       const newSubModels = state.subModels.map((subModel) => {
         return {
           ...subModel,
-          parameterIds: subModel.parameterIds.filter(
-            (id) => id !== removedParameter?.id,
-          ),
+          parameterIds: subModel.parameterIds.filter((i) => i !== id),
         }
       })
       return {

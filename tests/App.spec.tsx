@@ -15,7 +15,12 @@ describe('App', () => {
       const PictRunnerMock = vi.fn()
       PictRunnerMock.prototype.init = vi.fn()
       PictRunnerMock.prototype.run = vi.fn()
-      pictRunnerMock = new PictRunner()
+      pictRunnerMock = new PictRunnerMock()
+      const ResizeObserverMock = vi.fn()
+      ResizeObserverMock.prototype.disconnect = vi.fn()
+      ResizeObserverMock.prototype.observe = vi.fn()
+      ResizeObserverMock.prototype.unobserve = vi.fn()
+      global.ResizeObserver = ResizeObserverMock
       user = userEvent.setup()
       render(<App pictRunnerInjection={pictRunnerMock} />)
     })
@@ -28,85 +33,117 @@ describe('App', () => {
     it('Should display PictRider title and default parameter values', () => {
       // assert - only checking default text and values
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' }),
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Name/ }),
       ).toHaveLength(6)
-      expect(screen.getAllByRole('textbox', { name: 'Values' })).toHaveLength(6)
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' })[0],
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Values/ }),
+      ).toHaveLength(6)
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 1 Name' }),
       ).toHaveValue('Type')
-      expect(screen.getAllByRole('textbox', { name: 'Values' })[0]).toHaveValue(
-        'Single, Span, Stripe, Mirror, RAID-5',
-      )
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' })[5],
+        screen.getByRole('textbox', { name: 'Parameter 1 Values' }),
+      ).toHaveValue('Single, Span, Stripe, Mirror, RAID-5')
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 6 Name' }),
       ).toHaveValue('Compression')
-      expect(screen.getAllByRole('textbox', { name: 'Values' })[5]).toHaveValue(
-        'ON, OFF',
-      )
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 6 Values' }),
+      ).toHaveValue('ON, OFF')
     })
 
     it('Should add a new parameter row when clicking the add row button', async () => {
       // act
-      await user.click(screen.getByText('Add Row'))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 6 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Insert Below' }))
 
       // assert - check count and default values (new row should be empty)
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' }),
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Name/ }),
       ).toHaveLength(7)
-      expect(screen.getAllByRole('textbox', { name: 'Values' })).toHaveLength(7)
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' })[0],
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Values/ }),
+      ).toHaveLength(7)
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 1 Name' }),
       ).toHaveValue('Type')
-      expect(screen.getAllByRole('textbox', { name: 'Values' })[0]).toHaveValue(
-        'Single, Span, Stripe, Mirror, RAID-5',
-      )
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' })[5],
+        screen.getByRole('textbox', { name: 'Parameter 1 Values' }),
+      ).toHaveValue('Single, Span, Stripe, Mirror, RAID-5')
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 6 Name' }),
       ).toHaveValue('Compression')
-      expect(screen.getAllByRole('textbox', { name: 'Values' })[5]).toHaveValue(
-        'ON, OFF',
-      )
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' })[6],
+        screen.getByRole('textbox', { name: 'Parameter 6 Values' }),
+      ).toHaveValue('ON, OFF')
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 7 Name' }),
       ).toHaveValue('')
-      expect(screen.getAllByRole('textbox', { name: 'Values' })[6]).toHaveValue(
-        '',
-      )
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 7 Values' }),
+      ).toHaveValue('')
     })
 
     it('Should remove a parameter row when clicking the delete row button', async () => {
       // act
-      await user.click(screen.getByText('Remove Row'))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 6 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Delete Row' }))
 
       // assert - check count and default values
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' }),
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Name/ }),
       ).toHaveLength(5)
-      expect(screen.getAllByRole('textbox', { name: 'Values' })).toHaveLength(5)
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' })[0],
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Values/ }),
+      ).toHaveLength(5)
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 1 Name' }),
       ).toHaveValue('Type')
-      expect(screen.getAllByRole('textbox', { name: 'Values' })[0]).toHaveValue(
-        'Single, Span, Stripe, Mirror, RAID-5',
-      )
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' })[4],
+        screen.getByRole('textbox', { name: 'Parameter 1 Values' }),
+      ).toHaveValue('Single, Span, Stripe, Mirror, RAID-5')
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 5 Name' }),
       ).toHaveValue('Cluster size')
-      expect(screen.getAllByRole('textbox', { name: 'Values' })[4]).toHaveValue(
-        '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
-      )
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 5 Values' }),
+      ).toHaveValue('512, 1024, 2048, 4096, 8192, 16384, 32768, 65536')
     })
 
     it('Should disable delete row button when only one low', async () => {
       // act - delete rows until only one row is left
-      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
-      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
-      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
-      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
-      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 1 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Delete Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 1 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Delete Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 1 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Delete Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 1 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Delete Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 1 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Delete Row' }))
 
       // assert
-      expect(screen.getByText('Remove Row')).toBeDisabled()
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 1 Edit Menu' }),
+      )
+      expect(
+        screen.getByRole('menuitem', { name: 'Delete Row' }),
+      ).toBeDisabled()
     })
 
     it('Should clear all parameter values when clicking the clear button', async () => {
@@ -115,91 +152,141 @@ describe('App', () => {
 
       // assert - check count is not changed but values is empty
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' }),
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Name/ }),
       ).toHaveLength(6)
-      expect(screen.getAllByRole('textbox', { name: 'Values' })).toHaveLength(6)
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' })[0],
-      ).toHaveValue('')
-      expect(screen.getAllByRole('textbox', { name: 'Values' })[0]).toHaveValue(
-        '',
-      )
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Values/ }),
+      ).toHaveLength(6)
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' })[5],
+        screen.getByRole('textbox', { name: 'Parameter 1 Name' }),
       ).toHaveValue('')
-      expect(screen.getAllByRole('textbox', { name: 'Values' })[5]).toHaveValue(
-        '',
-      )
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 1 Values' }),
+      ).toHaveValue('')
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 6 Name' }),
+      ).toHaveValue('')
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 6 Values' }),
+      ).toHaveValue('')
     })
 
     it('Should handle adding and removing multiple parameter rows', async () => {
-      // Initial state - 12 textbox (6 parameter rows)
-      expect(screen.getAllByRole('textbox')).toHaveLength(12)
+      // Initial state - 6 parameter rows
+      expect(
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Name/ }),
+      ).toHaveLength(6)
 
       // Add 3 rows
       // act - add first row
-      await user.click(screen.getByRole('button', { name: 'Add Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 1 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Insert Below' }))
       // assert
-      expect(screen.getAllByRole('textbox')).toHaveLength(14)
+      expect(
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Name/ }),
+      ).toHaveLength(7)
 
       // act - add second row
-      await user.click(screen.getByRole('button', { name: 'Add Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 3 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Insert Above' }))
       // assert
-      expect(screen.getAllByRole('textbox')).toHaveLength(16)
+      expect(
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Name/ }),
+      ).toHaveLength(8)
 
       // act - add third row
-      await user.click(screen.getByRole('button', { name: 'Add Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 5 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Insert Below' }))
       // assert
-      expect(screen.getAllByRole('textbox')).toHaveLength(18)
+      expect(
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Name/ }),
+      ).toHaveLength(9)
 
       // Now remove 2 rows
       // act - remove first row
-      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 5 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Delete Row' }))
       // assert
-      expect(screen.getAllByRole('textbox')).toHaveLength(16)
+      expect(
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Name/ }),
+      ).toHaveLength(8)
 
       // act - remove second row
-      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 7 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Delete Row' }))
       // assert
-      expect(screen.getAllByRole('textbox')).toHaveLength(14)
+      expect(
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Name/ }),
+      ).toHaveLength(7)
 
       // Verify we still have the correct values in the remaining textbox
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' })[0],
+        screen.getByRole('textbox', { name: 'Parameter 1 Name' }),
       ).toHaveValue('Type')
-      expect(screen.getAllByRole('textbox', { name: 'Values' })[0]).toHaveValue(
-        'Single, Span, Stripe, Mirror, RAID-5',
-      )
       expect(
-        screen.getAllByRole('textbox', { name: 'Parameters' })[6],
+        screen.getByRole('textbox', { name: 'Parameter 2 Name' }),
       ).toHaveValue('')
-      expect(screen.getAllByRole('textbox', { name: 'Values' })[6]).toHaveValue(
-        '',
-      )
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 3 Name' }),
+      ).toHaveValue('')
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 4 Name' }),
+      ).toHaveValue('Size')
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 5 Name' }),
+      ).toHaveValue('')
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 6 Name' }),
+      ).toHaveValue('File system')
+      expect(
+        screen.getByRole('textbox', { name: 'Parameter 7 Name' }),
+      ).toHaveValue('Compression')
     })
 
     it('Should disable add row button when maximum row limit (50) is reached', async () => {
-      // Initial state - 12 textbox (6 parameter rows)
-      expect(screen.getAllByRole('textbox')).toHaveLength(12)
+      // Initial state - 6 parameter rows
+      expect(
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Name/ }),
+      ).toHaveLength(6)
 
       // Add rows until we reach the limit (50 rows)
       // We already have 6 rows, so we need to add 44 more
       for (let i = 0; i < 44; i++) {
-        await user.click(screen.getByRole('button', { name: 'Add Row' }))
+        await user.click(
+          screen.getByRole('button', { name: 'Parameter 1 Edit Menu' }),
+        )
+        await user.click(screen.getByRole('menuitem', { name: 'Insert Above' }))
       }
 
-      // Verify we have 50 rows (100 textbox - 2 per row)
-      expect(screen.getAllByRole('textbox')).toHaveLength(100)
+      // Verify we have 50 rows
+      expect(
+        screen.getAllByRole('textbox', { name: /Parameter [0-9]+ Name/ }),
+      ).toHaveLength(50)
 
       // Verify the Add Row button is disabled
-      expect(screen.getByRole('button', { name: 'Add Row' })).toBeDisabled()
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 1 Edit Menu' }),
+      )
+      expect(
+        screen.getByRole('menuitem', { name: 'Insert Above' }),
+      ).toBeDisabled()
     })
 
     it('Should display error message when duplicate parameter names are found (single)', async () => {
       // act - edit parameter name to create a duplicate
-      const nameInput = screen.getAllByRole('textbox', {
-        name: 'Parameters',
-      })[1]
+      const nameInput = screen.getByRole('textbox', {
+        name: 'Parameter 2 Name',
+      })
       await user.clear(nameInput)
       await user.type(nameInput, 'Type') // Set to 'Type' which already exists
 
@@ -220,16 +307,16 @@ describe('App', () => {
 
     it('Should display error message when duplicate parameter names are found (double)', async () => {
       // act - edit parameter name to create a duplicate
-      const nameInput0 = screen.getAllByRole('textbox', {
-        name: 'Parameters',
-      })[0]
-      await user.clear(nameInput0)
-      await user.type(nameInput0, 'Type')
-      const nameInput1 = screen.getAllByRole('textbox', {
-        name: 'Parameters',
-      })[1]
+      const nameInput1 = screen.getByRole('textbox', {
+        name: 'Parameter 1 Name',
+      })
       await user.clear(nameInput1)
       await user.type(nameInput1, 'Type')
+      const nameInput2 = screen.getByRole('textbox', {
+        name: 'Parameter 2 Name',
+      })
+      await user.clear(nameInput2)
+      await user.type(nameInput2, 'Type')
 
       // assert - check error message is displayed
       expect(screen.getByRole('alert')).toHaveTextContent(
@@ -238,16 +325,16 @@ describe('App', () => {
       expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
 
       // act - edit parameter name to create a duplicate twice
-      const nameInput2 = screen.getAllByRole('textbox', {
-        name: 'Parameters',
-      })[2]
-      await user.clear(nameInput2)
-      await user.type(nameInput2, 'Duplicate')
-      const nameInput3 = screen.getAllByRole('textbox', {
-        name: 'Parameters',
-      })[3]
+      const nameInput3 = screen.getByRole('textbox', {
+        name: 'Parameter 3 Name',
+      })
       await user.clear(nameInput3)
       await user.type(nameInput3, 'Duplicate')
+      const nameInput4 = screen.getByRole('textbox', {
+        name: 'Parameter 4 Name',
+      })
+      await user.clear(nameInput4)
+      await user.type(nameInput4, 'Duplicate')
 
       // assert - still error message is displayed
       expect(screen.getByRole('alert')).toHaveTextContent(
@@ -256,7 +343,7 @@ describe('App', () => {
       expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
 
       // act - edit first parameter name to clear a duplicate, but still have one
-      await user.clear(nameInput0)
+      await user.clear(nameInput1)
 
       // assert - still error message is displayed
       expect(screen.getByRole('alert')).toHaveTextContent(
@@ -265,7 +352,7 @@ describe('App', () => {
       expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
 
       // act - clear the error by changing the name
-      await user.clear(nameInput3)
+      await user.clear(nameInput4)
 
       // assert - error message should be gone (blank input is ignored)
       expect(screen.queryByRole('alert')).not.toBeInTheDocument()
@@ -274,9 +361,9 @@ describe('App', () => {
 
     it('Should display error message when invalid character in parameter name', async () => {
       // act - edit parameter name to create invalid character
-      const nameInput = screen.getAllByRole('textbox', {
-        name: 'Parameters',
-      })[0]
+      const nameInput = screen.getByRole('textbox', {
+        name: 'Parameter 1 Name',
+      })
       await user.clear(nameInput)
       await user.type(nameInput, 'Ty#:()|,~{{}}@[[]]:=!+&*?pe')
 
@@ -297,9 +384,9 @@ describe('App', () => {
 
     it('Should display error message when invalid character in parameter values', async () => {
       // act - edit parameter name to create invalid character
-      const nameInput = screen.getAllByRole('textbox', {
-        name: 'Values',
-      })[0]
+      const nameInput = screen.getByRole('textbox', {
+        name: 'Parameter 1 Values',
+      })
       await user.clear(nameInput)
       await user.type(nameInput, 'Type, a#:,{{}}@[[]]=!+&*?')
       // assert - check error message is displayed
@@ -326,7 +413,12 @@ describe('App', () => {
       const PictRunnerMock = vi.fn()
       PictRunnerMock.prototype.init = vi.fn()
       PictRunnerMock.prototype.run = vi.fn()
-      pictRunnerMock = new PictRunner()
+      pictRunnerMock = new PictRunnerMock()
+      const ResizeObserverMock = vi.fn()
+      ResizeObserverMock.prototype.disconnect = vi.fn()
+      ResizeObserverMock.prototype.observe = vi.fn()
+      ResizeObserverMock.prototype.unobserve = vi.fn()
+      global.ResizeObserver = ResizeObserverMock
       user = userEvent.setup()
       render(<App pictRunnerInjection={pictRunnerMock} />)
     })
@@ -368,9 +460,9 @@ describe('App', () => {
       )
 
       // act - change the name of the first parameter name
-      const nameInput = screen.getAllByRole('textbox', {
-        name: 'Parameters',
-      })[0]
+      const nameInput = screen.getByRole('textbox', {
+        name: 'Parameter 1 Name',
+      })
       await user.clear(nameInput)
       await user.type(nameInput, 'TypeTypeType')
 
@@ -390,6 +482,11 @@ describe('App', () => {
       PictRunnerMock.prototype.init = vi.fn()
       PictRunnerMock.prototype.run = vi.fn()
       pictRunnerMock = new PictRunnerMock()
+      const ResizeObserverMock = vi.fn()
+      ResizeObserverMock.prototype.disconnect = vi.fn()
+      ResizeObserverMock.prototype.observe = vi.fn()
+      ResizeObserverMock.prototype.unobserve = vi.fn()
+      global.ResizeObserver = ResizeObserverMock
       user = userEvent.setup()
       render(<App pictRunnerInjection={pictRunnerMock} />)
     })
@@ -673,9 +770,9 @@ describe('App', () => {
       expect(beforePreElement).toBeInTheDocument()
 
       // act - edit parameter values
-      const parameterInput = screen.getAllByRole('textbox', {
-        name: 'Parameters',
-      })[0]
+      const parameterInput = screen.getByRole('textbox', {
+        name: 'Parameter 1 Name',
+      })
       await user.clear(parameterInput)
       await user.type(parameterInput, 'New Type')
 
@@ -817,7 +914,10 @@ describe('App', () => {
 
     it('Should call with parameters when add empty row', async () => {
       // arrange - add empty row
-      await user.click(screen.getByRole('button', { name: 'Add Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 6 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Insert Below' }))
 
       // act - click the run button
       await user.click(screen.getByRole('button', { name: 'Run' }))
@@ -854,7 +954,10 @@ describe('App', () => {
 
     it('Should call with parameters when delete existing row', async () => {
       // arrange - delete existing row
-      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 6 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Delete Row' }))
 
       // act - click the run button
       await user.click(screen.getByRole('button', { name: 'Run' }))
@@ -889,7 +992,7 @@ describe('App', () => {
 
     it('Should call with parameters when editing value', async () => {
       // arrange - edit existing value
-      const input = screen.getAllByRole('textbox', { name: 'Values' })[0]
+      const input = screen.getByRole('textbox', { name: 'Parameter 1 Values' })
       await user.clear(input)
       await user.type(input, 'Double, Span, Stripe, Mirror, RAID-5000')
 
@@ -927,7 +1030,7 @@ describe('App', () => {
 
     it('Should call with parameters when editing parameter to empty', async () => {
       // arrange - edit existing value
-      const input = screen.getAllByRole('textbox', { name: 'Parameters' })[1]
+      const input = screen.getByRole('textbox', { name: 'Parameter 2 Name' })
       await user.clear(input)
 
       // act - click the run button
@@ -961,7 +1064,7 @@ describe('App', () => {
 
     it('Should call with parameters when editing values to empty', async () => {
       // arrange - edit existing value
-      const input = screen.getAllByRole('textbox', { name: 'Values' })[2]
+      const input = screen.getByRole('textbox', { name: 'Parameter 3 Values' })
       await user.clear(input)
 
       // act - click the run button
@@ -1057,7 +1160,10 @@ describe('App', () => {
       await user.type(screen.getByRole('spinbutton', { name: 'Order' }), '3')
 
       // act - click the run button
-      await user.click(screen.getByRole('button', { name: 'Remove Row' }))
+      await user.click(
+        screen.getByRole('button', { name: 'Parameter 6 Edit Menu' }),
+      )
+      await user.click(screen.getByRole('menuitem', { name: 'Delete Row' }))
       await user.click(screen.getByRole('button', { name: 'Run' }))
 
       // assert - check result table
