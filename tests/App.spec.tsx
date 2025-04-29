@@ -446,11 +446,14 @@ describe('App', () => {
         screen.queryByRole('heading', { level: 2, name: 'Sub-Models' }),
       ).toBeInTheDocument()
       expect(
-        screen.queryByRole('heading', { level: 3, name: 'Parameters' }),
+        screen.queryByRole('heading', { level: 3, name: 'Sub-Model 1' }),
       ).toBeInTheDocument()
       expect(
-        screen.queryByRole('spinbutton', { name: 'Order' }),
+        screen.queryByRole('heading', { level: 3, name: 'Sub-Model 2' }),
       ).toBeInTheDocument()
+      expect(
+        screen.queryAllByRole('spinbutton', { name: 'Order' }),
+      ).toHaveLength(2)
     })
 
     it('Should change sub-model name when parameter name is changed', async () => {
@@ -468,8 +471,8 @@ describe('App', () => {
 
       // assert - the sub-model name should be updated
       expect(
-        screen.queryByRole('checkbox', { name: 'TypeTypeType' }),
-      ).toBeInTheDocument()
+        screen.queryAllByRole('checkbox', { name: 'TypeTypeType' }),
+      ).toHaveLength(2)
     })
   })
 
@@ -1087,11 +1090,16 @@ describe('App', () => {
       await user.click(
         screen.getByRole('switch', { name: 'Enable Sub-Models' }),
       )
-      await user.click(screen.getByRole('checkbox', { name: 'Type' }))
-      await user.click(screen.getByRole('checkbox', { name: 'Size' }))
-      await user.click(screen.getByRole('checkbox', { name: 'Format method' }))
-      await user.clear(screen.getByRole('spinbutton', { name: 'Order' }))
-      await user.type(screen.getByRole('spinbutton', { name: 'Order' }), '3')
+      await user.click(screen.getAllByRole('checkbox', { name: 'Type' })[0])
+      await user.click(screen.getAllByRole('checkbox', { name: 'Size' })[0])
+      await user.click(
+        screen.getAllByRole('checkbox', { name: 'Format method' })[0],
+      )
+      await user.clear(screen.getAllByRole('spinbutton', { name: 'Order' })[0])
+      await user.type(
+        screen.getAllByRole('spinbutton', { name: 'Order' })[0],
+        '3',
+      )
 
       // act - click the run button
       await user.click(screen.getByRole('button', { name: 'Run' }))
@@ -1138,12 +1146,17 @@ describe('App', () => {
       await user.click(
         screen.getByRole('switch', { name: 'Enable Sub-Models' }),
       )
-      await user.click(screen.getByRole('checkbox', { name: 'Type' }))
-      await user.click(screen.getByRole('checkbox', { name: 'Size' }))
-      await user.click(screen.getByRole('checkbox', { name: 'Format method' }))
+      await user.click(screen.getAllByRole('checkbox', { name: 'Type' })[0])
+      await user.click(screen.getAllByRole('checkbox', { name: 'Size' })[0])
+      await user.click(
+        screen.getAllByRole('checkbox', { name: 'Format method' })[0],
+      )
 
-      await user.clear(screen.getByRole('spinbutton', { name: 'Order' }))
-      await user.type(screen.getByRole('spinbutton', { name: 'Order' }), '3')
+      await user.clear(screen.getAllByRole('spinbutton', { name: 'Order' })[0])
+      await user.type(
+        screen.getAllByRole('spinbutton', { name: 'Order' })[0],
+        '3',
+      )
 
       // act - click the run button
       await user.click(
@@ -1229,7 +1242,7 @@ describe('App', () => {
         ],
         {
           constraintsText: 'IF [Type] = "RAID-5" THEN [Size] > 1000;',
-          subModels: undefined,
+          subModels: [],
           options: expect.anything(),
         },
       )
