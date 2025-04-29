@@ -174,17 +174,19 @@ function App({ pictRunnerInjection }: AppProps) {
       .filter((p) => p.name !== '' && p.values !== '')
       .map((p) => ({ name: p.name, values: p.values }))
     const fixedSubModels = config.enableSubModels
-      ? model.subModels.map((s) => ({
-          parameterNames: s.parameterIds.map((id) => {
-            const parameter = model.parameters.find((p) => p.id === id)
-            if (!parameter) {
-              throw new Error(`Parameter not found: ${id}`)
-            }
-            return parameter.name
-          }),
-          order: s.order,
-        }))
-      : undefined
+      ? model.subModels
+          .filter((sm) => sm.parameterIds.length > 0)
+          .map((s) => ({
+            parameterNames: s.parameterIds.map((id) => {
+              const parameter = model.parameters.find((p) => p.id === id)
+              if (!parameter) {
+                throw new Error(`Parameter not found: ${id}`)
+              }
+              return parameter.name
+            }),
+            order: s.order,
+          }))
+      : []
     const pictOptions = {
       orderOfCombinations:
         config.orderOfCombinations !== '' ? config.orderOfCombinations : 2,

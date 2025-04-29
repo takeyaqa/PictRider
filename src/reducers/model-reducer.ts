@@ -609,6 +609,11 @@ export function getInitialModel(): Model {
         parameterIds: [],
         order: 2,
       },
+      {
+        id: uuidv4(),
+        parameterIds: [],
+        order: 2,
+      },
     ],
     constraints: [createConstraintFromParameters(initialParameters)],
     constraintTexts: [],

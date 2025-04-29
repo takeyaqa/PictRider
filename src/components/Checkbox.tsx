@@ -12,7 +12,7 @@ function Checkbox({ label, checked, onChange }: CheckboxProps) {
     <Field className="flex items-center">
       <HeadlessUiCheckbox
         checked={checked}
-        className="group mr-1 flex size-5 rounded bg-white ring-1 ring-gray-400 data-checked:bg-blue-500"
+        className="group mr-1 flex size-5 cursor-pointer rounded bg-white ring-1 ring-gray-400 data-checked:bg-blue-500"
         onChange={onChange}
       >
         <CheckIcon className="hidden fill-white group-data-checked:inline" />
