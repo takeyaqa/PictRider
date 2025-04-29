@@ -50,7 +50,7 @@ function SubModelsSection({
               className="mb-5 grid grid-cols-2 place-items-center gap-5"
             >
               <div>
-                <h3 className="text-base font-bold">Sub Model {i + 1}</h3>
+                <h3 className="text-base font-bold">Sub-Model {i + 1}</h3>
                 <div>
                   <h4 className="mb-2">Parameters</h4>
                   {parameters.map((parameter) => (
