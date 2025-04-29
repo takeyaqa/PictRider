@@ -1,12 +1,12 @@
 import { Switch as HeadlessUiSwitch, Field, Label } from '@headlessui/react'
 
-interface CheckboxProps {
+interface SwitchProps {
   label: string
   checked: boolean
   onChange: (checked: boolean) => void
 }
 
-function Switch({ label, checked, onChange }: CheckboxProps) {
+function Switch({ label, checked, onChange }: SwitchProps) {
   return (
     <Field className="flex items-center">
       <HeadlessUiSwitch
