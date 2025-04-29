@@ -243,6 +243,23 @@ function App({ pictRunnerInjection }: AppProps) {
             handleClickRemoveRow={handleClickRemoveRow}
             handleClickClear={handleClickClear}
           />
+          <ConstraintsSection
+            config={config}
+            parameters={model.parameters}
+            constraints={model.constraints}
+            constraintTexts={model.constraintTexts}
+            constraintDirectEditMode={model.constraintDirectEditMode}
+            messages={model.constraintErrors}
+            handleChangeConfigCheckbox={handleChangeConfigCheckbox}
+            handleToggleCondition={handleToggleCondition}
+            handleChangeCondition={handleChangeCondition}
+            handleChangeConstraintFormula={handleChangeConstraintFormula}
+            handleClickAddConstraint={handleClickAddConstraint}
+            handleClickRemoveConstraint={handleClickRemoveConstraint}
+            toggleConstraintDirectEditMode={
+              handleToggleConstraintDirectEditMode
+            }
+          />
           <OptionsSection
             config={config}
             handleChangeConfigCheckbox={handleChangeConfigCheckbox}
@@ -254,22 +271,6 @@ function App({ pictRunnerInjection }: AppProps) {
             subModels={model.subModels}
             handleClickSubModelParameters={handleClickSubModelParameters}
             handleChangeSubModelOrder={handleChangeSubModelOrder}
-          />
-          <ConstraintsSection
-            config={config}
-            parameters={model.parameters}
-            constraints={model.constraints}
-            constraintTexts={model.constraintTexts}
-            constraintDirectEditMode={model.constraintDirectEditMode}
-            messages={model.constraintErrors}
-            handleToggleCondition={handleToggleCondition}
-            handleChangeCondition={handleChangeCondition}
-            handleChangeConstraintFormula={handleChangeConstraintFormula}
-            handleClickAddConstraint={handleClickAddConstraint}
-            handleClickRemoveConstraint={handleClickRemoveConstraint}
-            toggleConstraintDirectEditMode={
-              handleToggleConstraintDirectEditMode
-            }
           />
           <RunButtonSection
             parameters={model.parameters}

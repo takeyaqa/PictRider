@@ -37,15 +37,6 @@ function OptionsSection({
         </div>
         <div>
           <Checkbox
-            label="Constraints"
-            checked={config.enableConstraints}
-            onChange={(checked) => {
-              handleChangeConfigCheckbox('enableConstraints', checked)
-            }}
-          />
-        </div>
-        <div>
-          <Checkbox
             label="Show model file"
             checked={config.showModelFile}
             onChange={(checked) => {

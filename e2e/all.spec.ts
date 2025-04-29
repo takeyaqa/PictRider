@@ -115,7 +115,7 @@ test('should display result after clicking Run with constraints', async ({
 }) => {
   // arrange
   await page.goto('/')
-  await page.getByText('Constraints').click()
+  await page.getByRole('switch', { name: 'Enable Constraints' }).click()
   const constraintTable = page.getByRole('table', { name: 'Constraints' })
 
   // input first constraint
