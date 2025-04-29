@@ -26,14 +26,10 @@ function ParametersSection({
     <Section>
       <div className="mb-5 grid grid-cols-12 gap-5">
         <div className="col-span-3">
-          <h2 className="text-lg font-bold" id="parameters_label">
-            Parameters
-          </h2>
+          <h2 className="text-lg font-bold">Parameters</h2>
         </div>
         <div className="col-span-2">
-          <h2 className="text-lg font-bold" id="values_label">
-            Values
-          </h2>
+          <h2 className="text-lg font-bold">Values</h2>
         </div>
         <div className="col-span-7 flex items-center justify-end gap-5">
           <Button
@@ -61,9 +57,9 @@ function ParametersSection({
         <div className="mb-1 grid grid-cols-12 gap-5" key={p.id}>
           <div className="col-span-3">
             <TextInput
+              label="Parameters"
               value={p.name}
               isValid={p.isValidName}
-              ariaLabelledby="parameters_label"
               onChange={(e) => {
                 handleChangeParameter(p.id, 'name', e)
               }}
@@ -71,9 +67,9 @@ function ParametersSection({
           </div>
           <div className="col-span-9">
             <TextInput
+              label="Values"
               value={p.values}
               isValid={p.isValidValues}
-              ariaLabelledby="values_label"
               onChange={(e) => {
                 handleChangeParameter(p.id, 'values', e)
               }}

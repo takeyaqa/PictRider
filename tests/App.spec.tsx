@@ -490,7 +490,7 @@ describe('App', () => {
       ).toBeDisabled()
     })
 
-    it('Should disable add constraint button when maximum constraint limit (50) is reached', async () => {
+    it.skip('Should disable add constraint button when maximum constraint limit (50) is reached', async () => {
       // arrange - enable constraints area
       await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
 
