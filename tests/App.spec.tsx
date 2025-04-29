@@ -407,7 +407,9 @@ describe('App', () => {
 
     it('Should render constraints area when enabled', async () => {
       // act - enable constraints area by clicking the checkbox
-      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
 
       // assert - verify constraints area is rendered
       expect(
@@ -423,7 +425,9 @@ describe('App', () => {
 
     it('Should add a new constraint when add constraint button is clicked', async () => {
       // arrange -  enable constraints area
-      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
 
       // assume - initially there should be one constraint
       expect(screen.getByText('Constraint 1')).toBeInTheDocument()
@@ -440,7 +444,9 @@ describe('App', () => {
 
     it('Should remove a constraint when remove constraint button is clicked', async () => {
       // arrange - enable constraints area and add a constraint so we have two
-      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
       await user.click(screen.getByRole('button', { name: 'Add Constraint' }))
 
       // assume - there should be two constraints
@@ -464,7 +470,9 @@ describe('App', () => {
 
     it('Should disable remove constraint button when only one constraint exists', async () => {
       // act - enable constraints area
-      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
 
       // assert - by default there's only one constraint, so remove button should be disabled
       expect(
@@ -492,7 +500,9 @@ describe('App', () => {
 
     it.skip('Should disable add constraint button when maximum constraint limit (50) is reached', async () => {
       // arrange - enable constraints area
-      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
 
       // Initial state - should have 1 constraint
       expect(screen.getByText('Constraint 1')).toBeInTheDocument()
@@ -515,7 +525,9 @@ describe('App', () => {
 
     it('Should toggle condition between if and then when clicked', async () => {
       // arrange - enable constraints area
-      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
       const firstIfButton = screen.getAllByRole('button', { name: 'if' })[0] // Get the first 'if' button
 
       // act - click it to toggle to 'then'
@@ -533,7 +545,9 @@ describe('App', () => {
 
     it('Should update condition predicate when input is changed', async () => {
       // arrange - enable constraints area
-      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
 
       // get the second 'if' button (for Size parameter) and change it to 'then'
       const ifButtons = screen.getAllByRole('button', { name: 'if' })
@@ -562,7 +576,9 @@ describe('App', () => {
 
     it('Should display alert when input is includes error', async () => {
       // arrange - enable constraints area
-      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
 
       // get the second 'if' button (for Size parameter) and change it to 'then'
       const ifButtons = screen.getAllByRole('button', { name: 'if' })
@@ -593,7 +609,9 @@ describe('App', () => {
 
     it('Should display complex constraints with if/then conditions', async () => {
       // arrange - enable constraints area
-      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
 
       // get the second 'if' button
       const ifButtons = screen.getAllByRole('button', { name: 'if' })
@@ -621,7 +639,9 @@ describe('App', () => {
 
     it('Should change constraints when edit parameter name', async () => {
       // arrange - enable constraints area
-      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
 
       // get the second 'if' button
       const ifButtons = screen.getAllByRole('button', { name: 'if' })
@@ -665,7 +685,9 @@ describe('App', () => {
 
     it('Should change direct edit mode when click button', async () => {
       // arrange
-      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
 
       // act
       await user.click(screen.getByRole('button', { name: 'Edit Directly' }))
@@ -1068,7 +1090,9 @@ describe('App', () => {
 
     it('Should call with constraints when constraints direct editing mode', async () => {
       // arrange
-      await user.click(screen.getByRole('checkbox', { name: 'Constraints' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
       await user.click(screen.getByRole('button', { name: 'Edit Directly' }))
 
       // act
