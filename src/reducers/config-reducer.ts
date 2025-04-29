@@ -1,34 +1,40 @@
 import { Config } from '../types'
 
-interface ConfigAction {
-  type:
-    | 'enableSubModels'
-    | 'enableConstraints'
-    | 'showModelFile'
-    | 'orderOfCombinations'
-    | 'randomizeGeneration'
-    | 'randomizeSeed'
-  payload: { e: React.ChangeEvent<HTMLInputElement> }
-}
+type ConfigAction =
+  | {
+      type:
+        | 'enableSubModels'
+        | 'enableConstraints'
+        | 'showModelFile'
+        | 'randomizeGeneration'
+      payload: { checked: boolean }
+    }
+  | {
+      type: 'orderOfCombinations' | 'randomizeSeed'
+      payload: { e: React.ChangeEvent<HTMLInputElement> }
+    }
 
 export function configReducer(state: Config, action: ConfigAction): Config {
   switch (action.type) {
     case 'enableSubModels': {
+      const { checked } = action.payload
       return {
         ...state,
-        enableSubModels: !state.enableSubModels,
+        enableSubModels: checked,
       }
     }
     case 'enableConstraints': {
+      const { checked } = action.payload
       return {
         ...state,
-        enableConstraints: !state.enableConstraints,
+        enableConstraints: checked,
       }
     }
     case 'showModelFile': {
+      const { checked } = action.payload
       return {
         ...state,
-        showModelFile: !state.showModelFile,
+        showModelFile: checked,
       }
     }
     case 'orderOfCombinations': {
@@ -40,9 +46,10 @@ export function configReducer(state: Config, action: ConfigAction): Config {
       }
     }
     case 'randomizeGeneration': {
+      const { checked } = action.payload
       return {
         ...state,
-        randomizeGeneration: !state.randomizeGeneration,
+        randomizeGeneration: checked,
       }
     }
     case 'randomizeSeed': {

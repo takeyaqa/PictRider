@@ -76,8 +76,9 @@ type ModelAction =
   | {
       type: 'clickSubModelParameters'
       payload: {
-        id: string
-        e: React.ChangeEvent<HTMLInputElement>
+        subModelId: string
+        parameterId: string
+        checked: boolean
       }
     }
   | {
@@ -282,29 +283,29 @@ export function modelReducer(state: Model, action: ModelAction): Model {
     }
 
     case 'clickSubModelParameters': {
-      const { id, e } = action.payload
+      const { subModelId, parameterId, checked } = action.payload
       const newSubModels = copySubModels(state.subModels)
-      const target = newSubModels.find((m) => m.id === id)
+      const target = newSubModels.find((m) => m.id === subModelId)
       if (!target) {
         // may not be reached
         return copyModel(state)
       }
-      if (e.target.checked) {
-        const newParameterIds = [...target.parameterIds, e.target.value]
+      if (checked) {
+        const newParameterIds = [...target.parameterIds, parameterId]
         return {
           ...copyModel(state),
           subModels: newSubModels.map((m) =>
-            m.id === id ? { ...m, parameterIds: newParameterIds } : m,
+            m.id === subModelId ? { ...m, parameterIds: newParameterIds } : m,
           ),
         }
       } else {
         const newParameterIds = target.parameterIds.filter(
-          (paramId) => paramId !== e.target.value,
+          (paramId) => paramId !== parameterId,
         )
         return {
           ...copyModel(state),
           subModels: newSubModels.map((m) =>
-            m.id === id ? { ...m, parameterIds: newParameterIds } : m,
+            m.id === subModelId ? { ...m, parameterIds: newParameterIds } : m,
           ),
         }
       }

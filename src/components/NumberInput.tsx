@@ -1,5 +1,7 @@
+import { Field, Label, Input } from '@headlessui/react'
+
 interface NumberInputProps {
-  id: string
+  label: string
   value: number | ''
   min: number
   max: number
@@ -8,7 +10,7 @@ interface NumberInputProps {
 }
 
 function NumberInput({
-  id,
+  label,
   value,
   min,
   max,
@@ -16,17 +18,18 @@ function NumberInput({
   onChange,
 }: NumberInputProps) {
   return (
-    <input
-      type="number"
-      id={id}
-      value={value}
-      className="ml-3 rounded border border-black bg-white pl-2 text-right focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none disabled:bg-gray-300"
-      min={min}
-      max={max}
-      disabled={disabled}
-      autoComplete="off"
-      onChange={onChange}
-    />
+    <Field disabled={disabled}>
+      <Label>{label}</Label>
+      <Input
+        type="number"
+        value={value}
+        className="ml-3 cursor-text rounded border border-black bg-white pl-2 text-right data-disabled:bg-gray-300 data-focus:border-transparent data-focus:ring-3 data-focus:ring-blue-500 data-focus:outline-none"
+        min={min}
+        max={max}
+        autoComplete="off"
+        onChange={onChange}
+      />
+    </Field>
   )
 }
 

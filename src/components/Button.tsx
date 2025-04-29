@@ -1,7 +1,9 @@
+import { Button as HeadlessUiButton } from '@headlessui/react'
+
 interface ButtonProps {
   type: 'primary' | 'secondary' | 'success' | 'danger' | 'warning'
-  label: string
   size: 'xs' | 'sm' | 'md' | 'full'
+  children: string
   disabled?: boolean
   fontMono?: boolean
   onClick: () => void
@@ -9,7 +11,7 @@ interface ButtonProps {
 
 function Button({
   type,
-  label,
+  children,
   size,
   disabled,
   fontMono,
@@ -19,14 +21,14 @@ function Button({
   const sizeClass = getSizeClass(size)
   const fontMonoClass = fontMono ? 'font-mono' : ''
   return (
-    <button
+    <HeadlessUiButton
       type="button"
-      className={`cursor-pointer rounded px-3 py-2 disabled:cursor-not-allowed disabled:opacity-50 ${colorClass} ${sizeClass} ${fontMonoClass}`}
+      className={`cursor-pointer rounded px-3 py-2 data-disabled:cursor-not-allowed data-disabled:opacity-50 ${colorClass} ${sizeClass} ${fontMonoClass}`}
       disabled={disabled}
       onClick={onClick}
     >
-      {label}
-    </button>
+      {children}
+    </HeadlessUiButton>
   )
 }
 
@@ -35,15 +37,15 @@ function getColorClass(
 ) {
   switch (type) {
     case 'primary':
-      return 'bg-blue-500 hover:bg-blue-600 text-white'
+      return 'bg-blue-500 text-white data-hover:bg-blue-600'
     case 'secondary':
-      return 'bg-gray-500 hover:bg-gray-600 text-white'
+      return 'bg-gray-500 text-white data-hover:bg-gray-600'
     case 'success':
-      return 'bg-green-700 hover:bg-green-800 text-white'
+      return 'bg-green-700 text-white data-hover:bg-green-800'
     case 'danger':
-      return 'bg-red-600 hover:bg-red-700 text-white'
+      return 'bg-red-600 text-white data-hover:bg-red-700'
     case 'warning':
-      return 'bg-yellow-400 hover:bg-yellow-300 text-black'
+      return 'bg-yellow-400 text-black data-hover:bg-yellow-300'
   }
 }
 

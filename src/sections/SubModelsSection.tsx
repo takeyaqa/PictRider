@@ -6,8 +6,9 @@ interface SubModelsSectionProps {
   parameters: Parameter[]
   subModels: SubModel[]
   handleClickSubModelParameters: (
-    id: string,
-    e: React.ChangeEvent<HTMLInputElement>,
+    subModelId: string,
+    parameterId: string,
+    checked: boolean,
   ) => void
   handleChangeSubModelOrder: (
     id: string,
@@ -39,12 +40,14 @@ function SubModelsSection({
                   className="mb-1 items-center"
                 >
                   <Checkbox
-                    id={`${subModel.id}-${parameter.id}`}
                     label={parameter.name}
-                    value={parameter.id}
                     checked={subModel.parameterIds.includes(parameter.id)}
-                    onChange={(e) => {
-                      handleClickSubModelParameters(subModel.id, e)
+                    onChange={(checked) => {
+                      handleClickSubModelParameters(
+                        subModel.id,
+                        parameter.id,
+                        checked,
+                      )
                     }}
                   />
                 </div>
@@ -52,18 +55,15 @@ function SubModelsSection({
             </div>
           </div>
           <div className="col-span-2">
-            <label htmlFor="sub-model-order">
-              Order
-              <NumberInput
-                id="sub-model-order"
-                value={subModel.order}
-                min={2}
-                max={parameters.length}
-                onChange={(e) => {
-                  handleChangeSubModelOrder(subModel.id, e)
-                }}
-              />
-            </label>
+            <NumberInput
+              label="Order"
+              value={subModel.order}
+              min={2}
+              max={parameters.length}
+              onChange={(e) => {
+                handleChangeSubModelOrder(subModel.id, e)
+              }}
+            />
           </div>
         </div>
       ))}

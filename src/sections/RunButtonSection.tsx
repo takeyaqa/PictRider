@@ -25,7 +25,6 @@ function RunButtonSection({
       <div>
         <Button
           type="primary"
-          label="Run"
           size="full"
           disabled={
             containsInvalidValues ||
@@ -33,7 +32,9 @@ function RunButtonSection({
             !pictRunnerLoaded
           }
           onClick={onClickRun}
-        />
+        >
+          Run
+        </Button>
       </div>
     </section>
   )
