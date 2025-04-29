@@ -31,7 +31,7 @@ function SubModelsSection({
   return (
     <Section>
       <div className="mb-5 flex items-center gap-5">
-        <h2 className="text-lg font-bold">Sub-Models</h2>
+        <h2 className="w-30 text-lg font-bold">Sub-Models</h2>
         <div>
           <Switch
             label="Enable Sub-Models"

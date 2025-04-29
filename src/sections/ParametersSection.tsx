@@ -23,17 +23,20 @@ function ParametersSection({
 }: ParametersSectionProps) {
   return (
     <Section>
-      <div className="mb-5 grid grid-cols-12 gap-5">
-        <div className="col-span-3">
+      <div className="mb-5 grid grid-cols-12 gap-1 sm:gap-5">
+        <div className="col-span-12 sm:col-span-3">
           <h2 className="text-lg font-bold">Parameters</h2>
         </div>
-        <div className="col-span-2">
+        <div className="sm:col-span-2">
           <h2 className="text-lg font-bold">Values</h2>
         </div>
       </div>
       {parameters.map((p, index) => (
-        <div className="mb-1 grid grid-cols-12 gap-5" key={p.id}>
-          <div className="col-span-3">
+        <div
+          className="mb-3 grid grid-cols-12 gap-0 sm:mb-1 sm:gap-5"
+          key={p.id}
+        >
+          <div className="col-span-11 sm:col-span-3">
             <TextInput
               label={`Parameter ${(index + 1).toString()} Name`}
               value={p.name}
@@ -43,7 +46,7 @@ function ParametersSection({
               }}
             />
           </div>
-          <div className="col-span-8">
+          <div className="col-span-11 sm:col-span-8">
             <TextInput
               label={`Parameter ${(index + 1).toString()} Values`}
               value={p.values}

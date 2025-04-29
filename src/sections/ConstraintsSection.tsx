@@ -54,7 +54,7 @@ function ConstraintsSection({
   return (
     <Section>
       <div className="mb-5 flex items-center gap-5">
-        <h2 className="text-lg font-bold">Constraints</h2>
+        <h2 className="w-30 text-lg font-bold">Constraints</h2>
         <div>
           <Switch
             label="Enable Constraints"
@@ -69,20 +69,7 @@ function ConstraintsSection({
         <div>
           {!constraintDirectEditMode && (
             <div>
-              <div className="grid grid-cols-2 gap-0 md:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-3">
-                <div>
-                  <div className="h-10 border-collapse border bg-gray-200 px-4 py-2 text-left font-bold">
-                    Parameter
-                  </div>
-                  {parameters.map((p) => (
-                    <div
-                      key={p.id}
-                      className="h-15 border px-4 py-2 text-left align-middle"
-                    >
-                      {p.name}
-                    </div>
-                  ))}
-                </div>
+              <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-3">
                 {constraints.map((constraint, i) => (
                   <div key={constraint.id}>
                     <div className="flex h-10 border-collapse grid-cols-3 items-center justify-between border bg-gray-200 px-4 py-2 text-left font-bold">
@@ -115,35 +102,43 @@ function ConstraintsSection({
                     {constraint.conditions.map((condition) => (
                       <div
                         key={condition.parameterId}
-                        className="h-15 border-collapse border px-4 py-2 text-left"
+                        className="border-collapse border px-4 py-2 text-left"
                       >
-                        <div className="flex gap-1">
-                          <Button
-                            type="secondary"
-                            size="xs"
-                            fontMono={true}
-                            aria-label={`Constraint ${(i + 1).toString()} ${getParameterName(parameters, condition.parameterId)} ${condition.ifOrThen}`}
-                            onClick={() => {
-                              handleToggleCondition(
-                                constraint.id,
-                                condition.parameterId,
-                              )
-                            }}
-                          >
-                            {condition.ifOrThen}
-                          </Button>
-                          <TextInput
-                            label={`Constraint ${(i + 1).toString()} ${getParameterName(parameters, condition.parameterId)} Predicate`}
-                            value={condition.predicate}
-                            isValid={condition.isValid}
-                            onChange={(e) => {
-                              handleChangeCondition(
-                                constraint.id,
-                                condition.parameterId,
-                                e,
-                              )
-                            }}
-                          />
+                        <div>
+                          <div className="text-sm font-bold">
+                            {getParameterName(
+                              parameters,
+                              condition.parameterId,
+                            )}
+                          </div>
+                          <div className="flex gap-1">
+                            <Button
+                              type="secondary"
+                              size="xs"
+                              fontMono={true}
+                              aria-label={`Constraint ${(i + 1).toString()} ${getParameterName(parameters, condition.parameterId)} ${condition.ifOrThen}`}
+                              onClick={() => {
+                                handleToggleCondition(
+                                  constraint.id,
+                                  condition.parameterId,
+                                )
+                              }}
+                            >
+                              {condition.ifOrThen}
+                            </Button>
+                            <TextInput
+                              label={`Constraint ${(i + 1).toString()} ${getParameterName(parameters, condition.parameterId)} Predicate`}
+                              value={condition.predicate}
+                              isValid={condition.isValid}
+                              onChange={(e) => {
+                                handleChangeCondition(
+                                  constraint.id,
+                                  condition.parameterId,
+                                  e,
+                                )
+                              }}
+                            />
+                          </div>
                         </div>
                       </div>
                     ))}

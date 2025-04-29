@@ -522,7 +522,6 @@ describe('App', () => {
       expect(
         screen.getByRole('button', { name: 'Remove Constraint' }),
       ).toBeInTheDocument()
-      expect(screen.getByText('Parameter')).toBeInTheDocument() // One in parameters area, one in constraints area
       expect(screen.getByText('Constraint 1')).toBeInTheDocument()
       expect(
         screen.getAllByRole('button', { name: /Constraint [0-9]+ .+ if/ }),
