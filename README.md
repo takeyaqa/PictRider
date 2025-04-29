@@ -1,7 +1,5 @@
 # PictRider
 
-<img src="public/logo.svg" alt="PictRider Logo" width="640">
-
 ## Pairwise Testing on the Web
 
 PictRider is a modern and user-friendly combinatorial testing tool that allows you to easily generate test cases using pairwise testing techniques directly on the web. It requires no installation and runs entirely in the browser, enabling QA engineers and software developers to quickly and efficiently design effective test cases.
@@ -30,7 +28,7 @@ Pairwise testing is especially effective when:
 
 PictRider is an open-source project. The source code is available on GitHub:
 
-<https://github.com/takeyaqa/PictRider>
+[https://github.com/takeyaqa/PictRider](https://github.com/takeyaqa/PictRider)
 
 Contributions, bug reports, and feature requests are welcome!
 
