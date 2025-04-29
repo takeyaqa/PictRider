@@ -56,15 +56,17 @@ function App({ pictRunnerInjection }: AppProps) {
     })
   }
 
-  function handleClickAddRow() {
+  function handleClickAddRow(id: string, target: 'above' | 'below') {
     dispatchModel({
       type: 'clickAddRow',
+      payload: { id, target },
     })
   }
 
-  function handleClickRemoveRow() {
+  function handleClickRemoveRow(id: string) {
     dispatchModel({
       type: 'clickRemoveRow',
+      payload: { id },
     })
   }
 

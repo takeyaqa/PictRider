@@ -1,4 +1,5 @@
-import { AlertMessage, Button, Section, TextInput } from '../components'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import { AlertMessage, Section, TextInput } from '../components'
 import { Message, Parameter } from '../types'
 
 interface ParametersSectionProps {
@@ -9,8 +10,8 @@ interface ParametersSectionProps {
     field: 'name' | 'values',
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
-  handleClickAddRow: () => void
-  handleClickRemoveRow: () => void
+  handleClickAddRow: (id: string, target: 'above' | 'below') => void
+  handleClickRemoveRow: (id: string) => void
 }
 
 function ParametersSection({
@@ -29,30 +30,12 @@ function ParametersSection({
         <div className="col-span-2">
           <h2 className="text-lg font-bold">Values</h2>
         </div>
-        <div className="col-span-7 flex items-center justify-end gap-5">
-          <Button
-            type="secondary"
-            size="sm"
-            disabled={parameters.length >= 50}
-            onClick={handleClickAddRow}
-          >
-            Add Row
-          </Button>
-          <Button
-            type="secondary"
-            size="sm"
-            disabled={parameters.length <= 1}
-            onClick={handleClickRemoveRow}
-          >
-            Remove Row
-          </Button>
-        </div>
       </div>
-      {parameters.map((p) => (
+      {parameters.map((p, index) => (
         <div className="mb-1 grid grid-cols-12 gap-5" key={p.id}>
           <div className="col-span-3">
             <TextInput
-              label="Parameters"
+              label={`Parameter ${(index + 1).toString()} Name`}
               value={p.name}
               isValid={p.isValidName}
               onChange={(e) => {
@@ -60,15 +43,66 @@ function ParametersSection({
               }}
             />
           </div>
-          <div className="col-span-9">
+          <div className="col-span-8">
             <TextInput
-              label="Values"
+              label={`Parameter ${(index + 1).toString()} Values`}
               value={p.values}
               isValid={p.isValidValues}
               onChange={(e) => {
                 handleChangeParameter(p.id, 'values', e)
               }}
             />
+          </div>
+          <div className="col-span-1 flex gap-2">
+            <Menu>
+              <MenuButton
+                className="w-full cursor-pointer items-center rounded bg-gray-500 px-3 py-2 text-center text-white data-disabled:cursor-not-allowed data-disabled:opacity-50 data-hover:bg-gray-600 data-open:bg-gray-600"
+                aria-label={`Parameter ${(index + 1).toString()} Edit Menu`}
+              >
+                ⋮
+              </MenuButton>
+              <MenuItems
+                anchor="bottom start"
+                className="mt-0.5 w-40 rounded border border-gray-400 bg-white py-2"
+              >
+                <MenuItem>
+                  <button
+                    type="button"
+                    disabled={parameters.length >= 50}
+                    className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400"
+                    onClick={() => {
+                      handleClickAddRow(p.id, 'above')
+                    }}
+                  >
+                    Insert Above
+                  </button>
+                </MenuItem>
+                <MenuItem>
+                  <button
+                    type="button"
+                    disabled={parameters.length >= 50}
+                    className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400"
+                    onClick={() => {
+                      handleClickAddRow(p.id, 'below')
+                    }}
+                  >
+                    Insert Below
+                  </button>
+                </MenuItem>
+                <MenuItem>
+                  <button
+                    type="button"
+                    disabled={parameters.length <= 1}
+                    className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400"
+                    onClick={() => {
+                      handleClickRemoveRow(p.id)
+                    }}
+                  >
+                    Delete Row
+                  </button>
+                </MenuItem>
+              </MenuItems>
+            </Menu>
           </div>
         </div>
       ))}
