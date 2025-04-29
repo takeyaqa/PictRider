@@ -108,38 +108,25 @@ test('should display result after clicking Run with constraints', async ({
   // arrange
   await page.goto('/')
   await page.getByRole('switch', { name: 'Enable Constraints' }).click()
-  const constraintTable = page.getByRole('table', { name: 'Constraints' })
 
   // input first constraint
-  const firstFileSystemCondition = constraintTable
-    .getByRole('row')
-    .nth(4)
-    .getByRole('cell')
-    .nth(1)
-  const firstSizeCondition = constraintTable
-    .getByRole('row')
-    .nth(2)
-    .getByRole('cell')
-    .nth(1)
-  await firstFileSystemCondition.getByRole('textbox').fill('FAT')
-  await firstSizeCondition.getByRole('button', { name: 'if' }).click()
-  await firstSizeCondition.getByRole('textbox').fill('<= 4096')
+  await page
+    .getByRole('textbox', { name: 'Constraint 1 File System Predicate' })
+    .fill('FAT')
+  await page.getByRole('button', { name: 'Constraint 1 Size if' }).click()
+  await page
+    .getByRole('textbox', { name: 'Constraint 1 Size Predicate' })
+    .fill('<= 4096')
 
   // input second constraint
   await page.getByRole('button', { name: 'Add Constraint' }).click()
-  const secondFileSystemCondition = constraintTable
-    .getByRole('row')
-    .nth(4)
-    .getByRole('cell')
-    .nth(2)
-  const secondSizeCondition = constraintTable
-    .getByRole('row')
-    .nth(2)
-    .getByRole('cell')
-    .nth(2)
-  await secondFileSystemCondition.getByRole('textbox').fill('FAT32')
-  await secondSizeCondition.getByRole('button', { name: 'if' }).click()
-  await secondSizeCondition.getByRole('textbox').fill('<= 32000')
+  await page
+    .getByRole('textbox', { name: 'Constraint 2 File System Predicate' })
+    .fill('FAT32')
+  await page.getByRole('button', { name: 'Constraint 2 Size if' }).click()
+  await page
+    .getByRole('textbox', { name: 'Constraint 2 Size Predicate' })
+    .fill('<= 32000')
 
   // act
   await page.getByRole('button', { name: 'Run' }).click()

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { PlusIcon, XMarkIcon } from '@heroicons/react/16/solid'
 import {
   Parameter,
   Constraint,
@@ -7,56 +8,6 @@ import {
   Message,
 } from '../types'
 import { AlertMessage, Button, Switch, Section, TextInput } from '../components'
-
-interface ConstraintTableCell {
-  constraintId: string
-  ifOrThen: 'if' | 'then' | undefined
-  predicate: string
-  isIfWithPredicate: boolean
-  isValid: boolean
-}
-
-interface ConstraintTableRow {
-  parameterId: string
-  parameterName: string
-  cells: ConstraintTableCell[]
-}
-
-/**
- * Builds a table data structure from parameters and constraints
- * to avoid repetitive lookups in the JSX
- */
-function buildConstraintTable(
-  parameters: Parameter[],
-  constraints: Constraint[],
-): ConstraintTableRow[] {
-  return parameters.map((parameter) => {
-    const cells = constraints.map((constraint) => {
-      const condition = constraint.conditions.find(
-        (cond) => cond.parameterId === parameter.id,
-      )
-
-      const ifOrThen = condition?.ifOrThen
-      const predicate = condition?.predicate ?? ''
-      const isIfWithPredicate = ifOrThen === 'if' && predicate !== ''
-      const isValid = condition ? condition.isValid : true
-
-      return {
-        constraintId: constraint.id,
-        ifOrThen,
-        predicate,
-        isIfWithPredicate,
-        isValid,
-      }
-    })
-
-    return {
-      parameterId: parameter.id,
-      parameterName: parameter.name,
-      cells,
-    }
-  })
-}
 
 interface ConstraintsSectionProps {
   config: Config
@@ -103,9 +54,7 @@ function ConstraintsSection({
   return (
     <Section>
       <div className="mb-5 flex items-center gap-5">
-        <h2 className="text-lg font-bold" id="constraints-heading">
-          Constraints
-        </h2>
+        <h2 className="text-lg font-bold">Constraints</h2>
         <div>
           <Switch
             label="Enable Constraints"
@@ -118,108 +67,88 @@ function ConstraintsSection({
       </div>
       {config.enableConstraints && (
         <div>
-          <div className="col-span-6 mb-5 flex items-center justify-end gap-5">
-            {!constraintDirectEditMode && (
-              <>
-                <Button
-                  type="secondary"
-                  size="md"
-                  disabled={constraints.length >= 50}
-                  onClick={handleClickAddConstraint}
-                >
-                  Add Constraint
-                </Button>
-                <Button
-                  type="secondary"
-                  size="md"
-                  disabled={constraints.length <= 1}
-                  onClick={handleClickRemoveConstraint}
-                >
-                  Remove Constraint
-                </Button>
-                <Button
-                  type="danger"
-                  size="md"
-                  onClick={() => {
-                    toggleConstraintDirectEditMode()
-                    setIsEditing(true)
-                  }}
-                >
-                  Edit Directly
-                </Button>
-              </>
-            )}
-          </div>
           {!constraintDirectEditMode && (
             <div>
-              <div className="overflow-x-auto">
-                <table
-                  className="border-collapse border border-black"
-                  aria-labelledby="constraints-heading"
-                >
-                  <thead>
-                    <tr className="border border-black bg-gray-200 text-left">
-                      <th className="px-4 py-2">Parameter</th>
-                      {constraints.map((c, i) => (
-                        <th
-                          key={c.id}
-                          className="border border-black px-4 py-2"
-                        >
-                          Constraint {i + 1}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {buildConstraintTable(parameters, constraints).map(
-                      (row) => (
-                        <tr key={row.parameterId} className="bg-white">
-                          <td className="border border-black px-4 py-2">
-                            {row.parameterName}
-                          </td>
-                          {row.cells.map((cell) => (
-                            <td
-                              key={`${cell.constraintId}-${row.parameterId}`}
-                              className={
-                                cell.isIfWithPredicate
-                                  ? 'border border-black bg-sky-200 px-4 py-2'
-                                  : 'border border-black bg-white px-4 py-2'
-                              }
-                            >
-                              <div className="flex gap-1">
-                                <Button
-                                  type="secondary"
-                                  size="xs"
-                                  fontMono={true}
-                                  onClick={() => {
-                                    handleToggleCondition(
-                                      cell.constraintId,
-                                      row.parameterId,
-                                    )
-                                  }}
-                                >
-                                  {cell.ifOrThen ?? ''}
-                                </Button>
-                                <TextInput
-                                  label={row.parameterName}
-                                  value={cell.predicate}
-                                  isValid={cell.isValid}
-                                  onChange={(e) => {
-                                    handleChangeCondition(
-                                      cell.constraintId,
-                                      row.parameterId,
-                                      e,
-                                    )
-                                  }}
-                                />
-                              </div>
-                            </td>
-                          ))}
-                        </tr>
-                      ),
-                    )}
-                  </tbody>
-                </table>
+              <div className="grid grid-cols-2 gap-0 md:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-3">
+                <div>
+                  <div className="h-10 border-collapse border bg-gray-200 px-4 py-2 text-left font-bold">
+                    Parameter
+                  </div>
+                  {parameters.map((p) => (
+                    <div
+                      key={p.id}
+                      className="h-15 border px-4 py-2 text-left align-middle"
+                    >
+                      {p.name}
+                    </div>
+                  ))}
+                </div>
+                {constraints.map((constraint, i) => (
+                  <div key={constraint.id}>
+                    <div className="flex h-10 border-collapse grid-cols-3 items-center justify-between border bg-gray-200 px-4 py-2 text-left font-bold">
+                      <div>Constraint {i + 1}</div>
+                      {i + 1 === constraints.length ? (
+                        <div className="flex gap-1">
+                          <Button
+                            type="secondary"
+                            size="2xs"
+                            disabled={constraints.length <= 1}
+                            aria-label="Remove Constraint"
+                            onClick={handleClickRemoveConstraint}
+                          >
+                            <XMarkIcon />
+                          </Button>
+                          <Button
+                            type="secondary"
+                            size="2xs"
+                            disabled={constraints.length >= 50}
+                            aria-label="Add Constraint"
+                            onClick={handleClickAddConstraint}
+                          >
+                            <PlusIcon />
+                          </Button>
+                        </div>
+                      ) : (
+                        ''
+                      )}
+                    </div>
+                    {constraint.conditions.map((condition) => (
+                      <div
+                        key={condition.parameterId}
+                        className="h-15 border-collapse border px-4 py-2 text-left"
+                      >
+                        <div className="flex gap-1">
+                          <Button
+                            type="secondary"
+                            size="xs"
+                            fontMono={true}
+                            aria-label={`Constraint ${(i + 1).toString()} ${getParameterName(parameters, condition.parameterId)} ${condition.ifOrThen}`}
+                            onClick={() => {
+                              handleToggleCondition(
+                                constraint.id,
+                                condition.parameterId,
+                              )
+                            }}
+                          >
+                            {condition.ifOrThen}
+                          </Button>
+                          <TextInput
+                            label={`Constraint ${(i + 1).toString()} ${getParameterName(parameters, condition.parameterId)} Predicate`}
+                            value={condition.predicate}
+                            isValid={condition.isValid}
+                            onChange={(e) => {
+                              handleChangeCondition(
+                                constraint.id,
+                                condition.parameterId,
+                                e,
+                              )
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -227,7 +156,7 @@ function ConstraintsSection({
             {isEditing ? (
               <>
                 <label
-                  className="mb-2 block text-sm font-bold text-gray-900"
+                  className="mb-2 block text-base font-bold text-gray-900"
                   htmlFor="constraint_formula"
                 >
                   Constraint Formula
@@ -247,9 +176,21 @@ function ConstraintsSection({
               </>
             ) : (
               <>
-                <span className="mb-2 block text-sm font-bold text-gray-900">
+                <span className="mr-3 mb-2 inline text-base font-bold text-gray-900">
                   Constraint Formula
                 </span>
+                {!constraintDirectEditMode && (
+                  <Button
+                    type="danger"
+                    size="sm"
+                    onClick={() => {
+                      toggleConstraintDirectEditMode()
+                      setIsEditing(true)
+                    }}
+                  >
+                    Edit Directly
+                  </Button>
+                )}
                 <pre
                   className={
                     constraintDirectEditMode
@@ -274,6 +215,14 @@ function ConstraintsSection({
       )}
     </Section>
   )
+}
+
+function getParameterName(
+  parameters: Parameter[],
+  parameterId: string,
+): string {
+  const parameter = parameters.find((p) => p.id === parameterId)
+  return parameter ? parameter.name : ''
 }
 
 export default ConstraintsSection
