@@ -2,51 +2,141 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=768, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>About - PictRider: Pairwise Testing on the Web</title>
-    <link rel="stylesheet" href="/src/styles.css" />
+    <style>
+      body {
+        background-color: #ffffff;
+      }
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 40px;
+        width: 100%;
+        padding-bottom: 10px;
+        color: #000000;
+        background-color: #ffffff;
+      }
+      nav img {
+        display: inline;
+        margin-right: 0.25rem;
+      }
+      section {
+        margin-left: 1rem;
+        margin-right: 1rem;
+        margin-top: 50px;
+        margin-bottom: 2.5rem;
+        @media (min-width: 640px) {
+          margin-left: 5rem;
+          margin-right: 5rem;
+        }
+        @media (min-width: 768px) {
+          margin-left: 10rem;
+          margin-right: 10rem;
+        }
+      }
+      div {
+        margin-bottom: 2rem;
+      }
+      p {
+        margin-bottom: 1rem;
+      }
+      h1 {
+        display: flex;
+        margin-right: 20px;
+        margin-left: 20px;
+        margin-top: 14px;
+        margin-bottom: 14px;
+        align-items: center;
+        font-family:
+          ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+          'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        font-size: 1.5rem;
+        line-height: 2rem;
+        font-weight: 700;
+      }
+      h2 {
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        line-height: 2rem;
+        font-weight: 700;
+      }
+      h3 {
+        margin-bottom: 0.75rem;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        font-weight: 600;
+      }
+      ul {
+        padding-left: 2rem;
+        margin-bottom: 1rem;
+        list-style-type: disc;
+      }
+      strong {
+        font-weight: 700;
+      }
+      em {
+        font-style: italic;
+        font-weight: 600;
+      }
+
+      a {
+        color: #2563eb;
+
+        :hover {
+          text-decoration: underline;
+        }
+      }
+      pre {
+        overflow: auto;
+        padding: 1rem;
+        border-radius: 0.25rem;
+        font-family: monospace;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        background-color: #f3f4f6;
+      }
+      footer {
+        margin-bottom: 2.5rem;
+        text-align: center;
+      }
+      footer p {
+        margin-top: 0;
+        margin-bottom: 0;
+        color: #6b7280;
+      }
+    </style>
   </head>
   <body>
     <header>
-      <nav
-        class="top-0 left-0 mb-10 flex h-15 w-full bg-white text-black shadow-sm"
-      >
-        <h1 class="my-auto mr-5 ml-5 flex items-center text-2xl font-bold">
-          <img
-            src="/favicon.svg"
-            alt="logo"
-            width="30"
-            height="30"
-            class="mr-1 hidden md:inline"
-          />
+      <nav>
+        <h1>
+          <img src="/favicon.svg" alt="logo" width="30" height="30" />
           PictRider
         </h1>
       </nav>
     </header>
-    <main class="bg-white">
-      <section
-        class="mx-2 mb-10 rounded-md border-2 bg-gray-50 p-7 shadow-md md:mx-10"
-      >
-        <h2 class="mb-6 text-2xl font-bold">About PictRider</h2>
+    <main>
+      <section>
+        <h2>About PictRider</h2>
 
-        <p class="mb-4">
-          <strong class="text-xl font-bold">
-            Pairwise Testing on the Web
-          </strong>
+        <p>
+          <strong>Pairwise Testing on the Web</strong>
         </p>
 
-        <div class="mb-8">
-          <h3 class="mb-3 text-xl font-semibold">What is PictRider?</h3>
-          <p class="mb-4">
-            <em class="font-semibold italic">PictRider</em> is a modern and
-            user-friendly combinatorial testing tool that allows you to easily
-            generate test cases using pairwise testing techniques directly on
-            the web. It requires no installation and runs entirely in the
-            browser, enabling QA engineers and software developers to quickly
-            and efficiently design effective test cases.
+        <div>
+          <h3>What is PictRider?</h3>
+          <p>
+            <em>PictRider</em> is a modern and user-friendly combinatorial
+            testing tool that allows you to easily generate test cases using
+            pairwise testing techniques directly on the web. It requires no
+            installation and runs entirely in the browser, enabling QA engineers
+            and software developers to quickly and efficiently design effective
+            test cases.
           </p>
-          <p class="mb-4">With PictRider, you can:</p>
-          <ul class="mb-4 list-disc pl-8">
+          <p>With PictRider, you can:</p>
+          <ul>
             <li>Define test parameters and their possible values</li>
             <li>Create complex constraints between parameters</li>
             <li>
@@ -60,16 +150,16 @@
           </ul>
         </div>
 
-        <div class="mb-8">
-          <h3 class="mb-3 text-xl font-semibold">What is Pairwise Testing?</h3>
-          <p class="mb-4">
-            <em class="font-semibold italic">Pairwise testing</em> is a
-            combinatorial testing technique used to reduce the number of test
-            cases while maintaining high test coverage. It is based on the
-            principle that most defects are caused by interactions between two
-            parameters rather than multiple simultaneous factors.
+        <div>
+          <h3>What is Pairwise Testing?</h3>
+          <p>
+            <em>Pairwise testing</em> is a combinatorial testing technique used
+            to reduce the number of test cases while maintaining high test
+            coverage. It is based on the principle that most defects are caused
+            by interactions between two parameters rather than multiple
+            simultaneous factors.
           </p>
-          <p class="mb-4">
+          <p>
             In this approach, test cases are generated to cover all possible
             combinations of input values for every pair of parameters. This
             greatly reduces the total number of tests needed compared to
@@ -77,7 +167,7 @@
             are evaluated.
           </p>
           <p>Pairwise testing is especially effective when:</p>
-          <ul class="mb-4 list-disc pl-8">
+          <ul>
             <li>You need to cover a wide range of parameter combinations</li>
             <li>
               Full combinatorial testing is impractical due to time or resource
@@ -90,16 +180,15 @@
           </ul>
         </div>
 
-        <div class="mb-8">
-          <h3 class="mb-3 text-xl font-semibold">Open Source</h3>
-          <p class="mb-4">
+        <div>
+          <h3>Open Source</h3>
+          <p>
             PictRider is an open-source project. The source code is available on
             GitHub:
           </p>
-          <p class="mb-4">
+          <p>
             <a
               href="https://github.com/takeyaqa/PictRider"
-              class="text-blue-600 hover:underline"
               target="_blank"
               rel="noreferrer noopener"
             >
@@ -109,9 +198,9 @@
           <p>Contributions, bug reports, and feature requests are welcome!</p>
         </div>
 
-        <div class="mb-8">
-          <h3 class="mb-3 text-xl font-semibold">Disclaimer</h3>
-          <p class="mb-4">
+        <div>
+          <h3>Disclaimer</h3>
+          <p>
             PictRider is provided "as is", without warranty of any kind, express
             or implied. In no event shall the authors, contributors, or
             copyright holders be liable for any claim, damages, or other
@@ -119,39 +208,35 @@
             arising from, out of, or in connection with the software or the use
             or other dealings in the software.
           </p>
-          <p class="mb-4">
+          <p>
             The test cases generated by PictRider are intended to assist in your
             testing efforts, but they do
-            <em class="font-semibold italic">
-              not guarantee complete test coverage
-            </em>
+            <em> not guarantee complete test coverage </em>
             or
-            <em class="font-semibold italic"> the absence of defects </em>
+            <em> the absence of defects </em>
             in your software. Users should always apply professional judgment
             when using testing tools, and are encouraged to supplement pairwise
             testing with additional testing strategies as appropriate for their
             specific use case or risk model.
           </p>
-          <p class="mb-4">
+          <p>
             PictRider is an independent project and is not affiliated with
             Microsoft Corporation.
           </p>
         </div>
 
-        <div class="mb-8">
-          <h3 class="mb-3 text-xl font-semibold">Third-Party Libraries</h3>
-          <p class="mb-4">
+        <div>
+          <h3>Third-Party Libraries</h3>
+          <p>
             PictRider uses the following third-party libraries:
-            <a href="/dependencies.txt" class="text-blue-600 hover:underline">
-              View third-party dependencies
-            </a>
+            <a href="/dependencies.txt"> View third-party dependencies </a>
           </p>
         </div>
 
-        <div class="mb-8">
-          <h3 class="mb-3 text-xl font-semibold">PictRider License</h3>
-          <p class="mb-4">PictRider is licensed under the MIT License:</p>
-          <pre class="overflow-auto rounded bg-gray-100 p-4 font-mono text-sm">
+        <div>
+          <h3>License</h3>
+          <p>PictRider is licensed under the MIT License:</p>
+          <pre>
 MIT License
 
 Copyright (c) 2025 Takeshi Kishi
@@ -177,18 +262,16 @@ SOFTWARE.
         </div>
 
         <div>
-          <h3 class="mb-3 text-xl font-semibold">Acknowledgement</h3>
-          <p class="mb-4">
+          <h3>Acknowledgement</h3>
+          <p>
             PictRider is heavily inspired by
             <a
               href="https://sourceforge.net/projects/pictmaster/"
               target="_blank"
               rel="noreferrer noopener"
-              class="text-blue-600 hover:underline"
             >
-              <strong class="font-bold">PictMaster</strong>
-            </a>
-            , a powerful Excel-based tool developed by Iwatsu System & Software
+              <strong>PictMaster</strong></a
+            >, a powerful Excel-based tool developed by Iwatsu System & Software
             Co., Ltd..
           </p>
           <p>
@@ -200,9 +283,8 @@ SOFTWARE.
       </section>
     </main>
     <footer>
-      <div class="mx-10 mb-10 px-4 text-center">
-        <p class="text-gray-500">© 2025 Takeshi Kishi</p>
-      </div>
+      <p>Released under the MIT License.</p>
+      <p>Copyright © 2025 Takeshi Kishi</p>
     </footer>
   </body>
 </html>
