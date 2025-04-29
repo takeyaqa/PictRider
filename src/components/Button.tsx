@@ -2,9 +2,10 @@ import { Button as HeadlessUiButton } from '@headlessui/react'
 
 interface ButtonProps {
   type: 'primary' | 'secondary' | 'success' | 'danger' | 'warning'
-  size: 'xs' | 'sm' | 'md' | 'full'
-  children: string
+  size: '2xs' | 'xs' | 'sm' | 'md' | 'full'
+  children: string | React.ReactNode
   disabled?: boolean
+  'aria-label'?: string
   fontMono?: boolean
   onClick: () => void
 }
@@ -14,6 +15,7 @@ function Button({
   children,
   size,
   disabled,
+  'aria-label': ariaLabel,
   fontMono,
   onClick,
 }: ButtonProps) {
@@ -25,6 +27,7 @@ function Button({
       type="button"
       className={`cursor-pointer rounded px-3 py-2 data-disabled:cursor-not-allowed data-disabled:opacity-50 ${colorClass} ${sizeClass} ${fontMonoClass}`}
       disabled={disabled}
+      aria-label={ariaLabel}
       onClick={onClick}
     >
       {children}
@@ -49,8 +52,10 @@ function getColorClass(
   }
 }
 
-function getSizeClass(size: 'xs' | 'sm' | 'md' | 'full') {
+function getSizeClass(size: '2xs' | 'xs' | 'sm' | 'md' | 'full') {
   switch (size) {
+    case '2xs':
+      return 'w-9'
     case 'xs':
       return 'w-15'
     case 'sm':

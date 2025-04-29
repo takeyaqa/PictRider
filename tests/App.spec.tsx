@@ -521,7 +521,9 @@ describe('App', () => {
       ).toBeInTheDocument()
       expect(screen.getByText('Parameter')).toBeInTheDocument() // One in parameters area, one in constraints area
       expect(screen.getByText('Constraint 1')).toBeInTheDocument()
-      expect(screen.getAllByRole('button', { name: 'if' })).toHaveLength(6) // Default app has 6 parameters, so we should have 6 'if' buttons
+      expect(
+        screen.getAllByRole('button', { name: /Constraint [0-9]+ .+ if/ }),
+      ).toHaveLength(6) // Default app has 6 parameters, so we should have 6 'if' buttons
     })
 
     it('Should add a new constraint when add constraint button is clicked', async () => {
@@ -540,7 +542,9 @@ describe('App', () => {
       // assert - now there should be two constraints
       expect(screen.getByText('Constraint 1')).toBeInTheDocument()
       expect(screen.getByText('Constraint 2')).toBeInTheDocument()
-      expect(screen.getAllByRole('button', { name: 'if' })).toHaveLength(12) // With 6 parameters and 2 constraints, we should have 12 'if' buttons
+      expect(
+        screen.getAllByRole('button', { name: /Constraint [0-9]+ .+ if/ }),
+      ).toHaveLength(12) // With 6 parameters and 2 constraints, we should have 12 'if' buttons
     })
 
     it('Should remove a constraint when remove constraint button is clicked', async () => {
@@ -566,7 +570,9 @@ describe('App', () => {
       // assert - now there should be only one constraint
       expect(screen.getByText('Constraint 1')).toBeInTheDocument()
       expect(screen.queryByText('Constraint 2')).not.toBeInTheDocument()
-      expect(screen.getAllByRole('button', { name: 'if' })).toHaveLength(6) // With 6 parameters and 1 constraint, we should have 6 'if' buttons
+      expect(
+        screen.getAllByRole('button', { name: /Constraint [0-9]+ .+ if/ }),
+      ).toHaveLength(6) // With 6 parameters and 1 constraint, we should have 6 'if' buttons
     })
 
     it('Should disable remove constraint button when only one constraint exists', async () => {
@@ -599,7 +605,7 @@ describe('App', () => {
       ).toBeDisabled()
     })
 
-    it.skip('Should disable add constraint button when maximum constraint limit (50) is reached', async () => {
+    it('Should disable add constraint button when maximum constraint limit (50) is reached', async () => {
       // arrange - enable constraints area
       await user.click(
         screen.getByRole('switch', { name: 'Enable Constraints' }),
@@ -629,7 +635,9 @@ describe('App', () => {
       await user.click(
         screen.getByRole('switch', { name: 'Enable Constraints' }),
       )
-      const firstIfButton = screen.getAllByRole('button', { name: 'if' })[0] // Get the first 'if' button
+      const firstIfButton = screen.getByRole('button', {
+        name: 'Constraint 1 Type if',
+      }) // Get the first 'if' button
 
       // act - click it to toggle to 'then'
       await user.click(firstIfButton)
@@ -651,22 +659,26 @@ describe('App', () => {
       )
 
       // get the second 'if' button (for Size parameter) and change it to 'then'
-      const ifButtons = screen.getAllByRole('button', { name: 'if' })
-      await user.click(ifButtons[1])
-
-      // find all inputs in the constraints area
-      const constraintsTable = screen.getByRole('table', {
-        name: 'Constraints',
+      const ifButton = screen.getByRole('button', {
+        name: 'Constraint 1 Size if',
       })
-      const inputs = constraintsTable.querySelectorAll('input[type="text"]')
+      await user.click(ifButton)
+
+      // find inputs in the constraints area
+      const input1 = screen.getByRole('textbox', {
+        name: 'Constraint 1 Type Predicate',
+      })
+      const input2 = screen.getByRole('textbox', {
+        name: 'Constraint 1 Size Predicate',
+      })
 
       // act - type predicates in both inputs
-      await user.type(inputs[0], 'RAID-5')
-      await user.type(inputs[1], '> 1000')
+      await user.type(input1, 'RAID-5')
+      await user.type(input2, '> 1000')
 
       // assert - the inputs should now have the values
-      expect(inputs[0]).toHaveValue('RAID-5')
-      expect(inputs[1]).toHaveValue('> 1000')
+      expect(input1).toHaveValue('RAID-5')
+      expect(input2).toHaveValue('> 1000')
 
       // the constraint should be displayed in the pre element
       const preElement = screen.getByText(
@@ -682,60 +694,31 @@ describe('App', () => {
       )
 
       // get the second 'if' button (for Size parameter) and change it to 'then'
-      const ifButtons = screen.getAllByRole('button', { name: 'if' })
-      await user.click(ifButtons[1])
+      const ifButton = screen.getByRole('button', {
+        name: 'Constraint 1 Type if',
+      })
+      await user.click(ifButton)
 
       // find all inputs in the constraints area
-      const constraintsTable = screen.getByRole('table', {
-        name: 'Constraints',
+      const input1 = screen.getByRole('textbox', {
+        name: 'Constraint 1 Type Predicate',
       })
-      const inputs = constraintsTable.querySelectorAll('input[type="text"]')
 
       // act - type predicates in both inputs
 
-      await user.type(inputs[0], '@')
+      await user.type(input1, '@')
       expect(screen.getByRole('alert')).toHaveTextContent(
         'Constraints cannot contain special characters: ":", "(", ")", "|", "~", "{", "}", "@", "[", "]", ";',
       )
       expect(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
 
       // act - clear the error by changing the name
-      await user.clear(inputs[0])
-      await user.type(inputs[0], '<= 1000')
+      await user.clear(input1)
+      await user.type(input1, '<= 1000')
 
       // assert - error message should be gone
       expect(screen.queryByRole('alert')).not.toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Run' })).toBeEnabled()
-    })
-
-    it('Should display complex constraints with if/then conditions', async () => {
-      // arrange - enable constraints area
-      await user.click(
-        screen.getByRole('switch', { name: 'Enable Constraints' }),
-      )
-
-      // get the second 'if' button
-      const ifButtons = screen.getAllByRole('button', { name: 'if' })
-      const secondIfButton = ifButtons[1]
-
-      // change the second to 'then'
-      await user.click(secondIfButton)
-
-      // find all inputs in the constraints area
-      const constraintsTable = screen.getByRole('table', {
-        name: 'Constraints',
-      })
-      const inputs = constraintsTable.querySelectorAll('input[type="text"]')
-
-      // act - type predicates
-      await user.type(inputs[0], 'RAID-5')
-      await user.type(inputs[1], '> 1000')
-
-      // assert - the constraint should be displayed in the pre element
-      const preElement = screen.getByText(
-        /IF \[Type\] = "RAID-5" THEN \[Size\] > 1000;/i,
-      )
-      expect(preElement).toBeInTheDocument()
     })
 
     it('Should change constraints when edit parameter name', async () => {
@@ -745,24 +728,27 @@ describe('App', () => {
       )
 
       // get the second 'if' button
-      const ifButtons = screen.getAllByRole('button', { name: 'if' })
-      const secondIfButton = ifButtons[1]
+      const secondIfButton = screen.getByRole('button', {
+        name: 'Constraint 1 Size if',
+      })
 
       // change the second to 'then'
       await user.click(secondIfButton)
 
-      // find all inputs in the constraints area
-      const constraintsTable = screen.getByRole('table', {
-        name: 'Constraints',
+      // find inputs in the constraints area
+      const input1 = screen.getByRole('textbox', {
+        name: 'Constraint 1 Type Predicate',
       })
-      const inputs = constraintsTable.querySelectorAll('input[type="text"]')
+      const input2 = screen.getByRole('textbox', {
+        name: 'Constraint 1 Size Predicate',
+      })
 
       // act - type predicates
-      await user.type(inputs[0], 'RAID-5')
-      await user.type(inputs[1], '> 1000')
+      await user.type(input1, 'RAID-5')
+      await user.type(input2, '> 1000')
 
       // assert - the constraint should be displayed in the pre element
-      const constraintsCell = constraintsTable.querySelector('td')
+      const constraintsCell = screen.getByText('Type')
       expect(constraintsCell).toHaveTextContent('Type')
       const beforePreElement = screen.getByText(
         /IF \[Type\] = "RAID-5" THEN \[Size\] > 1000;/i,
