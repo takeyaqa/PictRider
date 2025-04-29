@@ -247,6 +247,7 @@ function App({ pictRunnerInjection }: AppProps) {
               containsInvalidValues || containsInvalidConstraints
             }
             pictRunnerLoaded={pictRunnerLoaded}
+            canClearResult={result !== null}
             handleClickRun={runPict}
             handleClickClear={handleClickClear}
             handleClearResult={() => {

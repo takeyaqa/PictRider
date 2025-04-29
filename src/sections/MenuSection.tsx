@@ -3,6 +3,7 @@ import { Button, Section } from '../components'
 interface MenuSectionProps {
   containsInvalidValues: boolean
   pictRunnerLoaded: boolean
+  canClearResult: boolean
   handleClickRun: () => void
   handleClickClear: () => void
   handleClearResult: () => void
@@ -11,6 +12,7 @@ interface MenuSectionProps {
 function MenuSection({
   containsInvalidValues,
   pictRunnerLoaded,
+  canClearResult,
   handleClickRun,
   handleClickClear,
   handleClearResult,
@@ -24,11 +26,16 @@ function MenuSection({
           </Button>
         </li>
         <li>
-          <Button type="warning" size="sm" onClick={handleClearResult}>
+          <Button
+            type="warning"
+            size="sm"
+            disabled={!canClearResult}
+            onClick={handleClearResult}
+          >
             Clear Result
           </Button>
         </li>
-        <li className="border-l-black">
+        <li className="border-l border-l-black pl-5">
           <Button
             type="primary"
             size="sm"
