@@ -25,16 +25,7 @@ function OptionsSection({
   return (
     <Section>
       <h2 className="mb-5 text-lg font-bold">Options</h2>
-      <div className="mb-5 flex items-center gap-5">
-        <div>
-          <Checkbox
-            label="Show model file"
-            checked={config.showModelFile}
-            onChange={(checked) => {
-              handleChangeConfigCheckbox('showModelFile', checked)
-            }}
-          />
-        </div>
+      <div className="mb-5 grid grid-cols-1 items-center gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-3">
         <div>
           <NumberInput
             label="Order of combinations"
@@ -47,23 +38,34 @@ function OptionsSection({
           />
         </div>
         <div>
-          <Checkbox
-            label="Randomize generation"
-            checked={config.randomizeGeneration}
-            onChange={(checked) => {
-              handleChangeConfigCheckbox('randomizeGeneration', checked)
-            }}
-          />
+          <div>
+            <Checkbox
+              label="Randomize generation"
+              checked={config.randomizeGeneration}
+              onChange={(checked) => {
+                handleChangeConfigCheckbox('randomizeGeneration', checked)
+              }}
+            />
+          </div>
+          <div className="mt-2 indent-6">
+            <NumberInput
+              label="Seed"
+              value={config.randomizeSeed}
+              min={0}
+              max={65535}
+              disabled={!config.randomizeGeneration}
+              onChange={(e) => {
+                handleChangeConfigInput('randomizeSeed', e)
+              }}
+            />
+          </div>
         </div>
         <div>
-          <NumberInput
-            label="Seed"
-            value={config.randomizeSeed}
-            min={0}
-            max={65535}
-            disabled={!config.randomizeGeneration}
-            onChange={(e) => {
-              handleChangeConfigInput('randomizeSeed', e)
+          <Checkbox
+            label="Show model file"
+            checked={config.showModelFile}
+            onChange={(checked) => {
+              handleChangeConfigCheckbox('showModelFile', checked)
             }}
           />
         </div>
