@@ -55,18 +55,15 @@ function SubModelsSection({
             </div>
           </div>
           <div className="col-span-2">
-            <label htmlFor="sub-model-order">
-              Order
-              <NumberInput
-                id="sub-model-order"
-                value={subModel.order}
-                min={2}
-                max={parameters.length}
-                onChange={(e) => {
-                  handleChangeSubModelOrder(subModel.id, e)
-                }}
-              />
-            </label>
+            <NumberInput
+              label="Order"
+              value={subModel.order}
+              min={2}
+              max={parameters.length}
+              onChange={(e) => {
+                handleChangeSubModelOrder(subModel.id, e)
+              }}
+            />
           </div>
         </div>
       ))}

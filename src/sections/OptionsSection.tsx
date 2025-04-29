@@ -54,18 +54,15 @@ function OptionsSection({
           />
         </div>
         <div>
-          <label htmlFor="order-of-combinations">
-            Order of combinations
-            <NumberInput
-              id="order-of-combinations"
-              value={config.orderOfCombinations}
-              min={1}
-              max={50}
-              onChange={(e) => {
-                handleChangeConfigInput('orderOfCombinations', e)
-              }}
-            />
-          </label>
+          <NumberInput
+            label="Order of combinations"
+            value={config.orderOfCombinations}
+            min={1}
+            max={50}
+            onChange={(e) => {
+              handleChangeConfigInput('orderOfCombinations', e)
+            }}
+          />
         </div>
         <div>
           <Checkbox
@@ -77,19 +74,16 @@ function OptionsSection({
           />
         </div>
         <div>
-          <label htmlFor="randomize-seed">
-            Seed
-            <NumberInput
-              id="randomize-seed"
-              value={config.randomizeSeed}
-              min={0}
-              max={65535}
-              disabled={!config.randomizeGeneration}
-              onChange={(e) => {
-                handleChangeConfigInput('randomizeSeed', e)
-              }}
-            />
-          </label>
+          <NumberInput
+            label="Seed"
+            value={config.randomizeSeed}
+            min={0}
+            max={65535}
+            disabled={!config.randomizeGeneration}
+            onChange={(e) => {
+              handleChangeConfigInput('randomizeSeed', e)
+            }}
+          />
         </div>
       </div>
     </Section>
