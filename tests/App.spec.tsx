@@ -339,13 +339,15 @@ describe('App', () => {
     it('Should not render sub-models area by default', () => {
       // assert - by default, sub-models area should not be visible
       expect(
-        screen.queryByRole('heading', { name: 'Sub-Models' }),
-      ).not.toBeInTheDocument()
+        screen.queryByRole('switch', { name: 'Enable Sub-Models' }),
+      ).not.toBeChecked()
     })
 
     it('Should render sub-models area when enabled', async () => {
       // act - enable sub-models area by clicking the checkbox
-      await user.click(screen.getByRole('checkbox', { name: 'Sub-models' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Sub-Models' }),
+      )
 
       // assert - verify sub-models area is rendered
       expect(
@@ -361,7 +363,9 @@ describe('App', () => {
 
     it('Should change sub-model name when parameter name is changed', async () => {
       // arrange - enable sub-models area
-      await user.click(screen.getByRole('checkbox', { name: 'Sub-models' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Sub-Models' }),
+      )
 
       // act - change the name of the first parameter name
       const nameInput = screen.getAllByRole('textbox', {
@@ -991,7 +995,9 @@ describe('App', () => {
 
     it('Should call with sub-models when enable sub-models', async () => {
       // arrange - enable sub-models
-      await user.click(screen.getByRole('checkbox', { name: 'Sub-models' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Sub-Models' }),
+      )
       await user.click(screen.getByRole('checkbox', { name: 'Type' }))
       await user.click(screen.getByRole('checkbox', { name: 'Size' }))
       await user.click(screen.getByRole('checkbox', { name: 'Format method' }))
@@ -1040,7 +1046,9 @@ describe('App', () => {
 
     it('Should call with sub-models when enable sub-models and delete parameter rows', async () => {
       // arrange - enable sub-models
-      await user.click(screen.getByRole('checkbox', { name: 'Sub-models' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Sub-Models' }),
+      )
       await user.click(screen.getByRole('checkbox', { name: 'Type' }))
       await user.click(screen.getByRole('checkbox', { name: 'Size' }))
       await user.click(screen.getByRole('checkbox', { name: 'Format method' }))

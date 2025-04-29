@@ -278,17 +278,18 @@ function App({ pictRunnerInjection }: AppProps) {
               handleToggleConstraintDirectEditMode
             }
           />
-          <OptionsSection
-            config={config}
-            handleChangeConfigCheckbox={handleChangeConfigCheckbox}
-            handleChangeConfigInput={handleChangeConfigInput}
-          />
           <SubModelsSection
             config={config}
             parameters={model.parameters}
             subModels={model.subModels}
+            handleChangeConfigCheckbox={handleChangeConfigCheckbox}
             handleClickSubModelParameters={handleClickSubModelParameters}
             handleChangeSubModelOrder={handleChangeSubModelOrder}
+          />
+          <OptionsSection
+            config={config}
+            handleChangeConfigCheckbox={handleChangeConfigCheckbox}
+            handleChangeConfigInput={handleChangeConfigInput}
           />
         </div>
         <div>

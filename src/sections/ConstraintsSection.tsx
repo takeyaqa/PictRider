@@ -102,13 +102,11 @@ function ConstraintsSection({
 
   return (
     <Section>
-      <div className="mb-5 grid grid-cols-12 gap-5">
-        <div className="col-span-2">
-          <h2 className="text-lg font-bold" id="constraints-heading">
-            Constraints
-          </h2>
-        </div>
-        <div className="col-span-10">
+      <div className="mb-5 flex items-center gap-5">
+        <h2 className="text-lg font-bold" id="constraints-heading">
+          Constraints
+        </h2>
+        <div>
           <Switch
             label="Enable Constraints"
             checked={config.enableConstraints}

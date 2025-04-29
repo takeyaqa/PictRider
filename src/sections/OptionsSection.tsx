@@ -28,15 +28,6 @@ function OptionsSection({
       <div className="mb-5 flex items-center gap-5">
         <div>
           <Checkbox
-            label="Sub-models"
-            checked={config.enableSubModels}
-            onChange={(checked) => {
-              handleChangeConfigCheckbox('enableSubModels', checked)
-            }}
-          />
-        </div>
-        <div>
-          <Checkbox
             label="Show model file"
             checked={config.showModelFile}
             onChange={(checked) => {
