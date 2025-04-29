@@ -446,8 +446,11 @@ describe('App', () => {
         screen.queryByRole('heading', { level: 2, name: 'Sub-Models' }),
       ).toBeInTheDocument()
       expect(
-        screen.queryAllByRole('heading', { level: 4, name: 'Parameters' }),
-      ).toHaveLength(2)
+        screen.queryByRole('heading', { level: 3, name: 'Sub-Model 1' }),
+      ).toBeInTheDocument()
+      expect(
+        screen.queryByRole('heading', { level: 3, name: 'Sub-Model 2' }),
+      ).toBeInTheDocument()
       expect(
         screen.queryAllByRole('spinbutton', { name: 'Order' }),
       ).toHaveLength(2)
