@@ -1,12 +1,4 @@
-import {
-  Constraint,
-  Parameter,
-  Condition,
-  Model,
-  SubModel,
-  ConstraintText,
-  Message,
-} from '../types'
+import { Constraint, Parameter, Condition, Model, Message } from '../types'
 import { fixConstraint, printConstraints, uuidv4 } from '../helpers'
 
 const invalidParameterNameCharacters = [
@@ -134,7 +126,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
   switch (action.type) {
     case 'changeParameter': {
       const { id, field, e } = action.payload
-      const newParameters = copyParameters(state.parameters)
+      const newParameters = structuredClone(state.parameters)
       // Reset validation flags
       for (const parameter of newParameters) {
         parameter.isValidName = true
@@ -143,7 +135,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       const newParameter = newParameters.find((p) => p.id === id)
       if (!newParameter) {
         // may not be reached
-        return copyModel(state)
+        return structuredClone(state)
       }
       newParameter[field] = e.target.value
       const errors: Message[] = []
@@ -199,10 +191,10 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       }
 
       return {
-        ...copyModel(state),
+        ...structuredClone(state),
         parameters: newParameters,
         constraintTexts: state.constraintDirectEditMode
-          ? copyConstraintTexts(state.constraintTexts)
+          ? structuredClone(state.constraintTexts)
           : printConstraints(
               fixConstraint(state.constraints, newParameters),
               newParameters.map((p) => p.name),
@@ -218,12 +210,12 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       const { id, target } = action.payload
       if (state.parameters.length >= 50) {
         // may not be reached
-        return copyModel(state)
+        return structuredClone(state)
       }
 
       const newParameters: Parameter[] = []
       const newParameterId = uuidv4()
-      for (const p of copyParameters(state.parameters)) {
+      for (const p of structuredClone(state.parameters)) {
         if (p.id === id) {
           const newParameter = {
             id: newParameterId,
@@ -247,7 +239,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         }
       }
       const newConstraints: Constraint[] = []
-      for (const c of copyConstraints(state.constraints)) {
+      for (const c of structuredClone(state.constraints)) {
         const newConditions: Condition[] = []
         for (const cc of c.conditions) {
           if (cc.parameterId === id) {
@@ -278,7 +270,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       }
 
       return {
-        ...copyModel(state),
+        ...structuredClone(state),
         parameters: newParameters,
         constraints: newConstraints,
       }
@@ -288,7 +280,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       const { id } = action.payload
       if (state.parameters.length <= 1) {
         // may not be reached
-        return copyModel(state)
+        return structuredClone(state)
       }
       const newParameters = state.parameters.filter((p) => p.id !== id)
       const newConstraints = state.constraints.map((c) => {
@@ -304,7 +296,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         }
       })
       return {
-        ...copyModel(state),
+        ...structuredClone(state),
         parameters: newParameters,
         subModels: newSubModels,
         constraints: newConstraints,
@@ -338,16 +330,16 @@ export function modelReducer(state: Model, action: ModelAction): Model {
 
     case 'clickSubModelParameters': {
       const { subModelId, parameterId, checked } = action.payload
-      const newSubModels = copySubModels(state.subModels)
+      const newSubModels = structuredClone(state.subModels)
       const target = newSubModels.find((m) => m.id === subModelId)
       if (!target) {
         // may not be reached
-        return copyModel(state)
+        return structuredClone(state)
       }
       if (checked) {
         const newParameterIds = [...target.parameterIds, parameterId]
         return {
-          ...copyModel(state),
+          ...structuredClone(state),
           subModels: newSubModels.map((m) =>
             m.id === subModelId ? { ...m, parameterIds: newParameterIds } : m,
           ),
@@ -357,7 +349,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           (paramId) => paramId !== parameterId,
         )
         return {
-          ...copyModel(state),
+          ...structuredClone(state),
           subModels: newSubModels.map((m) =>
             m.id === subModelId ? { ...m, parameterIds: newParameterIds } : m,
           ),
@@ -367,15 +359,15 @@ export function modelReducer(state: Model, action: ModelAction): Model {
 
     case 'changeSubModelOrder': {
       const { id, e } = action.payload
-      const newSubModels = copySubModels(state.subModels)
+      const newSubModels = structuredClone(state.subModels)
       const target = newSubModels.find((m) => m.id === id)
       if (!target) {
         // may not be reached
-        return copyModel(state)
+        return structuredClone(state)
       }
       const newOrder = Number(e.target.value)
       return {
-        ...copyModel(state),
+        ...structuredClone(state),
         subModels: newSubModels.map((m) =>
           m.id === id ? { ...m, order: newOrder } : m,
         ),
@@ -384,7 +376,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
 
     case 'toggleCondition': {
       const { constraintId, parameterId } = action.payload
-      const newConstraints = copyConstraints(state.constraints)
+      const newConstraints = structuredClone(state.constraints)
       const newCondition = searchCondition(
         newConstraints,
         constraintId,
@@ -393,7 +385,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       newCondition.ifOrThen = newCondition.ifOrThen === 'if' ? 'then' : 'if'
 
       return {
-        ...copyModel(state),
+        ...structuredClone(state),
         constraints: newConstraints,
         constraintTexts: printConstraints(
           fixConstraint(newConstraints, state.parameters),
@@ -407,7 +399,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
 
     case 'changeCondition': {
       const { constraintId, parameterId, e } = action.payload
-      const newConstraints = copyConstraints(state.constraints)
+      const newConstraints = structuredClone(state.constraints)
       const newCondition = searchCondition(
         newConstraints,
         constraintId,
@@ -442,7 +434,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         })
       }
       return {
-        ...copyModel(state),
+        ...structuredClone(state),
         constraints: newConstraints,
         constraintTexts: printConstraints(
           fixConstraint(newConstraints, state.parameters),
@@ -458,7 +450,7 @@ export function modelReducer(state: Model, action: ModelAction): Model {
     case 'changeConstraintFormula': {
       const { e } = action.payload
       return {
-        ...copyModel(state),
+        ...structuredClone(state),
         constraintTexts: e.target.value.split('\n').map((text) => ({
           id: uuidv4(),
           text,
@@ -469,16 +461,16 @@ export function modelReducer(state: Model, action: ModelAction): Model {
     case 'clickAddConstraint': {
       if (state.constraints.length >= 50) {
         // may not be reached
-        return copyModel(state)
+        return structuredClone(state)
       }
       return {
-        ...copyModel(state),
+        ...structuredClone(state),
         constraints: [
-          ...copyConstraints(state.constraints),
+          ...structuredClone(state.constraints),
           createConstraintFromParameters(state.parameters),
         ],
         constraintTexts: [
-          ...copyConstraintTexts(state.constraintTexts),
+          ...structuredClone(state.constraintTexts),
           {
             id: uuidv4(),
             text: '',
@@ -490,14 +482,14 @@ export function modelReducer(state: Model, action: ModelAction): Model {
     case 'clickRemoveConstraint': {
       if (state.constraints.length <= 1) {
         // may not be reached
-        return copyModel(state)
+        return structuredClone(state)
       }
-      const newConstraints = copyConstraints(state.constraints)
-      const newConstraintsText = copyConstraintTexts(state.constraintTexts)
+      const newConstraints = structuredClone(state.constraints)
+      const newConstraintsText = structuredClone(state.constraintTexts)
       newConstraints.pop()
       newConstraintsText.pop()
       return {
-        ...copyModel(state),
+        ...structuredClone(state),
         constraints: newConstraints,
         constraintTexts: newConstraintsText,
       }
@@ -505,54 +497,10 @@ export function modelReducer(state: Model, action: ModelAction): Model {
 
     case 'toggleConstraintDirectEditMode': {
       return {
-        ...copyModel(state),
+        ...structuredClone(state),
         constraintDirectEditMode: !state.constraintDirectEditMode,
       }
     }
-  }
-}
-
-function deepCopyArray<T>(array: T[]): T[] {
-  return array.map((item) => ({ ...item }))
-}
-
-function copyParameters(parameters: Parameter[]): Parameter[] {
-  return deepCopyArray(parameters)
-}
-
-function copySubModels(subModels: SubModel[]): SubModel[] {
-  return subModels.map((m) => ({
-    ...m,
-    parameterIds: [...m.parameterIds],
-  }))
-}
-
-function copyConstraints(constraints: Constraint[]): Constraint[] {
-  return constraints.map((c) => ({
-    ...c,
-    conditions: c.conditions.map((cc) => ({ ...cc })),
-  }))
-}
-
-function copyConstraintTexts(
-  constraintTexts: ConstraintText[],
-): ConstraintText[] {
-  return deepCopyArray(constraintTexts)
-}
-
-function copyMessage(messages: Message[]): Message[] {
-  return deepCopyArray(messages)
-}
-
-function copyModel(state: Model): Model {
-  return {
-    parameters: copyParameters(state.parameters),
-    subModels: copySubModels(state.subModels),
-    constraints: copyConstraints(state.constraints),
-    constraintTexts: copyConstraintTexts(state.constraintTexts),
-    constraintDirectEditMode: state.constraintDirectEditMode,
-    parameterErrors: copyMessage(state.parameterErrors),
-    constraintErrors: copyMessage(state.constraintErrors),
   }
 }
 
