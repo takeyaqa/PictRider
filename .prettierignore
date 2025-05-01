@@ -1,5 +1,4 @@
 .devcontainer/
 .github/
-src/pict/wasm
 pnpm-lock.yaml
 README.md
