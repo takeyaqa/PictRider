@@ -74,7 +74,7 @@ function ConstraintsSection({
               <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-3">
                 {constraints.map((constraint, i) => (
                   <div key={constraint.id}>
-                    <div className="flex h-10 border-collapse grid-cols-3 items-center justify-between border bg-gray-200 px-4 py-2 text-left font-bold">
+                    <div className="flex h-10 border-collapse grid-cols-3 items-center justify-between border bg-gray-200 px-4 py-2 text-left font-bold dark:border-gray-500 dark:bg-gray-600 dark:text-white">
                       <div>Constraint {i + 1}</div>
                       {i + 1 === constraints.length ? (
                         <div className="flex gap-1">
@@ -104,7 +104,7 @@ function ConstraintsSection({
                     {constraint.conditions.map((condition) => (
                       <div
                         key={condition.parameterId}
-                        className="border-collapse border px-4 py-2 text-left"
+                        className="border-collapse border px-4 py-2 text-left dark:border-gray-500"
                       >
                         <div>
                           <div className="text-sm font-bold">
@@ -153,13 +153,13 @@ function ConstraintsSection({
             {isEditing ? (
               <>
                 <label
-                  className="mb-2 block text-base font-bold text-gray-900"
+                  className="mb-2 block text-base font-bold text-gray-900 dark:text-white"
                   htmlFor="constraint_formula"
                 >
                   Constraint Formula
                 </label>
                 <textarea
-                  className="max-h-50 min-h-30 w-full rounded border border-black bg-white p-4 font-mono text-sm text-black focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none"
+                  className="max-h-50 min-h-30 w-full rounded border border-black bg-white p-4 font-mono text-sm text-black focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none dark:border-gray-500 dark:bg-gray-600 dark:text-white"
                   value={constraintTexts.map((c) => c.text).join('\n')}
                   id="constraint_formula"
                   autoFocus={true}
@@ -173,7 +173,7 @@ function ConstraintsSection({
               </>
             ) : (
               <>
-                <span className="mr-3 mb-2 inline text-base font-bold text-gray-900">
+                <span className="mr-3 mb-2 inline text-base font-bold text-gray-900 dark:text-white">
                   Constraint Formula
                 </span>
                 {!constraintDirectEditMode && (
@@ -191,8 +191,8 @@ function ConstraintsSection({
                 <pre
                   className={
                     constraintDirectEditMode
-                      ? 'max-h-50 min-h-30 overflow-x-auto rounded bg-white p-4 font-mono text-sm text-black'
-                      : 'max-h-50 min-h-30 overflow-x-auto rounded bg-gray-100 p-4 font-mono text-sm text-black'
+                      ? 'max-h-50 min-h-30 overflow-x-auto rounded bg-white p-4 font-mono text-sm text-black dark:bg-gray-600 dark:text-white'
+                      : 'max-h-50 min-h-30 overflow-x-auto rounded bg-gray-100 p-4 font-mono text-sm text-black dark:bg-gray-600 dark:text-white'
                   }
                   onClick={() => {
                     setIsEditing(true)

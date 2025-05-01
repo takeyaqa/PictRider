@@ -66,13 +66,13 @@ function ParametersSection({
               </MenuButton>
               <MenuItems
                 anchor="bottom start"
-                className="mt-0.5 w-40 rounded border border-gray-400 bg-white py-2"
+                className="mt-0.5 w-40 rounded border border-gray-400 bg-white py-2 dark:border-gray-500 dark:bg-gray-700 dark:text-white"
               >
                 <MenuItem>
                   <button
                     type="button"
                     disabled={parameters.length >= 50}
-                    className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400"
+                    className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
                     onClick={() => {
                       handleClickAddRow(p.id, 'above')
                     }}
@@ -84,7 +84,7 @@ function ParametersSection({
                   <button
                     type="button"
                     disabled={parameters.length >= 50}
-                    className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400"
+                    className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
                     onClick={() => {
                       handleClickAddRow(p.id, 'below')
                     }}
@@ -96,7 +96,7 @@ function ParametersSection({
                   <button
                     type="button"
                     disabled={parameters.length <= 1}
-                    className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400"
+                    className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
                     onClick={() => {
                       handleClickRemoveRow(p.id)
                     }}

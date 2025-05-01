@@ -51,7 +51,7 @@ function SubModelsSection({
         {config.enableSubModels &&
           subModels.map((subModel, i) => (
             <div key={subModel.id} className="mb-5">
-              <div className="flex h-10 border-collapse grid-cols-3 items-center justify-between border bg-gray-200 px-4 py-2 text-left font-bold">
+              <div className="flex h-10 border-collapse grid-cols-3 items-center justify-between border bg-gray-200 px-4 py-2 text-left font-bold dark:border-gray-500 dark:bg-gray-600 dark:text-white">
                 <div>Sub-Model {i + 1}</div>
                 {i + 1 === subModels.length ? (
                   <div className="flex gap-1">
@@ -78,7 +78,7 @@ function SubModelsSection({
                   ''
                 )}
               </div>
-              <div className="grid grid-cols-2 items-center gap-5 border p-5">
+              <div className="grid grid-cols-2 items-center gap-5 border p-5 dark:border-gray-500">
                 <div>
                   {parameters.map((parameter) => (
                     <div
