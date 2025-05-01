@@ -27,6 +27,7 @@ function App({ pictRunnerInjection }: AppProps) {
   const [result, setResult] = useState<Result | null>(null)
   const [pictRunnerLoaded, setPictRunnerLoaded] = useState(false)
   const pictRunner = useRef<PictRunner>(null)
+  const resultSection = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // Use the injected PictRunner for testing
@@ -44,6 +45,20 @@ function App({ pictRunnerInjection }: AppProps) {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadPictRunner()
   }, [pictRunnerInjection])
+
+  useEffect(() => {
+    if (
+      result !== null &&
+      resultSection.current &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(width < 96rem)').matches // tailwind: 2xl, two columns layout
+    ) {
+      resultSection.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }
+  }, [result])
 
   function handleChangeParameter(
     id: string,
@@ -296,7 +311,7 @@ function App({ pictRunnerInjection }: AppProps) {
             handleChangeConfigInput={handleChangeConfigInput}
           />
         </div>
-        <div>
+        <div ref={resultSection}>
           <ResultSection config={config} result={result} />
         </div>
       </main>

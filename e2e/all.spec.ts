@@ -159,7 +159,7 @@ test('should display result after clicking Run (combination 3)', async ({
   // assert
   const table = page.getByRole('table', { name: 'Result' })
   const lastDataRow = table.getByRole('row').nth(281)
-  await expect(lastDataRow.getByRole('cell').nth(0)).toHaveText('280')
+  await expect(lastDataRow.getByRole('cell').nth(0)).toHaveText('281')
   await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('Slow')
   await expect(lastDataRow.getByRole('cell').nth(4)).toHaveText('FAT32')
 })

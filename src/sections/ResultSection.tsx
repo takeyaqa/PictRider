@@ -51,80 +51,33 @@ function ResultSection({ config, result }: ResultSectionProps) {
     return null
   }
 
-  let modelFile = <></>
-  if (config.showModelFile) {
-    modelFile = (
-      <div>
-        <h2 className="text-xl font-bold" id="model_label">
-          Model File
-        </h2>
-        <div>
-          <pre className="my-3 rounded-md border-2 bg-white p-4 font-mono">
-            {result.modelFile}
-          </pre>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <Section>
-      {modelFile}
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-bold" id="result_heading">
+      {config.showModelFile && <ModelFile modelFile={result.modelFile} />}
+      <div className="mb-4 grid grid-cols-2 items-center">
+        <h2
+          className="justify-self-start text-xl font-bold"
+          id="result_heading"
+        >
           Result
         </h2>
-        <div className="flex gap-2">
-          <Menu>
-            <MenuButton className="flex w-20 cursor-pointer items-center rounded bg-green-700 px-3 py-2 text-white data-disabled:cursor-not-allowed data-disabled:opacity-50 data-hover:bg-green-800 data-open:bg-green-800 lg:w-30">
-              Download
-              <ChevronDownIcon className="ml-1 inline size-5 fill-white" />
-            </MenuButton>
-            <MenuItems
-              anchor="bottom start"
-              className="mt-0.5 rounded border border-gray-400 bg-white py-2"
-            >
-              <MenuItem>
-                <button
-                  type="button"
-                  className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100"
-                  onClick={() => {
-                    handleDownload('csv')
-                  }}
-                >
-                  CSV
-                </button>
-              </MenuItem>
-              <MenuItem>
-                <button
-                  type="button"
-                  className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100"
-                  onClick={() => {
-                    handleDownload('tsv')
-                  }}
-                >
-                  TSV
-                </button>
-              </MenuItem>
-            </MenuItems>
-          </Menu>
+        <div className="justify-self-end">
+          <DownloadMenu handleDownload={handleDownload} />
         </div>
       </div>
       <AlertMessage messages={result.messages} />
       <div className="overflow-x-auto">
         <table
-          className="w-full table-fixed border-collapse"
+          className="min-w-full border-collapse text-left"
           aria-labelledby="result_heading"
         >
           <thead>
-            <tr className="bg-gray-100">
-              <th className="border border-black px-4 py-2 text-left font-bold">
-                #
-              </th>
+            <tr className="bg-gray-100 font-bold">
+              <th className="border border-black px-1 py-2 sm:px-4">#</th>
               {result.header.map((h) => (
                 <th
                   key={h.id}
-                  className="border border-black px-4 py-2 text-left"
+                  className="border border-black px-1 py-2 sm:px-4"
                 >
                   {h.name}
                 </th>
@@ -132,13 +85,16 @@ function ResultSection({ config, result }: ResultSectionProps) {
             </tr>
           </thead>
           <tbody>
-            {result.body.map((row) => (
+            {result.body.map((row, i) => (
               <tr key={row.id} className="bg-white">
-                <th className="border border-black px-4 py-2 text-left font-bold">
-                  {row.id}
+                <th className="border border-black px-1 py-2 font-bold sm:px-4">
+                  {i + 1}
                 </th>
                 {row.values.map((col) => (
-                  <td key={col.id} className="border border-black px-4 py-2">
+                  <td
+                    key={col.id}
+                    className="border border-black px-1 py-2 sm:px-4"
+                  >
                     {col.value}
                   </td>
                 ))}
@@ -148,6 +104,65 @@ function ResultSection({ config, result }: ResultSectionProps) {
         </table>
       </div>
     </Section>
+  )
+}
+
+interface ModelFileProps {
+  modelFile: string
+}
+
+function ModelFile({ modelFile }: ModelFileProps) {
+  return (
+    <div>
+      <h2 className="text-xl font-bold">Model File</h2>
+      <div>
+        <pre className="my-3 overflow-x-auto rounded-md border-2 bg-white p-4 font-mono">
+          {modelFile}
+        </pre>
+      </div>
+    </div>
+  )
+}
+
+interface DownloadMenuProps {
+  handleDownload: (type: 'csv' | 'tsv') => void
+}
+
+function DownloadMenu({ handleDownload }: DownloadMenuProps) {
+  return (
+    <Menu>
+      <MenuButton className="center flex w-30 cursor-pointer items-center justify-center rounded bg-green-700 px-3 py-2 text-white data-disabled:cursor-not-allowed data-disabled:opacity-50 data-hover:bg-green-800 data-open:bg-green-800">
+        Download
+        <ChevronDownIcon className="ml-1 inline size-5 fill-white" />
+      </MenuButton>
+      <MenuItems
+        anchor="bottom start"
+        className="mt-0.5 rounded border border-gray-400 bg-white py-2"
+      >
+        <MenuItem>
+          <button
+            type="button"
+            className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100"
+            onClick={() => {
+              handleDownload('csv')
+            }}
+          >
+            CSV
+          </button>
+        </MenuItem>
+        <MenuItem>
+          <button
+            type="button"
+            className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100"
+            onClick={() => {
+              handleDownload('tsv')
+            }}
+          >
+            TSV
+          </button>
+        </MenuItem>
+      </MenuItems>
+    </Menu>
   )
 }
 
