@@ -2,11 +2,12 @@
 
 ## Pairwise Testing on the Web
 
-PictRider is a modern and user-friendly combinatorial testing tool that allows you to easily generate test cases using pairwise testing techniques directly on the web. It requires no installation and runs entirely in the browser, enabling QA engineers and software developers to quickly and efficiently design effective test cases.
+*PictRider* is a web-based tool for generating pairwise test cases quickly and easily, with no installation required.
 
 ### Features
 
 With PictRider, you can:
+
 - Define test parameters and their possible values
 - Create complex constraints between parameters
 - Generate optimized test cases that cover all pairwise combinations
@@ -15,11 +16,12 @@ With PictRider, you can:
 
 ### What is Pairwise Testing?
 
-Pairwise testing is a combinatorial testing technique used to reduce the number of test cases while maintaining high test coverage. It is based on the principle that most defects are caused by interactions between two parameters rather than multiple simultaneous factors.
+*Pairwise testing* is a combinatorial testing technique used to reduce the number of test cases while maintaining high test coverage. It is based on the principle that most defects are caused by interactions between two parameters rather than multiple simultaneous factors.
 
 In this approach, test cases are generated to cover all possible combinations of input values for every pair of parameters. This greatly reduces the total number of tests needed compared to exhaustive testing, while still ensuring that critical interactions are evaluated.
 
 Pairwise testing is especially effective when:
+
 - You need to cover a wide range of parameter combinations
 - Full combinatorial testing is impractical due to time or resource constraints
 - You want to systematically reduce redundant test cases without sacrificing coverage quality
@@ -29,8 +31,6 @@ Pairwise testing is especially effective when:
 PictRider is an open-source project. The source code is available on GitHub:
 
 [https://github.com/takeyaqa/PictRider](https://github.com/takeyaqa/PictRider)
-
-Contributions, bug reports, and feature requests are welcome!
 
 ## Disclaimer
 
