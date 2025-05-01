@@ -150,7 +150,7 @@ function ConstraintsSection({
             </div>
           )}
           <div className="mt-3">
-            {isEditing ? (
+            {constraintDirectEditMode && isEditing ? (
               <>
                 <label
                   className="mb-2 block text-base font-bold text-gray-900 dark:text-white"
