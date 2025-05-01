@@ -486,7 +486,7 @@ describe('App', () => {
       // act - remove a new sub-model
       await user.click(screen.getByRole('button', { name: 'Remove Sub-Model' }))
 
-      // assert - now there should be one sub-models
+      // assert - now there should be one sub-model
       expect(screen.queryByText('Sub-Model 1')).toBeInTheDocument()
       expect(screen.queryByText('Sub-Model 2')).not.toBeInTheDocument()
     })
