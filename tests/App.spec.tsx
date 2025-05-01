@@ -808,6 +808,26 @@ describe('App', () => {
         screen.queryByRole('button', { name: 'Remove Constraint' }),
       ).not.toBeInTheDocument()
     })
+
+    it('Should reset constraints when click reset button', async () => {
+      // arrange
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Constraints' }),
+      )
+      await user.click(screen.getByRole('button', { name: 'Edit Directly' }))
+      expect(
+        screen.getByRole('textbox', { name: 'Constraint Formula' }),
+      ).toBeInTheDocument()
+
+      // act
+      await user.click(
+        screen.getByRole('button', { name: 'Reset Constraints' }),
+      )
+
+      // assert
+      expect(screen.queryByText('Constraint 1')).toBeInTheDocument()
+      expect(screen.queryByText('Constraint 2')).not.toBeInTheDocument()
+    })
   })
 
   describe('Run Pict', () => {

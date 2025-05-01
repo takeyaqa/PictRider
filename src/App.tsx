@@ -157,6 +157,12 @@ function App({ pictRunnerInjection }: AppProps) {
     })
   }
 
+  function handleClickResetConstraints() {
+    dispatchModel({
+      type: 'clickResetConstraints',
+    })
+  }
+
   function handleClickAddSubModel() {
     dispatchModel({
       type: 'clickAddSubModel',
@@ -308,6 +314,7 @@ function App({ pictRunnerInjection }: AppProps) {
             toggleConstraintDirectEditMode={
               handleToggleConstraintDirectEditMode
             }
+            handleClickResetConstraints={handleClickResetConstraints}
           />
           <SubModelsSection
             config={config}

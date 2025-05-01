@@ -32,6 +32,7 @@ interface ConstraintsSectionProps {
   handleClickAddConstraint: () => void
   handleClickRemoveConstraint: () => void
   toggleConstraintDirectEditMode: () => void
+  handleClickResetConstraints: () => void
 }
 
 function ConstraintsSection({
@@ -48,6 +49,7 @@ function ConstraintsSection({
   handleClickAddConstraint,
   handleClickRemoveConstraint,
   toggleConstraintDirectEditMode,
+  handleClickResetConstraints,
 }: ConstraintsSectionProps) {
   const [isEditing, setIsEditing] = useState(false)
 
@@ -203,6 +205,15 @@ function ConstraintsSection({
                   ))}
                 </pre>
               </>
+            )}
+            {constraintDirectEditMode && (
+              <Button
+                type="warning"
+                size="md"
+                onClick={handleClickResetConstraints}
+              >
+                Reset Constraints
+              </Button>
             )}
           </div>
           <AlertMessage messages={messages} />

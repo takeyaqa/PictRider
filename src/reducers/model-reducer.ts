@@ -120,6 +120,7 @@ type ModelAction =
         | 'clickAddConstraint'
         | 'clickRemoveConstraint'
         | 'toggleConstraintDirectEditMode'
+        | 'clickResetConstraints'
         | 'clickAddSubModel'
         | 'clickRemoveSubModel'
     }
@@ -501,6 +502,16 @@ export function modelReducer(state: Model, action: ModelAction): Model {
       return {
         ...structuredClone(state),
         constraintDirectEditMode: !state.constraintDirectEditMode,
+      }
+    }
+
+    case 'clickResetConstraints': {
+      return {
+        ...structuredClone(state),
+        constraints: [createConstraintFromParameters(state.parameters)],
+        constraintTexts: [],
+        constraintDirectEditMode: false,
+        constraintErrors: [],
       }
     }
 
