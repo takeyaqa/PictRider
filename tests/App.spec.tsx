@@ -445,15 +445,10 @@ describe('App', () => {
       expect(
         screen.queryByRole('heading', { level: 2, name: 'Sub-Models' }),
       ).toBeInTheDocument()
-      expect(
-        screen.queryByRole('heading', { level: 3, name: 'Sub-Model 1' }),
-      ).toBeInTheDocument()
-      expect(
-        screen.queryByRole('heading', { level: 3, name: 'Sub-Model 2' }),
-      ).toBeInTheDocument()
+      expect(screen.queryByText('Sub-Model 1')).toBeInTheDocument()
       expect(
         screen.queryAllByRole('spinbutton', { name: 'Order' }),
-      ).toHaveLength(2)
+      ).toHaveLength(1)
     })
 
     it('Should change sub-model name when parameter name is changed', async () => {
@@ -472,7 +467,28 @@ describe('App', () => {
       // assert - the sub-model name should be updated
       expect(
         screen.queryAllByRole('checkbox', { name: 'TypeTypeType' }),
-      ).toHaveLength(2)
+      ).toHaveLength(1)
+    })
+
+    it('Should add and remove a new sub-model when add/remove sub-model button is clicked', async () => {
+      // arrange - enable sub-models area
+      await user.click(
+        screen.getByRole('switch', { name: 'Enable Sub-Models' }),
+      )
+
+      // act - add a new sub-model
+      await user.click(screen.getByRole('button', { name: 'Add Sub-Model' }))
+
+      // assert - now there should be two sub-models
+      expect(screen.queryByText('Sub-Model 1')).toBeInTheDocument()
+      expect(screen.queryByText('Sub-Model 2')).toBeInTheDocument()
+
+      // act - remove a new sub-model
+      await user.click(screen.getByRole('button', { name: 'Remove Sub-Model' }))
+
+      // assert - now there should be one sub-model
+      expect(screen.queryByText('Sub-Model 1')).toBeInTheDocument()
+      expect(screen.queryByText('Sub-Model 2')).not.toBeInTheDocument()
     })
   })
 

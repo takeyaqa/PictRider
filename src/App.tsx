@@ -157,6 +157,18 @@ function App({ pictRunnerInjection }: AppProps) {
     })
   }
 
+  function handleClickAddSubModel() {
+    dispatchModel({
+      type: 'clickAddSubModel',
+    })
+  }
+
+  function handleClickRemoveSubModel() {
+    dispatchModel({
+      type: 'clickRemoveSubModel',
+    })
+  }
+
   function handleChangeConfigCheckbox(
     type:
       | 'enableSubModels'
@@ -304,6 +316,8 @@ function App({ pictRunnerInjection }: AppProps) {
             handleChangeConfigCheckbox={handleChangeConfigCheckbox}
             handleClickSubModelParameters={handleClickSubModelParameters}
             handleChangeSubModelOrder={handleChangeSubModelOrder}
+            handleClickAddSubModel={handleClickAddSubModel}
+            handleClickRemoveSubModel={handleClickRemoveSubModel}
           />
           <OptionsSection
             config={config}
