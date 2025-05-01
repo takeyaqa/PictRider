@@ -120,6 +120,8 @@ type ModelAction =
         | 'clickAddConstraint'
         | 'clickRemoveConstraint'
         | 'toggleConstraintDirectEditMode'
+        | 'clickAddSubModel'
+        | 'clickRemoveSubModel'
     }
 
 export function modelReducer(state: Model, action: ModelAction): Model {
@@ -501,6 +503,37 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         constraintDirectEditMode: !state.constraintDirectEditMode,
       }
     }
+
+    case 'clickAddSubModel': {
+      if (state.subModels.length >= 2) {
+        // may not be reached
+        return structuredClone(state)
+      }
+      return {
+        ...structuredClone(state),
+        subModels: [
+          ...structuredClone(state.subModels),
+          {
+            id: uuidv4(),
+            parameterIds: [],
+            order: 2,
+          },
+        ],
+      }
+    }
+
+    case 'clickRemoveSubModel': {
+      if (state.subModels.length <= 1) {
+        // may not be reached
+        return structuredClone(state)
+      }
+      const newSubModels = structuredClone(state.subModels)
+      newSubModels.pop()
+      return {
+        ...structuredClone(state),
+        subModels: newSubModels,
+      }
+    }
   }
 }
 
@@ -552,11 +585,6 @@ export function getInitialModel(): Model {
   return {
     parameters: initialParameters,
     subModels: [
-      {
-        id: uuidv4(),
-        parameterIds: [],
-        order: 2,
-      },
       {
         id: uuidv4(),
         parameterIds: [],

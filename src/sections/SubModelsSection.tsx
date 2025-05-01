@@ -1,4 +1,5 @@
-import { Checkbox, NumberInput, Section, Switch } from '../components'
+import { PlusIcon, XMarkIcon } from '@heroicons/react/16/solid'
+import { Button, Checkbox, NumberInput, Section, Switch } from '../components'
 import { Config, Parameter, SubModel } from '../types'
 
 interface SubModelsSectionProps {
@@ -18,6 +19,8 @@ interface SubModelsSectionProps {
     id: string,
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
+  handleClickAddSubModel: () => void
+  handleClickRemoveSubModel: () => void
 }
 
 function SubModelsSection({
@@ -27,6 +30,8 @@ function SubModelsSection({
   handleChangeConfigCheckbox,
   handleClickSubModelParameters,
   handleChangeSubModelOrder,
+  handleClickAddSubModel,
+  handleClickRemoveSubModel,
 }: SubModelsSectionProps) {
   return (
     <Section>
@@ -45,12 +50,35 @@ function SubModelsSection({
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-2">
         {config.enableSubModels &&
           subModels.map((subModel, i) => (
-            <div
-              key={subModel.id}
-              className="mb-5 grid grid-cols-2 place-items-center gap-5"
-            >
-              <div>
-                <h3 className="mb-1 text-base font-bold">Sub-Model {i + 1}</h3>
+            <div key={subModel.id} className="mb-5">
+              <div className="flex h-10 border-collapse grid-cols-3 items-center justify-between border bg-gray-200 px-4 py-2 text-left font-bold">
+                <div>Sub-Model {i + 1}</div>
+                {i + 1 === subModels.length ? (
+                  <div className="flex gap-1">
+                    <Button
+                      type="secondary"
+                      size="2xs"
+                      disabled={subModels.length <= 1}
+                      aria-label="Remove Sub-Model"
+                      onClick={handleClickRemoveSubModel}
+                    >
+                      <XMarkIcon />
+                    </Button>
+                    <Button
+                      type="secondary"
+                      size="2xs"
+                      disabled={subModels.length >= 2}
+                      aria-label="Add Sub-Model"
+                      onClick={handleClickAddSubModel}
+                    >
+                      <PlusIcon />
+                    </Button>
+                  </div>
+                ) : (
+                  ''
+                )}
+              </div>
+              <div className="grid grid-cols-2 items-center gap-5 border p-5">
                 <div>
                   {parameters.map((parameter) => (
                     <div
@@ -71,17 +99,17 @@ function SubModelsSection({
                     </div>
                   ))}
                 </div>
-              </div>
-              <div>
-                <NumberInput
-                  label="Order"
-                  value={subModel.order}
-                  min={2}
-                  max={parameters.length}
-                  onChange={(e) => {
-                    handleChangeSubModelOrder(subModel.id, e)
-                  }}
-                />
+                <div>
+                  <NumberInput
+                    label="Order"
+                    value={subModel.order}
+                    min={2}
+                    max={parameters.length}
+                    onChange={(e) => {
+                      handleChangeSubModelOrder(subModel.id, e)
+                    }}
+                  />
+                </div>
               </div>
             </div>
           ))}
