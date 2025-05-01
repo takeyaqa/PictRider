@@ -16,7 +16,7 @@ function Switch({ label, checked, onChange }: SwitchProps) {
       >
         <span
           aria-hidden="true"
-          className="pointer-events-none inline-block size-5 translate-x-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out group-data-checked:translate-x-7"
+          className="pointer-events-none inline-block size-5 translate-x-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out group-data-checked:translate-x-7 dark:bg-black dark:group-data-checked:bg-gray-600"
         />
       </HeadlessUiSwitch>
       <Label className="hidden cursor-pointer">{label}</Label>

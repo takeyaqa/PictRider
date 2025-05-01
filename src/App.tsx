@@ -277,7 +277,7 @@ function App({ pictRunnerInjection }: AppProps) {
       <NotificationMessageSection
         message={import.meta.env.VITE_NOTIFICATION_MESSAGE}
       />
-      <main className="grid grid-cols-1 bg-white 2xl:grid-cols-2">
+      <main className="grid grid-cols-1 2xl:grid-cols-2">
         <div>
           <MenuSection
             containsInvalidValues={

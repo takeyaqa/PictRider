@@ -72,12 +72,14 @@ function ResultSection({ config, result }: ResultSectionProps) {
           aria-labelledby="result_heading"
         >
           <thead>
-            <tr className="bg-gray-100 font-bold">
-              <th className="border border-black px-1 py-2 sm:px-4">#</th>
+            <tr className="bg-gray-100 font-bold dark:bg-gray-600">
+              <th className="border border-black px-1 py-2 sm:px-4 dark:border-gray-500">
+                #
+              </th>
               {result.header.map((h) => (
                 <th
                   key={h.id}
-                  className="border border-black px-1 py-2 sm:px-4"
+                  className="border border-black px-1 py-2 sm:px-4 dark:border-gray-500"
                 >
                   {h.name}
                 </th>
@@ -86,14 +88,14 @@ function ResultSection({ config, result }: ResultSectionProps) {
           </thead>
           <tbody>
             {result.body.map((row, i) => (
-              <tr key={row.id} className="bg-white">
-                <th className="border border-black px-1 py-2 font-bold sm:px-4">
+              <tr key={row.id} className="bg-white dark:bg-gray-600">
+                <th className="border border-black px-1 py-2 font-bold sm:px-4 dark:border-gray-500">
                   {i + 1}
                 </th>
                 {row.values.map((col) => (
                   <td
                     key={col.id}
-                    className="border border-black px-1 py-2 sm:px-4"
+                    className="border border-black px-1 py-2 sm:px-4 dark:border-gray-500"
                   >
                     {col.value}
                   </td>
@@ -116,7 +118,7 @@ function ModelFile({ modelFile }: ModelFileProps) {
     <div>
       <h2 className="text-xl font-bold">Model File</h2>
       <div>
-        <pre className="my-3 overflow-x-auto rounded-md border-2 bg-white p-4 font-mono">
+        <pre className="my-3 overflow-x-auto rounded-md border-2 bg-white p-4 font-mono dark:border-gray-500 dark:bg-gray-600 dark:text-white">
           {modelFile}
         </pre>
       </div>
@@ -137,12 +139,12 @@ function DownloadMenu({ handleDownload }: DownloadMenuProps) {
       </MenuButton>
       <MenuItems
         anchor="bottom start"
-        className="mt-0.5 rounded border border-gray-400 bg-white py-2"
+        className="mt-0.5 rounded border border-gray-400 bg-white py-2 dark:border-gray-500 dark:bg-gray-700 dark:text-white"
       >
         <MenuItem>
           <button
             type="button"
-            className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100"
+            className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
               handleDownload('csv')
             }}
@@ -153,7 +155,7 @@ function DownloadMenu({ handleDownload }: DownloadMenuProps) {
         <MenuItem>
           <button
             type="button"
-            className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100"
+            className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
               handleDownload('tsv')
             }}

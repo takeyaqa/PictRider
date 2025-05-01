@@ -17,7 +17,7 @@ function TextInput({ label, value, isValid, onChange }: TextInputProps) {
       <Input
         type="text"
         value={value}
-        className={`w-full cursor-text rounded border bg-white px-3 py-2 data-focus:border-transparent data-focus:ring-3 data-focus:outline-none ${validClass}`}
+        className={`w-full cursor-text rounded border bg-white px-3 py-2 text-black data-focus:border-transparent data-focus:ring-3 data-focus:outline-none dark:bg-gray-600 dark:text-white ${validClass}`}
         autoComplete="off"
         onChange={onChange}
       />

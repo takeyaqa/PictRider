@@ -1,7 +1,7 @@
 function HeaderSection() {
   return (
     <header>
-      <nav className="top-0 left-0 mb-10 flex h-15 w-full bg-white text-black shadow-sm">
+      <nav className="top-0 left-0 mb-10 flex h-15 w-full shadow-sm dark:bg-gray-800">
         <h1 className="my-auto mr-5 ml-5 flex items-center text-2xl font-bold">
           <img
             src="/favicon.svg"
@@ -26,7 +26,24 @@ function HeaderSection() {
               target="_blank"
               rel="noreferrer noopener"
             >
-              <img src="/github-mark.svg" alt="GitHub" width="25" height="25" />
+              <picture>
+                <source
+                  srcSet="/github-mark-white.svg"
+                  type="image/svg+xml"
+                  media="(prefers-color-scheme: dark)"
+                />
+                <source
+                  srcSet="/github-mark.svg"
+                  type="image/svg+xml"
+                  media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+                />
+                <img
+                  src="/github-mark.svg"
+                  alt="GitHub"
+                  width="25"
+                  height="25"
+                />
+              </picture>
             </a>
           </li>
           <li>{import.meta.env.VITE_APP_VERSION}</li>
