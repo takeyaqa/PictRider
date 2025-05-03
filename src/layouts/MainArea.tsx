@@ -1,22 +1,15 @@
 import { PictRunner } from '@takeyaqa/pict-browser'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Result } from '../types'
 import TopPanel from './TopPanel'
 import BottomPanel from './BottomPanel'
 
 interface MainAreaProps {
-  pictRunnerLoaded: boolean
-  pictRunner: React.RefObject<PictRunner | null>
-  result: Result | null
-  setResult: (result: Result | null) => void
+  pictRunnerInjection?: PictRunner // use for testing
 }
 
-function MainArea({
-  pictRunnerLoaded,
-  pictRunner,
-  result,
-  setResult,
-}: MainAreaProps) {
+function MainArea({ pictRunnerInjection }: MainAreaProps) {
+  const [result, setResult] = useState<Result | null>(null)
   const resultSection = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -36,8 +29,7 @@ function MainArea({
   return (
     <main className="grid grid-cols-1 2xl:grid-cols-2">
       <TopPanel
-        pictRunnerLoaded={pictRunnerLoaded}
-        pictRunner={pictRunner}
+        pictRunnerInjection={pictRunnerInjection}
         result={result}
         setResult={setResult}
       />

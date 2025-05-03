@@ -4,24 +4,43 @@ import { useConfig } from '../features/config'
 import { Result } from '../types'
 import { uuidv4 } from '../helpers'
 import { useModel } from '../features/model'
+import { useEffect, useRef, useState } from 'react'
 
 interface MenuSectionProps {
-  pictRunnerLoaded: boolean
-  pictRunner: React.RefObject<PictRunner | null>
+  pictRunnerInjection?: PictRunner // use for testing
   canClearResult: boolean
   handleClearResult: () => void
   setResult: (result: Result) => void
 }
 
 function MenuSection({
-  pictRunnerLoaded,
-  pictRunner,
+  pictRunnerInjection,
   canClearResult,
   handleClearResult,
   setResult,
 }: MenuSectionProps) {
+  const [pictRunnerLoaded, setPictRunnerLoaded] = useState(false)
+  const pictRunner = useRef<PictRunner>(null)
+
   const { config } = useConfig()
   const { model, handlers } = useModel()
+
+  useEffect(() => {
+    // Use the injected PictRunner for testing
+    if (pictRunnerInjection) {
+      pictRunner.current = pictRunnerInjection
+      setPictRunnerLoaded(true)
+      return
+    }
+    const loadPictRunner = async () => {
+      pictRunner.current = new PictRunner()
+      await pictRunner.current.init()
+      setPictRunnerLoaded(true)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    loadPictRunner()
+  }, [pictRunnerInjection])
 
   function runPict() {
     if (!pictRunnerLoaded || !pictRunner.current) {
