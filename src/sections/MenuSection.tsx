@@ -1,31 +1,27 @@
 import { PictRunner } from '@takeyaqa/pict-browser'
 import { Button, Section } from '../components'
 import { useConfig } from '../features/config'
-import { Model, Result } from '../types'
+import { Result } from '../types'
 import { uuidv4 } from '../helpers'
+import { useModel } from '../features/model'
 
 interface MenuSectionProps {
-  containsInvalidValues: boolean
   pictRunnerLoaded: boolean
   pictRunner: React.RefObject<PictRunner | null>
-  model: Model
   canClearResult: boolean
-  handleClickClear: () => void
   handleClearResult: () => void
   setResult: (result: Result) => void
 }
 
 function MenuSection({
-  containsInvalidValues,
   pictRunnerLoaded,
   pictRunner,
-  model,
   canClearResult,
-  handleClickClear,
   handleClearResult,
   setResult,
 }: MenuSectionProps) {
   const { config } = useConfig()
+  const { model, handlers } = useModel()
 
   function runPict() {
     if (!pictRunnerLoaded || !pictRunner.current) {
@@ -92,11 +88,18 @@ function MenuSection({
     })
   }
 
+  const containsInvalidValues = model.parameters.some(
+    (p) => !p.isValidName || !p.isValidValues,
+  )
+  const containsInvalidConstraints = model.constraints.some((c) =>
+    c.conditions.some((cond) => !cond.isValid),
+  )
+
   return (
     <Section>
       <menu className="flex list-none items-center justify-start gap-5">
         <li>
-          <Button type="warning" size="sm" onClick={handleClickClear}>
+          <Button type="warning" size="sm" onClick={handlers.handleClickClear}>
             Clear Input
           </Button>
         </li>
@@ -114,7 +117,11 @@ function MenuSection({
           <Button
             type="primary"
             size="sm"
-            disabled={containsInvalidValues || !pictRunnerLoaded}
+            disabled={
+              containsInvalidValues ||
+              containsInvalidConstraints ||
+              !pictRunnerLoaded
+            }
             onClick={runPict}
           >
             Run

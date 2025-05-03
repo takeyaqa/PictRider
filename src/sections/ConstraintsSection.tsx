@@ -1,46 +1,32 @@
 import { useState } from 'react'
 import { PlusIcon, XMarkIcon } from '@heroicons/react/16/solid'
-import { Parameter, Constraint, ConstraintText, Message } from '../types'
+import { Parameter } from '../types'
 import { AlertMessage, Button, Switch, Section, TextInput } from '../components'
 import { useConfig } from '../features/config'
+import { useModel } from '../features/model'
 
-interface ConstraintsSectionProps {
-  parameters: Parameter[]
-  constraints: Constraint[]
-  constraintTexts: ConstraintText[]
-  constraintDirectEditMode: boolean
-  messages: Message[]
-  handleToggleCondition: (constraintId: string, parameterId: string) => void
-  handleChangeCondition: (
-    constraintId: string,
-    parameterId: string,
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => void
-  handleChangeConstraintFormula: (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => void
-  handleClickAddConstraint: () => void
-  handleClickRemoveConstraint: () => void
-  toggleConstraintDirectEditMode: () => void
-  handleClickResetConstraints: () => void
-}
-
-function ConstraintsSection({
-  parameters,
-  constraints,
-  constraintTexts,
-  constraintDirectEditMode,
-  messages,
-  handleToggleCondition,
-  handleChangeCondition,
-  handleChangeConstraintFormula,
-  handleClickAddConstraint,
-  handleClickRemoveConstraint,
-  toggleConstraintDirectEditMode,
-  handleClickResetConstraints,
-}: ConstraintsSectionProps) {
-  const { config, handlers } = useConfig()
+function ConstraintsSection() {
+  const { config, handlers: configHandlers } = useConfig()
+  const { model, handlers: modelHandlers } = useModel()
   const [isEditing, setIsEditing] = useState(false)
+
+  const {
+    parameters,
+    constraints,
+    constraintTexts,
+    constraintDirectEditMode,
+    constraintErrors,
+  } = model
+
+  const {
+    handleToggleCondition,
+    handleClickAddConstraint,
+    handleClickRemoveConstraint,
+    handleChangeCondition,
+    handleChangeConstraintFormula,
+    handleToggleConstraintDirectEditMode,
+    handleClickResetConstraints,
+  } = modelHandlers
 
   return (
     <Section>
@@ -51,7 +37,10 @@ function ConstraintsSection({
             label="Enable Constraints"
             checked={config.enableConstraints}
             onChange={(checked) => {
-              handlers.handleChangeConfigCheckbox('enableConstraints', checked)
+              configHandlers.handleChangeConfigCheckbox(
+                'enableConstraints',
+                checked,
+              )
             }}
           />
         </div>
@@ -61,11 +50,11 @@ function ConstraintsSection({
           {!constraintDirectEditMode && (
             <div>
               <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-3">
-                {constraints.map((constraint, i) => (
+                {model.constraints.map((constraint, i) => (
                   <div key={constraint.id}>
                     <div className="flex h-10 border-collapse grid-cols-3 items-center justify-between border bg-gray-200 px-4 py-2 text-left font-bold dark:border-gray-500 dark:bg-gray-600 dark:text-white">
                       <div>Constraint {i + 1}</div>
-                      {i + 1 === constraints.length ? (
+                      {i + 1 === model.constraints.length ? (
                         <div className="flex gap-1">
                           <Button
                             type="secondary"
@@ -170,7 +159,7 @@ function ConstraintsSection({
                     type="danger"
                     size="sm"
                     onClick={() => {
-                      toggleConstraintDirectEditMode()
+                      handleToggleConstraintDirectEditMode()
                       setIsEditing(true)
                     }}
                   >
@@ -205,7 +194,7 @@ function ConstraintsSection({
               </Button>
             )}
           </div>
-          <AlertMessage messages={messages} />
+          <AlertMessage messages={constraintErrors} />
         </div>
       )}
     </Section>

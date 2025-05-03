@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useReducer } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { PictRunner } from '@takeyaqa/pict-browser'
 import { Analytics } from './components'
 import {
@@ -13,15 +13,14 @@ import {
   MenuSection,
 } from './sections'
 import { Result } from './types'
-import { modelReducer, getInitialModel } from './reducers/model-reducer'
 import { ConfigProvider } from './features/config'
+import { ModelProvider } from './features/model'
 
 interface AppProps {
   pictRunnerInjection?: PictRunner // use for testing
 }
 
 function App({ pictRunnerInjection }: AppProps) {
-  const [model, dispatchModel] = useReducer(modelReducer, getInitialModel())
   const [result, setResult] = useState<Result | null>(null)
   const [pictRunnerLoaded, setPictRunnerLoaded] = useState(false)
   const pictRunner = useRef<PictRunner>(null)
@@ -58,190 +57,39 @@ function App({ pictRunnerInjection }: AppProps) {
     }
   }, [result])
 
-  function handleChangeParameter(
-    id: string,
-    field: 'name' | 'values',
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) {
-    dispatchModel({
-      type: 'changeParameter',
-      payload: { id, field, e },
-    })
-  }
-
-  function handleClickAddRow(id: string, target: 'above' | 'below') {
-    dispatchModel({
-      type: 'clickAddRow',
-      payload: { id, target },
-    })
-  }
-
-  function handleClickRemoveRow(id: string) {
-    dispatchModel({
-      type: 'clickRemoveRow',
-      payload: { id },
-    })
-  }
-
-  function handleClickClear() {
-    dispatchModel({
-      type: 'clickClear',
-    })
-  }
-
-  function handleClickSubModelParameters(
-    subModelId: string,
-    parameterId: string,
-    checked: boolean,
-  ) {
-    dispatchModel({
-      type: 'clickSubModelParameters',
-      payload: { subModelId, parameterId, checked },
-    })
-  }
-
-  function handleChangeSubModelOrder(
-    id: string,
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) {
-    dispatchModel({
-      type: 'changeSubModelOrder',
-      payload: { id, e },
-    })
-  }
-
-  function handleToggleCondition(constraintId: string, parameterId: string) {
-    dispatchModel({
-      type: 'toggleCondition',
-      payload: { constraintId, parameterId },
-    })
-  }
-
-  function handleChangeCondition(
-    constraintId: string,
-    parameterId: string,
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) {
-    dispatchModel({
-      type: 'changeCondition',
-      payload: { constraintId, parameterId, e },
-    })
-  }
-
-  function handleChangeConstraintFormula(
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-  ) {
-    dispatchModel({
-      type: 'changeConstraintFormula',
-      payload: { e },
-    })
-  }
-
-  function handleClickAddConstraint() {
-    dispatchModel({
-      type: 'clickAddConstraint',
-    })
-  }
-
-  function handleClickRemoveConstraint() {
-    dispatchModel({
-      type: 'clickRemoveConstraint',
-    })
-  }
-
-  function handleToggleConstraintDirectEditMode() {
-    dispatchModel({
-      type: 'toggleConstraintDirectEditMode',
-    })
-  }
-
-  function handleClickResetConstraints() {
-    dispatchModel({
-      type: 'clickResetConstraints',
-    })
-  }
-
-  function handleClickAddSubModel() {
-    dispatchModel({
-      type: 'clickAddSubModel',
-    })
-  }
-
-  function handleClickRemoveSubModel() {
-    dispatchModel({
-      type: 'clickRemoveSubModel',
-    })
-  }
-
-  const containsInvalidValues = model.parameters.some(
-    (p) => !p.isValidName || !p.isValidValues,
-  )
-  const containsInvalidConstraints = model.constraints.some((c) =>
-    c.conditions.some((cond) => !cond.isValid),
-  )
-
   return (
-    <ConfigProvider>
+    <>
       <HeaderSection />
       <NotificationMessageSection
         message={import.meta.env.VITE_NOTIFICATION_MESSAGE}
       />
-      <main className="grid grid-cols-1 2xl:grid-cols-2">
-        <div>
-          <MenuSection
-            containsInvalidValues={
-              containsInvalidValues || containsInvalidConstraints
-            }
-            pictRunnerLoaded={pictRunnerLoaded}
-            canClearResult={result !== null}
-            pictRunner={pictRunner}
-            model={model}
-            handleClickClear={handleClickClear}
-            handleClearResult={() => {
-              setResult(null)
-            }}
-            setResult={setResult}
-          />
-          <ParametersSection
-            parameters={model.parameters}
-            messages={model.parameterErrors}
-            handleChangeParameter={handleChangeParameter}
-            handleClickAddRow={handleClickAddRow}
-            handleClickRemoveRow={handleClickRemoveRow}
-          />
-          <ConstraintsSection
-            parameters={model.parameters}
-            constraints={model.constraints}
-            constraintTexts={model.constraintTexts}
-            constraintDirectEditMode={model.constraintDirectEditMode}
-            messages={model.constraintErrors}
-            handleToggleCondition={handleToggleCondition}
-            handleChangeCondition={handleChangeCondition}
-            handleChangeConstraintFormula={handleChangeConstraintFormula}
-            handleClickAddConstraint={handleClickAddConstraint}
-            handleClickRemoveConstraint={handleClickRemoveConstraint}
-            toggleConstraintDirectEditMode={
-              handleToggleConstraintDirectEditMode
-            }
-            handleClickResetConstraints={handleClickResetConstraints}
-          />
-          <SubModelsSection
-            parameters={model.parameters}
-            subModels={model.subModels}
-            handleClickSubModelParameters={handleClickSubModelParameters}
-            handleChangeSubModelOrder={handleChangeSubModelOrder}
-            handleClickAddSubModel={handleClickAddSubModel}
-            handleClickRemoveSubModel={handleClickRemoveSubModel}
-          />
-          <OptionsSection />
-        </div>
-        <div ref={resultSection}>
-          <ResultSection result={result} />
-        </div>
-      </main>
+      <ConfigProvider>
+        <ModelProvider>
+          <main className="grid grid-cols-1 2xl:grid-cols-2">
+            <div>
+              <MenuSection
+                pictRunnerLoaded={pictRunnerLoaded}
+                canClearResult={result !== null}
+                pictRunner={pictRunner}
+                handleClearResult={() => {
+                  setResult(null)
+                }}
+                setResult={setResult}
+              />
+              <ParametersSection />
+              <ConstraintsSection />
+              <SubModelsSection />
+              <OptionsSection />
+            </div>
+            <div ref={resultSection}>
+              <ResultSection result={result} />
+            </div>
+          </main>
+        </ModelProvider>
+      </ConfigProvider>
       <FooterSection />
       <Analytics />
-    </ConfigProvider>
+    </>
   )
 }
 
