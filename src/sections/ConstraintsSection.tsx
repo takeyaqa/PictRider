@@ -1,25 +1,15 @@
 import { useState } from 'react'
 import { PlusIcon, XMarkIcon } from '@heroicons/react/16/solid'
-import {
-  Parameter,
-  Constraint,
-  Config,
-  ConstraintText,
-  Message,
-} from '../types'
+import { Parameter, Constraint, ConstraintText, Message } from '../types'
 import { AlertMessage, Button, Switch, Section, TextInput } from '../components'
+import { useConfig } from '../features/config'
 
 interface ConstraintsSectionProps {
-  config: Config
   parameters: Parameter[]
   constraints: Constraint[]
   constraintTexts: ConstraintText[]
   constraintDirectEditMode: boolean
   messages: Message[]
-  handleChangeConfigCheckbox: (
-    type: 'enableConstraints',
-    checked: boolean,
-  ) => void
   handleToggleCondition: (constraintId: string, parameterId: string) => void
   handleChangeCondition: (
     constraintId: string,
@@ -36,13 +26,11 @@ interface ConstraintsSectionProps {
 }
 
 function ConstraintsSection({
-  config,
   parameters,
   constraints,
   constraintTexts,
   constraintDirectEditMode,
   messages,
-  handleChangeConfigCheckbox,
   handleToggleCondition,
   handleChangeCondition,
   handleChangeConstraintFormula,
@@ -51,6 +39,7 @@ function ConstraintsSection({
   toggleConstraintDirectEditMode,
   handleClickResetConstraints,
 }: ConstraintsSectionProps) {
+  const { config, handlers } = useConfig()
   const [isEditing, setIsEditing] = useState(false)
 
   return (
@@ -62,7 +51,7 @@ function ConstraintsSection({
             label="Enable Constraints"
             checked={config.enableConstraints}
             onChange={(checked) => {
-              handleChangeConfigCheckbox('enableConstraints', checked)
+              handlers.handleChangeConfigCheckbox('enableConstraints', checked)
             }}
           />
         </div>

@@ -14,8 +14,7 @@ import {
 } from './sections'
 import { Result } from './types'
 import { modelReducer, getInitialModel } from './reducers/model-reducer'
-import { configReducer, getInitialConfig } from './reducers/config-reducer'
-import { uuidv4 } from './helpers'
+import { ConfigProvider } from './features/config'
 
 interface AppProps {
   pictRunnerInjection?: PictRunner // use for testing
@@ -23,7 +22,6 @@ interface AppProps {
 
 function App({ pictRunnerInjection }: AppProps) {
   const [model, dispatchModel] = useReducer(modelReducer, getInitialModel())
-  const [config, dispatchConfig] = useReducer(configReducer, getInitialConfig())
   const [result, setResult] = useState<Result | null>(null)
   const [pictRunnerLoaded, setPictRunnerLoaded] = useState(false)
   const pictRunner = useRef<PictRunner>(null)
@@ -175,95 +173,6 @@ function App({ pictRunnerInjection }: AppProps) {
     })
   }
 
-  function handleChangeConfigCheckbox(
-    type:
-      | 'enableSubModels'
-      | 'enableConstraints'
-      | 'showModelFile'
-      | 'randomizeGeneration',
-    checked: boolean,
-  ) {
-    dispatchConfig({
-      type,
-      payload: { checked },
-    })
-  }
-
-  function handleChangeConfigInput(
-    type: 'orderOfCombinations' | 'randomizeSeed',
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) {
-    dispatchConfig({
-      type,
-      payload: { e },
-    })
-  }
-
-  function runPict() {
-    if (!pictRunnerLoaded || !pictRunner.current) {
-      return
-    }
-    const fixedParameters = model.parameters
-      .filter((p) => p.name !== '' && p.values !== '')
-      .map((p) => ({ name: p.name, values: p.values }))
-    const fixedSubModels = config.enableSubModels
-      ? model.subModels
-          .filter((sm) => sm.parameterIds.length > 0)
-          .map((s) => ({
-            parameterNames: s.parameterIds.map((id) => {
-              const parameter = model.parameters.find((p) => p.id === id)
-              if (!parameter) {
-                throw new Error(`Parameter not found: ${id}`)
-              }
-              return parameter.name
-            }),
-            order: s.order,
-          }))
-      : []
-    const pictOptions = {
-      orderOfCombinations:
-        config.orderOfCombinations !== '' ? config.orderOfCombinations : 2,
-      randomizeGeneration: config.randomizeGeneration,
-      randomizeSeed:
-        config.randomizeGeneration && config.randomizeSeed !== ''
-          ? config.randomizeSeed
-          : undefined,
-    }
-    const output = config.enableConstraints
-      ? pictRunner.current.run(fixedParameters, {
-          subModels: fixedSubModels,
-          constraintsText: model.constraintTexts.map((c) => c.text).join('\n'),
-          options: pictOptions,
-        })
-      : pictRunner.current.run(fixedParameters, {
-          subModels: fixedSubModels,
-          options: pictOptions,
-        })
-    const header = output.header.map((h, i) => {
-      return { id: i, name: h }
-    })
-    const body = output.body.map((row, i) => {
-      return {
-        id: i,
-        values: row.map((col, j) => {
-          return { id: j, value: col }
-        }),
-      }
-    })
-    const messages = output.message
-      ? output.message.split('\n').map((m) => ({
-          id: uuidv4(),
-          text: m,
-        }))
-      : []
-    setResult({
-      header,
-      body,
-      modelFile: output.modelFile,
-      messages: messages,
-    })
-  }
-
   const containsInvalidValues = model.parameters.some(
     (p) => !p.isValidName || !p.isValidValues,
   )
@@ -272,7 +181,7 @@ function App({ pictRunnerInjection }: AppProps) {
   )
 
   return (
-    <>
+    <ConfigProvider>
       <HeaderSection />
       <NotificationMessageSection
         message={import.meta.env.VITE_NOTIFICATION_MESSAGE}
@@ -285,11 +194,13 @@ function App({ pictRunnerInjection }: AppProps) {
             }
             pictRunnerLoaded={pictRunnerLoaded}
             canClearResult={result !== null}
-            handleClickRun={runPict}
+            pictRunner={pictRunner}
+            model={model}
             handleClickClear={handleClickClear}
             handleClearResult={() => {
               setResult(null)
             }}
+            setResult={setResult}
           />
           <ParametersSection
             parameters={model.parameters}
@@ -299,13 +210,11 @@ function App({ pictRunnerInjection }: AppProps) {
             handleClickRemoveRow={handleClickRemoveRow}
           />
           <ConstraintsSection
-            config={config}
             parameters={model.parameters}
             constraints={model.constraints}
             constraintTexts={model.constraintTexts}
             constraintDirectEditMode={model.constraintDirectEditMode}
             messages={model.constraintErrors}
-            handleChangeConfigCheckbox={handleChangeConfigCheckbox}
             handleToggleCondition={handleToggleCondition}
             handleChangeCondition={handleChangeCondition}
             handleChangeConstraintFormula={handleChangeConstraintFormula}
@@ -317,28 +226,22 @@ function App({ pictRunnerInjection }: AppProps) {
             handleClickResetConstraints={handleClickResetConstraints}
           />
           <SubModelsSection
-            config={config}
             parameters={model.parameters}
             subModels={model.subModels}
-            handleChangeConfigCheckbox={handleChangeConfigCheckbox}
             handleClickSubModelParameters={handleClickSubModelParameters}
             handleChangeSubModelOrder={handleChangeSubModelOrder}
             handleClickAddSubModel={handleClickAddSubModel}
             handleClickRemoveSubModel={handleClickRemoveSubModel}
           />
-          <OptionsSection
-            config={config}
-            handleChangeConfigCheckbox={handleChangeConfigCheckbox}
-            handleChangeConfigInput={handleChangeConfigInput}
-          />
+          <OptionsSection />
         </div>
         <div ref={resultSection}>
-          <ResultSection config={config} result={result} />
+          <ResultSection result={result} />
         </div>
       </main>
       <FooterSection />
       <Analytics />
-    </>
+    </ConfigProvider>
   )
 }
 

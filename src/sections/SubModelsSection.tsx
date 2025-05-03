@@ -1,15 +1,11 @@
 import { PlusIcon, XMarkIcon } from '@heroicons/react/16/solid'
 import { Button, Checkbox, NumberInput, Section, Switch } from '../components'
-import { Config, Parameter, SubModel } from '../types'
+import { Parameter, SubModel } from '../types'
+import { useConfig } from '../features/config'
 
 interface SubModelsSectionProps {
-  config: Config
   parameters: Parameter[]
   subModels: SubModel[]
-  handleChangeConfigCheckbox: (
-    type: 'enableSubModels',
-    checked: boolean,
-  ) => void
   handleClickSubModelParameters: (
     subModelId: string,
     parameterId: string,
@@ -24,15 +20,14 @@ interface SubModelsSectionProps {
 }
 
 function SubModelsSection({
-  config,
   parameters,
   subModels,
-  handleChangeConfigCheckbox,
   handleClickSubModelParameters,
   handleChangeSubModelOrder,
   handleClickAddSubModel,
   handleClickRemoveSubModel,
 }: SubModelsSectionProps) {
+  const { config, handlers } = useConfig()
   return (
     <Section>
       <div className="mb-5 flex items-center gap-5">
@@ -42,7 +37,7 @@ function SubModelsSection({
             label="Enable Sub-Models"
             checked={config.enableSubModels}
             onChange={(checked) => {
-              handleChangeConfigCheckbox('enableSubModels', checked)
+              handlers.handleChangeConfigCheckbox('enableSubModels', checked)
             }}
           />
         </div>
