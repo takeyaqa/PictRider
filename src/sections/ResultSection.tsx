@@ -1,7 +1,8 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 import { AlertMessage, Section } from '../components'
-import { Config, Result } from '../types'
+import { Result } from '../types'
+import { useConfig } from '../features/config'
 
 function createCsvContent(result: Result) {
   const headerRow = result.header.map((h) => `"${h.name}"`).join(',')
@@ -20,11 +21,12 @@ function createTsvContent(result: Result) {
 }
 
 interface ResultSectionProps {
-  config: Config
   result: Result | null
 }
 
-function ResultSection({ config, result }: ResultSectionProps) {
+function ResultSection({ result }: ResultSectionProps) {
+  const { config } = useConfig()
+
   function handleDownload(type: 'csv' | 'tsv') {
     if (!result) {
       return

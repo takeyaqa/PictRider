@@ -1,27 +1,8 @@
 import { Checkbox, NumberInput, Section } from '../components'
-import { Config } from '../types'
+import { useConfig } from '../features/config'
 
-interface OptionsSectionProps {
-  config: Config
-  handleChangeConfigCheckbox: (
-    type:
-      | 'enableSubModels'
-      | 'enableConstraints'
-      | 'showModelFile'
-      | 'randomizeGeneration',
-    checked: boolean,
-  ) => void
-  handleChangeConfigInput: (
-    type: 'orderOfCombinations' | 'randomizeSeed',
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => void
-}
-
-function OptionsSection({
-  config,
-  handleChangeConfigCheckbox,
-  handleChangeConfigInput,
-}: OptionsSectionProps) {
+function OptionsSection() {
+  const { config, handlers } = useConfig()
   return (
     <Section>
       <h2 className="mb-5 text-lg font-bold">Options</h2>
@@ -33,7 +14,7 @@ function OptionsSection({
             min={1}
             max={50}
             onChange={(e) => {
-              handleChangeConfigInput('orderOfCombinations', e)
+              handlers.handleChangeConfigInput('orderOfCombinations', e)
             }}
           />
         </div>
@@ -43,7 +24,10 @@ function OptionsSection({
               label="Randomize generation"
               checked={config.randomizeGeneration}
               onChange={(checked) => {
-                handleChangeConfigCheckbox('randomizeGeneration', checked)
+                handlers.handleChangeConfigCheckbox(
+                  'randomizeGeneration',
+                  checked,
+                )
               }}
             />
           </div>
@@ -55,7 +39,7 @@ function OptionsSection({
               max={65535}
               disabled={!config.randomizeGeneration}
               onChange={(e) => {
-                handleChangeConfigInput('randomizeSeed', e)
+                handlers.handleChangeConfigInput('randomizeSeed', e)
               }}
             />
           </div>
@@ -65,7 +49,7 @@ function OptionsSection({
             label="Show model file"
             checked={config.showModelFile}
             onChange={(checked) => {
-              handleChangeConfigCheckbox('showModelFile', checked)
+              handlers.handleChangeConfigCheckbox('showModelFile', checked)
             }}
           />
         </div>
