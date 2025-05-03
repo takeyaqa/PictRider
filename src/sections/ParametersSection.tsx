@@ -1,26 +1,12 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { AlertMessage, Section, TextInput } from '../components'
-import { Message, Parameter } from '../types'
+import { useModel } from '../features/model'
 
-interface ParametersSectionProps {
-  parameters: Parameter[]
-  messages: Message[]
-  handleChangeParameter: (
-    id: string,
-    field: 'name' | 'values',
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => void
-  handleClickAddRow: (id: string, target: 'above' | 'below') => void
-  handleClickRemoveRow: (id: string) => void
-}
-
-function ParametersSection({
-  parameters,
-  messages,
-  handleChangeParameter,
-  handleClickAddRow,
-  handleClickRemoveRow,
-}: ParametersSectionProps) {
+function ParametersSection() {
+  const { model, handlers } = useModel()
+  const { parameters, parameterErrors } = model
+  const { handleChangeParameter, handleClickAddRow, handleClickRemoveRow } =
+    handlers
   return (
     <Section>
       <div className="mb-5 grid grid-cols-12 gap-1 sm:gap-5">
@@ -109,7 +95,7 @@ function ParametersSection({
           </div>
         </div>
       ))}
-      <AlertMessage messages={messages} />
+      <AlertMessage messages={parameterErrors} />
     </Section>
   )
 }
