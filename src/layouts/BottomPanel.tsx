@@ -1,0 +1,17 @@
+import { ResultSection } from '../sections'
+import { Result } from '../types'
+
+interface BottomPanelProps {
+  result: Result | null
+  resultSection: React.RefObject<HTMLDivElement | null>
+}
+
+function BottomPanel({ result, resultSection }: BottomPanelProps) {
+  return (
+    <div ref={resultSection}>
+      <ResultSection result={result} />
+    </div>
+  )
+}
+
+export default BottomPanel

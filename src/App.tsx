@@ -4,17 +4,12 @@ import { Analytics } from './components'
 import {
   HeaderSection,
   NotificationMessageSection,
-  ParametersSection,
-  OptionsSection,
-  SubModelsSection,
-  ConstraintsSection,
-  ResultSection,
   FooterSection,
-  MenuSection,
 } from './sections'
 import { Result } from './types'
 import { ConfigProvider } from './features/config'
 import { ModelProvider } from './features/model'
+import { MainArea } from './layouts'
 
 interface AppProps {
   pictRunnerInjection?: PictRunner // use for testing
@@ -24,7 +19,6 @@ function App({ pictRunnerInjection }: AppProps) {
   const [result, setResult] = useState<Result | null>(null)
   const [pictRunnerLoaded, setPictRunnerLoaded] = useState(false)
   const pictRunner = useRef<PictRunner>(null)
-  const resultSection = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // Use the injected PictRunner for testing
@@ -43,20 +37,6 @@ function App({ pictRunnerInjection }: AppProps) {
     loadPictRunner()
   }, [pictRunnerInjection])
 
-  useEffect(() => {
-    if (
-      result !== null &&
-      resultSection.current &&
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(width < 96rem)').matches // tailwind: 2xl, two columns layout
-    ) {
-      resultSection.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
-    }
-  }, [result])
-
   return (
     <>
       <HeaderSection />
@@ -65,26 +45,12 @@ function App({ pictRunnerInjection }: AppProps) {
       />
       <ConfigProvider>
         <ModelProvider>
-          <main className="grid grid-cols-1 2xl:grid-cols-2">
-            <div>
-              <MenuSection
-                pictRunnerLoaded={pictRunnerLoaded}
-                canClearResult={result !== null}
-                pictRunner={pictRunner}
-                handleClearResult={() => {
-                  setResult(null)
-                }}
-                setResult={setResult}
-              />
-              <ParametersSection />
-              <ConstraintsSection />
-              <SubModelsSection />
-              <OptionsSection />
-            </div>
-            <div ref={resultSection}>
-              <ResultSection result={result} />
-            </div>
-          </main>
+          <MainArea
+            pictRunnerLoaded={pictRunnerLoaded}
+            pictRunner={pictRunner}
+            result={result}
+            setResult={setResult}
+          />
         </ModelProvider>
       </ConfigProvider>
       <FooterSection />
