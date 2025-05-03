@@ -1,4 +1,3 @@
-import { PictRunner } from '@takeyaqa/pict-browser'
 import { Result } from '../types'
 import {
   MenuSection,
@@ -7,26 +6,20 @@ import {
   SubModelsSection,
   OptionsSection,
 } from '../sections'
+import { PictRunner } from '@takeyaqa/pict-browser'
 
 interface TopPanelProps {
-  pictRunnerLoaded: boolean
-  pictRunner: React.RefObject<PictRunner | null>
+  pictRunnerInjection?: PictRunner // use for testing
   result: Result | null
   setResult: (result: Result | null) => void
 }
 
-function TopPanel({
-  pictRunnerLoaded,
-  pictRunner,
-  result,
-  setResult,
-}: TopPanelProps) {
+function TopPanel({ pictRunnerInjection, result, setResult }: TopPanelProps) {
   return (
     <div>
       <MenuSection
-        pictRunnerLoaded={pictRunnerLoaded}
+        pictRunnerInjection={pictRunnerInjection} // use for testing
         canClearResult={result !== null}
-        pictRunner={pictRunner}
         handleClearResult={() => {
           setResult(null)
         }}
