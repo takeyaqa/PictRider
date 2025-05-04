@@ -2,7 +2,7 @@ import { PictRunner } from '@takeyaqa/pict-browser'
 import { Button, Section } from '../components'
 import { useConfig } from '../features/config'
 import { useModel } from '../features/model'
-import { runPict } from '../helpers'
+import { runPict } from '../shared/helpers'
 import { usePictRunner } from '../shared/hooks'
 import { Result } from '../types'
 

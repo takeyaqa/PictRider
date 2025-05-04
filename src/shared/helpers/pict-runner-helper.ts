@@ -1,54 +1,19 @@
 import { PictRunner } from '@takeyaqa/pict-browser'
-import { convertTableToConstraints } from './constraint-converter'
-import { printCodeFromAST } from './pict-constraints-parser/printer'
-import {
-  Config,
-  Constraint,
-  ConstraintText,
-  FixedConstraint,
-  Model,
-  Parameter,
-  Result,
-  SubModel,
-} from './types'
 import {
   PictOptions,
   PictOutput,
   PictParameter,
   PictSubModel,
 } from '@takeyaqa/pict-browser/dist/types'
-
-export function uuidv4(): string {
-  return crypto.randomUUID()
-}
-
-export function fixConstraint(
-  constraints: Constraint[],
-  parameters: Parameter[],
-): FixedConstraint[] {
-  return constraints.map((c) => ({
-    conditions: c.conditions.map((cond) => {
-      const parameter = parameters.find((p) => p.id === cond.parameterId)
-      if (!parameter) {
-        throw new Error(
-          `Parameter not found for condition: ${cond.parameterId}`,
-        )
-      }
-      return {
-        ifOrThen: cond.ifOrThen,
-        predicate: cond.predicate,
-        parameterName: parameter.name,
-      }
-    }),
-  }))
-}
-
-export function printConstraints(
-  constraints: FixedConstraint[],
-  parameters: string[],
-): string[] {
-  return printCodeFromAST(convertTableToConstraints(constraints, parameters))
-}
+import {
+  Config,
+  ConstraintText,
+  Model,
+  Parameter,
+  Result,
+  SubModel,
+} from '../../types'
+import { uuidv4 } from './utils'
 
 export function runPict(pictRunner: PictRunner, model: Model, config: Config) {
   const pictParameters = processParameters(model.parameters)
