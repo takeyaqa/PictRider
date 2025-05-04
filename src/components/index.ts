@@ -1,5 +1,6 @@
 export { default as AlertMessage } from './AlertMessage'
 export { default as Analytics } from './Analytics'
+export { default as AugmentDiv } from './AugmentDiv'
 export { default as Button } from './Button'
 export { default as Checkbox } from './Checkbox'
 export { default as NumberInput } from './NumberInput'

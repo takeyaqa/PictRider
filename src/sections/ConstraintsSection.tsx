@@ -1,6 +1,12 @@
 import { useState } from 'react'
-import { PlusIcon, XMarkIcon } from '@heroicons/react/16/solid'
-import { AlertMessage, Button, Section, Switch, TextInput } from '../components'
+import {
+  AlertMessage,
+  AugmentDiv,
+  Button,
+  Section,
+  Switch,
+  TextInput,
+} from '../components'
 import { useConfig } from '../features/config'
 import { useModel } from '../features/model'
 import { Constraint, ConstraintText, Parameter } from '../types'
@@ -85,14 +91,16 @@ function ConstraintTables({
     <div>
       <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-3">
         {constraints.map((constraint, i) => (
-          <div key={constraint.id}>
-            <ConstraintTableHeader
-              constraintHeading={`Constraint ${(i + 1).toString()}`}
-              constraintsLength={constraints.length}
-              isRenderButtons={i + 1 === constraints.length}
-              handleClickAddConstraint={handleClickAddConstraint}
-              handleClickRemoveConstraint={handleClickRemoveConstraint}
-            />
+          <AugmentDiv
+            key={constraint.id}
+            title="Constraint"
+            heading={`Constraint ${(i + 1).toString()}`}
+            totalLength={constraints.length}
+            maxLength={50}
+            canRenderButtons={i + 1 === constraints.length}
+            handleClickAdd={handleClickAddConstraint}
+            handleClickRemove={handleClickRemoveConstraint}
+          >
             <ConstraintTableBody
               constraintHeading={`Constraint ${(i + 1).toString()}`}
               constraint={constraint}
@@ -100,55 +108,9 @@ function ConstraintTables({
               handleChangeCondition={handleChangeCondition}
               handleToggleCondition={handleToggleCondition}
             />
-          </div>
+          </AugmentDiv>
         ))}
       </div>
-    </div>
-  )
-}
-
-interface ConstraintTableHeaderProps {
-  constraintHeading: string
-  constraintsLength: number
-  isRenderButtons: boolean
-  handleClickAddConstraint: () => void
-  handleClickRemoveConstraint: () => void
-}
-
-function ConstraintTableHeader({
-  constraintHeading,
-  constraintsLength,
-  isRenderButtons,
-  handleClickAddConstraint,
-  handleClickRemoveConstraint,
-}: ConstraintTableHeaderProps) {
-  return (
-    <div className="flex h-10 border-collapse grid-cols-3 items-center justify-between border bg-gray-200 px-4 py-2 text-left font-bold dark:border-gray-500 dark:bg-gray-600 dark:text-white">
-      <div>{constraintHeading}</div>
-      {isRenderButtons ? (
-        <div className="flex gap-1">
-          <Button
-            type="secondary"
-            size="2xs"
-            disabled={constraintsLength <= 1}
-            aria-label="Remove Constraint"
-            onClick={handleClickRemoveConstraint}
-          >
-            <XMarkIcon />
-          </Button>
-          <Button
-            type="secondary"
-            size="2xs"
-            disabled={constraintsLength >= 50}
-            aria-label="Add Constraint"
-            onClick={handleClickAddConstraint}
-          >
-            <PlusIcon />
-          </Button>
-        </div>
-      ) : (
-        ''
-      )}
     </div>
   )
 }
