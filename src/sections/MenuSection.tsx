@@ -1,10 +1,10 @@
 import { PictRunner } from '@takeyaqa/pict-browser'
+import { useEffect, useRef, useState } from 'react'
 import { Button, Section } from '../components'
 import { useConfig } from '../features/config'
-import { Result } from '../types'
-import { uuidv4 } from '../helpers'
 import { useModel } from '../features/model'
-import { useEffect, useRef, useState } from 'react'
+import { uuidv4 } from '../helpers'
+import { Result } from '../types'
 
 interface MenuSectionProps {
   pictRunnerInjection?: PictRunner // use for testing
@@ -23,7 +23,7 @@ function MenuSection({
   const pictRunner = useRef<PictRunner>(null)
 
   const { config } = useConfig()
-  const { model, handlers } = useModel()
+  const { model, handlers: modelHandlers } = useModel()
 
   useEffect(() => {
     // Use the injected PictRunner for testing
@@ -82,14 +82,14 @@ function MenuSection({
           subModels: fixedSubModels,
           options: pictOptions,
         })
-    const header = output.header.map((h, i) => {
-      return { id: i, name: h }
+    const header = output.header.map((h) => {
+      return { id: uuidv4(), name: h }
     })
-    const body = output.body.map((row, i) => {
+    const body = output.body.map((row) => {
       return {
-        id: i,
-        values: row.map((col, j) => {
-          return { id: j, value: col }
+        id: uuidv4(),
+        values: row.map((col) => {
+          return { id: uuidv4(), value: col }
         }),
       }
     })
@@ -118,7 +118,11 @@ function MenuSection({
     <Section>
       <menu className="flex list-none items-center justify-start gap-5">
         <li>
-          <Button type="warning" size="sm" onClick={handlers.handleClickClear}>
+          <Button
+            type="warning"
+            size="sm"
+            onClick={modelHandlers.handleClickClear}
+          >
             Clear Input
           </Button>
         </li>
