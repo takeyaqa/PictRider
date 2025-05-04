@@ -101,75 +101,50 @@ function ConstraintTables({
             handleClickAdd={handleClickAddConstraint}
             handleClickRemove={handleClickRemoveConstraint}
           >
-            <ConstraintTableBody
-              constraintHeading={`Constraint ${(i + 1).toString()}`}
-              constraint={constraint}
-              parameters={parameters}
-              handleChangeCondition={handleChangeCondition}
-              handleToggleCondition={handleToggleCondition}
-            />
+            {constraint.conditions.map((condition) => (
+              <div
+                key={condition.parameterId}
+                className="border-collapse border px-4 py-2 text-left dark:border-gray-500"
+              >
+                <div>
+                  <div className="text-sm font-bold">
+                    {getParameterName(parameters, condition.parameterId)}
+                  </div>
+                  <div className="flex gap-1">
+                    <Button
+                      type="secondary"
+                      size="xs"
+                      fontMono={true}
+                      aria-label={`Constraint ${(i + 1).toString()} ${getParameterName(parameters, condition.parameterId)} ${condition.ifOrThen}`}
+                      onClick={() => {
+                        handleToggleCondition(
+                          constraint.id,
+                          condition.parameterId,
+                        )
+                      }}
+                    >
+                      {condition.ifOrThen}
+                    </Button>
+                    <TextInput
+                      label={`Constraint ${(i + 1).toString()} ${getParameterName(parameters, condition.parameterId)} Predicate`}
+                      value={condition.predicate}
+                      isValid={condition.isValid}
+                      onChange={(e) => {
+                        handleChangeCondition(
+                          constraint.id,
+                          condition.parameterId,
+                          e,
+                        )
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
           </AugmentDiv>
         ))}
       </div>
     </div>
-  )
-}
-
-interface ConstraintTableBodyProps {
-  constraintHeading: string
-  constraint: Constraint
-  parameters: Parameter[]
-  handleChangeCondition: (
-    constraintId: string,
-    parameterId: string,
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => void
-  handleToggleCondition: (constraintId: string, parameterId: string) => void
-}
-
-function ConstraintTableBody({
-  constraintHeading,
-  constraint,
-  parameters,
-  handleChangeCondition,
-  handleToggleCondition,
-}: ConstraintTableBodyProps) {
-  return (
-    <>
-      {constraint.conditions.map((condition) => (
-        <div
-          key={condition.parameterId}
-          className="border-collapse border px-4 py-2 text-left dark:border-gray-500"
-        >
-          <div>
-            <div className="text-sm font-bold">
-              {getParameterName(parameters, condition.parameterId)}
-            </div>
-            <div className="flex gap-1">
-              <Button
-                type="secondary"
-                size="xs"
-                fontMono={true}
-                aria-label={`${constraintHeading} ${getParameterName(parameters, condition.parameterId)} ${condition.ifOrThen}`}
-                onClick={() => {
-                  handleToggleCondition(constraint.id, condition.parameterId)
-                }}
-              >
-                {condition.ifOrThen}
-              </Button>
-              <TextInput
-                label={`${constraintHeading} ${getParameterName(parameters, condition.parameterId)} Predicate`}
-                value={condition.predicate}
-                isValid={condition.isValid}
-                onChange={(e) => {
-                  handleChangeCondition(constraint.id, condition.parameterId, e)
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      ))}
-    </>
   )
 }
 
@@ -220,12 +195,16 @@ function ConstraintEditor({
             Constraint Formula
           </span>
           {!constraintDirectEditMode && (
-            <ConstraintDirectEditButton
-              handleToggleConstraintDirectEditMode={
-                handleToggleConstraintDirectEditMode
-              }
-              setIsEditing={setIsEditing}
-            />
+            <Button
+              type="danger"
+              size="sm"
+              onClick={() => {
+                handleToggleConstraintDirectEditMode()
+                setIsEditing(true)
+              }}
+            >
+              Edit Directly
+            </Button>
           )}
           <pre
             className={
@@ -244,48 +223,11 @@ function ConstraintEditor({
         </>
       )}
       {constraintDirectEditMode && (
-        <ConstraintResetButton
-          handleClickResetConstraints={handleClickResetConstraints}
-        />
+        <Button type="warning" size="md" onClick={handleClickResetConstraints}>
+          Reset Constraints
+        </Button>
       )}
     </div>
-  )
-}
-
-interface ConstraintDirectEditButtonProps {
-  handleToggleConstraintDirectEditMode: () => void
-  setIsEditing: (isEditing: boolean) => void
-}
-
-function ConstraintDirectEditButton({
-  handleToggleConstraintDirectEditMode,
-  setIsEditing,
-}: ConstraintDirectEditButtonProps) {
-  return (
-    <Button
-      type="danger"
-      size="sm"
-      onClick={() => {
-        handleToggleConstraintDirectEditMode()
-        setIsEditing(true)
-      }}
-    >
-      Edit Directly
-    </Button>
-  )
-}
-
-interface ConstraintResetButtonProps {
-  handleClickResetConstraints: () => void
-}
-
-function ConstraintResetButton({
-  handleClickResetConstraints,
-}: ConstraintResetButtonProps) {
-  return (
-    <Button type="warning" size="md" onClick={handleClickResetConstraints}>
-      Reset Constraints
-    </Button>
   )
 }
 
