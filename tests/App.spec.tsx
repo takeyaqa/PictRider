@@ -1277,7 +1277,6 @@ describe('App', () => {
         ],
         {
           constraintsText: 'IF [Type] = "RAID-5" THEN [Size] > 1000;',
-          subModels: [],
           options: expect.anything(),
         },
       )
