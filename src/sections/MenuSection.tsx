@@ -1,10 +1,10 @@
 import { PictRunner } from '@takeyaqa/pict-browser'
 import { Button, Section } from '../components'
 import { useConfig } from '../features/config'
-import { Result } from '../types'
-import { uuidv4 } from '../helpers'
 import { useModel } from '../features/model'
-import { useEffect, useRef, useState } from 'react'
+import { runPict } from '../shared/helpers'
+import { usePictRunner } from '../shared/hooks'
+import { Result } from '../types'
 
 interface MenuSectionProps {
   pictRunnerInjection?: PictRunner // use for testing
@@ -19,92 +19,21 @@ function MenuSection({
   handleClearResult,
   setResult,
 }: MenuSectionProps) {
-  const [pictRunnerLoaded, setPictRunnerLoaded] = useState(false)
-  const pictRunner = useRef<PictRunner>(null)
-
+  const { pictRunner, pictRunnerLoaded } = usePictRunner(pictRunnerInjection)
   const { config } = useConfig()
-  const { model, handlers } = useModel()
+  const { model, handlers: modelHandlers } = useModel()
 
-  useEffect(() => {
-    // Use the injected PictRunner for testing
-    if (pictRunnerInjection) {
-      pictRunner.current = pictRunnerInjection
-      setPictRunnerLoaded(true)
+  function handleClickRun() {
+    if (
+      containsInvalidValues ||
+      containsInvalidConstraints ||
+      !pictRunnerLoaded ||
+      !pictRunner.current
+    ) {
       return
     }
-    const loadPictRunner = async () => {
-      pictRunner.current = new PictRunner()
-      await pictRunner.current.init()
-      setPictRunnerLoaded(true)
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    loadPictRunner()
-  }, [pictRunnerInjection])
-
-  function runPict() {
-    if (!pictRunnerLoaded || !pictRunner.current) {
-      return
-    }
-    const fixedParameters = model.parameters
-      .filter((p) => p.name !== '' && p.values !== '')
-      .map((p) => ({ name: p.name, values: p.values }))
-    const fixedSubModels = config.enableSubModels
-      ? model.subModels
-          .filter((sm) => sm.parameterIds.length > 0)
-          .map((s) => ({
-            parameterNames: s.parameterIds.map((id) => {
-              const parameter = model.parameters.find((p) => p.id === id)
-              if (!parameter) {
-                throw new Error(`Parameter not found: ${id}`)
-              }
-              return parameter.name
-            }),
-            order: s.order,
-          }))
-      : []
-    const pictOptions = {
-      orderOfCombinations:
-        config.orderOfCombinations !== '' ? config.orderOfCombinations : 2,
-      randomizeGeneration: config.randomizeGeneration,
-      randomizeSeed:
-        config.randomizeGeneration && config.randomizeSeed !== ''
-          ? config.randomizeSeed
-          : undefined,
-    }
-    const output = config.enableConstraints
-      ? pictRunner.current.run(fixedParameters, {
-          subModels: fixedSubModels,
-          constraintsText: model.constraintTexts.map((c) => c.text).join('\n'),
-          options: pictOptions,
-        })
-      : pictRunner.current.run(fixedParameters, {
-          subModels: fixedSubModels,
-          options: pictOptions,
-        })
-    const header = output.header.map((h, i) => {
-      return { id: i, name: h }
-    })
-    const body = output.body.map((row, i) => {
-      return {
-        id: i,
-        values: row.map((col, j) => {
-          return { id: j, value: col }
-        }),
-      }
-    })
-    const messages = output.message
-      ? output.message.split('\n').map((m) => ({
-          id: uuidv4(),
-          text: m,
-        }))
-      : []
-    setResult({
-      header,
-      body,
-      modelFile: output.modelFile,
-      messages: messages,
-    })
+    const result = runPict(pictRunner.current, model, config)
+    setResult(result)
   }
 
   const containsInvalidValues = model.parameters.some(
@@ -114,11 +43,21 @@ function MenuSection({
     c.conditions.some((cond) => !cond.isValid),
   )
 
+  const canRunPict =
+    !containsInvalidValues &&
+    !containsInvalidConstraints &&
+    pictRunnerLoaded &&
+    pictRunner.current
+
   return (
     <Section>
       <menu className="flex list-none items-center justify-start gap-5">
         <li>
-          <Button type="warning" size="sm" onClick={handlers.handleClickClear}>
+          <Button
+            type="warning"
+            size="sm"
+            onClick={modelHandlers.handleClickClear}
+          >
             Clear Input
           </Button>
         </li>
@@ -136,12 +75,8 @@ function MenuSection({
           <Button
             type="primary"
             size="sm"
-            disabled={
-              containsInvalidValues ||
-              containsInvalidConstraints ||
-              !pictRunnerLoaded
-            }
-            onClick={runPict}
+            disabled={!canRunPict}
+            onClick={handleClickRun}
           >
             Run
           </Button>

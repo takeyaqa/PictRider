@@ -1,10 +1,6 @@
-import { convertTableToConstraints } from './constraint-converter'
-import { printCodeFromAST } from './pict-constraints-parser/printer'
-import { Constraint, FixedConstraint, Parameter } from './types'
-
-export function uuidv4(): string {
-  return crypto.randomUUID()
-}
+import { convertTableToConstraints } from '../../constraint-converter'
+import { printCodeFromAST } from '../../pict-constraints-parser'
+import { Constraint, FixedConstraint, Parameter } from '../../types'
 
 export function fixConstraint(
   constraints: Constraint[],

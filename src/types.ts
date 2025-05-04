@@ -55,8 +55,8 @@ export interface Model {
 }
 
 export interface Result {
-  header: { id: number; name: string }[]
-  body: { id: number; values: { id: number; value: string }[] }[]
+  header: { id: string; name: string }[]
+  body: { id: string; values: { id: string; value: string }[] }[]
   modelFile: string
   messages: Message[]
 }

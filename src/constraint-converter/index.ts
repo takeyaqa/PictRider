@@ -1,4 +1,4 @@
-import { FixedCondition, FixedConstraint } from './types'
+import { FixedCondition, FixedConstraint } from '../types'
 import {
   Constraints as ConstraintsAst,
   Predicate,
@@ -12,7 +12,7 @@ import {
   LogicalOperator,
   Clause,
   NotClause,
-} from './pict-constraints-parser/types'
+} from '../pict-constraints-parser/types'
 
 type UnfixedTerm =
   | RelationTerm
