@@ -1,6 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { AlertMessage, Section, TextInput } from '../components'
-import { useModel } from '../features/model'
+import { AlertMessage, Section, TextInput } from '../../../shared/components'
+import useModel from '../hook'
 
 function ParametersSection() {
   const { model, handlers: modelHandlers } = useModel()

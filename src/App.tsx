@@ -1,13 +1,13 @@
 import { PictRunner } from '@takeyaqa/pict-browser'
-import { Analytics } from './components'
-import {
-  HeaderSection,
-  NotificationMessageSection,
-  FooterSection,
-} from './sections'
 import { ConfigProvider } from './features/config'
 import { ModelProvider } from './features/model'
 import { MainArea } from './layouts'
+import {
+  Analytics,
+  FooterSection,
+  HeaderSection,
+  NotificationMessageSection,
+} from './shared/components'
 
 interface AppProps {
   pictRunnerInjection?: PictRunner // use for testing

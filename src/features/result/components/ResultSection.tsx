@@ -1,8 +1,8 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
-import { AlertMessage, Section } from '../components'
-import { useConfig } from '../features/config'
-import { Result } from '../types'
+import { AlertMessage, Section } from '../../../shared/components'
+import { Result } from '../../../types'
+import { useConfig } from '../../config'
 
 function createCsvContent(result: Result) {
   const headerRow = result.header.map((h) => `"${h.name}"`).join(',')

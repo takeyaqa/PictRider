@@ -4,9 +4,9 @@ import {
   NumberInput,
   Section,
   Switch,
-} from '../components'
-import { useConfig } from '../features/config'
-import { useModel } from '../features/model'
+} from '../../../shared/components'
+import { useConfig } from '../../config'
+import useModel from '../hook'
 
 function SubModelsSection() {
   const { config, handlers: configHandlers } = useConfig()

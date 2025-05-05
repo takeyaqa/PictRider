@@ -1,12 +1,12 @@
-import { Result } from '../types'
-import {
-  MenuSection,
-  ParametersSection,
-  ConstraintsSection,
-  SubModelsSection,
-  OptionsSection,
-} from '../sections'
 import { PictRunner } from '@takeyaqa/pict-browser'
+import { OptionsSection } from '../features/config/components'
+import { MenuSection } from '../features/menu/components'
+import {
+  ConstraintsSection,
+  ParametersSection,
+  SubModelsSection,
+} from '../features/model/components'
+import { Result } from '../types'
 
 interface TopPanelProps {
   pictRunnerInjection?: PictRunner // use for testing

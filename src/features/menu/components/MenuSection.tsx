@@ -1,10 +1,10 @@
 import { PictRunner } from '@takeyaqa/pict-browser'
-import { Button, Section } from '../components'
-import { useConfig } from '../features/config'
-import { useModel } from '../features/model'
-import { runPict } from '../shared/helpers'
-import { usePictRunner } from '../shared/hooks'
-import { Result } from '../types'
+import { Button, Section } from '../../../shared/components'
+import { runPict } from '../../../shared/helpers'
+import { usePictRunner } from '../../../shared/hooks'
+import { Result } from '../../../types'
+import { useConfig } from '../../config'
+import { useModel } from '../../model'
 
 interface MenuSectionProps {
   pictRunnerInjection?: PictRunner // use for testing

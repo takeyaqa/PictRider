@@ -1,10 +1,6 @@
 import { it, describe, expect } from 'vitest'
-import { printCodeFromAST } from '../../src/pict-constraints-parser/printer'
-import {
-  IfConstraint,
-  PredicateConstraint,
-  Relation,
-} from '../../src/pict-constraints-parser/types'
+import { printCodeFromAST } from './printer'
+import { IfConstraint, PredicateConstraint, Relation } from './types'
 
 describe('printCodeFromAST', () => {
   it('should return an empty string for an empty array', () => {
