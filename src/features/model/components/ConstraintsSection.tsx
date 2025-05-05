@@ -6,10 +6,10 @@ import {
   Section,
   Switch,
   TextInput,
-} from '../components'
-import { useConfig } from '../features/config'
-import { useModel } from '../features/model'
-import { Constraint, ConstraintText, Parameter } from '../types'
+} from '../../../shared/components'
+import { Constraint, ConstraintText, Parameter } from '../../../types'
+import { useConfig } from '../../config'
+import useModel from '../hook'
 
 function ConstraintsSection() {
   const { config, handlers: configHandlers } = useConfig()

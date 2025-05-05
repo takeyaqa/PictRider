@@ -13,7 +13,7 @@ import {
   Result,
   SubModel,
 } from '../../types'
-import { uuidv4 } from './utils'
+import { uuidv4 } from './util'
 
 export function runPict(pictRunner: PictRunner, model: Model, config: Config) {
   const pictParameters = processParameters(model.parameters)

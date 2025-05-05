@@ -1,5 +1,5 @@
-import { Checkbox, NumberInput, Section } from '../components'
-import { useConfig } from '../features/config'
+import { Checkbox, NumberInput, Section } from '../../../shared/components'
+import useConfig from '../hook'
 
 function OptionsSection() {
   const { config, handlers } = useConfig()

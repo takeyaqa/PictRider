@@ -1,4 +1,4 @@
-import { ResultSection } from '../sections'
+import { ResultSection } from '../features/result/components'
 import { Result } from '../types'
 
 interface BottomPanelProps {

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useReducer } from 'react'
-import { configReducer } from './reducer'
 import ConfigContext from './context'
+import { configReducer } from './reducer'
 
 function ConfigProvider({ children }: { children: React.ReactNode }) {
   const [config, dispatch] = useReducer(configReducer, {
