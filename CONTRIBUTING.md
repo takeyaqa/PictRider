@@ -30,6 +30,7 @@ This project and everyone participating in it is governed by the [PictRider Code
 3. Install dependencies:
    ```bash
    pnpm install
+   pnpm exec playwright install --with-deps
    ```
 4. Create a branch for your feature or bugfix:
    ```bash
