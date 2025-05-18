@@ -16,11 +16,6 @@ describe('App', () => {
       PictRunnerMock.prototype.init = vi.fn()
       PictRunnerMock.prototype.run = vi.fn()
       pictRunnerMock = new PictRunnerMock()
-      const ResizeObserverMock = vi.fn()
-      ResizeObserverMock.prototype.disconnect = vi.fn()
-      ResizeObserverMock.prototype.observe = vi.fn()
-      ResizeObserverMock.prototype.unobserve = vi.fn()
-      global.ResizeObserver = ResizeObserverMock
       user = userEvent.setup()
       render(<App pictRunnerInjection={pictRunnerMock} />)
     })
@@ -414,11 +409,6 @@ describe('App', () => {
       PictRunnerMock.prototype.init = vi.fn()
       PictRunnerMock.prototype.run = vi.fn()
       pictRunnerMock = new PictRunnerMock()
-      const ResizeObserverMock = vi.fn()
-      ResizeObserverMock.prototype.disconnect = vi.fn()
-      ResizeObserverMock.prototype.observe = vi.fn()
-      ResizeObserverMock.prototype.unobserve = vi.fn()
-      global.ResizeObserver = ResizeObserverMock
       user = userEvent.setup()
       render(<App pictRunnerInjection={pictRunnerMock} />)
     })
@@ -501,11 +491,6 @@ describe('App', () => {
       PictRunnerMock.prototype.init = vi.fn()
       PictRunnerMock.prototype.run = vi.fn()
       pictRunnerMock = new PictRunnerMock()
-      const ResizeObserverMock = vi.fn()
-      ResizeObserverMock.prototype.disconnect = vi.fn()
-      ResizeObserverMock.prototype.observe = vi.fn()
-      ResizeObserverMock.prototype.unobserve = vi.fn()
-      global.ResizeObserver = ResizeObserverMock
       user = userEvent.setup()
       render(<App pictRunnerInjection={pictRunnerMock} />)
     })
@@ -846,11 +831,6 @@ describe('App', () => {
       }))
       pictRunnerMock = new PictRunnerMock()
       user = userEvent.setup()
-      const ResizeObserverMock = vi.fn()
-      ResizeObserverMock.prototype.disconnect = vi.fn()
-      ResizeObserverMock.prototype.observe = vi.fn()
-      ResizeObserverMock.prototype.unobserve = vi.fn()
-      global.ResizeObserver = ResizeObserverMock
       render(<App pictRunnerInjection={pictRunnerMock} />)
     })
 

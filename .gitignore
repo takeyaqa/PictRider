@@ -14,6 +14,7 @@ dist-ssr
 .pnpm-store/
 .env
 coverage/
+__screenshots__/
 
 # Editor directories and files
 .vscode/*
