@@ -6,7 +6,6 @@ export default defineConfig({
   test: {
     include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     exclude: ['node_modules', 'dist', 'e2e'],
-    environment: 'jsdom',
     testTimeout: 20000,
     coverage: {
       provider: 'istanbul',
