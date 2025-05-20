@@ -50,6 +50,9 @@ jobs:
       - run: pnpm run typecheck 
   test:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.52.0-noble
+      options: --user 1001
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -60,11 +63,13 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
       - run: pnpm install
-      - run: pnpm exec playwright install --with-deps
       - run: pnpm run test
   e2e:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.52.0-noble
+      options: --user 1001
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -75,7 +80,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
       - run: pnpm install
-      - run: pnpm exec playwright install --with-deps
       - run: pnpm run e2e
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
