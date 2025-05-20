@@ -60,6 +60,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
       - run: pnpm install
+      - run: pnpm exec playwright install --with-deps
       - run: pnpm run test
   e2e:
     timeout-minutes: 60
