@@ -41,7 +41,7 @@
     "eslint-plugin-react-x": "^1.52.2",
     "globals": "^16.1.0",
     "playwright": "^1.52.0",
-    "prettier": "^3.5.3",
+    "prettier": "^3.6.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "rollup-plugin-license": "^3.6.0",
     "typescript": "~5.8.3",
