@@ -40,7 +40,7 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "eslint-plugin-react-x": "^1.52.2",
     "globals": "^16.1.0",
-    "playwright": "^1.52.0",
+    "playwright": "^1.53.1",
     "prettier": "^3.6.1",
     "prettier-plugin-tailwindcss": "^0.6.13",
     "rollup-plugin-license": "^3.6.0",
