@@ -1,4 +1,4 @@
-import { PictRunner } from '@takeyaqa/pict-browser'
+import { PictRunner } from '@takeyaqa/pict-wasm'
 import { OptionsSection } from '../features/config/components'
 import { MenuSection } from '../features/menu/components'
 import {

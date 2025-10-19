@@ -1,4 +1,4 @@
-import { PictRunner } from '@takeyaqa/pict-browser'
+import { PictRunner } from '@takeyaqa/pict-wasm'
 import { ConfigProvider } from './features/config'
 import { ModelProvider } from './features/model'
 import { MainArea } from './layouts'
