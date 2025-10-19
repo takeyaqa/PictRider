@@ -1,10 +1,10 @@
-import { PictRunner } from '@takeyaqa/pict-browser'
+import { PictRunner } from '@takeyaqa/pict-wasm'
 import {
   PictOptions,
   PictOutput,
   PictParameter,
   PictSubModel,
-} from '@takeyaqa/pict-browser/dist/types'
+} from '@takeyaqa/pict-wasm/dist/types'
 import {
   Config,
   ConstraintText,

@@ -1,4 +1,4 @@
-import { PictRunner } from '@takeyaqa/pict-browser'
+import { PictRunner } from '@takeyaqa/pict-wasm'
 import { useEffect, useRef, useState } from 'react'
 import { Result } from '../types'
 import TopPanel from './TopPanel'

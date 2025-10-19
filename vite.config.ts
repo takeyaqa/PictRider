@@ -41,6 +41,6 @@ export default defineConfig({
     host: '127.0.0.1',
   },
   optimizeDeps: {
-    exclude: ['@takeyaqa/pict-browser'],
+    exclude: ['@takeyaqa/pict-wasm'],
   },
 })

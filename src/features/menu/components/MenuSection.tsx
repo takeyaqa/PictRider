@@ -1,4 +1,4 @@
-import { PictRunner } from '@takeyaqa/pict-browser'
+import { PictRunner } from '@takeyaqa/pict-wasm'
 import { Button, Section } from '../../../shared/components'
 import { runPict } from '../../../shared/helpers'
 import { usePictRunner } from '../../../shared/hooks'
