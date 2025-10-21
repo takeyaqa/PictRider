@@ -51,7 +51,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.54.2-noble
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     steps:
       - uses: actions/checkout@v5
@@ -68,7 +68,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.54.2-noble
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     steps:
       - uses: actions/checkout@v5
