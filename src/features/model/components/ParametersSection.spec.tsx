@@ -5,15 +5,15 @@ import { render } from 'vitest-browser-react'
 import App from '../../../App'
 
 describe('ParametersSection', () => {
-  let screen: ReturnType<typeof render>
+  let screen: Awaited<ReturnType<typeof render>>
   let pictRunnerMock: PictRunner
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const PictRunnerMock = vi.fn()
     PictRunnerMock.prototype.init = vi.fn()
     PictRunnerMock.prototype.run = vi.fn()
     pictRunnerMock = new PictRunnerMock()
-    screen = render(<App pictRunnerInjection={pictRunnerMock} />)
+    screen = await render(<App pictRunnerInjection={pictRunnerMock} />)
   })
 
   afterEach(() => {
