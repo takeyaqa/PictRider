@@ -6,10 +6,10 @@ import App from './App'
 
 describe('App', () => {
   describe('Run Pict', () => {
-    let screen: ReturnType<typeof render>
+    let screen: Awaited<ReturnType<typeof render>>
     let pictRunnerMock: PictRunner
 
-    beforeEach(() => {
+    beforeEach(async () => {
       const PictRunnerMock = vi.fn()
       PictRunnerMock.prototype.init = vi.fn()
       PictRunnerMock.prototype.run = vi.fn(() => ({
@@ -20,7 +20,7 @@ describe('App', () => {
         ],
       }))
       pictRunnerMock = new PictRunnerMock()
-      screen = render(<App pictRunnerInjection={pictRunnerMock} />)
+      screen = await render(<App pictRunnerInjection={pictRunnerMock} />)
     })
 
     afterEach(() => {
