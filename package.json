@@ -45,7 +45,7 @@
     "rollup-plugin-license": "^3.6.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.2",
-    "vite": "^7.1.12",
+    "vite": "^7.2.2",
     "vite-plugin-pwa": "^1.1.0",
     "vitest": "^4.0.6",
     "vitest-browser-react": "^2.0.2"
