@@ -6,17 +6,21 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import reactX from 'eslint-plugin-react-x'
 import tseslint from 'typescript-eslint'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
+import { defineConfig, globalIgnores } from 'eslint/config'
 
-export default tseslint.config(
-  { ignores: ['dist', 'src/pict/wasm'] },
+export default defineConfig([
+  globalIgnores(['dist', 'src/pict/wasm']),
   {
+    files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
-      ...tseslint.configs.strictTypeChecked,
-      ...tseslint.configs.stylisticTypeChecked,
-      eslintConfigPrettier,
+      tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
+      reactDom.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+      reactX.configs['recommended-typescript'],
     ],
-    files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -25,20 +29,6 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
-    plugins: {
-      'react-dom': reactDom,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-      'react-x': reactX,
-    },
-    rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
-      ...reactX.configs['recommended-typescript'].rules,
-      ...reactDom.configs.recommended.rules,
-    },
   },
-)
+  eslintConfigPrettier,
+])
