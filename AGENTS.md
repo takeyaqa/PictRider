@@ -118,7 +118,7 @@ Configure via `.env` file (copy from `.env.example`):
 
 - TypeScript strict mode enabled
 - ESLint configuration: [`eslint.config.js`](eslint.config.js)
-- Prettier formatting: [`prettierrc`](.prettierrc)
+- Prettier formatting: [`.prettierrc`](.prettierrc)
 - Run `pnpm run lint` and `pnpm run format` before committing
 
 ### Component Patterns
