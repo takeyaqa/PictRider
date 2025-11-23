@@ -5,7 +5,7 @@ on:
 
 env:
   PNPM_VERSION: 10
-  NODE_VERSION: 22
+  NODE_VERSION: 24
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
