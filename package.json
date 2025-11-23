@@ -11,8 +11,9 @@
     "lint": "eslint .",
     "format": "prettier --check .",
     "test": "vitest",
-    "coverage": "vitest run --coverage",
-    "e2e": "playwright test"
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",

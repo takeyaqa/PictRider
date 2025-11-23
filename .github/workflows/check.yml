@@ -80,7 +80,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
       - run: pnpm install
-      - run: pnpm run e2e
+      - run: pnpm run test:e2e
       - uses: actions/upload-artifact@v5
         if: ${{ !cancelled() }}
         with:

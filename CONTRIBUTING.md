@@ -99,7 +99,7 @@ pnpm run test
 Run end-to-end tests with Playwright:
 
 ```bash
-pnpm run e2e
+pnpm run test:e2e
 ```
 
 ### Building for Production
