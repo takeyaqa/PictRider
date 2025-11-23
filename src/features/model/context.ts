@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { Model } from '../../types'
+import type { Model } from '../../types'
 
 interface ModelContextType {
   model: Model

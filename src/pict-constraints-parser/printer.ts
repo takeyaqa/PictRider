@@ -1,4 +1,4 @@
-import { Constraint, Predicate, Clause, Term, Value } from './types'
+import type { Constraint, Predicate, Clause, Term, Value } from './types'
 
 export function printCodeFromAST(ast: Constraint[]): string[] {
   return ast.map(printConstraint)

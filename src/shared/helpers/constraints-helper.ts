@@ -1,5 +1,5 @@
 import { printCodeFromAST } from '../../pict-constraints-parser'
-import {
+import type {
   Constraints as ConstraintsAst,
   Predicate,
   Relation,
@@ -13,7 +13,7 @@ import {
   Clause,
   NotClause,
 } from '../../pict-constraints-parser/types'
-import {
+import type {
   Constraint,
   FixedCondition,
   FixedConstraint,

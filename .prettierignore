@@ -1,4 +1,5 @@
 .devcontainer/
 .github/
 pnpm-lock.yaml
+pnpm-workspace.yaml
 README.md

@@ -1,5 +1,5 @@
 import { ResultSection } from '../features/result/components'
-import { Result } from '../types'
+import type { Result } from '../types'
 
 interface BottomPanelProps {
   result: Result | null

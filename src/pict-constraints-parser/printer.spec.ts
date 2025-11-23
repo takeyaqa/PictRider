@@ -1,6 +1,6 @@
 import { it, describe, expect } from 'vitest'
 import { printCodeFromAST } from './printer'
-import { IfConstraint, PredicateConstraint, Relation } from './types'
+import type { IfConstraint, PredicateConstraint, Relation } from './types'
 
 describe('printCodeFromAST', () => {
   it('should return an empty string for an empty array', () => {

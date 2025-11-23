@@ -1,11 +1,12 @@
 import { PictRunner } from '@takeyaqa/pict-wasm'
-import {
+import { uuidv4 } from './util'
+import type {
   PictOptions,
   PictOutput,
   PictParameter,
   PictSubModel,
 } from '@takeyaqa/pict-wasm/dist/types'
-import {
+import type {
   Config,
   ConstraintText,
   Model,
@@ -13,7 +14,6 @@ import {
   Result,
   SubModel,
 } from '../../types'
-import { uuidv4 } from './util'
 
 export function runPict(pictRunner: PictRunner, model: Model, config: Config) {
   const pictParameters = processParameters(model.parameters)

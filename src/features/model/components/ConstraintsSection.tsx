@@ -7,9 +7,9 @@ import {
   Switch,
   TextInput,
 } from '../../../shared/components'
-import { Constraint, ConstraintText, Parameter } from '../../../types'
 import { useConfig } from '../../config'
 import useModel from '../hook'
+import type { Constraint, ConstraintText, Parameter } from '../../../types'
 
 function ConstraintsSection() {
   const { config, handlers: configHandlers } = useConfig()
