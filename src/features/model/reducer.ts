@@ -1,5 +1,11 @@
 import { fixConstraint, printConstraints, uuidv4 } from '../../shared/helpers'
-import { Constraint, Parameter, Condition, Model, Message } from '../../types'
+import type {
+  Constraint,
+  Parameter,
+  Condition,
+  Model,
+  Message,
+} from '../../types'
 
 const invalidParameterNameCharacters = [
   '#', // comments identifier, constraints operator

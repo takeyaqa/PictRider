@@ -1,8 +1,8 @@
 import { PictRunner } from '@takeyaqa/pict-wasm'
 import { useEffect, useRef, useState } from 'react'
-import { Result } from '../types'
 import TopPanel from './TopPanel'
 import BottomPanel from './BottomPanel'
+import type { Result } from '../types'
 
 interface MainAreaProps {
   pictRunnerInjection?: PictRunner // use for testing

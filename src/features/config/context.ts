@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { Config } from '../../types'
+import type { Config } from '../../types'
 
 interface ConfigContextType {
   config: Config

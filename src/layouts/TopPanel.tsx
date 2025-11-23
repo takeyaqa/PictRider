@@ -6,7 +6,7 @@ import {
   ParametersSection,
   SubModelsSection,
 } from '../features/model/components'
-import { Result } from '../types'
+import type { Result } from '../types'
 
 interface TopPanelProps {
   pictRunnerInjection?: PictRunner // use for testing

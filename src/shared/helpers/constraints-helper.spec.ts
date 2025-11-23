@@ -1,6 +1,6 @@
 import { it, describe, expect } from 'vitest'
 import { printConstraints } from './constraints-helper'
-import { FixedConstraint } from '../../types'
+import type { FixedConstraint } from '../../types'
 
 describe('convertConstraints', () => {
   it('should convert basic constraint (1)', () => {
