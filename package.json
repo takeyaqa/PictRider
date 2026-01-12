@@ -62,11 +62,5 @@
         "version": ">=10 <11"
       }
     ]
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp"
-    ]
   }
 }
