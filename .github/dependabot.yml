@@ -10,6 +10,38 @@ updates:
     commit-message:
       prefix: "build"
       include: "scope"
+    groups:
+      react:
+        patterns:
+          - "@types/react"
+          - "@types/react-dom"
+          - "react"
+          - "react-dom"
+      vite:
+        patterns:
+          - "@vitejs/*"
+          - "vite"
+      vite-pwa:
+        patterns:
+          - "@vite-pwa/*"
+          - "vite-plugin-pwa"
+      vitest:
+        patterns:
+          - "@vitest/*"
+          - "vitest"
+          - "vitest-browser-react"
+      tailwindcss:
+        patterns:
+          - "@tailwindcss/*"
+          - "tailwindcss"
+          - "prettier-plugin-tailwindcss"
+      eslint:
+        patterns:
+          - "@eslint/*"
+          - "eslint"
+          - "eslint-config-prettier"
+          - "eslint-plugin-react-*"
+          - "typescript-eslint"
     ignore:
       - dependency-name: "@takeyaqa/pict-wasm"
   - package-ecosystem: "github-actions"
