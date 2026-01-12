@@ -74,6 +74,7 @@ jobs:
           cache: pnpm
       - run: pnpm install
       - run: pnpm exec playwright install --with-deps
+      - run: cp .env.example .env
       - run: pnpm run test:e2e
       - uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
