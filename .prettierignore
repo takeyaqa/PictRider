@@ -1,5 +1,2 @@
-.devcontainer/
-.github/
+.github/**/*.md
 pnpm-lock.yaml
-pnpm-workspace.yaml
-README.md
