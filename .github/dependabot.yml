@@ -10,6 +10,8 @@ updates:
     commit-message:
       prefix: "build"
       include: "scope"
+    ignore:
+      - dependency-name: "@takeyaqa/pict-wasm"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
