@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "format": "prettier --check .",
     "test": "vitest",
-    "test:run": "vitest run",
+    "test:no-watch": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test"
   },
