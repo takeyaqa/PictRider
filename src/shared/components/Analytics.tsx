@@ -1,3 +1,5 @@
+import { init } from '@plausible-analytics/tracker'
+
 function Analytics() {
   // Don't load analytics in development mode
   if (!import.meta.env.PROD) {
@@ -11,12 +13,8 @@ function Analytics() {
   if (window.matchMedia('(display-mode: standalone)').matches) {
     return null
   }
-  return (
-    <script
-      async
-      data-domain={import.meta.env.VITE_BASE_DOMAIN}
-      src="https://plausible.io/js/script.js"
-    ></script>
-  )
+  init({
+    domain: import.meta.env.VITE_BASE_DOMAIN,
+  })
 }
 export default Analytics
