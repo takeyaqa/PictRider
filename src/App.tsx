@@ -3,7 +3,6 @@ import { ConfigProvider } from './features/config'
 import { ModelProvider } from './features/model'
 import { MainArea } from './layouts'
 import {
-  Analytics,
   FooterSection,
   HeaderSection,
   NotificationMessageSection,
@@ -26,7 +25,6 @@ function App({ pictRunnerInjection }: AppProps) {
         </ModelProvider>
       </ConfigProvider>
       <FooterSection />
-      <Analytics />
     </>
   )
 }
