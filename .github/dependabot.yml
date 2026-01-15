@@ -35,12 +35,13 @@ updates:
           - "@tailwindcss/*"
           - "tailwindcss"
           - "prettier-plugin-tailwindcss"
-      eslint:
+      eslint-and-prettier:
         patterns:
           - "@eslint/*"
           - "eslint"
           - "eslint-config-prettier"
           - "eslint-plugin-react-*"
+          - "prettier"
           - "typescript-eslint"
     ignore:
       - dependency-name: "@takeyaqa/pict-wasm"
@@ -50,7 +51,6 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 1
-    open-pull-requests-limit: 10
     commit-message:
       prefix: "ci"
       include: "scope"
