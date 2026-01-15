@@ -34,7 +34,6 @@ updates:
         patterns:
           - "@tailwindcss/*"
           - "tailwindcss"
-          - "prettier-plugin-tailwindcss"
       eslint-and-prettier:
         patterns:
           - "@eslint/*"
@@ -42,6 +41,7 @@ updates:
           - "eslint-config-prettier"
           - "eslint-plugin-react-*"
           - "prettier"
+          - "prettier-plugin-tailwindcss"
           - "typescript-eslint"
     ignore:
       - dependency-name: "@takeyaqa/pict-wasm"
