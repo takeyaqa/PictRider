@@ -26,7 +26,9 @@ export default defineConfig({
         theme_color: '#ffffff',
         display: 'standalone',
       },
-      pwaAssets: {},
+      pwaAssets: {
+        image: 'public/PictRider_icon.svg',
+      },
     }),
     license({
       thirdParty: {
