@@ -4,7 +4,7 @@ function HeaderSection() {
       <nav className="top-0 left-0 mb-10 flex h-15 w-full shadow-sm dark:bg-gray-800">
         <h1 className="my-auto mr-5 ml-5 flex items-center text-2xl font-bold">
           <img
-            src="/favicon.svg"
+            src="/PictRider_icon.svg"
             alt="logo"
             width="30"
             height="30"
