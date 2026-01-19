@@ -133,5 +133,5 @@ Configure via `.env` file (copy from `.env.example`):
 - **Bundler**: Vite (configured in [`vite.config.ts`](vite.config.ts))
 - **PWA**: Enabled via vite-plugin-pwa for offline support
 - **Tailwind**: Integrated via @tailwindcss/vite
-- **License**: Third-party licenses output to `dist/dependencies.txt`
+- **License**: Third-party licenses output to `dist/license.md`
 - **WASM**: @takeyaqa/pict-wasm excluded from optimization

@@ -1,22 +1,20 @@
-import { join, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import tailwindcss from '@tailwindcss/vite'
-import license from 'rollup-plugin-license'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    license: { fileName: 'license.md' },
+  },
   plugins: [
     react(),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,wasm,css,html,svg}', '**/dependencies.txt'],
+        globPatterns: ['**/*.{js,wasm,css,html,svg,md}'],
       },
       manifest: {
         name: 'PictRider',
@@ -28,14 +26,6 @@ export default defineConfig({
       },
       pwaAssets: {
         image: 'public/PictRider_icon.svg',
-      },
-    }),
-    license({
-      thirdParty: {
-        output: {
-          file: join(__dirname, 'dist', 'dependencies.txt'),
-          encoding: 'utf-8',
-        },
       },
     }),
   ],
