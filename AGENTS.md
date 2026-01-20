@@ -44,11 +44,11 @@ Open-source, inspired by PictMaster, independent of Microsoft Corporation, and p
 - Run `pnpm run build` to build for production
 - Run `pnpm run preview` to preview production build
 - Run `pnpm run test:run` to run unit tests with Vitest
-- Run `pnpm run test:coverage` to generate test coverage report
+- Run `pnpm run test:run:coverage` to generate test coverage report
 - Run `pnpm run test:e2e` to run end-to-end tests with Playwright
 - Run `pnpm run typecheck` to check types
 - Run `pnpm run lint` to check lint
-- Run `pnpm run format` to check format style
+- Run `pnpm run fmt:check` to check format style
 
 ## Project Structure
 
@@ -103,7 +103,7 @@ Configure via `.env` file (copy from `.env.example`):
 - Framework: Vitest
 - Location: `**/*.spec.ts` and `**/*.spec.tsx`
 - Run: `pnpm run test:run`
-- Coverage: `pnpm run test:coverage`
+- Coverage: `pnpm run test:run:coverage`
 
 ### E2E Tests
 
@@ -119,7 +119,7 @@ Configure via `.env` file (copy from `.env.example`):
 - TypeScript strict mode enabled
 - ESLint configuration: [`eslint.config.js`](eslint.config.js)
 - Prettier formatting: [`.prettierrc`](.prettierrc)
-- Run `pnpm run lint` and `pnpm run format` before committing
+- Run `pnpm run lint` and `pnpm run fmt` before committing
 
 ### Component Patterns
 
