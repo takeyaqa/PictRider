@@ -1,2 +1,2 @@
-export { default as ModelProvider } from './provider'
-export { default as useModel } from './hook'
+export { default as useModelManager } from './useModelManager'
+export type { ModelHandlers } from './types'

@@ -2,6 +2,7 @@ import { PictRunner } from '@takeyaqa/pict-wasm'
 import { useEffect, useRef, useState } from 'react'
 import TopPanel from './TopPanel'
 import BottomPanel from './BottomPanel'
+import { useModelManager } from '../features/model'
 import type { Result } from '../types'
 
 interface MainAreaProps {
@@ -9,6 +10,7 @@ interface MainAreaProps {
 }
 
 function MainArea({ pictRunnerInjection }: MainAreaProps) {
+  const { model, handlers } = useModelManager()
   const [result, setResult] = useState<Result | null>(null)
   const resultSection = useRef<HTMLDivElement>(null)
 
@@ -32,6 +34,8 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
         pictRunnerInjection={pictRunnerInjection}
         result={result}
         setResult={setResult}
+        model={model}
+        handlers={handlers}
       />
       <BottomPanel result={result} resultSection={resultSection} />
     </main>

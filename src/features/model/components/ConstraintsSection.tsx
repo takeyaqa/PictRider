@@ -8,12 +8,24 @@ import {
   TextInput,
 } from '../../../shared/components'
 import { useConfig } from '../../config'
-import useModel from '../hook'
-import type { Constraint, ConstraintText, Parameter } from '../../../types'
+import type {
+  Constraint,
+  ConstraintText,
+  Model,
+  Parameter,
+} from '../../../types'
+import type { ModelHandlers } from '../types'
 
-function ConstraintsSection() {
+interface ConstraintsSectionProps {
+  model: Model
+  handlers: ModelHandlers
+}
+
+function ConstraintsSection({
+  model,
+  handlers: modelHandlers,
+}: ConstraintsSectionProps) {
   const { config, handlers: configHandlers } = useConfig()
-  const { model, handlers: modelHandlers } = useModel()
 
   return (
     <Section>

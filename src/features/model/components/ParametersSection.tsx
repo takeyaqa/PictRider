@@ -1,10 +1,17 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { AlertMessage, Section, TextInput } from '../../../shared/components'
-import useModel from '../hook'
+import type { Model } from '../../../types'
+import type { ModelHandlers } from '../types'
 
-function ParametersSection() {
-  const { model, handlers: modelHandlers } = useModel()
+interface ParametersSectionProps {
+  model: Model
+  handlers: ModelHandlers
+}
 
+function ParametersSection({
+  model,
+  handlers: modelHandlers,
+}: ParametersSectionProps) {
   return (
     <Section>
       <div className="mb-5 grid grid-cols-12 gap-1 sm:gap-5">
