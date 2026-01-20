@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useReducer } from 'react'
-import ModelContext from './context'
 import { getInitialModel, modelReducer } from './reducer'
+import type { ModelManager } from './types'
 
-function ModelProvider({ children }: { children: React.ReactNode }) {
+function useModelManager(): ModelManager {
   const [model, dispatch] = useReducer(modelReducer, getInitialModel())
 
   const handleChangeParameter = useCallback(
@@ -135,7 +135,7 @@ function ModelProvider({ children }: { children: React.ReactNode }) {
     })
   }, [dispatch])
 
-  const value = useMemo(
+  return useMemo(
     () => ({
       model,
       handlers: {
@@ -175,8 +175,6 @@ function ModelProvider({ children }: { children: React.ReactNode }) {
       handleClickRemoveSubModel,
     ],
   )
-
-  return <ModelContext value={value}>{children}</ModelContext>
 }
 
-export default ModelProvider
+export default useModelManager

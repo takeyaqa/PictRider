@@ -6,11 +6,19 @@ import {
   Switch,
 } from '../../../shared/components'
 import { useConfig } from '../../config'
-import useModel from '../hook'
+import type { Model } from '../../../types'
+import type { ModelHandlers } from '../types'
 
-function SubModelsSection() {
+interface SubModelsSectionProps {
+  model: Model
+  handlers: ModelHandlers
+}
+
+function SubModelsSection({
+  model,
+  handlers: modelHandlers,
+}: SubModelsSectionProps) {
   const { config, handlers: configHandlers } = useConfig()
-  const { model, handlers: modelHandlers } = useModel()
 
   return (
     <Section>

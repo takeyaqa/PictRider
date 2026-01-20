@@ -3,14 +3,16 @@ import { Button, Section } from '../../../shared/components'
 import { runPict } from '../../../shared/helpers'
 import { usePictRunner } from '../../../shared/hooks'
 import { useConfig } from '../../config'
-import { useModel } from '../../model'
-import type { Result } from '../../../types'
+import type { ModelHandlers } from '../../model'
+import type { Model, Result } from '../../../types'
 
 interface MenuSectionProps {
   pictRunnerInjection?: PictRunner // use for testing
   canClearResult: boolean
   handleClearResult: () => void
   setResult: (result: Result) => void
+  model: Model
+  handlers: ModelHandlers
 }
 
 function MenuSection({
@@ -18,10 +20,11 @@ function MenuSection({
   canClearResult,
   handleClearResult,
   setResult,
+  model,
+  handlers: modelHandlers,
 }: MenuSectionProps) {
   const { pictRunner, pictRunnerLoaded } = usePictRunner(pictRunnerInjection)
   const { config } = useConfig()
-  const { model, handlers: modelHandlers } = useModel()
 
   function handleClickRun() {
     if (
