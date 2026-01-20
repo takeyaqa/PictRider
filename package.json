@@ -6,13 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "typecheck": "tsc -b --noEmit",
+    "clean": "rm -rf dist",
     "preview": "vite preview",
+    "fmt": "prettier --write .",
+    "fmt:check": "prettier --check .",
     "lint": "eslint .",
-    "format": "prettier --check .",
+    "lint:fix": "eslint --fix .",
+    "typecheck": "tsc -b --noEmit",
     "test": "vitest",
-    "test:no-watch": "vitest run",
-    "test:coverage": "vitest run --coverage",
+    "test:run": "vitest run",
+    "test:run:coverage": "vitest run --coverage",
     "test:e2e": "playwright test"
   },
   "dependencies": {
