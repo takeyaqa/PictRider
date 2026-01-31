@@ -5,13 +5,16 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import reactX from 'eslint-plugin-react-x'
 import tseslint from 'typescript-eslint'
+import vitest from '@vitest/eslint-plugin'
+import playwright from 'eslint-plugin-playwright'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'src/pict/wasm']),
+  globalIgnores(['dist']),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/**/*.spec.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.strictTypeChecked,
@@ -29,6 +32,22 @@ export default defineConfig([
         tsconfigRootDir: import.meta.dirname,
       },
     },
+  },
+  {
+    files: ['src/**/*.spec.{ts,tsx}'],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      vitest.configs.recommended,
+    ],
+  },
+  {
+    files: ['e2e/**/*.spec.ts'],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      playwright.configs['flat/recommended'],
+    ],
   },
   eslintConfigPrettier,
 ])

@@ -5,8 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   test: {
-    include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
-    exclude: ['node_modules', 'dist', 'e2e'],
+    include: ['./src/**/*.spec.{ts,tsx}'],
     testTimeout: 20000,
     coverage: {
       provider: 'istanbul',
