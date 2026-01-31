@@ -11,12 +11,25 @@ updates:
       prefix: "build"
       include: "scope"
     groups:
+      eslint-and-prettier:
+        patterns:
+          - "@eslint/*"
+          - "eslint"
+          - "eslint-config-prettier"
+          - "eslint-plugin-*"
+          - "prettier"
+          - "prettier-plugin-tailwindcss"
+          - "typescript-eslint"
       react:
         patterns:
           - "@types/react"
           - "@types/react-dom"
           - "react"
           - "react-dom"
+      tailwindcss:
+        patterns:
+          - "@tailwindcss/*"
+          - "tailwindcss"
       vite:
         patterns:
           - "@vitejs/*"
@@ -30,19 +43,6 @@ updates:
           - "@vitest/*"
           - "vitest"
           - "vitest-browser-react"
-      tailwindcss:
-        patterns:
-          - "@tailwindcss/*"
-          - "tailwindcss"
-      eslint-and-prettier:
-        patterns:
-          - "@eslint/*"
-          - "eslint"
-          - "eslint-config-prettier"
-          - "eslint-plugin-react-*"
-          - "prettier"
-          - "prettier-plugin-tailwindcss"
-          - "typescript-eslint"
     ignore:
       - dependency-name: "@takeyaqa/pict-wasm"
   - package-ecosystem: "github-actions"
