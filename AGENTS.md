@@ -1,137 +1,70 @@
-# PictRider
+# Agent Instructions for PictRider
 
-## Project overview
+## Overview
 
-**PictRider** is a web-based tool for generating pairwise test cases quickly and easily, with no installation required.
+PictRider is a web-based pairwise testing tool built with React 19, TypeScript, Vite, and Tailwind CSS v4. It uses [@takeyaqa/pict-wasm](https://github.com/takeyaqa/pict-wasm) to generate combinatorial test cases in the browser.
 
-### Core Purpose:
+## Build & Test Commands
 
-PictRider implements pairwise testing—a combinatorial testing technique that reduces the number of test cases while maintaining high coverage by ensuring all possible combinations of input values for every pair of parameters are tested.
+```bash
+pnpm install          # Install dependencies (pnpm 10.x required, Node 24.x)
+pnpm run build        # TypeScript check + Vite build
+pnpm run dev          # Start dev server at http://127.0.0.1:5173
 
-### Key Features:
+# Lint and format
+pnpm run fmt
+pnpm run lint
+pnpm run typecheck
 
-- Define test parameters and their possible values
-- Create complex constraints between parameters
-- Generate optimized test cases covering all pairwise combinations
-- View and export generated test cases
-- Browser-based with no installation needed
+# Unit tests (Vitest with browser mode via Playwright)
+pnpm run test:run     # Single run
 
-### Technology Stack:
+# E2E tests (Playwright)
+pnpm run test:e2e     # Run all E2E tests
+```
 
-- React 19 + TypeScript with Vite
-- Tailwind CSS for styling
-- PICT WASM (@takeyaqa/pict-wasm) for test case generation
-- Vitest for unit testing
-- Playwright for E2E testing
-- pnpm workspace management
+## Architecture
 
-### Why Pairwise Testing:
-
-Most defects result from interactions between two parameters rather than multiple simultaneous factors. Pairwise testing is especially effective when you need to cover wide parameter combinations, full combinatorial testing is impractical, or you want to systematically reduce redundant test cases without sacrificing coverage quality.
-
-### Project Status:
-
-Open-source, inspired by PictMaster, independent of Microsoft Corporation, and provided "as is" without warranty.
-
-## Build and test commands
-
-- Install dependencies:
-  ```bash
-   pnpm install
-   pnpm exec playwright install --with-deps
-  ```
-- Run `pnpm run dev` to start development server (http://localhost:5173)
-- Run `pnpm run build` to build for production
-- Run `pnpm run preview` to preview production build
-- Run `pnpm run test:run` to run unit tests with Vitest
-- Run `pnpm run test:run:coverage` to generate test coverage report
-- Run `pnpm run test:e2e` to run end-to-end tests with Playwright
-- Run `pnpm run typecheck` to check types
-- Run `pnpm run lint` to check lint
-- Run `pnpm run fmt:check` to check format style
-
-## Project Structure
+### Feature-Based Structure
 
 ```
 src/
-├── App.tsx                          # Main application component with providers
-├── main.tsx                         # Entry point
-├── types.ts                         # Core TypeScript interfaces
-├── styles.css                       # Global styles
-├── features/                        # Feature modules (organized by domain)
-│   ├── config/                      # Configuration state management
-│   ├── model/                       # Model state management (parameters, constraints, submodels)
-│   ├── result/                      # Result display
-│   └── menu/                        # Menu navigation
-├── layouts/                         # Layout components
-│   ├── TopPanel.tsx                # Header area
-│   ├── MainArea.tsx                # Main content area with PICT runner
-│   └── BottomPanel.tsx             # Footer area
-├── shared/                          # Shared utilities and components
-│   ├── components/                  # Reusable UI components
-│   ├── helpers/                     # Utility functions
-│   │   ├── pict-runner-helper.ts   # PICT execution and data transformation
-│   │   ├── constraints-helper.ts   # Constraint validation and processing
-│   │   └── util.ts                 # General utilities (UUID generation, etc.)
-│   └── hooks/
-│       └── usePictRunner.ts        # Hook for running PICT with error handling
-└── pict-constraints-parser/         # PICT constraint parsing
+├── features/           # Feature modules (self-contained)
+│   ├── config/         # Global configuration state (Context + useReducer)
+│   ├── model/          # Parameter/constraint model state and logic
+│   ├── menu/           # Menu components
+│   └── result/         # Result display components
+├── layouts/            # Page layout components (TopPanel, BottomPanel, MainArea)
+├── shared/             # Shared utilities
+│   ├── components/     # Reusable UI components (Button, TextInput, Switch, etc.)
+│   ├── helpers/        # Utility functions
+│   └── hooks/          # Custom hooks (usePictRunner)
+├── pict-constraints-parser/  # Constraint syntax parser/printer
+└── types.ts            # Shared TypeScript interfaces
 ```
 
-## Core Data Types
+### State Management Pattern
 
-All types are defined in [`src/types.ts`](src/types.ts):
+- **Context + useReducer**: Used for global config (`ConfigProvider`) and model state
+- Reducers are in `reducer.ts` files within feature directories
+- Actions are discriminated unions with `type` and `payload`
+- State is cloned with `structuredClone()` before modifications
 
-## State Management
+### PICT Integration
 
-PictRider uses React Context API with useReducer for state management:
+The `usePictRunner` hook wraps `@takeyaqa/pict-wasm`. Components accept an optional `pictRunnerInjection` prop for testing with mocked WASM.
 
-## Environment Variables
+### Testing Approach
 
-Configure via `.env` file (copy from `.env.example`):
+- **Unit tests** (`*.spec.tsx`): Use Vitest browser mode with `vitest-browser-react`. Tests render components and interact via `screen.getByRole()`.
+- **E2E tests** (`e2e/`): Playwright tests against the dev server. Follow AAA pattern with `// arrange`, `// act`, `// assert` comments.
 
-| Variable                    | Description                  | Default                 |
-| --------------------------- | ---------------------------- | ----------------------- |
-| `VITE_APP_VERSION`          | Application version          | `development`           |
-| `VITE_BASE_DOMAIN`          | Base domain for analytics    | `pictrider.example.com` |
-| `VITE_NOTIFICATION_MESSAGE` | Optional notification banner | (empty)                 |
+## Conventions
 
-## Testing
-
-### Unit Tests
-
-- Framework: Vitest
-- Location: `**/*.spec.ts` and `**/*.spec.tsx`
-- Run: `pnpm run test:run`
-- Coverage: `pnpm run test:run:coverage`
-
-### E2E Tests
-
-- Framework: Playwright
-- Location: `e2e/`
-- Run: `pnpm run test:e2e`
-- Configuration: [`playwright.config.ts`](playwright.config.ts)
-
-## Development Guidelines
-
-### Code Style
-
-- TypeScript strict mode enabled
-- ESLint configuration: [`eslint.config.js`](eslint.config.js)
-- Prettier formatting: [`.prettierrc`](.prettierrc)
-- Run `pnpm run lint` and `pnpm run fmt` before committing
-
-### Component Patterns
-
-- Functional components with hooks
-- Context API for state management
-- Tailwind CSS for styling
-- Shared components in `src/shared/components/`
-
-## Build Configuration
-
-- **Bundler**: Vite (configured in [`vite.config.ts`](vite.config.ts))
-- **PWA**: Enabled via vite-plugin-pwa for offline support
-- **Tailwind**: Integrated via @tailwindcss/vite
-- **License**: Third-party licenses output to `dist/license.md`
-- **WASM**: @takeyaqa/pict-wasm excluded from optimization
+- **TypeScript**: Strict mode with `typescript-eslint` strict + stylistic rules
+- **Prettier** for formatting
+- **React**: Functional components only, hooks for state/effects
+- **IDs**: Use `uuidv4()` from `shared/helpers` for generating unique identifiers
+- **Validation**: Input validation happens in reducers, setting `isValid*` flags on state objects
+- **Before committing** - Always run `pnpm run fmt`, `pnpm run lint`, `pnpm run typecheck`, `pnpm run test:run`, and `pnpm run test:e2e`
+- **Ignore `pnpm-lock.yaml`** - Always skip this file during code review and pull request creation
