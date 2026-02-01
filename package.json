@@ -22,7 +22,7 @@
     "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
     "@plausible-analytics/tracker": "^0.4.4",
-    "@takeyaqa/pict-wasm": "3.7.4-wasm.11",
+    "@takeyaqa/pict-wasm": "3.7.4-wasm.13",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwindcss": "^4.1.18"
