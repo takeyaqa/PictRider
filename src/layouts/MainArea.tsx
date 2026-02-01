@@ -19,7 +19,7 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
       result !== null &&
       resultSection.current &&
       typeof window.matchMedia === 'function' &&
-      window.matchMedia('(width < 96rem)').matches // tailwind: 2xl, two columns layout
+      window.matchMedia('(width < 80rem)').matches // tailwind: xl, two columns layout
     ) {
       resultSection.current.scrollIntoView({
         behavior: 'smooth',
@@ -29,7 +29,7 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
   }, [result])
 
   return (
-    <main className="grid grid-cols-1 2xl:grid-cols-2">
+    <main className="grid grid-cols-1 xl:grid-cols-2">
       <TopPanel
         pictRunnerInjection={pictRunnerInjection}
         result={result}

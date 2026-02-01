@@ -6,7 +6,7 @@ function OptionsSection() {
   return (
     <Section>
       <h2 className="mb-5 text-lg font-bold">Options</h2>
-      <div className="mb-5 grid grid-cols-1 items-start gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-3">
+      <div className="mb-5 grid grid-cols-1 items-start gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3">
         <div>
           <NumberInput
             label="Order of combinations"
