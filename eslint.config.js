@@ -42,7 +42,7 @@ export default defineConfig([
     ],
   },
   {
-    files: ['e2e/**/*.spec.ts'],
+    files: ['tests/**/*.spec.ts'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,

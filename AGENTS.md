@@ -65,7 +65,7 @@ The `usePictRunner` hook wraps `@takeyaqa/pict-wasm`. Components accept an optio
 ### Testing Approach
 
 - **Unit tests** (`*.spec.tsx`): Use Vitest browser mode with `vitest-browser-react`. Tests render components and interact via `screen.getByRole()`.
-- **E2E tests** (`e2e/`): Playwright tests against the dev server. Follow AAA pattern with `// arrange`, `// act`, `// assert` comments.
+- **E2E tests** (`tests/`): Playwright tests against the dev server. Follow AAA pattern with `// arrange`, `// act`, `// assert` comments.
 
 ## Conventions
 
