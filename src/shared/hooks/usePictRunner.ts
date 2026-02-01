@@ -14,8 +14,7 @@ function usePictRunner(pictRunnerInjection?: PictRunner) {
       return
     }
     const loadPictRunner = async () => {
-      pictRunner.current = new PictRunner()
-      await pictRunner.current.init()
+      pictRunner.current = await PictRunner.create()
       setPictRunnerLoaded(true)
     }
 

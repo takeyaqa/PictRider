@@ -10,13 +10,14 @@ describe('App', () => {
 
     beforeEach(async () => {
       const PictRunnerMock = vi.fn()
-      PictRunnerMock.prototype.init = vi.fn()
       PictRunnerMock.prototype.run = vi.fn(() => ({
-        header: ['Type', 'Size', 'Format method'],
-        body: [
-          ['Single', '10', 'Quick'],
-          ['Span', '100', 'Slow'],
-        ],
+        result: {
+          header: ['Type', 'Size', 'Format method'],
+          body: [
+            ['Single', '10', 'Quick'],
+            ['Span', '100', 'Slow'],
+          ],
+        },
       }))
       pictRunnerMock = new PictRunnerMock()
       screen = await render(<App pictRunnerInjection={pictRunnerMock} />)

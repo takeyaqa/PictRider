@@ -1,11 +1,11 @@
-import { PictRunner } from '@takeyaqa/pict-wasm'
+import {
+  PictRunner,
+  type PictOptions,
+  type PictOutput,
+  type PictParameter,
+  type PictSubModel,
+} from '@takeyaqa/pict-wasm'
 import { uuidv4 } from './util'
-import type {
-  PictOptions,
-  PictOutput,
-  PictParameter,
-  PictSubModel,
-} from '@takeyaqa/pict-wasm/dist/types'
 import type {
   Config,
   ConstraintText,
@@ -73,10 +73,10 @@ function processOptions(config: Config): PictOptions {
 }
 
 function processOutput(output: PictOutput): Result {
-  const header = output.header.map((h) => {
+  const header = output.result.header.map((h) => {
     return { id: uuidv4(), name: h }
   })
-  const body = output.body.map((row) => {
+  const body = output.result.body.map((row) => {
     return {
       id: uuidv4(),
       values: row.map((col) => {
