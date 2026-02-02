@@ -1,5 +1,9 @@
 # PictRider
 
+<p align="center">
+  <img src="public/PictRider_logo.svg" alt="PictRider Logo" width="400">
+</p>
+
 ## Pairwise Testing on the Web
 
 _PictRider_ is a web-based tool for generating pairwise test cases quickly and easily, with no installation required.
