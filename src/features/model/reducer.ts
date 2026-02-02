@@ -206,7 +206,6 @@ export function modelReducer(state: Model, action: ModelAction): Model {
           ? structuredClone(state.constraintTexts)
           : printConstraints(
               fixConstraint(state.constraints, newParameters),
-              newParameters.map((p) => p.name),
             ).map((text) => ({
               id: uuidv4(),
               text,
@@ -398,7 +397,6 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         constraints: newConstraints,
         constraintTexts: printConstraints(
           fixConstraint(newConstraints, state.parameters),
-          state.parameters.map((p) => p.name),
         ).map((text) => ({
           id: uuidv4(),
           text,
@@ -447,7 +445,6 @@ export function modelReducer(state: Model, action: ModelAction): Model {
         constraints: newConstraints,
         constraintTexts: printConstraints(
           fixConstraint(newConstraints, state.parameters),
-          state.parameters.map((p) => p.name),
         ).map((text) => ({
           id: uuidv4(),
           text,

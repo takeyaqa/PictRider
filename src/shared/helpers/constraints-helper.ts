@@ -41,11 +41,8 @@ export function fixConstraint(
   }))
 }
 
-export function printConstraints(
-  constraints: FixedConstraint[],
-  parameters: string[],
-): string[] {
-  return printCodeFromAST(convertTableToConstraints(constraints, parameters))
+export function printConstraints(constraints: FixedConstraint[]): string[] {
+  return printCodeFromAST(convertTableToConstraints(constraints))
 }
 
 type UnfixedTerm =
@@ -55,21 +52,17 @@ type UnfixedTerm =
   | UnfixedRelationTerm
   | NotClause
 
-type UnfixedRelation = Relation | '&=' | '&!'
-
 interface UnfixedRelationTerm {
   type: 'UnfixedRelationTerm'
   parameterName: ParameterName
-  relation: UnfixedRelation
+  relation: Relation
   right: Value | ParameterName
 }
 
 function convertTableToConstraints(
   constraints: FixedConstraint[],
-  parameters: string[],
 ): ConstraintsAst {
   const constraintsAst: ConstraintsAst = []
-  const parametersSet = new Set(parameters.filter((p) => p !== ''))
   for (const constraint of constraints) {
     const ifConditions = constraint.conditions.filter(
       (c) => c.ifOrThen === 'if' && c.predicate !== '',
@@ -85,10 +78,10 @@ function convertTableToConstraints(
     }
     if (ifConditions.length > 0) {
       const ifPredicates = ifConditions.map((condition) => {
-        return convertPredicate(condition, parametersSet)
+        return convertPredicate(condition)
       })
       const thenPredicates = thenConditions.map((condition) => {
-        return convertPredicate(condition, parametersSet)
+        return convertPredicate(condition)
       })
       constraintsAst.push({
         type: 'IfConstraint',
@@ -97,7 +90,7 @@ function convertTableToConstraints(
       })
     } else {
       const thenPredicates = thenConditions.map((condition) => {
-        return convertPredicate(condition, parametersSet)
+        return convertPredicate(condition)
       })
       constraintsAst.push({
         type: 'PredicateConstraint',
@@ -143,14 +136,11 @@ function convertIfOrThenConstraint(predicates: Predicate[]): Predicate {
   return predicate
 }
 
-function convertPredicate(
-  condition: FixedCondition,
-  parameters: Set<string>,
-): Predicate {
+function convertPredicate(condition: FixedCondition): Predicate {
   const tokens = condition.predicate.split(',').map((token) => token.trim())
   const isAllNegated = tokens[0].startsWith('#')
   const terms = tokens.map((token) => {
-    return convertTerm(token, condition.parameterName, parameters)
+    return convertTerm(token, condition.parameterName)
   })
   let predicate: Predicate
   if (terms.length === 1) {
@@ -195,9 +185,6 @@ function convertPredicate(
 
 function fixFirstTerm(unfixedTerm: UnfixedTerm, isAllNegated: boolean): Clause {
   if (unfixedTerm.type === 'UnfixedRelationTerm') {
-    if (unfixedTerm.relation === '&=' || unfixedTerm.relation === '&!') {
-      throw new Error('Invalid predicate format')
-    }
     return {
       type: 'RelationTerm',
       parameterName: unfixedTerm.parameterName,
@@ -214,30 +201,24 @@ function fixRestTerm(
   isAllNegated: boolean,
 ): [LogicalOperator, Term] {
   let operator: LogicalOperator
-  let relation: Relation
-  if (unfixedTerm.relation === '&=' || unfixedTerm.relation === '&!') {
+
+  if (
+    isAllNegated ||
+    unfixedTerm.relation === '>' ||
+    unfixedTerm.relation === '<' ||
+    unfixedTerm.relation === '>=' ||
+    unfixedTerm.relation === '<='
+  ) {
     operator = 'AND'
-    relation = unfixedTerm.relation === '&=' ? '=' : '<>'
   } else {
-    if (
-      isAllNegated ||
-      unfixedTerm.relation === '>' ||
-      unfixedTerm.relation === '<' ||
-      unfixedTerm.relation === '>=' ||
-      unfixedTerm.relation === '<='
-    ) {
-      operator = 'AND'
-    } else {
-      operator = 'OR'
-    }
-    relation = isAllNegated ? '<>' : unfixedTerm.relation
+    operator = 'OR'
   }
   return [
     operator,
     {
       type: 'RelationTerm',
       parameterName: unfixedTerm.parameterName,
-      relation: relation,
+      relation: isAllNegated ? '<>' : unfixedTerm.relation,
       right: unfixedTerm.right,
     },
   ]
@@ -253,23 +234,24 @@ function isError(conditions: FixedCondition[]): boolean {
   return false
 }
 
-function convertTerm(
-  predicate: string,
-  parameter: string,
-  parameters: Set<string>,
-): UnfixedTerm {
-  let isParameterName = false
-  for (const p of parameters) {
-    if (isPatternString(predicate)) {
-      isParameterName = false
-      break
-    } else if (predicate.includes(p) && /^[=!&].+$/.test(predicate)) {
-      isParameterName = true
-      break
+function convertTerm(predicate: string, parameter: string): UnfixedTerm {
+  const [relation, value] = splitValueAndRelation(predicate)
+  if (relation === 'LIKE') {
+    return {
+      type: 'LikeTerm',
+      parameter: parameter,
+      patternString: value,
     }
-  }
-  if (isParameterName) {
-    const [relation, name] = splitParameterNameAndValue(predicate)
+  } else if (relation === 'NOT LIKE') {
+    return {
+      type: 'NotClause',
+      predicate: {
+        type: 'LikeTerm',
+        parameter: parameter,
+        patternString: value,
+      },
+    }
+  } else {
     return {
       type: 'UnfixedRelationTerm',
       parameterName: {
@@ -277,46 +259,15 @@ function convertTerm(
         name: parameter,
       },
       relation: relation,
-      right: {
-        type: 'ParameterName',
-        name: name,
-      },
-    }
-  } else {
-    const [relation, value] = splitValueAndRelation(predicate)
-    if (relation === 'LIKE') {
-      return {
-        type: 'LikeTerm',
-        parameter: parameter,
-        patternString: value,
-      }
-    } else if (relation === 'NOT LIKE') {
-      return {
-        type: 'NotClause',
-        predicate: {
-          type: 'LikeTerm',
-          parameter: parameter,
-          patternString: value,
-        },
-      }
-    } else {
-      return {
-        type: 'UnfixedRelationTerm',
-        parameterName: {
-          type: 'ParameterName',
-          name: parameter,
-        },
-        relation: relation,
-        right: Number.isNaN(Number(value))
-          ? {
-              type: 'String',
-              value: value,
-            }
-          : {
-              type: 'Number',
-              value: Number(value),
-            },
-      }
+      right: Number.isNaN(Number(value))
+        ? {
+            type: 'String',
+            value: value,
+          }
+        : {
+            type: 'Number',
+            value: Number(value),
+          },
     }
   }
 }
@@ -340,22 +291,6 @@ function splitValueAndRelation(
     return ['<', predicate.replace('<', '').trim()]
   } else {
     return ['=', predicate.trim()]
-  }
-}
-
-function splitParameterNameAndValue(
-  predicate: string,
-): [UnfixedRelation, string] {
-  if (predicate.startsWith('=')) {
-    return ['=', predicate.replace('=', '').trim()]
-  } else if (predicate.startsWith('!')) {
-    return ['<>', predicate.replace('!', '').trim()]
-  } else if (predicate.startsWith('&=')) {
-    return ['&=', predicate.replace('&=', '').trim()]
-  } else if (predicate.startsWith('&!')) {
-    return ['&!', predicate.replace('&!', '').trim()]
-  } else {
-    throw new Error('Invalid predicate format')
   }
 }
 
