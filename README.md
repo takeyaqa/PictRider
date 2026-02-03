@@ -6,7 +6,7 @@
 
 ## Pairwise Testing on the Web
 
-_PictRider_ is a web-based tool for generating pairwise test cases quickly and easily, with no installation required.
+**PictRider** is a web-based tool for generating pairwise test cases quickly and easily, with no installation required.
 
 ### Try it here!
 
