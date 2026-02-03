@@ -8,15 +8,22 @@
 
 _PictRider_ is a web-based tool for generating pairwise test cases quickly and easily, with no installation required.
 
+### Try it here!
+
+**<https://pictrider.takeyaqa.dev/>**
+
+Using an AI agent for test design? Check out [PictMCP](https://github.com/takeyaqa/PictMCP).
+
 ### Features
 
 With PictRider, you can:
 
-- Define test parameters and their possible values
-- Create complex constraints between parameters
-- Generate optimized test cases that cover all pairwise combinations
-- View and export the generated test cases
-- And no installation required; get started immediately from your browser
+- 📝 Define test parameters and their possible values
+- 🔗 Create complex constraints between parameters
+- ✨ Generate optimized test cases that cover all pairwise combinations
+- 📤 View and export the generated test cases
+- 🌐 And no installation required; get started immediately from your browser
+- ⚡ Fast execution using the PICT algorithm compiled to WebAssembly
 
 ### What is Pairwise Testing?
 
@@ -34,7 +41,7 @@ Pairwise testing is especially effective when:
 
 PictRider is an open-source project. The source code is available on GitHub:
 
-[https://github.com/takeyaqa/PictRider](https://github.com/takeyaqa/PictRider)
+<https://github.com/takeyaqa/PictRider>
 
 ## Disclaimer
 
