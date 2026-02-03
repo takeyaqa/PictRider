@@ -12,7 +12,7 @@
 
 **<https://pictrider.takeyaqa.dev/>**
 
-Using an AI agent for test design? Check out [PictMCP](https://github.com/takeyaqa/PictMCP).
+Using an AI agent for test design? Check out **[PictMCP](https://github.com/takeyaqa/PictMCP)**.
 
 ### Features
 
