@@ -1,16 +1,23 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { AlertMessage, Section, TextInput } from '../../../shared/components'
-import type { Model } from '../../../types'
-import type { ModelHandlers } from '../types'
+import type { ParametersState } from '../../../types'
 
 interface ParametersSectionProps {
-  model: Model
-  handlers: ModelHandlers
+  parameters: ParametersState
+  handleAddRow: (id: string, target: 'above' | 'below') => void
+  handleRemoveRow: (id: string) => void
+  handleChangeParameter: (
+    id: string,
+    field: 'name' | 'values',
+    value: string,
+  ) => void
 }
 
 function ParametersSection({
-  model,
-  handlers: modelHandlers,
+  parameters,
+  handleAddRow,
+  handleRemoveRow,
+  handleChangeParameter,
 }: ParametersSectionProps) {
   return (
     <Section>
@@ -22,7 +29,7 @@ function ParametersSection({
           <h2 className="text-lg font-bold">Values</h2>
         </div>
       </div>
-      {model.parameters.map((parameter, i) => (
+      {parameters.parameters.map((parameter, i) => (
         <div
           className="mb-3 grid grid-cols-12 gap-0 sm:mb-1 sm:gap-5"
           key={parameter.id}
@@ -33,7 +40,7 @@ function ParametersSection({
               value={parameter.name}
               isValid={parameter.isValidName}
               onChange={(e) => {
-                modelHandlers.handleChangeParameter(parameter.id, 'name', e)
+                handleChangeParameter(parameter.id, 'name', e.target.value)
               }}
             />
           </div>
@@ -43,7 +50,7 @@ function ParametersSection({
               value={parameter.values}
               isValid={parameter.isValidValues}
               onChange={(e) => {
-                modelHandlers.handleChangeParameter(parameter.id, 'values', e)
+                handleChangeParameter(parameter.id, 'values', e.target.value)
               }}
             />
           </div>
@@ -51,14 +58,14 @@ function ParametersSection({
             <ParameterMenu
               parameterId={parameter.id}
               parameterHeading={`Parameter ${(i + 1).toString()}`}
-              parametersLength={model.parameters.length}
-              handleClickAddRow={modelHandlers.handleClickAddRow}
-              handleClickRemoveRow={modelHandlers.handleClickRemoveRow}
+              parametersLength={parameters.parameters.length}
+              handleClickAddRow={handleAddRow}
+              handleClickRemoveRow={handleRemoveRow}
             />
           </div>
         </div>
       ))}
-      <AlertMessage messages={model.parameterErrors} />
+      <AlertMessage messages={parameters.parameterErrors} />
     </Section>
   )
 }

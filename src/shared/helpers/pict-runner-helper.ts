@@ -9,19 +9,24 @@ import { uuidv4 } from './util'
 import type {
   Config,
   ConstraintText,
-  Model,
   Parameter,
   Result,
   SubModel,
 } from '../../types'
 
-export function runPict(pictRunner: PictRunner, model: Model, config: Config) {
-  const pictParameters = processParameters(model.parameters)
+export function runPict(
+  pictRunner: PictRunner,
+  parameters: Parameter[],
+  constraintTexts: ConstraintText[],
+  subModels: SubModel[],
+  config: Config,
+) {
+  const pictParameters = processParameters(parameters)
   const pictSubModels = config.enableSubModels
-    ? processSubModels(model.subModels, model.parameters)
+    ? processSubModels(subModels, parameters)
     : undefined
   const pictConstraintTexts = config.enableConstraints
-    ? processConstraintTexts(model.constraintTexts)
+    ? processConstraintTexts(constraintTexts)
     : undefined
   const pictOptions = processOptions(config)
   const output = pictRunner.run(pictParameters, {
