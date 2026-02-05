@@ -69,3 +69,21 @@ export interface Config {
   randomizeGeneration: boolean
   randomizeSeed: number | ''
 }
+
+// State types for the three separate reducers
+
+export interface ParametersState {
+  parameters: Parameter[]
+  parameterErrors: Message[]
+}
+
+export interface ConstraintsState {
+  constraints: Constraint[]
+  constraintTexts: ConstraintText[]
+  constraintDirectEditMode: boolean
+  constraintErrors: Message[]
+}
+
+export interface SubModelsState {
+  subModels: SubModel[]
+}

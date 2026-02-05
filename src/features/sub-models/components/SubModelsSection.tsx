@@ -6,17 +6,28 @@ import {
   Switch,
 } from '../../../shared/components'
 import { useConfig } from '../../config'
-import type { Model } from '../../../types'
-import type { ModelHandlers } from '../types'
+import type { Parameter, SubModelsState } from '../../../types'
 
 interface SubModelsSectionProps {
-  model: Model
-  handlers: ModelHandlers
+  subModels: SubModelsState
+  parameters: Parameter[]
+  handleAddSubModel: () => void
+  handleRemoveSubModel: () => void
+  handleClickSubModelParameters: (
+    subModelId: string,
+    parameterId: string,
+    checked: boolean,
+  ) => void
+  handleChangeSubModelOrder: (id: string, order: number) => void
 }
 
 function SubModelsSection({
-  model,
-  handlers: modelHandlers,
+  subModels,
+  parameters,
+  handleAddSubModel,
+  handleRemoveSubModel,
+  handleClickSubModelParameters,
+  handleChangeSubModelOrder,
 }: SubModelsSectionProps) {
   const { config, handlers: configHandlers } = useConfig()
 
@@ -39,20 +50,20 @@ function SubModelsSection({
       </div>
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-2">
         {config.enableSubModels &&
-          model.subModels.map((subModel, i) => (
+          subModels.subModels.map((subModel, i) => (
             <AugmentDiv
               key={subModel.id}
               title="Sub-Model"
               heading={`Sub-Model ${(i + 1).toString()}`}
-              totalLength={model.subModels.length}
+              totalLength={subModels.subModels.length}
               maxLength={2}
-              canRenderButtons={i + 1 === model.subModels.length}
-              handleClickAdd={modelHandlers.handleClickAddSubModel}
-              handleClickRemove={modelHandlers.handleClickRemoveSubModel}
+              canRenderButtons={i + 1 === subModels.subModels.length}
+              handleClickAdd={handleAddSubModel}
+              handleClickRemove={handleRemoveSubModel}
             >
               <div className="grid grid-cols-2 items-center gap-5 border p-5 dark:border-gray-500">
                 <div>
-                  {model.parameters.map((parameter) => (
+                  {parameters.map((parameter) => (
                     <div
                       key={`${subModel.id}-${parameter.id}`}
                       className="mb-1 items-center"
@@ -61,7 +72,7 @@ function SubModelsSection({
                         label={parameter.name}
                         checked={subModel.parameterIds.includes(parameter.id)}
                         onChange={(checked) => {
-                          modelHandlers.handleClickSubModelParameters(
+                          handleClickSubModelParameters(
                             subModel.id,
                             parameter.id,
                             checked,
@@ -76,9 +87,12 @@ function SubModelsSection({
                     label="Order"
                     value={subModel.order}
                     min={2}
-                    max={model.parameters.length}
+                    max={parameters.length}
                     onChange={(e) => {
-                      modelHandlers.handleChangeSubModelOrder(subModel.id, e)
+                      handleChangeSubModelOrder(
+                        subModel.id,
+                        Number(e.target.value),
+                      )
                     }}
                   />
                 </div>

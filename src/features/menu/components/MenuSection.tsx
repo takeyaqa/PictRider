@@ -3,16 +3,22 @@ import { Button, Section } from '../../../shared/components'
 import { runPict } from '../../../shared/helpers'
 import { usePictRunner } from '../../../shared/hooks'
 import { useConfig } from '../../config'
-import type { ModelHandlers } from '../../model'
-import type { Model, Result } from '../../../types'
+import type {
+  ConstraintsState,
+  ParametersState,
+  Result,
+  SubModelsState,
+} from '../../../types'
 
 interface MenuSectionProps {
   pictRunnerInjection?: PictRunner // use for testing
   canClearResult: boolean
   handleClearResult: () => void
   setResult: (result: Result) => void
-  model: Model
-  handlers: ModelHandlers
+  parameters: ParametersState
+  constraints: ConstraintsState
+  subModels: SubModelsState
+  handleClickClear: () => void
 }
 
 function MenuSection({
@@ -20,8 +26,10 @@ function MenuSection({
   canClearResult,
   handleClearResult,
   setResult,
-  model,
-  handlers: modelHandlers,
+  parameters,
+  constraints,
+  subModels,
+  handleClickClear,
 }: MenuSectionProps) {
   const { pictRunner, pictRunnerLoaded } = usePictRunner(pictRunnerInjection)
   const { config } = useConfig()
@@ -35,14 +43,20 @@ function MenuSection({
     ) {
       return
     }
-    const result = runPict(pictRunner.current, model, config)
+    const result = runPict(
+      pictRunner.current,
+      parameters.parameters,
+      constraints.constraintTexts,
+      subModels.subModels,
+      config,
+    )
     setResult(result)
   }
 
-  const containsInvalidValues = model.parameters.some(
+  const containsInvalidValues = parameters.parameters.some(
     (p) => !p.isValidName || !p.isValidValues,
   )
-  const containsInvalidConstraints = model.constraints.some((c) =>
+  const containsInvalidConstraints = constraints.constraints.some((c) =>
     c.conditions.some((cond) => !cond.isValid),
   )
 
@@ -56,11 +70,7 @@ function MenuSection({
     <Section>
       <menu className="flex list-none items-center justify-start gap-5">
         <li>
-          <Button
-            type="warning"
-            size="sm"
-            onClick={modelHandlers.handleClickClear}
-          >
+          <Button type="warning" size="sm" onClick={handleClickClear}>
             Clear Input
           </Button>
         </li>

@@ -10,20 +10,37 @@ import {
 import { useConfig } from '../../config'
 import type {
   Constraint,
+  ConstraintsState,
   ConstraintText,
-  Model,
   Parameter,
 } from '../../../types'
-import type { ModelHandlers } from '../types'
 
 interface ConstraintsSectionProps {
-  model: Model
-  handlers: ModelHandlers
+  constraints: ConstraintsState
+  parameters: Parameter[]
+  handleAddConstraint: () => void
+  handleRemoveConstraint: () => void
+  handleChangeCondition: (
+    constraintId: string,
+    parameterId: string,
+    value: string,
+  ) => void
+  handleToggleCondition: (constraintId: string, parameterId: string) => void
+  handleChangeConstraintFormula: (value: string) => void
+  handleToggleConstraintDirectEditMode: () => void
+  handleResetConstraints: () => void
 }
 
 function ConstraintsSection({
-  model,
-  handlers: modelHandlers,
+  constraints,
+  parameters,
+  handleAddConstraint,
+  handleRemoveConstraint,
+  handleChangeCondition,
+  handleToggleCondition,
+  handleChangeConstraintFormula,
+  handleToggleConstraintDirectEditMode,
+  handleResetConstraints,
 }: ConstraintsSectionProps) {
   const { config, handlers: configHandlers } = useConfig()
 
@@ -46,32 +63,34 @@ function ConstraintsSection({
       </div>
       {config.enableConstraints && (
         <div>
-          {!model.constraintDirectEditMode && (
+          {!constraints.constraintDirectEditMode && (
             <ConstraintTables
-              constraints={model.constraints}
-              parameters={model.parameters}
-              handleClickAddConstraint={modelHandlers.handleClickAddConstraint}
-              handleClickRemoveConstraint={
-                modelHandlers.handleClickRemoveConstraint
-              }
-              handleChangeCondition={modelHandlers.handleChangeCondition}
-              handleToggleCondition={modelHandlers.handleToggleCondition}
+              constraints={constraints.constraints}
+              parameters={parameters}
+              handleClickAddConstraint={handleAddConstraint}
+              handleClickRemoveConstraint={handleRemoveConstraint}
+              handleChangeCondition={(constraintId, parameterId, event) => {
+                handleChangeCondition(
+                  constraintId,
+                  parameterId,
+                  event.target.value,
+                )
+              }}
+              handleToggleCondition={handleToggleCondition}
             />
           )}
           <ConstraintEditor
-            constraintTexts={model.constraintTexts}
-            constraintDirectEditMode={model.constraintDirectEditMode}
-            handleChangeConstraintFormula={
-              modelHandlers.handleChangeConstraintFormula
-            }
+            constraintTexts={constraints.constraintTexts}
+            constraintDirectEditMode={constraints.constraintDirectEditMode}
+            handleChangeConstraintFormula={(e) => {
+              handleChangeConstraintFormula(e.target.value)
+            }}
             handleToggleConstraintDirectEditMode={
-              modelHandlers.handleToggleConstraintDirectEditMode
+              handleToggleConstraintDirectEditMode
             }
-            handleClickResetConstraints={
-              modelHandlers.handleClickResetConstraints
-            }
+            handleClickResetConstraints={handleResetConstraints}
           />
-          <AlertMessage messages={model.constraintErrors} />
+          <AlertMessage messages={constraints.constraintErrors} />
         </div>
       )}
     </Section>
