@@ -4,9 +4,9 @@ import {
   NumberInput,
   Section,
   Switch,
-} from '../../../shared/components'
-import { useConfig } from '../../config'
-import type { Parameter, SubModelsState } from '../../../types'
+} from '../../shared/components'
+import { useConfig } from '../config'
+import type { Parameter, SubModelsState } from '../../types'
 
 interface SubModelsSectionProps {
   subModels: SubModelsState

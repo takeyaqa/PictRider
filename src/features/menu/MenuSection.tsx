@@ -1,14 +1,14 @@
 import { PictRunner } from '@takeyaqa/pict-wasm'
-import { Button, Section } from '../../../shared/components'
-import { runPict } from '../../../shared/helpers'
-import { usePictRunner } from '../../../shared/hooks'
-import { useConfig } from '../../config'
+import { Button, Section } from '../../shared/components'
+import { runPict } from '../../shared/helpers'
+import { usePictRunner } from '../../shared/hooks'
+import { useConfig } from '../config'
 import type {
   ConstraintsState,
   ParametersState,
   Result,
   SubModelsState,
-} from '../../../types'
+} from '../../types'
 
 interface MenuSectionProps {
   pictRunnerInjection?: PictRunner // use for testing
