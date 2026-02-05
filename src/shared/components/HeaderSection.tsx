@@ -24,7 +24,7 @@ function HeaderSection() {
             <a
               href="https://github.com/takeyaqa/PictRider"
               target="_blank"
-              rel="noreferrer noopener"
+              rel="noopener noreferrer"
             >
               <picture>
                 <source
@@ -50,7 +50,7 @@ function HeaderSection() {
             <a
               href={`https://github.com/takeyaqa/PictRider/releases/tag/${import.meta.env.VITE_APP_VERSION}`}
               target="_blank"
-              rel="noreferrer noopener"
+              rel="noopener noreferrer"
             >
               {import.meta.env.VITE_APP_VERSION}
             </a>
