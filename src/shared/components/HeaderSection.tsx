@@ -46,7 +46,15 @@ function HeaderSection() {
               </picture>
             </a>
           </li>
-          <li>{import.meta.env.VITE_APP_VERSION}</li>
+          <li>
+            <a
+              href={`https://github.com/takeyaqa/PictRider/releases/tag/${import.meta.env.VITE_APP_VERSION}`}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              {import.meta.env.VITE_APP_VERSION}
+            </a>
+          </li>
         </ul>
       </nav>
     </header>
