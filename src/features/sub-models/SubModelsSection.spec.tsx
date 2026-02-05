@@ -1,7 +1,7 @@
 import { PictRunner } from '@takeyaqa/pict-wasm'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
-import App from '../../../App'
+import App from '../../App'
 
 describe('SubModelArea', () => {
   let screen: Awaited<ReturnType<typeof render>>

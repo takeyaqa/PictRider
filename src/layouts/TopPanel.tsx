@@ -1,6 +1,6 @@
 import { PictRunner } from '@takeyaqa/pict-wasm'
-import { OptionsSection } from '../features/config/components'
-import { MenuSection } from '../features/menu/components'
+import { OptionsSection } from '../features/config'
+import { MenuSection } from '../features/menu'
 import { ConstraintsSection } from '../features/constraints'
 import { ParametersSection } from '../features/parameters'
 import { SubModelsSection } from '../features/sub-models'

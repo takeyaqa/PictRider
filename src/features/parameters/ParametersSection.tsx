@@ -1,6 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { AlertMessage, Section, TextInput } from '../../../shared/components'
-import type { ParametersState } from '../../../types'
+import { AlertMessage, Section, TextInput } from '../../shared/components'
+import type { ParametersState } from '../../types'
 
 interface ParametersSectionProps {
   parameters: ParametersState

@@ -6,14 +6,14 @@ import {
   Section,
   Switch,
   TextInput,
-} from '../../../shared/components'
-import { useConfig } from '../../config'
+} from '../../shared/components'
+import { useConfig } from '../config'
 import type {
   Constraint,
   ConstraintsState,
   ConstraintText,
   Parameter,
-} from '../../../types'
+} from '../../types'
 
 interface ConstraintsSectionProps {
   constraints: ConstraintsState
