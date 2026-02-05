@@ -7,11 +7,12 @@ PictRider is a web-based pairwise testing tool built with React 19, TypeScript, 
 ## Build & Test Commands
 
 ```bash
-# Set up Playwright (required for first-time setup)
+# Install dependencies (pnpm 10.x required, Node 24.x) and Playwright
+pnpm install
 pnpm exec playwright install --with-deps
 
-# Install dependencies (pnpm 10.x required, Node 24.x)
-pnpm install
+# Create .env from example
+cp .env.example .env
 
 # Vite build
 pnpm run build
@@ -39,9 +40,11 @@ pnpm run test:e2e
 src/
 ├── features/           # Feature modules (self-contained)
 │   ├── config/         # Global configuration state (Context + useReducer)
-│   ├── model/          # Parameter/constraint model state and logic
+│   ├── constraints/    # constraints input components
 │   ├── menu/           # Menu components
-│   └── result/         # Result display components
+│   ├── parameters/     # Parameter input components
+│   ├── result/         # Result display components
+|   └── sub-models/     # Sub-model input components
 ├── layouts/            # Page layout components (TopPanel, BottomPanel, MainArea)
 ├── shared/             # Shared utilities
 │   ├── components/     # Reusable UI components (Button, TextInput, Switch, etc.)
