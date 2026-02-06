@@ -72,10 +72,12 @@ The `usePictRunner` hook wraps `@takeyaqa/pict-wasm`. Components accept an optio
 
 ## Conventions
 
+- **Git Workflow**: Always create a new branch from `main` before starting any task
 - **TypeScript**: Strict mode with `typescript-eslint` strict + stylistic rules
 - **Prettier** for formatting
 - **React**: Functional components only, hooks for state/effects
 - **IDs**: Use `uuidv4()` from `shared/helpers` for generating unique identifiers
 - **Validation**: Input validation happens in reducers, setting `isValid*` flags on state objects
+- **Commit Messages**: Use Conventional Commits format (e.g., `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `ci:`)
 - **Before committing** - Always run `pnpm run fmt`, `pnpm run lint`, `pnpm run typecheck`, `pnpm run test:run`, and `pnpm run test:e2e`
 - **Ignore `pnpm-lock.yaml`** - Always skip this file during code review and pull request creation
