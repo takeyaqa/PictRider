@@ -152,7 +152,7 @@ describe('ConstraintsSection', () => {
       .toBeDisabled()
   })
 
-  it('Should disable add constraint button when maximum constraint limit (50) is reached', async () => {
+  it('Should disable add constraint button when maximum constraint limit (25) is reached', async () => {
     // arrange - enable constraints area
     await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
 
@@ -161,18 +161,18 @@ describe('ConstraintsSection', () => {
       .element(screen.getByText('Constraint 1', { exact: true }))
       .toBeInTheDocument()
     await expect
-      .element(screen.getByText('Constraint 50', { exact: true }))
+      .element(screen.getByText('Constraint 25', { exact: true }))
       .not.toBeInTheDocument()
 
-    // Add constraints until we reach the limit (50)
-    // We already have 1 constraint, so we need to add 49 more
-    for (let i = 0; i < 49; i++) {
+    // Add constraints until we reach the limit (25)
+    // We already have 1 constraint, so we need to add 24 more
+    for (let i = 0; i < 24; i++) {
       await screen.getByRole('button', { name: 'Add Constraint' }).click()
     }
 
-    // Verify we have 50 constraints
+    // Verify we have 25 constraints
     await expect
-      .element(screen.getByText('Constraint 50', { exact: true }))
+      .element(screen.getByText('Constraint 25', { exact: true }))
       .toBeInTheDocument()
 
     // Verify the Add Constraint button is disabled

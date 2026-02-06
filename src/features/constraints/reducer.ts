@@ -182,7 +182,7 @@ export function constraintsReducer(
 
     case 'addConstraint': {
       const { parameters } = action.payload
-      if (state.constraints.length >= 50) {
+      if (state.constraints.length >= 25) {
         // may not be reached
         return structuredClone(state)
       }

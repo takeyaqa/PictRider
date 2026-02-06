@@ -151,7 +151,7 @@ export function parametersReducer(
 
     case 'addRow': {
       const { id, target, newParameterId } = action.payload
-      if (state.parameters.length >= 50) {
+      if (state.parameters.length >= 25) {
         // may not be reached
         return structuredClone(state)
       }

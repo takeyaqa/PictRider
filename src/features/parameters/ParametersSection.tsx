@@ -100,7 +100,7 @@ function ParameterMenu({
         <MenuItem>
           <button
             type="button"
-            disabled={parametersLength >= 50}
+            disabled={parametersLength >= 25}
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
               handleClickAddRow(parameterId, 'above')
@@ -112,7 +112,7 @@ function ParameterMenu({
         <MenuItem>
           <button
             type="button"
-            disabled={parametersLength >= 50}
+            disabled={parametersLength >= 25}
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
               handleClickAddRow(parameterId, 'below')
