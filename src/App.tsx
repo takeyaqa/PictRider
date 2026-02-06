@@ -1,11 +1,11 @@
 import { PictRunner } from '@takeyaqa/pict-wasm'
 import { ConfigProvider } from './features/config'
-import { MainArea } from './layouts'
 import {
   FooterSection,
   HeaderSection,
+  MainArea,
   NotificationMessageSection,
-} from './shared/components'
+} from './layouts'
 
 interface AppProps {
   pictRunnerInjection?: PictRunner // use for testing
