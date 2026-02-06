@@ -127,7 +127,7 @@ function ConstraintTables({
             title="Constraint"
             heading={`Constraint ${(i + 1).toString()}`}
             totalLength={constraints.length}
-            maxLength={50}
+            maxLength={25}
             canRenderButtons={i + 1 === constraints.length}
             handleClickAdd={handleClickAddConstraint}
             handleClickRemove={handleClickRemoveConstraint}

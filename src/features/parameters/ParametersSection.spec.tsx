@@ -265,7 +265,7 @@ describe('ParametersSection', () => {
       .toHaveValue('Compression')
   })
 
-  it('Should disable add row button when maximum row limit (50) is reached', async () => {
+  it('Should disable add row button when maximum row limit (25) is reached', async () => {
     // Initial state - 6 parameter rows
     await expect
       .element(
@@ -278,24 +278,24 @@ describe('ParametersSection', () => {
       )
       .not.toBeInTheDocument()
 
-    // Add rows until we reach the limit (50 rows)
-    // We already have 6 rows, so we need to add 44 more
-    for (let i = 0; i < 44; i++) {
+    // Add rows until we reach the limit (25 rows)
+    // We already have 6 rows, so we need to add 19 more
+    for (let i = 0; i < 19; i++) {
       await screen
         .getByRole('button', { name: 'Parameter 1 Edit Menu' })
         .click()
       await screen.getByRole('menuitem', { name: 'Insert Above' }).click()
     }
 
-    // Verify we have 50 rows
+    // Verify we have 25 rows
     await expect
       .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(49),
+        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(24),
       )
       .toBeInTheDocument()
     await expect
       .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(50),
+        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(25),
       )
       .not.toBeInTheDocument()
 
