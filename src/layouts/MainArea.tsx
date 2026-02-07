@@ -1,13 +1,23 @@
 import { PictRunner } from '@takeyaqa/pict-wasm'
 import { useEffect, useReducer, useRef, useState, useCallback } from 'react'
-import TopPanel from './TopPanel'
-import BottomPanel from './BottomPanel'
+import { OptionsSection } from '../features/config'
 import {
+  ConstraintsSection,
   constraintsReducer,
   getInitialConstraints,
 } from '../features/constraints'
-import { parametersReducer, getInitialParameters } from '../features/parameters'
-import { subModelsReducer, getInitialSubModels } from '../features/sub-models'
+import { MenuSection } from '../features/menu'
+import {
+  ParametersSection,
+  parametersReducer,
+  getInitialParameters,
+} from '../features/parameters'
+import { ResultSection } from '../features/result'
+import {
+  SubModelsSection,
+  subModelsReducer,
+  getInitialSubModels,
+} from '../features/sub-models'
 import { uuidv4 } from '../shared/helpers'
 import type { Result } from '../types'
 
@@ -196,32 +206,51 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
 
   return (
     <main className="grid grid-cols-1 xl:grid-cols-2">
-      <TopPanel
-        pictRunnerInjection={pictRunnerInjection}
-        result={result}
-        setResult={setResult}
-        parameters={parametersState}
-        constraints={constraintsState}
-        subModels={subModelsState}
-        handleAddRow={handleAddRow}
-        handleRemoveRow={handleRemoveRow}
-        handleClear={handleClear}
-        handleChangeParameter={handleChangeParameter}
-        handleAddConstraint={handleAddConstraint}
-        handleRemoveConstraint={handleRemoveConstraint}
-        handleChangeCondition={handleChangeCondition}
-        handleToggleCondition={handleToggleCondition}
-        handleChangeConstraintFormula={handleChangeConstraintFormula}
-        handleToggleConstraintDirectEditMode={
-          handleToggleConstraintDirectEditMode
-        }
-        handleResetConstraints={handleResetConstraints}
-        handleAddSubModel={handleAddSubModel}
-        handleRemoveSubModel={handleRemoveSubModel}
-        handleClickSubModelParameters={handleClickSubModelParameters}
-        handleChangeSubModelOrder={handleChangeSubModelOrder}
-      />
-      <BottomPanel result={result} resultSection={resultSection} />
+      <div>
+        <MenuSection
+          pictRunnerInjection={pictRunnerInjection}
+          canClearResult={result !== null}
+          handleClearResult={() => {
+            setResult(null)
+          }}
+          setResult={setResult}
+          parameters={parametersState}
+          constraints={constraintsState}
+          subModels={subModelsState}
+          handleClickClear={handleClear}
+        />
+        <ParametersSection
+          parameters={parametersState}
+          handleAddRow={handleAddRow}
+          handleRemoveRow={handleRemoveRow}
+          handleChangeParameter={handleChangeParameter}
+        />
+        <ConstraintsSection
+          constraints={constraintsState}
+          parameters={parametersState.parameters}
+          handleAddConstraint={handleAddConstraint}
+          handleRemoveConstraint={handleRemoveConstraint}
+          handleChangeCondition={handleChangeCondition}
+          handleToggleCondition={handleToggleCondition}
+          handleChangeConstraintFormula={handleChangeConstraintFormula}
+          handleToggleConstraintDirectEditMode={
+            handleToggleConstraintDirectEditMode
+          }
+          handleResetConstraints={handleResetConstraints}
+        />
+        <SubModelsSection
+          subModels={subModelsState}
+          parameters={parametersState.parameters}
+          handleAddSubModel={handleAddSubModel}
+          handleRemoveSubModel={handleRemoveSubModel}
+          handleClickSubModelParameters={handleClickSubModelParameters}
+          handleChangeSubModelOrder={handleChangeSubModelOrder}
+        />
+        <OptionsSection />
+      </div>
+      <div ref={resultSection}>
+        <ResultSection result={result} />
+      </div>
     </main>
   )
 }
