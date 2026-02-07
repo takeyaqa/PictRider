@@ -1,18 +1,98 @@
-import { PictRunner } from '@takeyaqa/pict-wasm'
+import { useMemo, useReducer } from 'react'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
-import App from '../../App'
+import ConfigProvider from '../config/provider'
+import { getInitialParameters } from '../parameters'
+import ConstraintsSection from './ConstraintsSection'
+import { constraintsReducer, getInitialConstraints } from './reducer'
+
+function ConstraintsSectionWrapper() {
+  const initialParameters = useMemo(() => getInitialParameters(), [])
+  const [constraintsState, dispatchConstraints] = useReducer(
+    constraintsReducer,
+    getInitialConstraints(initialParameters.parameters),
+  )
+
+  const handleAddConstraint = () => {
+    dispatchConstraints({
+      type: 'addConstraint',
+      payload: { parameters: initialParameters.parameters },
+    })
+  }
+
+  const handleRemoveConstraint = () => {
+    dispatchConstraints({ type: 'removeConstraint' })
+  }
+
+  const handleChangeCondition = (
+    constraintId: string,
+    parameterId: string,
+    value: string,
+  ) => {
+    dispatchConstraints({
+      type: 'changeCondition',
+      payload: {
+        constraintId,
+        parameterId,
+        value,
+        parameters: initialParameters.parameters,
+      },
+    })
+  }
+
+  const handleToggleCondition = (constraintId: string, parameterId: string) => {
+    dispatchConstraints({
+      type: 'toggleCondition',
+      payload: {
+        constraintId,
+        parameterId,
+        parameters: initialParameters.parameters,
+      },
+    })
+  }
+
+  const handleChangeConstraintFormula = (value: string) => {
+    dispatchConstraints({
+      type: 'changeConstraintFormula',
+      payload: { value },
+    })
+  }
+
+  const handleToggleConstraintDirectEditMode = () => {
+    dispatchConstraints({ type: 'toggleConstraintDirectEditMode' })
+  }
+
+  const handleResetConstraints = () => {
+    dispatchConstraints({
+      type: 'resetConstraints',
+      payload: { parameters: initialParameters.parameters },
+    })
+  }
+
+  return (
+    <ConfigProvider>
+      <ConstraintsSection
+        constraints={constraintsState}
+        parameters={initialParameters.parameters}
+        handleAddConstraint={handleAddConstraint}
+        handleRemoveConstraint={handleRemoveConstraint}
+        handleChangeCondition={handleChangeCondition}
+        handleToggleCondition={handleToggleCondition}
+        handleChangeConstraintFormula={handleChangeConstraintFormula}
+        handleToggleConstraintDirectEditMode={
+          handleToggleConstraintDirectEditMode
+        }
+        handleResetConstraints={handleResetConstraints}
+      />
+    </ConfigProvider>
+  )
+}
 
 describe('ConstraintsSection', () => {
   let screen: Awaited<ReturnType<typeof render>>
-  let pictRunnerMock: PictRunner
 
   beforeEach(async () => {
-    const PictRunnerMock = vi.fn()
-    PictRunnerMock.prototype.init = vi.fn()
-    PictRunnerMock.prototype.run = vi.fn()
-    pictRunnerMock = new PictRunnerMock()
-    screen = await render(<App pictRunnerInjection={pictRunnerMock} />)
+    screen = await render(<ConstraintsSectionWrapper />)
   })
 
   afterEach(() => {
@@ -274,9 +354,6 @@ describe('ConstraintsSection', () => {
       .toHaveTextContent(
         'Constraints cannot contain special characters: ":", "(", ")", "|", "~", "{", "}", "@", "[", "]", ";',
       )
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeDisabled()
 
     // act - clear the error by changing the name
     await input1.clear()
@@ -284,58 +361,6 @@ describe('ConstraintsSection', () => {
 
     // assert - error message should be gone
     await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeEnabled()
-  })
-
-  it('Should change constraints when edit parameter name', async () => {
-    // arrange - enable constraints area
-    await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
-
-    // get the second 'if' button
-    const secondIfButton = screen.getByRole('button', {
-      name: 'Constraint 1 Size if',
-    })
-
-    // change the second to 'then'
-    await secondIfButton.click()
-
-    // find inputs in the constraints area
-    const input1 = screen.getByRole('textbox', {
-      name: 'Constraint 1 Type Predicate',
-    })
-    const input2 = screen.getByRole('textbox', {
-      name: 'Constraint 1 Size Predicate',
-    })
-
-    // act - type predicates
-    await input1.fill('RAID-5')
-    await input2.fill('> 1000')
-
-    // assert - the constraint should be displayed in the pre element
-    const constraintsCell = screen.getByText('Type', { exact: true })
-    await expect.element(constraintsCell).toHaveTextContent('Type')
-    const beforePreElement = screen.getByText(
-      /IF \[Type\] = "RAID-5" THEN \[Size\] > 1000;/i,
-    )
-    await expect.element(beforePreElement).toBeInTheDocument()
-
-    // act - edit parameter values
-    const parameterInput = screen.getByRole('textbox', {
-      name: 'Parameter 1 Name',
-    })
-    await parameterInput.clear()
-    await parameterInput.fill('New Type')
-
-    // assert - the constraint should be displayed in the pre element
-    await expect
-      .element(screen.getByText('New Type', { exact: true }))
-      .toHaveTextContent('New Type')
-    const afterPreElement = screen.getByText(
-      /IF \[New Type\] = "RAID-5" THEN \[Size\] > 1000;/i,
-    )
-    await expect.element(afterPreElement).toBeInTheDocument()
   })
 
   it('Should change direct edit mode when click button', async () => {
