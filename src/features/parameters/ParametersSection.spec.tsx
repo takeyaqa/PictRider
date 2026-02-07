@@ -1,18 +1,53 @@
-import { PictRunner } from '@takeyaqa/pict-wasm'
+import { useReducer } from 'react'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
-import App from '../../App'
+import { uuidv4 } from '../../shared/helpers'
+import ParametersSection from './ParametersSection'
+import { parametersReducer, getInitialParameters } from './reducer'
+
+function ParametersSectionWrapper() {
+  const [parametersState, dispatchParameters] = useReducer(
+    parametersReducer,
+    getInitialParameters(),
+  )
+
+  const handleChangeParameter = (
+    id: string,
+    field: 'name' | 'values',
+    value: string,
+  ) => {
+    dispatchParameters({
+      type: 'changeParameter',
+      payload: { id, field, value },
+    })
+  }
+
+  const handleAddRow = (id: string, target: 'above' | 'below') => {
+    dispatchParameters({
+      type: 'addRow',
+      payload: { id, target, newParameterId: uuidv4() },
+    })
+  }
+
+  const handleRemoveRow = (id: string) => {
+    dispatchParameters({ type: 'removeRow', payload: { id } })
+  }
+
+  return (
+    <ParametersSection
+      parameters={parametersState}
+      handleAddRow={handleAddRow}
+      handleRemoveRow={handleRemoveRow}
+      handleChangeParameter={handleChangeParameter}
+    />
+  )
+}
 
 describe('ParametersSection', () => {
   let screen: Awaited<ReturnType<typeof render>>
-  let pictRunnerMock: PictRunner
 
   beforeEach(async () => {
-    const PictRunnerMock = vi.fn()
-    PictRunnerMock.prototype.init = vi.fn()
-    PictRunnerMock.prototype.run = vi.fn()
-    pictRunnerMock = new PictRunnerMock()
-    screen = await render(<App pictRunnerInjection={pictRunnerMock} />)
+    screen = await render(<ParametersSectionWrapper />)
   })
 
   afterEach(() => {
@@ -139,45 +174,6 @@ describe('ParametersSection', () => {
     await expect
       .element(screen.getByRole('menuitem', { name: 'Delete Row' }))
       .toBeDisabled()
-  })
-
-  it('Should clear all parameter values when clicking the clear button', async () => {
-    // act
-    await screen.getByRole('button', { name: 'Clear Input' }).click()
-
-    // assert - check count is not changed but values is empty
-    await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(5),
-      )
-      .toBeInTheDocument()
-    await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(6),
-      )
-      .not.toBeInTheDocument()
-    await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Values/ }).nth(5),
-      )
-      .toBeInTheDocument()
-    await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Values/ }).nth(6),
-      )
-      .not.toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('textbox', { name: 'Parameter 1 Name' }))
-      .toHaveValue('')
-    await expect
-      .element(screen.getByRole('textbox', { name: 'Parameter 1 Values' }))
-      .toHaveValue('')
-    await expect
-      .element(screen.getByRole('textbox', { name: 'Parameter 6 Name' }))
-      .toHaveValue('')
-    await expect
-      .element(screen.getByRole('textbox', { name: 'Parameter 6 Values' }))
-      .toHaveValue('')
   })
 
   it('Should handle adding and removing multiple parameter rows', async () => {
@@ -318,9 +314,6 @@ describe('ParametersSection', () => {
     await expect
       .element(screen.getByRole('alert'))
       .toHaveTextContent('Parameter names must be unique.')
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeDisabled()
 
     // act - clear the error by changing the name
     await nameInput.clear()
@@ -328,9 +321,6 @@ describe('ParametersSection', () => {
 
     // assert - error message should be gone
     await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeEnabled()
   })
 
   it('Should display error message when duplicate parameter names are found (double)', async () => {
@@ -350,9 +340,6 @@ describe('ParametersSection', () => {
     await expect
       .element(screen.getByRole('alert'))
       .toHaveTextContent('Parameter names must be unique.')
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeDisabled()
 
     // act - edit parameter name to create a duplicate twice
     const nameInput3 = screen.getByRole('textbox', {
@@ -370,9 +357,6 @@ describe('ParametersSection', () => {
     await expect
       .element(screen.getByRole('alert'))
       .toHaveTextContent('Parameter names must be unique.')
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeDisabled()
 
     // act - edit first parameter name to clear a duplicate, but still have one
     await nameInput1.clear()
@@ -381,18 +365,12 @@ describe('ParametersSection', () => {
     await expect
       .element(screen.getByRole('alert'))
       .toHaveTextContent('Parameter names must be unique.')
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeDisabled()
 
     // act - clear the error by changing the name
     await nameInput4.clear()
 
     // assert - error message should be gone (blank input is ignored)
     await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeEnabled()
   })
 
   it('Should display error message when invalid character in parameter name', async () => {
@@ -409,9 +387,6 @@ describe('ParametersSection', () => {
       .toHaveTextContent(
         'Parameter name cannot contain special characters: "#", ":", "<", ">", "(", ")", "|", ",", "~", "{", "}", "@", "[", "]", ";", "=", "!", "+", "&", "*", "?"',
       )
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeDisabled()
 
     // act - clear the error by changing the name
     await nameInput.clear()
@@ -419,9 +394,6 @@ describe('ParametersSection', () => {
 
     // assert - error message should be gone
     await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeEnabled()
   })
 
   it('Should display error message when invalid character in parameter values', async () => {
@@ -437,9 +409,6 @@ describe('ParametersSection', () => {
       .toHaveTextContent(
         'Parameter values cannot contain special characters: "#", ":", "{", "}", "@", "[", "]", ";", "=", "!", "+", "&", "*", "?"',
       )
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeDisabled()
 
     // act - clear the error by changing the name
     await nameInput.clear()
@@ -447,8 +416,5 @@ describe('ParametersSection', () => {
 
     // assert - error message should be gone
     await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeEnabled()
   })
 })
