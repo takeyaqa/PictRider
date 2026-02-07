@@ -2,37 +2,45 @@ import { PictRunner } from '@takeyaqa/pict-wasm'
 import { Button, Section } from '../../shared/components'
 import { runPict } from '../../shared/helpers'
 import { usePictRunner } from '../../shared/hooks'
+import type { Constraints, Parameters, Result, SubModels } from '../../types'
 import { useConfig } from '../config'
-import type {
-  ConstraintsState,
-  ParametersState,
-  Result,
-  SubModelsState,
-} from '../../types'
 
 interface MenuSectionProps {
   pictRunnerInjection?: PictRunner // use for testing
   canClearResult: boolean
-  handleClearResult: () => void
+  parameters: Parameters
+  constraints: Constraints
+  subModels: SubModels
+  onClearInput: () => void
+  onClearResult: () => void
   setResult: (result: Result) => void
-  parameters: ParametersState
-  constraints: ConstraintsState
-  subModels: SubModelsState
-  handleClickClear: () => void
 }
 
 function MenuSection({
   pictRunnerInjection,
   canClearResult,
-  handleClearResult,
-  setResult,
   parameters,
   constraints,
   subModels,
-  handleClickClear,
+  onClearInput,
+  onClearResult,
+  setResult,
 }: MenuSectionProps) {
   const { pictRunner, pictRunnerLoaded } = usePictRunner(pictRunnerInjection)
   const { config } = useConfig()
+
+  const containsInvalidValues = parameters.parameters.some(
+    (p) => !p.isValidName || !p.isValidValues,
+  )
+  const containsInvalidConstraints = constraints.constraints.some((c) =>
+    c.conditions.some((cond) => !cond.isValid),
+  )
+
+  const canRunPict =
+    !containsInvalidValues &&
+    !containsInvalidConstraints &&
+    pictRunnerLoaded &&
+    pictRunner.current
 
   function handleClickRun() {
     if (
@@ -53,24 +61,11 @@ function MenuSection({
     setResult(result)
   }
 
-  const containsInvalidValues = parameters.parameters.some(
-    (p) => !p.isValidName || !p.isValidValues,
-  )
-  const containsInvalidConstraints = constraints.constraints.some((c) =>
-    c.conditions.some((cond) => !cond.isValid),
-  )
-
-  const canRunPict =
-    !containsInvalidValues &&
-    !containsInvalidConstraints &&
-    pictRunnerLoaded &&
-    pictRunner.current
-
   return (
     <Section>
       <menu className="flex list-none items-center justify-start gap-5">
         <li>
-          <Button type="warning" size="sm" onClick={handleClickClear}>
+          <Button type="warning" size="sm" onClick={onClearInput}>
             Clear Input
           </Button>
         </li>
@@ -79,7 +74,7 @@ function MenuSection({
             type="warning"
             size="sm"
             disabled={!canClearResult}
-            onClick={handleClearResult}
+            onClick={onClearResult}
           >
             Clear Result
           </Button>

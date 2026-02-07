@@ -2,7 +2,7 @@ import { fixConstraint, printConstraints, uuidv4 } from '../../shared/helpers'
 import type {
   Condition,
   Constraint,
-  ConstraintsState,
+  Constraints,
   Message,
   Parameter,
 } from '../../types'
@@ -91,9 +91,9 @@ const invalidConstraintCharacters = [
 ]
 
 export function constraintsReducer(
-  state: ConstraintsState,
+  state: Constraints,
   action: ConstraintsAction,
-): ConstraintsState {
+): Constraints {
   switch (action.type) {
     case 'toggleCondition': {
       const { constraintId, parameterId, parameters } = action.payload
@@ -329,9 +329,7 @@ export function constraintsReducer(
   }
 }
 
-export function getInitialConstraints(
-  parameters: Parameter[],
-): ConstraintsState {
+export function getInitialConstraints(parameters: Parameter[]): Constraints {
   return {
     constraints: [createConstraintFromParameters(parameters)],
     constraintTexts: [],

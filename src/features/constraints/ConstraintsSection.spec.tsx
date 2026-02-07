@@ -8,20 +8,20 @@ import { constraintsReducer, getInitialConstraints } from './reducer'
 
 function ConstraintsSectionWrapper() {
   const initialParameters = useMemo(() => getInitialParameters(), [])
-  const [constraintsState, dispatchConstraints] = useReducer(
+  const [constraints, dispatchConstraints] = useReducer(
     constraintsReducer,
     getInitialConstraints(initialParameters.parameters),
   )
 
-  const handleAddConstraint = () => {
+  const handleToggleCondition = (constraintId: string, parameterId: string) => {
     dispatchConstraints({
-      type: 'addConstraint',
-      payload: { parameters: initialParameters.parameters },
+      type: 'toggleCondition',
+      payload: {
+        constraintId,
+        parameterId,
+        parameters: initialParameters.parameters,
+      },
     })
-  }
-
-  const handleRemoveConstraint = () => {
-    dispatchConstraints({ type: 'removeConstraint' })
   }
 
   const handleChangeCondition = (
@@ -40,15 +40,19 @@ function ConstraintsSectionWrapper() {
     })
   }
 
-  const handleToggleCondition = (constraintId: string, parameterId: string) => {
+  const handleAddConstraint = () => {
     dispatchConstraints({
-      type: 'toggleCondition',
-      payload: {
-        constraintId,
-        parameterId,
-        parameters: initialParameters.parameters,
-      },
+      type: 'addConstraint',
+      payload: { parameters: initialParameters.parameters },
     })
+  }
+
+  const handleRemoveConstraint = () => {
+    dispatchConstraints({ type: 'removeConstraint' })
+  }
+
+  const handleToggleConstraintDirectEditMode = () => {
+    dispatchConstraints({ type: 'toggleConstraintDirectEditMode' })
   }
 
   const handleChangeConstraintFormula = (value: string) => {
@@ -56,10 +60,6 @@ function ConstraintsSectionWrapper() {
       type: 'changeConstraintFormula',
       payload: { value },
     })
-  }
-
-  const handleToggleConstraintDirectEditMode = () => {
-    dispatchConstraints({ type: 'toggleConstraintDirectEditMode' })
   }
 
   const handleResetConstraints = () => {
@@ -72,17 +72,15 @@ function ConstraintsSectionWrapper() {
   return (
     <ConfigProvider>
       <ConstraintsSection
-        constraints={constraintsState}
+        constraints={constraints}
         parameters={initialParameters.parameters}
-        handleAddConstraint={handleAddConstraint}
-        handleRemoveConstraint={handleRemoveConstraint}
-        handleChangeCondition={handleChangeCondition}
-        handleToggleCondition={handleToggleCondition}
-        handleChangeConstraintFormula={handleChangeConstraintFormula}
-        handleToggleConstraintDirectEditMode={
-          handleToggleConstraintDirectEditMode
-        }
-        handleResetConstraints={handleResetConstraints}
+        onToggleCondition={handleToggleCondition}
+        onChangeConstraintFormula={handleChangeConstraintFormula}
+        onAddConstraint={handleAddConstraint}
+        onRemoveConstraint={handleRemoveConstraint}
+        onToggleConstraintDirectEditMode={handleToggleConstraintDirectEditMode}
+        onChangeCondition={handleChangeCondition}
+        onResetConstraints={handleResetConstraints}
       />
     </ConfigProvider>
   )

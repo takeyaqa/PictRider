@@ -28,19 +28,18 @@ interface MainAreaProps {
 const initialParametersState = getInitialParameters()
 
 function MainArea({ pictRunnerInjection }: MainAreaProps) {
-  const [parametersState, dispatchParameters] = useReducer(
+  const [parameters, dispatchParameters] = useReducer(
     parametersReducer,
     initialParametersState,
   )
-  const [constraintsState, dispatchConstraints] = useReducer(
+  const [constraints, dispatchConstraints] = useReducer(
     constraintsReducer,
     getInitialConstraints(initialParametersState.parameters),
   )
-  const [subModelsState, dispatchSubModels] = useReducer(
+  const [subModels, dispatchSubModels] = useReducer(
     subModelsReducer,
     getInitialSubModels(),
   )
-
   const [result, setResult] = useState<Result | null>(null)
   const resultSection = useRef<HTMLDivElement>(null)
 
@@ -57,6 +56,25 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
       })
     }
   }, [result])
+
+  // menu handlers
+  const handleClearInput = useCallback(() => {
+    // Generate new parameter IDs once and use them for both parameters and constraints
+    const newParameterIds = parameters.parameters.map(() => uuidv4())
+    const emptyParameters = newParameterIds.map((id) => ({
+      id,
+      name: '',
+      values: '',
+      isValidName: true,
+      isValidValues: true,
+    }))
+    dispatchParameters({ type: 'clear', payload: { newParameterIds } })
+    dispatchConstraints({
+      type: 'clear',
+      payload: { parameters: emptyParameters },
+    })
+    dispatchSubModels({ type: 'clear' })
+  }, [parameters.parameters])
 
   // Parameter handlers
   const handleChangeParameter = useCallback(
@@ -93,35 +111,20 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
     })
   }, [])
 
-  const handleClear = useCallback(() => {
-    // Generate new parameter IDs once and use them for both parameters and constraints
-    const newParameterIds = parametersState.parameters.map(() => uuidv4())
-    const emptyParameters = newParameterIds.map((id) => ({
-      id,
-      name: '',
-      values: '',
-      isValidName: true,
-      isValidValues: true,
-    }))
-    dispatchParameters({ type: 'clear', payload: { newParameterIds } })
-    dispatchConstraints({
-      type: 'clear',
-      payload: { parameters: emptyParameters },
-    })
-    dispatchSubModels({ type: 'clear' })
-  }, [parametersState.parameters])
-
   // Constraint handlers
-  const handleAddConstraint = useCallback(() => {
-    dispatchConstraints({
-      type: 'addConstraint',
-      payload: { parameters: parametersState.parameters },
-    })
-  }, [parametersState.parameters])
-
-  const handleRemoveConstraint = useCallback(() => {
-    dispatchConstraints({ type: 'removeConstraint' })
-  }, [])
+  const handleToggleCondition = useCallback(
+    (constraintId: string, parameterId: string) => {
+      dispatchConstraints({
+        type: 'toggleCondition',
+        payload: {
+          constraintId,
+          parameterId,
+          parameters: parameters.parameters,
+        },
+      })
+    },
+    [parameters.parameters],
+  )
 
   const handleChangeCondition = useCallback(
     (constraintId: string, parameterId: string, value: string) => {
@@ -131,26 +134,27 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
           constraintId,
           parameterId,
           value,
-          parameters: parametersState.parameters,
+          parameters: parameters.parameters,
         },
       })
     },
-    [parametersState.parameters],
+    [parameters.parameters],
   )
 
-  const handleToggleCondition = useCallback(
-    (constraintId: string, parameterId: string) => {
-      dispatchConstraints({
-        type: 'toggleCondition',
-        payload: {
-          constraintId,
-          parameterId,
-          parameters: parametersState.parameters,
-        },
-      })
-    },
-    [parametersState.parameters],
-  )
+  const handleAddConstraint = useCallback(() => {
+    dispatchConstraints({
+      type: 'addConstraint',
+      payload: { parameters: parameters.parameters },
+    })
+  }, [parameters.parameters])
+
+  const handleRemoveConstraint = useCallback(() => {
+    dispatchConstraints({ type: 'removeConstraint' })
+  }, [])
+
+  const handleToggleConstraintDirectEditMode = useCallback(() => {
+    dispatchConstraints({ type: 'toggleConstraintDirectEditMode' })
+  }, [])
 
   const handleChangeConstraintFormula = useCallback((value: string) => {
     dispatchConstraints({
@@ -159,26 +163,14 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
     })
   }, [])
 
-  const handleToggleConstraintDirectEditMode = useCallback(() => {
-    dispatchConstraints({ type: 'toggleConstraintDirectEditMode' })
-  }, [])
-
   const handleResetConstraints = useCallback(() => {
     dispatchConstraints({
       type: 'resetConstraints',
-      payload: { parameters: parametersState.parameters },
+      payload: { parameters: parameters.parameters },
     })
-  }, [parametersState.parameters])
+  }, [parameters.parameters])
 
   // SubModel handlers
-  const handleAddSubModel = useCallback(() => {
-    dispatchSubModels({ type: 'addSubModel' })
-  }, [])
-
-  const handleRemoveSubModel = useCallback(() => {
-    dispatchSubModels({ type: 'removeSubModel' })
-  }, [])
-
   const handleClickSubModelParameters = useCallback(
     (subModelId: string, parameterId: string, checked: boolean) => {
       dispatchSubModels({
@@ -196,13 +188,21 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
     })
   }, [])
 
+  const handleAddSubModel = useCallback(() => {
+    dispatchSubModels({ type: 'addSubModel' })
+  }, [])
+
+  const handleRemoveSubModel = useCallback(() => {
+    dispatchSubModels({ type: 'removeSubModel' })
+  }, [])
+
   // Update constraint texts when parameters change
   useEffect(() => {
     dispatchConstraints({
       type: 'updateConstraintTexts',
-      payload: { parameters: parametersState.parameters },
+      payload: { parameters: parameters.parameters },
     })
-  }, [parametersState.parameters])
+  }, [parameters.parameters])
 
   return (
     <main className="grid grid-cols-1 xl:grid-cols-2">
@@ -210,41 +210,41 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
         <MenuSection
           pictRunnerInjection={pictRunnerInjection}
           canClearResult={result !== null}
-          handleClearResult={() => {
+          parameters={parameters}
+          constraints={constraints}
+          subModels={subModels}
+          onClearInput={handleClearInput}
+          onClearResult={() => {
             setResult(null)
           }}
           setResult={setResult}
-          parameters={parametersState}
-          constraints={constraintsState}
-          subModels={subModelsState}
-          handleClickClear={handleClear}
         />
         <ParametersSection
-          parameters={parametersState}
-          handleAddRow={handleAddRow}
-          handleRemoveRow={handleRemoveRow}
-          handleChangeParameter={handleChangeParameter}
+          parameters={parameters}
+          onChangeParameter={handleChangeParameter}
+          onAddRow={handleAddRow}
+          onRemoveRow={handleRemoveRow}
         />
         <ConstraintsSection
-          constraints={constraintsState}
-          parameters={parametersState.parameters}
-          handleAddConstraint={handleAddConstraint}
-          handleRemoveConstraint={handleRemoveConstraint}
-          handleChangeCondition={handleChangeCondition}
-          handleToggleCondition={handleToggleCondition}
-          handleChangeConstraintFormula={handleChangeConstraintFormula}
-          handleToggleConstraintDirectEditMode={
+          constraints={constraints}
+          parameters={parameters.parameters}
+          onToggleCondition={handleToggleCondition}
+          onChangeConstraintFormula={handleChangeConstraintFormula}
+          onAddConstraint={handleAddConstraint}
+          onRemoveConstraint={handleRemoveConstraint}
+          onToggleConstraintDirectEditMode={
             handleToggleConstraintDirectEditMode
           }
-          handleResetConstraints={handleResetConstraints}
+          onChangeCondition={handleChangeCondition}
+          onResetConstraints={handleResetConstraints}
         />
         <SubModelsSection
-          subModels={subModelsState}
-          parameters={parametersState.parameters}
-          handleAddSubModel={handleAddSubModel}
-          handleRemoveSubModel={handleRemoveSubModel}
-          handleClickSubModelParameters={handleClickSubModelParameters}
-          handleChangeSubModelOrder={handleChangeSubModelOrder}
+          subModels={subModels}
+          parameters={parameters.parameters}
+          onClickSubModelParameters={handleClickSubModelParameters}
+          onChangeSubModelOrder={handleChangeSubModelOrder}
+          onAddSubModel={handleAddSubModel}
+          onRemoveSubModel={handleRemoveSubModel}
         />
         <OptionsSection />
       </div>

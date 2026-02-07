@@ -1,5 +1,5 @@
 import { uuidv4 } from '../../shared/helpers'
-import type { Message, Parameter, ParametersState } from '../../types'
+import type { Message, Parameter, Parameters } from '../../types'
 
 export type ParametersAction =
   | {
@@ -73,9 +73,9 @@ const invalidParameterValuesCharacters = [
 ]
 
 export function parametersReducer(
-  state: ParametersState,
+  state: Parameters,
   action: ParametersAction,
-): ParametersState {
+): Parameters {
   switch (action.type) {
     case 'changeParameter': {
       const { id, field, value } = action.payload
@@ -218,7 +218,7 @@ export function parametersReducer(
   }
 }
 
-export function getInitialParameters(): ParametersState {
+export function getInitialParameters(): Parameters {
   return {
     parameters: [
       {

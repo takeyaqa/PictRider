@@ -7,40 +7,40 @@ import {
   Switch,
   TextInput,
 } from '../../shared/components'
-import { useConfig } from '../config'
 import type {
   Constraint,
-  ConstraintsState,
+  Constraints,
   ConstraintText,
   Parameter,
 } from '../../types'
+import { useConfig } from '../config'
 
 interface ConstraintsSectionProps {
-  constraints: ConstraintsState
+  constraints: Constraints
   parameters: Parameter[]
-  handleAddConstraint: () => void
-  handleRemoveConstraint: () => void
-  handleChangeCondition: (
+  onToggleCondition: (constraintId: string, parameterId: string) => void
+  onChangeCondition: (
     constraintId: string,
     parameterId: string,
     value: string,
   ) => void
-  handleToggleCondition: (constraintId: string, parameterId: string) => void
-  handleChangeConstraintFormula: (value: string) => void
-  handleToggleConstraintDirectEditMode: () => void
-  handleResetConstraints: () => void
+  onAddConstraint: () => void
+  onRemoveConstraint: () => void
+  onToggleConstraintDirectEditMode: () => void
+  onChangeConstraintFormula: (value: string) => void
+  onResetConstraints: () => void
 }
 
 function ConstraintsSection({
   constraints,
   parameters,
-  handleAddConstraint,
-  handleRemoveConstraint,
-  handleChangeCondition,
-  handleToggleCondition,
-  handleChangeConstraintFormula,
-  handleToggleConstraintDirectEditMode,
-  handleResetConstraints,
+  onToggleCondition,
+  onChangeCondition,
+  onAddConstraint,
+  onRemoveConstraint,
+  onToggleConstraintDirectEditMode,
+  onChangeConstraintFormula,
+  onResetConstraints,
 }: ConstraintsSectionProps) {
   const { config, handlers: configHandlers } = useConfig()
 
@@ -67,28 +67,22 @@ function ConstraintsSection({
             <ConstraintTables
               constraints={constraints.constraints}
               parameters={parameters}
-              handleClickAddConstraint={handleAddConstraint}
-              handleClickRemoveConstraint={handleRemoveConstraint}
-              handleChangeCondition={(constraintId, parameterId, event) => {
-                handleChangeCondition(
-                  constraintId,
-                  parameterId,
-                  event.target.value,
-                )
+              onClickAddConstraint={onAddConstraint}
+              onClickRemoveConstraint={onRemoveConstraint}
+              onChangeCondition={(constraintId, parameterId, event) => {
+                onChangeCondition(constraintId, parameterId, event.target.value)
               }}
-              handleToggleCondition={handleToggleCondition}
+              onToggleCondition={onToggleCondition}
             />
           )}
           <ConstraintEditor
             constraintTexts={constraints.constraintTexts}
             constraintDirectEditMode={constraints.constraintDirectEditMode}
-            handleChangeConstraintFormula={(e) => {
-              handleChangeConstraintFormula(e.target.value)
+            onChangeConstraintFormula={(e) => {
+              onChangeConstraintFormula(e.target.value)
             }}
-            handleToggleConstraintDirectEditMode={
-              handleToggleConstraintDirectEditMode
-            }
-            handleClickResetConstraints={handleResetConstraints}
+            onToggleConstraintDirectEditMode={onToggleConstraintDirectEditMode}
+            onClickResetConstraints={onResetConstraints}
           />
           <AlertMessage messages={constraints.constraintErrors} />
         </div>
@@ -100,23 +94,23 @@ function ConstraintsSection({
 interface ConstraintTablesProps {
   constraints: Constraint[]
   parameters: Parameter[]
-  handleClickAddConstraint: () => void
-  handleClickRemoveConstraint: () => void
-  handleChangeCondition: (
+  onToggleCondition: (constraintId: string, parameterId: string) => void
+  onChangeCondition: (
     constraintId: string,
     parameterId: string,
     event: React.ChangeEvent<HTMLInputElement>,
   ) => void
-  handleToggleCondition: (constraintId: string, parameterId: string) => void
+  onClickAddConstraint: () => void
+  onClickRemoveConstraint: () => void
 }
 
 function ConstraintTables({
   constraints,
   parameters,
-  handleClickAddConstraint,
-  handleClickRemoveConstraint,
-  handleChangeCondition,
-  handleToggleCondition,
+  onToggleCondition,
+  onChangeCondition,
+  onClickAddConstraint,
+  onClickRemoveConstraint,
 }: ConstraintTablesProps) {
   return (
     <div>
@@ -129,8 +123,8 @@ function ConstraintTables({
             totalLength={constraints.length}
             maxLength={25}
             canRenderButtons={i + 1 === constraints.length}
-            handleClickAdd={handleClickAddConstraint}
-            handleClickRemove={handleClickRemoveConstraint}
+            onClickAdd={onClickAddConstraint}
+            onClickRemove={onClickRemoveConstraint}
           >
             {constraint.conditions.map((condition) => (
               <div
@@ -148,10 +142,7 @@ function ConstraintTables({
                       fontMono={true}
                       aria-label={`Constraint ${(i + 1).toString()} ${getParameterName(parameters, condition.parameterId)} ${condition.ifOrThen}`}
                       onClick={() => {
-                        handleToggleCondition(
-                          constraint.id,
-                          condition.parameterId,
-                        )
+                        onToggleCondition(constraint.id, condition.parameterId)
                       }}
                     >
                       {condition.ifOrThen}
@@ -161,7 +152,7 @@ function ConstraintTables({
                       value={condition.predicate}
                       isValid={condition.isValid}
                       onChange={(e) => {
-                        handleChangeCondition(
+                        onChangeCondition(
                           constraint.id,
                           condition.parameterId,
                           e,
@@ -182,19 +173,17 @@ function ConstraintTables({
 interface ConstraintEditorProps {
   constraintTexts: ConstraintText[]
   constraintDirectEditMode: boolean
-  handleChangeConstraintFormula: (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => void
-  handleToggleConstraintDirectEditMode: () => void
-  handleClickResetConstraints: () => void
+  onToggleConstraintDirectEditMode: () => void
+  onChangeConstraintFormula: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onClickResetConstraints: () => void
 }
 
 function ConstraintEditor({
   constraintTexts,
   constraintDirectEditMode,
-  handleChangeConstraintFormula,
-  handleToggleConstraintDirectEditMode,
-  handleClickResetConstraints,
+  onToggleConstraintDirectEditMode,
+  onChangeConstraintFormula,
+  onClickResetConstraints,
 }: ConstraintEditorProps) {
   const [isEditing, setIsEditing] = useState(false)
   return (
@@ -213,7 +202,7 @@ function ConstraintEditor({
             id="constraint_formula"
             autoFocus={true}
             onChange={(e) => {
-              handleChangeConstraintFormula(e)
+              onChangeConstraintFormula(e)
             }}
             onBlur={() => {
               setIsEditing(false)
@@ -230,7 +219,7 @@ function ConstraintEditor({
               type="danger"
               size="sm"
               onClick={() => {
-                handleToggleConstraintDirectEditMode()
+                onToggleConstraintDirectEditMode()
                 setIsEditing(true)
               }}
             >
@@ -254,7 +243,7 @@ function ConstraintEditor({
         </>
       )}
       {constraintDirectEditMode && (
-        <Button type="warning" size="md" onClick={handleClickResetConstraints}>
+        <Button type="warning" size="md" onClick={onClickResetConstraints}>
           Reset Constraints
         </Button>
       )}

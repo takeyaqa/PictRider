@@ -6,10 +6,9 @@ export interface Parameter {
   isValidValues: boolean
 }
 
-export interface SubModel {
-  id: string
-  parameterIds: string[]
-  order: number
+export interface Parameters {
+  parameters: Parameter[]
+  parameterErrors: Message[]
 }
 
 export interface Condition {
@@ -37,6 +36,23 @@ export interface FixedConstraint {
 export interface ConstraintText {
   id: string
   text: string
+}
+
+export interface Constraints {
+  constraints: Constraint[]
+  constraintTexts: ConstraintText[]
+  constraintDirectEditMode: boolean
+  constraintErrors: Message[]
+}
+
+export interface SubModel {
+  id: string
+  parameterIds: string[]
+  order: number
+}
+
+export interface SubModels {
+  subModels: SubModel[]
 }
 
 export interface Message {
@@ -68,22 +84,4 @@ export interface Config {
   orderOfCombinations: number | ''
   randomizeGeneration: boolean
   randomizeSeed: number | ''
-}
-
-// State types for the three separate reducers
-
-export interface ParametersState {
-  parameters: Parameter[]
-  parameterErrors: Message[]
-}
-
-export interface ConstraintsState {
-  constraints: Constraint[]
-  constraintTexts: ConstraintText[]
-  constraintDirectEditMode: boolean
-  constraintErrors: Message[]
-}
-
-export interface SubModelsState {
-  subModels: SubModel[]
 }
