@@ -8,18 +8,10 @@ import { subModelsReducer, getInitialSubModels } from './reducer'
 
 function SubModelsSectionWrapper() {
   const initialParameters = useMemo(() => getInitialParameters(), [])
-  const [subModelsState, dispatchSubModels] = useReducer(
+  const [subModels, dispatchSubModels] = useReducer(
     subModelsReducer,
     getInitialSubModels(),
   )
-
-  const handleAddSubModel = () => {
-    dispatchSubModels({ type: 'addSubModel' })
-  }
-
-  const handleRemoveSubModel = () => {
-    dispatchSubModels({ type: 'removeSubModel' })
-  }
 
   const handleClickSubModelParameters = (
     subModelId: string,
@@ -39,15 +31,23 @@ function SubModelsSectionWrapper() {
     })
   }
 
+  const handleAddSubModel = () => {
+    dispatchSubModels({ type: 'addSubModel' })
+  }
+
+  const handleRemoveSubModel = () => {
+    dispatchSubModels({ type: 'removeSubModel' })
+  }
+
   return (
     <ConfigProvider>
       <SubModelsSection
-        subModels={subModelsState}
+        subModels={subModels}
         parameters={initialParameters.parameters}
-        handleAddSubModel={handleAddSubModel}
-        handleRemoveSubModel={handleRemoveSubModel}
-        handleClickSubModelParameters={handleClickSubModelParameters}
-        handleChangeSubModelOrder={handleChangeSubModelOrder}
+        onClickSubModelParameters={handleClickSubModelParameters}
+        onChangeSubModelOrder={handleChangeSubModelOrder}
+        onAddSubModel={handleAddSubModel}
+        onRemoveSubModel={handleRemoveSubModel}
       />
     </ConfigProvider>
   )

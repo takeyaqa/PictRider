@@ -2,55 +2,51 @@ import { PictRunner } from '@takeyaqa/pict-wasm'
 import { useMemo } from 'react'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
-import type {
-  ConstraintsState,
-  ParametersState,
-  SubModelsState,
-} from '../../types'
+import type { Constraints, Parameters, SubModels } from '../../types'
 import ConfigProvider from '../config/provider'
 import { getInitialConstraints } from '../constraints/reducer'
 import { getInitialParameters } from '../parameters/reducer'
 import { getInitialSubModels } from '../sub-models/reducer'
 import MenuSection from './MenuSection'
 
-interface WrapperProps {
+interface MenuSectionWrapperProps {
   pictRunnerInjection: PictRunner
   canClearResult?: boolean
-  handleClearResult?: () => void
+  parametersOverride?: Parameters
+  onClearInput?: () => void
+  onClearResult?: () => void
   setResult?: () => void
-  handleClickClear?: () => void
-  parametersOverride?: ParametersState
 }
 
 function MenuSectionWrapper({
   pictRunnerInjection,
   canClearResult = false,
-  handleClearResult = vi.fn(),
-  setResult = vi.fn(),
-  handleClickClear = vi.fn(),
   parametersOverride,
-}: WrapperProps) {
+  onClearResult = vi.fn(),
+  onClearInput = vi.fn(),
+  setResult = vi.fn(),
+}: MenuSectionWrapperProps) {
   const parameters = useMemo(
     () => parametersOverride ?? getInitialParameters(),
     [parametersOverride],
   )
-  const constraints: ConstraintsState = useMemo(
+  const constraints: Constraints = useMemo(
     () => getInitialConstraints(parameters.parameters),
     [parameters],
   )
-  const subModels: SubModelsState = useMemo(() => getInitialSubModels(), [])
+  const subModels: SubModels = useMemo(() => getInitialSubModels(), [])
 
   return (
     <ConfigProvider>
       <MenuSection
         pictRunnerInjection={pictRunnerInjection}
         canClearResult={canClearResult}
-        handleClearResult={handleClearResult}
-        setResult={setResult}
         parameters={parameters}
         constraints={constraints}
         subModels={subModels}
-        handleClickClear={handleClickClear}
+        onClearInput={onClearInput}
+        onClearResult={onClearResult}
+        setResult={setResult}
       />
     </ConfigProvider>
   )
@@ -126,13 +122,13 @@ describe('MenuSection', () => {
       .toBeEnabled()
   })
 
-  it('Should call handleClickClear when Clear Input is clicked', async () => {
+  it('Should call handleClearInput when Clear Input is clicked', async () => {
     // arrange
-    const handleClickClear = vi.fn()
+    const handleClearInput = vi.fn()
     screen = await render(
       <MenuSectionWrapper
         pictRunnerInjection={pictRunnerMock}
-        handleClickClear={handleClickClear}
+        onClearInput={handleClearInput}
       />,
     )
 
@@ -140,7 +136,7 @@ describe('MenuSection', () => {
     await screen.getByRole('button', { name: 'Clear Input' }).click()
 
     // assert
-    expect(handleClickClear).toHaveBeenCalledOnce()
+    expect(handleClearInput).toHaveBeenCalledOnce()
   })
 
   it('Should call handleClearResult when Clear Result is clicked', async () => {
@@ -150,7 +146,7 @@ describe('MenuSection', () => {
       <MenuSectionWrapper
         pictRunnerInjection={pictRunnerMock}
         canClearResult={true}
-        handleClearResult={handleClearResult}
+        onClearResult={handleClearResult}
       />,
     )
 
@@ -175,7 +171,7 @@ describe('MenuSection', () => {
 
   it('Should disable Run button when parameters contain invalid values', async () => {
     // arrange
-    const invalidParameters: ParametersState = {
+    const invalidParameters: Parameters = {
       parameters: [
         {
           id: '1',

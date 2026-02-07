@@ -5,29 +5,29 @@ import {
   Section,
   Switch,
 } from '../../shared/components'
+import type { Parameter, SubModels } from '../../types'
 import { useConfig } from '../config'
-import type { Parameter, SubModelsState } from '../../types'
 
 interface SubModelsSectionProps {
-  subModels: SubModelsState
+  subModels: SubModels
   parameters: Parameter[]
-  handleAddSubModel: () => void
-  handleRemoveSubModel: () => void
-  handleClickSubModelParameters: (
+  onClickSubModelParameters: (
     subModelId: string,
     parameterId: string,
     checked: boolean,
   ) => void
-  handleChangeSubModelOrder: (id: string, order: number) => void
+  onChangeSubModelOrder: (id: string, order: number) => void
+  onAddSubModel: () => void
+  onRemoveSubModel: () => void
 }
 
 function SubModelsSection({
   subModels,
   parameters,
-  handleAddSubModel,
-  handleRemoveSubModel,
-  handleClickSubModelParameters,
-  handleChangeSubModelOrder,
+  onClickSubModelParameters,
+  onChangeSubModelOrder,
+  onAddSubModel,
+  onRemoveSubModel,
 }: SubModelsSectionProps) {
   const { config, handlers: configHandlers } = useConfig()
 
@@ -58,8 +58,8 @@ function SubModelsSection({
               totalLength={subModels.subModels.length}
               maxLength={2}
               canRenderButtons={i + 1 === subModels.subModels.length}
-              handleClickAdd={handleAddSubModel}
-              handleClickRemove={handleRemoveSubModel}
+              onClickAdd={onAddSubModel}
+              onClickRemove={onRemoveSubModel}
             >
               <div className="grid grid-cols-2 items-center gap-5 border p-5 dark:border-gray-500">
                 <div>
@@ -72,7 +72,7 @@ function SubModelsSection({
                         label={parameter.name}
                         checked={subModel.parameterIds.includes(parameter.id)}
                         onChange={(checked) => {
-                          handleClickSubModelParameters(
+                          onClickSubModelParameters(
                             subModel.id,
                             parameter.id,
                             checked,
@@ -89,10 +89,7 @@ function SubModelsSection({
                     min={2}
                     max={parameters.length}
                     onChange={(e) => {
-                      handleChangeSubModelOrder(
-                        subModel.id,
-                        Number(e.target.value),
-                      )
+                      onChangeSubModelOrder(subModel.id, Number(e.target.value))
                     }}
                   />
                 </div>

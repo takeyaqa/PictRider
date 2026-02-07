@@ -1,8 +1,8 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 import { AlertMessage, Section } from '../../shared/components'
-import { useConfig } from '../config'
 import type { Result } from '../../types'
+import { useConfig } from '../config'
 
 function createCsvContent(result: Result) {
   const headerRow = result.header.map((h) => `"${h.name}"`).join(',')
@@ -64,7 +64,7 @@ function ResultSection({ result }: ResultSectionProps) {
           Result
         </h2>
         <div className="justify-self-end">
-          <DownloadMenu handleDownload={handleDownload} />
+          <DownloadMenu onDownload={handleDownload} />
         </div>
       </div>
       <AlertMessage messages={result.messages} />
@@ -129,10 +129,10 @@ function ModelFile({ modelFile }: ModelFileProps) {
 }
 
 interface DownloadMenuProps {
-  handleDownload: (type: 'csv' | 'tsv') => void
+  onDownload: (type: 'csv' | 'tsv') => void
 }
 
-function DownloadMenu({ handleDownload }: DownloadMenuProps) {
+function DownloadMenu({ onDownload }: DownloadMenuProps) {
   return (
     <Menu>
       <MenuButton className="center flex w-30 cursor-pointer items-center justify-center rounded bg-green-700 px-3 py-2 text-white data-disabled:cursor-not-allowed data-disabled:opacity-50 data-hover:bg-green-800 data-open:bg-green-800">
@@ -148,7 +148,7 @@ function DownloadMenu({ handleDownload }: DownloadMenuProps) {
             type="button"
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
-              handleDownload('csv')
+              onDownload('csv')
             }}
           >
             CSV
@@ -159,7 +159,7 @@ function DownloadMenu({ handleDownload }: DownloadMenuProps) {
             type="button"
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
-              handleDownload('tsv')
+              onDownload('tsv')
             }}
           >
             TSV

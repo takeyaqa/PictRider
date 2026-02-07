@@ -1,5 +1,5 @@
 import { uuidv4 } from '../../shared/helpers'
-import type { SubModelsState } from '../../types'
+import type { SubModels } from '../../types'
 
 export type SubModelsAction =
   | {
@@ -34,9 +34,9 @@ export type SubModelsAction =
     }
 
 export function subModelsReducer(
-  state: SubModelsState,
+  state: SubModels,
   action: SubModelsAction,
-): SubModelsState {
+): SubModels {
   switch (action.type) {
     case 'clickSubModelParameters': {
       const { subModelId, parameterId, checked } = action.payload
@@ -136,7 +136,7 @@ export function subModelsReducer(
   }
 }
 
-export function getInitialSubModels(): SubModelsState {
+export function getInitialSubModels(): SubModels {
   return {
     subModels: [
       {

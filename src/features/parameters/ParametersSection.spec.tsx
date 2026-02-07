@@ -6,7 +6,7 @@ import ParametersSection from './ParametersSection'
 import { parametersReducer, getInitialParameters } from './reducer'
 
 function ParametersSectionWrapper() {
-  const [parametersState, dispatchParameters] = useReducer(
+  const [parameters, dispatchParameters] = useReducer(
     parametersReducer,
     getInitialParameters(),
   )
@@ -35,10 +35,10 @@ function ParametersSectionWrapper() {
 
   return (
     <ParametersSection
-      parameters={parametersState}
-      handleAddRow={handleAddRow}
-      handleRemoveRow={handleRemoveRow}
-      handleChangeParameter={handleChangeParameter}
+      parameters={parameters}
+      onChangeParameter={handleChangeParameter}
+      onAddRow={handleAddRow}
+      onRemoveRow={handleRemoveRow}
     />
   )
 }
@@ -54,7 +54,7 @@ describe('ParametersSection', () => {
     vi.clearAllMocks()
   })
 
-  it('Should display PictRider title and default parameter values', async () => {
+  it('Should display default parameter values', async () => {
     // assert - only checking default text and values
     await expect
       .element(

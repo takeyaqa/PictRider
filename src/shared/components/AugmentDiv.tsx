@@ -8,8 +8,8 @@ interface AugmentDivProps {
   totalLength: number
   maxLength: number
   canRenderButtons: boolean
-  handleClickAdd: () => void
-  handleClickRemove: () => void
+  onClickAdd: () => void
+  onClickRemove: () => void
 }
 
 function AugmentDiv({
@@ -19,8 +19,8 @@ function AugmentDiv({
   totalLength,
   maxLength,
   canRenderButtons,
-  handleClickAdd,
-  handleClickRemove,
+  onClickAdd,
+  onClickRemove,
 }: AugmentDivProps) {
   return (
     <div className="mb-5">
@@ -33,7 +33,7 @@ function AugmentDiv({
               size="2xs"
               disabled={totalLength <= 1}
               aria-label={`Remove ${title}`}
-              onClick={handleClickRemove}
+              onClick={onClickRemove}
             >
               <XMarkIcon />
             </Button>
@@ -42,7 +42,7 @@ function AugmentDiv({
               size="2xs"
               disabled={totalLength >= maxLength}
               aria-label={`Add ${title}`}
-              onClick={handleClickAdd}
+              onClick={onClickAdd}
             >
               <PlusIcon />
             </Button>

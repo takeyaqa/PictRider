@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
-import type { Result } from '../../types'
 import ConfigContext from '../config/context'
 import { getInitialConfig } from '../config/reducer'
+import type { Result } from '../../types'
 import ResultSection from './ResultSection'
 
 const sampleResult: Result = {
@@ -31,12 +31,15 @@ const sampleResult: Result = {
   messages: [],
 }
 
-interface WrapperProps {
+interface ResultSectionWrapperProps {
   result: Result | null
   showModelFile?: boolean
 }
 
-function ResultSectionWrapper({ result, showModelFile = false }: WrapperProps) {
+function ResultSectionWrapper({
+  result,
+  showModelFile = false,
+}: ResultSectionWrapperProps) {
   const value = useMemo(
     () => ({
       config: { ...getInitialConfig(), showModelFile },

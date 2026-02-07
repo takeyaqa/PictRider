@@ -1,23 +1,23 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { AlertMessage, Section, TextInput } from '../../shared/components'
-import type { ParametersState } from '../../types'
+import type { Parameters } from '../../types'
 
 interface ParametersSectionProps {
-  parameters: ParametersState
-  handleAddRow: (id: string, target: 'above' | 'below') => void
-  handleRemoveRow: (id: string) => void
-  handleChangeParameter: (
+  parameters: Parameters
+  onChangeParameter: (
     id: string,
     field: 'name' | 'values',
     value: string,
   ) => void
+  onAddRow: (id: string, target: 'above' | 'below') => void
+  onRemoveRow: (id: string) => void
 }
 
 function ParametersSection({
   parameters,
-  handleAddRow,
-  handleRemoveRow,
-  handleChangeParameter,
+  onChangeParameter,
+  onAddRow,
+  onRemoveRow,
 }: ParametersSectionProps) {
   return (
     <Section>
@@ -40,7 +40,7 @@ function ParametersSection({
               value={parameter.name}
               isValid={parameter.isValidName}
               onChange={(e) => {
-                handleChangeParameter(parameter.id, 'name', e.target.value)
+                onChangeParameter(parameter.id, 'name', e.target.value)
               }}
             />
           </div>
@@ -50,7 +50,7 @@ function ParametersSection({
               value={parameter.values}
               isValid={parameter.isValidValues}
               onChange={(e) => {
-                handleChangeParameter(parameter.id, 'values', e.target.value)
+                onChangeParameter(parameter.id, 'values', e.target.value)
               }}
             />
           </div>
@@ -59,8 +59,8 @@ function ParametersSection({
               parameterId={parameter.id}
               parameterHeading={`Parameter ${(i + 1).toString()}`}
               parametersLength={parameters.parameters.length}
-              handleClickAddRow={handleAddRow}
-              handleClickRemoveRow={handleRemoveRow}
+              onAddRow={onAddRow}
+              onRemoveRow={onRemoveRow}
             />
           </div>
         </div>
@@ -74,16 +74,16 @@ interface ParameterMenuProps {
   parameterId: string
   parameterHeading: string
   parametersLength: number
-  handleClickAddRow: (id: string, position: 'above' | 'below') => void
-  handleClickRemoveRow: (id: string) => void
+  onAddRow: (id: string, position: 'above' | 'below') => void
+  onRemoveRow: (id: string) => void
 }
 
 function ParameterMenu({
   parameterId,
   parameterHeading,
   parametersLength,
-  handleClickAddRow,
-  handleClickRemoveRow,
+  onAddRow,
+  onRemoveRow,
 }: ParameterMenuProps) {
   return (
     <Menu>
@@ -103,7 +103,7 @@ function ParameterMenu({
             disabled={parametersLength >= 25}
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
-              handleClickAddRow(parameterId, 'above')
+              onAddRow(parameterId, 'above')
             }}
           >
             Insert Above
@@ -115,7 +115,7 @@ function ParameterMenu({
             disabled={parametersLength >= 25}
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
-              handleClickAddRow(parameterId, 'below')
+              onAddRow(parameterId, 'below')
             }}
           >
             Insert Below
@@ -127,7 +127,7 @@ function ParameterMenu({
             disabled={parametersLength <= 1}
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
-              handleClickRemoveRow(parameterId)
+              onRemoveRow(parameterId)
             }}
           >
             Delete Row
