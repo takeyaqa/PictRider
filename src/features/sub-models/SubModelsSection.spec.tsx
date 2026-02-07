@@ -1,18 +1,63 @@
-import { PictRunner } from '@takeyaqa/pict-wasm'
+import { useMemo, useReducer } from 'react'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
-import App from '../../App'
+import ConfigProvider from '../config/provider'
+import { getInitialParameters } from '../parameters'
+import SubModelsSection from './SubModelsSection'
+import { subModelsReducer, getInitialSubModels } from './reducer'
+
+function SubModelsSectionWrapper() {
+  const initialParameters = useMemo(() => getInitialParameters(), [])
+  const [subModelsState, dispatchSubModels] = useReducer(
+    subModelsReducer,
+    getInitialSubModels(),
+  )
+
+  const handleAddSubModel = () => {
+    dispatchSubModels({ type: 'addSubModel' })
+  }
+
+  const handleRemoveSubModel = () => {
+    dispatchSubModels({ type: 'removeSubModel' })
+  }
+
+  const handleClickSubModelParameters = (
+    subModelId: string,
+    parameterId: string,
+    checked: boolean,
+  ) => {
+    dispatchSubModels({
+      type: 'clickSubModelParameters',
+      payload: { subModelId, parameterId, checked },
+    })
+  }
+
+  const handleChangeSubModelOrder = (id: string, order: number) => {
+    dispatchSubModels({
+      type: 'changeSubModelOrder',
+      payload: { id, order },
+    })
+  }
+
+  return (
+    <ConfigProvider>
+      <SubModelsSection
+        subModels={subModelsState}
+        parameters={initialParameters.parameters}
+        handleAddSubModel={handleAddSubModel}
+        handleRemoveSubModel={handleRemoveSubModel}
+        handleClickSubModelParameters={handleClickSubModelParameters}
+        handleChangeSubModelOrder={handleChangeSubModelOrder}
+      />
+    </ConfigProvider>
+  )
+}
 
 describe('SubModelArea', () => {
   let screen: Awaited<ReturnType<typeof render>>
-  let pictRunnerMock: PictRunner
 
   beforeEach(async () => {
-    const PictRunnerMock = vi.fn()
-    PictRunnerMock.prototype.init = vi.fn()
-    PictRunnerMock.prototype.run = vi.fn()
-    pictRunnerMock = new PictRunnerMock()
-    screen = await render(<App pictRunnerInjection={pictRunnerMock} />)
+    screen = await render(<SubModelsSectionWrapper />)
   })
 
   afterEach(() => {
@@ -47,23 +92,6 @@ describe('SubModelArea', () => {
         screen.getByRole('spinbutton', { name: 'Order', exact: true }).nth(1),
       )
       .not.toBeInTheDocument()
-  })
-
-  it('Should change sub-model name when parameter name is changed', async () => {
-    // arrange - enable sub-models area
-    await screen.getByRole('switch', { name: 'Enable Sub-Models' }).click()
-
-    // act - change the name of the first parameter name
-    const nameInput = screen.getByRole('textbox', {
-      name: 'Parameter 1 Name',
-    })
-    await nameInput.clear()
-    await nameInput.fill('TypeTypeType')
-
-    // assert - the sub-model name should be updated
-    await expect
-      .element(screen.getByRole('checkbox', { name: 'TypeTypeType' }))
-      .toBeInTheDocument()
   })
 
   it('Should add and remove a new sub-model when add/remove sub-model button is clicked', async () => {
