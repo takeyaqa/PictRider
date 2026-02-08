@@ -54,7 +54,7 @@ PictRider supports the full PICT constraint syntax. See the [PICT documentation]
 
 ## Privacy
 
-PictRider uses [Plausible Analytics](https://plausible.io/) for basic, privacy-friendly website analytics. No personally identifiable information is collected or transmitted.
+PictRider uses [Plausible Analytics](https://plausible.io/) for basic, privacy-friendly website analytics. Plausible does not use cookies and collects only minimal, anonymized usage data; IP addresses are not stored and data is aggregated. See [Plausible's privacy documentation](https://plausible.io/privacy-focused-web-analytics) for details.
 
 All test case generation is performed locally in your browser using WebAssembly. Your input data is never sent to any server.
 
