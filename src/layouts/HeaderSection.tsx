@@ -18,6 +18,15 @@ function HeaderSection() {
               About
             </a>
           </li>
+          <li>
+            <a
+              href="https://github.com/takeyaqa/PictMCP#readme"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              PictMCP
+            </a>
+          </li>
         </ul>
         <ul className="ml-auto flex items-center justify-end gap-3 pr-5">
           <li>
