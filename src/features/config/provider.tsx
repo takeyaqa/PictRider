@@ -1,16 +1,10 @@
-import { useCallback, useMemo, useReducer } from 'react'
+import { useCallback, useMemo } from 'react'
+import { useImmerReducer } from 'use-immer'
 import ConfigContext from './context'
-import { configReducer } from './reducer'
+import { configReducer, getInitialConfig } from './reducer'
 
 function ConfigProvider({ children }: { children: React.ReactNode }) {
-  const [config, dispatch] = useReducer(configReducer, {
-    enableSubModels: false,
-    enableConstraints: false,
-    showModelFile: false,
-    orderOfCombinations: 2,
-    randomizeGeneration: false,
-    randomizeSeed: '',
-  })
+  const [config, dispatch] = useImmerReducer(configReducer, getInitialConfig())
 
   const handleChangeConfigCheckbox = useCallback(
     (

@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { useImmerReducer } from 'use-immer'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { uuidv4 } from '../../shared/helpers'
@@ -6,7 +6,7 @@ import ParametersSection from './ParametersSection'
 import { parametersReducer, getInitialParameters } from './reducer'
 
 function ParametersSectionWrapper() {
-  const [parameters, dispatchParameters] = useReducer(
+  const [parameters, dispatchParameters] = useImmerReducer(
     parametersReducer,
     getInitialParameters(),
   )

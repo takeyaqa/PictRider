@@ -21,6 +21,10 @@ updates:
           - "prettier"
           - "prettier-plugin-tailwindcss"
           - "typescript-eslint"
+      immer:
+        patterns:
+          - "immer"
+          - "use-immer"
       react:
         patterns:
           - "@types/react"

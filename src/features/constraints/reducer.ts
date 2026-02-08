@@ -1,3 +1,4 @@
+import type { Draft } from 'immer'
 import { fixConstraint, printConstraints, uuidv4 } from '../../shared/helpers'
 import type {
   Condition,
@@ -91,44 +92,38 @@ const invalidConstraintCharacters = [
 ]
 
 export function constraintsReducer(
-  state: Constraints,
+  draft: Draft<Constraints>,
   action: ConstraintsAction,
-): Constraints {
+): void {
   switch (action.type) {
     case 'toggleCondition': {
       const { constraintId, parameterId, parameters } = action.payload
-      const newConstraints = structuredClone<Constraint[]>(state.constraints)
       const newCondition = searchCondition(
-        newConstraints,
+        draft.constraints,
         constraintId,
         parameterId,
       )
       newCondition.ifOrThen = newCondition.ifOrThen === 'if' ? 'then' : 'if'
 
-      return {
-        constraints: newConstraints,
-        constraintTexts: printConstraints(
-          fixConstraint(newConstraints, parameters),
-        ).map((text) => ({
-          id: uuidv4(),
-          text,
-        })),
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        constraintErrors: structuredClone(state.constraintErrors),
-      }
+      draft.constraintTexts = printConstraints(
+        fixConstraint(draft.constraints, parameters),
+      ).map((text) => ({
+        id: uuidv4(),
+        text,
+      }))
+      break
     }
 
     case 'changeCondition': {
       const { constraintId, parameterId, value, parameters } = action.payload
-      const newConstraints = structuredClone<Constraint[]>(state.constraints)
       const newCondition = searchCondition(
-        newConstraints,
+        draft.constraints,
         constraintId,
         parameterId,
       )
       newCondition.predicate = value
       // Reset validation flags
-      for (const constraint of newConstraints) {
+      for (const constraint of draft.constraints) {
         for (const condition of constraint.conditions) {
           condition.isValid = true
         }
@@ -136,7 +131,7 @@ export function constraintsReducer(
       // Check for invalid characters
       const errors: Message[] = []
       let invalidConstraint = false
-      for (const constraint of newConstraints) {
+      for (const constraint of draft.constraints) {
         for (const condition of constraint.conditions) {
           if (
             invalidConstraintCharacters.some((char) =>
@@ -154,96 +149,67 @@ export function constraintsReducer(
           text: `Constraints cannot contain special characters: ${invalidConstraintCharacters.map((s) => `"${s}"`).join(', ')}`,
         })
       }
-      return {
-        constraints: newConstraints,
-        constraintTexts: printConstraints(
-          fixConstraint(newConstraints, parameters),
-        ).map((text) => ({
-          id: uuidv4(),
-          text,
-        })),
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        constraintErrors: errors,
-      }
+      draft.constraintTexts = printConstraints(
+        fixConstraint(draft.constraints, parameters),
+      ).map((text) => ({
+        id: uuidv4(),
+        text,
+      }))
+      draft.constraintErrors = errors
+      break
     }
 
     case 'changeConstraintFormula': {
       const { value } = action.payload
-      return {
-        constraints: structuredClone(state.constraints),
-        constraintTexts: value.split('\n').map((text) => ({
-          id: uuidv4(),
-          text,
-        })),
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        constraintErrors: structuredClone(state.constraintErrors),
-      }
+      draft.constraintTexts = value.split('\n').map((text) => ({
+        id: uuidv4(),
+        text,
+      }))
+      break
     }
 
     case 'addConstraint': {
       const { parameters } = action.payload
-      if (state.constraints.length >= 25) {
+      if (draft.constraints.length >= 25) {
         // may not be reached
-        return structuredClone(state)
+        break
       }
-      return {
-        constraints: [
-          ...structuredClone(state.constraints),
-          createConstraintFromParameters(parameters),
-        ],
-        constraintTexts: [
-          ...structuredClone(state.constraintTexts),
-          {
-            id: uuidv4(),
-            text: '',
-          },
-        ],
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        constraintErrors: structuredClone(state.constraintErrors),
-      }
+      draft.constraints.push(createConstraintFromParameters(parameters))
+      draft.constraintTexts.push({
+        id: uuidv4(),
+        text: '',
+      })
+      break
     }
 
     case 'removeConstraint': {
-      if (state.constraints.length <= 1) {
+      if (draft.constraints.length <= 1) {
         // may not be reached
-        return structuredClone(state)
+        break
       }
-      const newConstraints = structuredClone<Constraint[]>(state.constraints)
-      const newConstraintsText = structuredClone(state.constraintTexts)
-      newConstraints.pop()
-      newConstraintsText.pop()
-      return {
-        constraints: newConstraints,
-        constraintTexts: newConstraintsText,
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        constraintErrors: structuredClone(state.constraintErrors),
-      }
+      draft.constraints.pop()
+      draft.constraintTexts.pop()
+      break
     }
 
     case 'toggleConstraintDirectEditMode': {
-      return {
-        constraints: structuredClone(state.constraints),
-        constraintTexts: structuredClone(state.constraintTexts),
-        constraintDirectEditMode: !state.constraintDirectEditMode,
-        constraintErrors: structuredClone(state.constraintErrors),
-      }
+      draft.constraintDirectEditMode = !draft.constraintDirectEditMode
+      break
     }
 
     case 'resetConstraints': {
       const { parameters } = action.payload
-      return {
-        constraints: [createConstraintFromParameters(parameters)],
-        constraintTexts: [],
-        constraintDirectEditMode: false,
-        constraintErrors: [],
-      }
+      draft.constraints = [createConstraintFromParameters(parameters)]
+      draft.constraintTexts = []
+      draft.constraintDirectEditMode = false
+      draft.constraintErrors = []
+      break
     }
 
     case 'addCondition': {
       const { id, target, newParameterId } = action.payload
-      const oldConstraints = structuredClone<Constraint[]>(state.constraints)
       const newConstraints: Constraint[] = []
-      for (const c of oldConstraints) {
+      for (const c of draft.constraints) {
         const newConditions: Condition[] = []
         for (const cc of c.conditions) {
           if (cc.parameterId === id) {
@@ -272,18 +238,13 @@ export function constraintsReducer(
           conditions: newConditions,
         })
       }
-
-      return {
-        constraints: newConstraints,
-        constraintTexts: structuredClone(state.constraintTexts),
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        constraintErrors: structuredClone(state.constraintErrors),
-      }
+      draft.constraints = newConstraints
+      break
     }
 
     case 'removeCondition': {
       const { parameterId } = action.payload
-      const newConstraints = state.constraints.map((c) => {
+      const newConstraints = draft.constraints.map((c) => {
         return {
           ...c,
           conditions: c.conditions.filter(
@@ -291,40 +252,31 @@ export function constraintsReducer(
           ),
         }
       })
-      return {
-        constraints: newConstraints,
-        constraintTexts: structuredClone(state.constraintTexts),
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        constraintErrors: structuredClone(state.constraintErrors),
-      }
+      draft.constraints = newConstraints
+      break
     }
 
     case 'updateConstraintTexts': {
       const { parameters } = action.payload
-      if (state.constraintDirectEditMode) {
-        return structuredClone(state)
+      if (draft.constraintDirectEditMode) {
+        break
       }
-      return {
-        constraints: structuredClone(state.constraints),
-        constraintTexts: printConstraints(
-          fixConstraint(state.constraints, parameters),
-        ).map((text) => ({
-          id: uuidv4(),
-          text,
-        })),
-        constraintDirectEditMode: state.constraintDirectEditMode,
-        constraintErrors: structuredClone(state.constraintErrors),
-      }
+      draft.constraintTexts = printConstraints(
+        fixConstraint(draft.constraints, parameters),
+      ).map((text) => ({
+        id: uuidv4(),
+        text,
+      }))
+      break
     }
 
     case 'clear': {
       const { parameters } = action.payload
-      return {
-        constraints: [createConstraintFromParameters(parameters)],
-        constraintTexts: [],
-        constraintDirectEditMode: false,
-        constraintErrors: [],
-      }
+      draft.constraints = [createConstraintFromParameters(parameters)]
+      draft.constraintTexts = []
+      draft.constraintDirectEditMode = false
+      draft.constraintErrors = []
+      break
     }
   }
 }
