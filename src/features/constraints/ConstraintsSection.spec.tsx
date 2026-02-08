@@ -1,4 +1,5 @@
-import { useMemo, useReducer } from 'react'
+import { useMemo } from 'react'
+import { useImmerReducer } from 'use-immer'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import ConfigProvider from '../config/provider'
@@ -8,7 +9,7 @@ import { constraintsReducer, getInitialConstraints } from './reducer'
 
 function ConstraintsSectionWrapper() {
   const initialParameters = useMemo(() => getInitialParameters(), [])
-  const [constraints, dispatchConstraints] = useReducer(
+  const [constraints, dispatchConstraints] = useImmerReducer(
     constraintsReducer,
     getInitialConstraints(initialParameters.parameters),
   )

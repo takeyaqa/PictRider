@@ -1,3 +1,4 @@
+import type { Draft } from 'immer'
 import { uuidv4 } from '../../shared/helpers'
 import type { Message, Parameter, Parameters } from '../../types'
 
@@ -73,34 +74,33 @@ const invalidParameterValuesCharacters = [
 ]
 
 export function parametersReducer(
-  state: Parameters,
+  draft: Draft<Parameters>,
   action: ParametersAction,
-): Parameters {
+): void {
   switch (action.type) {
     case 'changeParameter': {
       const { id, field, value } = action.payload
-      const newParameters = structuredClone<Parameter[]>(state.parameters)
       // Reset validation flags
-      for (const parameter of newParameters) {
+      for (const parameter of draft.parameters) {
         parameter.isValidName = true
         parameter.isValidValues = true
       }
-      const newParameter = newParameters.find((p) => p.id === id)
+      const newParameter = draft.parameters.find((p) => p.id === id)
       if (!newParameter) {
         // may not be reached
-        return structuredClone(state)
+        break
       }
       newParameter[field] = value
       const errors: Message[] = []
 
       // Check for duplicate parameter
       if (field === 'name') {
-        const parameterNames = newParameters.map((p) => p.name)
+        const parameterNames = draft.parameters.map((p) => p.name)
         const duplicates = parameterNames.filter(
           (item, index) => item && parameterNames.indexOf(item) !== index,
         )
         if (duplicates.length > 0) {
-          for (const parameter of newParameters) {
+          for (const parameter of draft.parameters) {
             if (duplicates.includes(parameter.name)) {
               parameter.isValidName = false
             }
@@ -112,7 +112,7 @@ export function parametersReducer(
       // Check for invalid characters
       let invalidParameterName = false
       let invalidParameterValues = false
-      for (const parameter of newParameters) {
+      for (const parameter of draft.parameters) {
         if (
           invalidParameterNameCharacters.some((char) =>
             parameter.name.includes(char),
@@ -142,23 +142,20 @@ export function parametersReducer(
           text: `Parameter values cannot contain special characters: ${invalidParameterValuesCharacters.map((s) => `"${s}"`).join(', ')}`,
         })
       }
+      draft.parameterErrors = errors
 
-      return {
-        parameters: newParameters,
-        parameterErrors: errors,
-      }
+      break
     }
 
     case 'addRow': {
       const { id, target, newParameterId } = action.payload
-      if (state.parameters.length >= 25) {
+      if (draft.parameters.length >= 25) {
         // may not be reached
-        return structuredClone(state)
+        break
       }
 
-      const oldParameters = structuredClone<Parameter[]>(state.parameters)
       const newParameters: Parameter[] = []
-      for (const p of oldParameters) {
+      for (const p of draft.parameters) {
         if (p.id === id) {
           const newParameter: Parameter = {
             id: newParameterId,
@@ -181,39 +178,32 @@ export function parametersReducer(
           newParameters.push(p)
         }
       }
-
-      return {
-        parameters: newParameters,
-        parameterErrors: structuredClone(state.parameterErrors),
-      }
+      draft.parameters = newParameters
+      break
     }
 
     case 'removeRow': {
       const { id } = action.payload
-      if (state.parameters.length <= 1) {
+      if (draft.parameters.length <= 1) {
         // may not be reached
-        return structuredClone(state)
+        break
       }
-      const newParameters = state.parameters.filter((p) => p.id !== id)
-      return {
-        parameters: newParameters,
-        parameterErrors: structuredClone(state.parameterErrors),
-      }
+      const newParameters = draft.parameters.filter((p) => p.id !== id)
+      draft.parameters = newParameters
+      break
     }
 
     case 'clear': {
       const { newParameterIds } = action.payload
-      const emptyParameters: Parameter[] = state.parameters.map((_, index) => ({
+      draft.parameters = draft.parameters.map((_, index) => ({
         id: newParameterIds[index],
         name: '',
         values: '',
         isValidName: true,
         isValidValues: true,
       }))
-      return {
-        parameters: emptyParameters,
-        parameterErrors: [],
-      }
+      draft.parameterErrors = []
+      break
     }
   }
 }

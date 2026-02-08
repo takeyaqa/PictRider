@@ -59,7 +59,7 @@ src/
 - **Context + useReducer**: Used for global config (`ConfigProvider`) and model state
 - Reducers are in `reducer.ts` files within feature directories
 - Actions are discriminated unions with `type` and `payload`
-- State is cloned with `structuredClone()` before modifications
+- State manipulation uses `use-immer` for immutability with mutable syntax
 
 ### PICT Integration
 

@@ -1,3 +1,4 @@
+import type { Draft } from 'immer'
 import { uuidv4 } from '../../shared/helpers'
 import type { SubModels } from '../../types'
 
@@ -34,104 +35,91 @@ export type SubModelsAction =
     }
 
 export function subModelsReducer(
-  state: SubModels,
+  draft: Draft<SubModels>,
   action: SubModelsAction,
-): SubModels {
+): void {
   switch (action.type) {
     case 'clickSubModelParameters': {
       const { subModelId, parameterId, checked } = action.payload
-      const newSubModels = structuredClone(state.subModels)
-      const target = newSubModels.find((m) => m.id === subModelId)
+      const target = draft.subModels.find((m) => m.id === subModelId)
       if (!target) {
         // may not be reached
-        return structuredClone(state)
+        break
       }
       if (checked) {
         const newParameterIds = [...target.parameterIds, parameterId]
-        return {
-          subModels: newSubModels.map((m) =>
-            m.id === subModelId ? { ...m, parameterIds: newParameterIds } : m,
-          ),
-        }
+
+        draft.subModels = draft.subModels.map((m) =>
+          m.id === subModelId ? { ...m, parameterIds: newParameterIds } : m,
+        )
+        break
       } else {
         const newParameterIds = target.parameterIds.filter(
           (paramId) => paramId !== parameterId,
         )
-        return {
-          subModels: newSubModels.map((m) =>
-            m.id === subModelId ? { ...m, parameterIds: newParameterIds } : m,
-          ),
-        }
+        draft.subModels = draft.subModels.map((m) =>
+          m.id === subModelId ? { ...m, parameterIds: newParameterIds } : m,
+        )
+        break
       }
     }
 
     case 'changeSubModelOrder': {
       const { id, order } = action.payload
-      const newSubModels = structuredClone(state.subModels)
-      const target = newSubModels.find((m) => m.id === id)
+      const target = draft.subModels.find((m) => m.id === id)
       if (!target) {
         // may not be reached
-        return structuredClone(state)
+        break
       }
-      return {
-        subModels: newSubModels.map((m) =>
-          m.id === id ? { ...m, order: order } : m,
-        ),
-      }
+      draft.subModels = draft.subModels.map((m) =>
+        m.id === id ? { ...m, order: order } : m,
+      )
+      break
     }
 
     case 'addSubModel': {
-      if (state.subModels.length >= 2) {
+      if (draft.subModels.length >= 2) {
         // may not be reached
-        return structuredClone(state)
+        break
       }
-      return {
-        subModels: [
-          ...structuredClone(state.subModels),
-          {
-            id: uuidv4(),
-            parameterIds: [],
-            order: 2,
-          },
-        ],
-      }
+      draft.subModels.push({
+        id: uuidv4(),
+        parameterIds: [],
+        order: 2,
+      })
+      break
     }
 
     case 'removeSubModel': {
-      if (state.subModels.length <= 1) {
+      if (draft.subModels.length <= 1) {
         // may not be reached
-        return structuredClone(state)
+        break
       }
-      const newSubModels = structuredClone(state.subModels)
-      newSubModels.pop()
-      return {
-        subModels: newSubModels,
-      }
+      draft.subModels.pop()
+      break
     }
 
     case 'removeParameter': {
       const { parameterId } = action.payload
-      const newSubModels = state.subModels.map((subModel) => {
+      const newSubModels = draft.subModels.map((subModel) => {
         return {
           ...subModel,
           parameterIds: subModel.parameterIds.filter((i) => i !== parameterId),
         }
       })
-      return {
-        subModels: newSubModels,
-      }
+      draft.subModels = newSubModels
+      break
     }
 
     case 'clear': {
-      return {
-        subModels: [
-          {
-            id: uuidv4(),
-            parameterIds: [],
-            order: 2,
-          },
-        ],
-      }
+      draft.subModels = [
+        {
+          id: uuidv4(),
+          parameterIds: [],
+          order: 2,
+        },
+      ]
+      break
     }
   }
 }

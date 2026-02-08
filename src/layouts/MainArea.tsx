@@ -1,5 +1,6 @@
 import { PictRunner } from '@takeyaqa/pict-wasm'
-import { useEffect, useReducer, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useImmerReducer } from 'use-immer'
 import { OptionsSection } from '../features/config'
 import {
   ConstraintsSection,
@@ -28,15 +29,15 @@ interface MainAreaProps {
 const initialParametersState = getInitialParameters()
 
 function MainArea({ pictRunnerInjection }: MainAreaProps) {
-  const [parameters, dispatchParameters] = useReducer(
+  const [parameters, dispatchParameters] = useImmerReducer(
     parametersReducer,
     initialParametersState,
   )
-  const [constraints, dispatchConstraints] = useReducer(
+  const [constraints, dispatchConstraints] = useImmerReducer(
     constraintsReducer,
     getInitialConstraints(initialParametersState.parameters),
   )
-  const [subModels, dispatchSubModels] = useReducer(
+  const [subModels, dispatchSubModels] = useImmerReducer(
     subModelsReducer,
     getInitialSubModels(),
   )
@@ -58,7 +59,7 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
   }, [result])
 
   // menu handlers
-  const handleClearInput = useCallback(() => {
+  const handleClearInput = () => {
     // Generate new parameter IDs once and use them for both parameters and constraints
     const newParameterIds = parameters.parameters.map(() => uuidv4())
     const emptyParameters = newParameterIds.map((id) => ({
@@ -74,20 +75,21 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
       payload: { parameters: emptyParameters },
     })
     dispatchSubModels({ type: 'clear' })
-  }, [parameters.parameters])
+  }
 
   // Parameter handlers
-  const handleChangeParameter = useCallback(
-    (id: string, field: 'name' | 'values', value: string) => {
-      dispatchParameters({
-        type: 'changeParameter',
-        payload: { id, field, value },
-      })
-    },
-    [],
-  )
+  const handleChangeParameter = (
+    id: string,
+    field: 'name' | 'values',
+    value: string,
+  ) => {
+    dispatchParameters({
+      type: 'changeParameter',
+      payload: { id, field, value },
+    })
+  }
 
-  const handleAddRow = useCallback((id: string, target: 'above' | 'below') => {
+  const handleAddRow = (id: string, target: 'above' | 'below') => {
     const newParameterId = uuidv4()
     dispatchParameters({
       type: 'addRow',
@@ -97,9 +99,9 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
       type: 'addCondition',
       payload: { id, target, newParameterId },
     })
-  }, [])
+  }
 
-  const handleRemoveRow = useCallback((id: string) => {
+  const handleRemoveRow = (id: string) => {
     dispatchParameters({ type: 'removeRow', payload: { id } })
     dispatchConstraints({
       type: 'removeCondition',
@@ -109,92 +111,91 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
       type: 'removeParameter',
       payload: { parameterId: id },
     })
-  }, [])
+  }
 
   // Constraint handlers
-  const handleToggleCondition = useCallback(
-    (constraintId: string, parameterId: string) => {
-      dispatchConstraints({
-        type: 'toggleCondition',
-        payload: {
-          constraintId,
-          parameterId,
-          parameters: parameters.parameters,
-        },
-      })
-    },
-    [parameters.parameters],
-  )
+  const handleToggleCondition = (constraintId: string, parameterId: string) => {
+    dispatchConstraints({
+      type: 'toggleCondition',
+      payload: {
+        constraintId,
+        parameterId,
+        parameters: parameters.parameters,
+      },
+    })
+  }
 
-  const handleChangeCondition = useCallback(
-    (constraintId: string, parameterId: string, value: string) => {
-      dispatchConstraints({
-        type: 'changeCondition',
-        payload: {
-          constraintId,
-          parameterId,
-          value,
-          parameters: parameters.parameters,
-        },
-      })
-    },
-    [parameters.parameters],
-  )
+  const handleChangeCondition = (
+    constraintId: string,
+    parameterId: string,
+    value: string,
+  ) => {
+    dispatchConstraints({
+      type: 'changeCondition',
+      payload: {
+        constraintId,
+        parameterId,
+        value,
+        parameters: parameters.parameters,
+      },
+    })
+  }
 
-  const handleAddConstraint = useCallback(() => {
+  const handleAddConstraint = () => {
     dispatchConstraints({
       type: 'addConstraint',
       payload: { parameters: parameters.parameters },
     })
-  }, [parameters.parameters])
+  }
 
-  const handleRemoveConstraint = useCallback(() => {
+  const handleRemoveConstraint = () => {
     dispatchConstraints({ type: 'removeConstraint' })
-  }, [])
+  }
 
-  const handleToggleConstraintDirectEditMode = useCallback(() => {
+  const handleToggleConstraintDirectEditMode = () => {
     dispatchConstraints({ type: 'toggleConstraintDirectEditMode' })
-  }, [])
+  }
 
-  const handleChangeConstraintFormula = useCallback((value: string) => {
+  const handleChangeConstraintFormula = (value: string) => {
     dispatchConstraints({
       type: 'changeConstraintFormula',
       payload: { value },
     })
-  }, [])
+  }
 
-  const handleResetConstraints = useCallback(() => {
+  const handleResetConstraints = () => {
     dispatchConstraints({
       type: 'resetConstraints',
       payload: { parameters: parameters.parameters },
     })
-  }, [parameters.parameters])
+  }
 
   // SubModel handlers
-  const handleClickSubModelParameters = useCallback(
-    (subModelId: string, parameterId: string, checked: boolean) => {
-      dispatchSubModels({
-        type: 'clickSubModelParameters',
-        payload: { subModelId, parameterId, checked },
-      })
-    },
-    [],
-  )
+  const handleClickSubModelParameters = (
+    subModelId: string,
+    parameterId: string,
+    checked: boolean,
+  ) => {
+    dispatchSubModels({
+      type: 'clickSubModelParameters',
+      payload: { subModelId, parameterId, checked },
+    })
+  }
 
-  const handleChangeSubModelOrder = useCallback((id: string, order: number) => {
+  const handleChangeSubModelOrder = (id: string, order: number) => {
     dispatchSubModels({
       type: 'changeSubModelOrder',
       payload: { id, order },
     })
-  }, [])
+  }
 
-  const handleAddSubModel = useCallback(() => {
+  const handleAddSubModel = () => {
     dispatchSubModels({ type: 'addSubModel' })
-  }, [])
+  }
 
-  const handleRemoveSubModel = useCallback(() => {
+  const handleRemoveSubModel = () => {
     dispatchSubModels({ type: 'removeSubModel' })
-  }, [])
+  }
 
   // Update constraint texts when parameters change
   useEffect(() => {
@@ -202,7 +203,7 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
       type: 'updateConstraintTexts',
       payload: { parameters: parameters.parameters },
     })
-  }, [parameters.parameters])
+  }, [dispatchConstraints, parameters.parameters])
 
   return (
     <main className="grid grid-cols-1 xl:grid-cols-2">

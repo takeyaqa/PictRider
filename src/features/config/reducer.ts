@@ -1,3 +1,4 @@
+import type { Draft } from 'immer'
 import type { Config } from '../../types'
 
 type ConfigAction =
@@ -14,50 +15,42 @@ type ConfigAction =
       payload: { e: React.ChangeEvent<HTMLInputElement> }
     }
 
-export function configReducer(state: Config, action: ConfigAction): Config {
+export function configReducer(
+  draft: Draft<Config>,
+  action: ConfigAction,
+): void {
   switch (action.type) {
     case 'enableSubModels': {
       const { checked } = action.payload
-      return {
-        ...state,
-        enableSubModels: checked,
-      }
+      draft.enableSubModels = checked
+      break
     }
     case 'enableConstraints': {
       const { checked } = action.payload
-      return {
-        ...state,
-        enableConstraints: checked,
-      }
+      draft.enableConstraints = checked
+      break
     }
     case 'showModelFile': {
       const { checked } = action.payload
-      return {
-        ...state,
-        showModelFile: checked,
-      }
+      draft.showModelFile = checked
+      break
     }
     case 'orderOfCombinations': {
       const { e } = action.payload
-      return {
-        ...state,
-        orderOfCombinations:
-          e.target.value !== '' ? Number(e.target.value) : '',
-      }
+
+      draft.orderOfCombinations =
+        e.target.value !== '' ? Number(e.target.value) : ''
+      break
     }
     case 'randomizeGeneration': {
       const { checked } = action.payload
-      return {
-        ...state,
-        randomizeGeneration: checked,
-      }
+      draft.randomizeGeneration = checked
+      break
     }
     case 'randomizeSeed': {
       const { e } = action.payload
-      return {
-        ...state,
-        randomizeSeed: e.target.value !== '' ? Number(e.target.value) : '',
-      }
+      draft.randomizeSeed = e.target.value !== '' ? Number(e.target.value) : ''
+      break
     }
   }
 }
