@@ -62,10 +62,10 @@ export interface Message {
 
 export interface Model {
   parameters: Parameter[]
-  subModels: SubModel[]
   constraints: Constraint[]
   constraintTexts: ConstraintText[]
   constraintDirectEditMode: boolean
+  subModels: SubModel[]
   parameterErrors: Message[]
   constraintErrors: Message[]
 }

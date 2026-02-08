@@ -1,12 +1,9 @@
 import { PictRunner } from '@takeyaqa/pict-wasm'
-import { useMemo } from 'react'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
-import type { Constraints, Parameters, SubModels } from '../../types'
+import type { Parameters } from '../../types'
 import ConfigProvider from '../config/provider'
-import { getInitialConstraints } from '../constraints/reducer'
-import { getInitialParameters } from '../parameters/reducer'
-import { getInitialSubModels } from '../sub-models/reducer'
+import { getInitialModel } from '../model/reducer'
 import MenuSection from './MenuSection'
 
 interface MenuSectionWrapperProps {
@@ -26,15 +23,22 @@ function MenuSectionWrapper({
   onClearInput = vi.fn(),
   setResult = vi.fn(),
 }: MenuSectionWrapperProps) {
-  const parameters = useMemo(
-    () => parametersOverride ?? getInitialParameters(),
-    [parametersOverride],
-  )
-  const constraints: Constraints = useMemo(
-    () => getInitialConstraints(parameters.parameters),
-    [parameters],
-  )
-  const subModels: SubModels = useMemo(() => getInitialSubModels(), [])
+  const model = getInitialModel()
+  const parameters = parametersOverride || {
+    parameters: model.parameters,
+    parameterErrors: [],
+  }
+
+  const constraints = {
+    constraints: model.constraints,
+    constraintTexts: model.constraintTexts,
+    constraintDirectEditMode: false,
+    constraintErrors: [],
+  }
+
+  const subModels = {
+    subModels: model.subModels,
+  }
 
   return (
     <ConfigProvider>

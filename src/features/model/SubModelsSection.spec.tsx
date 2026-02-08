@@ -1,50 +1,46 @@
-import { useMemo } from 'react'
 import { useImmerReducer } from 'use-immer'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import ConfigProvider from '../config/provider'
-import { getInitialParameters } from '../parameters'
 import SubModelsSection from './SubModelsSection'
-import { subModelsReducer, getInitialSubModels } from './reducer'
+import { modelReducer, getInitialModel } from './reducer'
 
 function SubModelsSectionWrapper() {
-  const initialParameters = useMemo(() => getInitialParameters(), [])
-  const [subModels, dispatchSubModels] = useImmerReducer(
-    subModelsReducer,
-    getInitialSubModels(),
-  )
+  const [model, dispatch] = useImmerReducer(modelReducer, getInitialModel())
 
   const handleClickSubModelParameters = (
     subModelId: string,
     parameterId: string,
     checked: boolean,
   ) => {
-    dispatchSubModels({
+    dispatch({
       type: 'clickSubModelParameters',
       payload: { subModelId, parameterId, checked },
     })
   }
 
   const handleChangeSubModelOrder = (id: string, order: number) => {
-    dispatchSubModels({
+    dispatch({
       type: 'changeSubModelOrder',
       payload: { id, order },
     })
   }
 
   const handleAddSubModel = () => {
-    dispatchSubModels({ type: 'addSubModel' })
+    dispatch({ type: 'addSubModel' })
   }
 
   const handleRemoveSubModel = () => {
-    dispatchSubModels({ type: 'removeSubModel' })
+    dispatch({ type: 'removeSubModel' })
   }
 
   return (
     <ConfigProvider>
       <SubModelsSection
-        subModels={subModels}
-        parameters={initialParameters.parameters}
+        subModels={{
+          subModels: model.subModels,
+        }}
+        parameters={model.parameters}
         onClickSubModelParameters={handleClickSubModelParameters}
         onChangeSubModelOrder={handleChangeSubModelOrder}
         onAddSubModel={handleAddSubModel}
