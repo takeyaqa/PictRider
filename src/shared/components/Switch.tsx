@@ -11,12 +11,12 @@ function Switch({ label, checked, onChange }: SwitchProps) {
     <Field className="flex items-center">
       <HeadlessUiSwitch
         checked={checked}
-        className="group relative flex h-7 w-14 cursor-pointer rounded-full border-gray-300 bg-gray-400 p-1 ease-in-out focus:not-data-focus:outline-none data-checked:bg-blue-400 data-focus:outline data-focus:outline-white"
+        className="group relative flex h-7 w-14 cursor-pointer rounded-full bg-gray-400 p-1 ease-in-out focus:not-data-focus:outline-none data-checked:bg-blue-500 data-focus:outline data-focus:outline-white dark:bg-gray-700 dark:data-checked:bg-blue-600"
         onChange={onChange}
       >
         <span
           aria-hidden="true"
-          className="pointer-events-none inline-block size-5 translate-x-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out group-data-checked:translate-x-7 dark:bg-black dark:group-data-checked:bg-gray-600"
+          className="pointer-events-none inline-block size-5 translate-x-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out group-data-checked:translate-x-7"
         />
       </HeadlessUiSwitch>
       <Label className="hidden cursor-pointer">{label}</Label>

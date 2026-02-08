@@ -95,7 +95,7 @@ function ParameterMenu({
       </MenuButton>
       <MenuItems
         anchor="bottom start"
-        className="mt-0.5 w-40 rounded border border-gray-400 bg-white py-2 dark:border-gray-500 dark:bg-gray-700 dark:text-white"
+        className="mt-0.5 w-40 rounded border border-gray-400 bg-white py-2 shadow-lg dark:border-gray-500 dark:bg-gray-700 dark:text-white"
       >
         <MenuItem>
           <button
