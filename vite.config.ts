@@ -20,7 +20,7 @@ export default defineConfig({
         name: 'PictRider',
         short_name: 'PictRider',
         description:
-          'PictRider is a modern web-based tool for pairwise testing that allows QA engineers and developers to generate optimized test cases with no installation required. Define parameters, create constraints, and export test cases directly in your browser.',
+          'A web-based pairwise test case generator powered by WebAssembly. No installation required.',
         theme_color: '#ffffff',
         display: 'standalone',
       },

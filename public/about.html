@@ -149,113 +149,126 @@
         <div>
           <h3>Pairwise Testing on the Web</h3>
           <p>
-            <em>PictRider</em> is a web-based tool for generating pairwise test
-            cases quickly and easily, with no installation required.
+            <strong>PictRider</strong> is a web-based tool for generating
+            pairwise test cases quickly and easily, with no installation
+            required.
+          </p>
+          <p>
+            Using an AI agent for test design? Check out
+            <strong
+              ><a
+                href="https://github.com/takeyaqa/PictMCP#readme"
+                target="_blank"
+                rel="noopener noreferrer"
+                >PictMCP</a
+              ></strong
+            >.
           </p>
         </div>
 
         <div>
-          <h4>Features</h4>
-          <p>With PictRider, you can:</p>
+          <h3>Features</h3>
           <ul>
-            <li>Define test parameters and their possible values</li>
-            <li>Create complex constraints between parameters</li>
             <li>
-              Generate optimized test cases that cover all pairwise combinations
+              <strong>No Installation Required</strong> - Get started
+              immediately from your browser
             </li>
-            <li>View and export the generated test cases</li>
             <li>
-              And no installation required; get started immediately from your
-              browser
+              <strong>User-Friendly Interface</strong> - Intuitive UI for
+              defining parameters, values, and constraints
+            </li>
+            <li>
+              <strong>WebAssembly Powered</strong> - Fast execution using
+              Microsoft's PICT algorithm compiled to WebAssembly
+            </li>
+            <li>
+              <strong>Constraint Support</strong> - Define constraints to filter
+              out invalid parameter combinations
+            </li>
+            <li>
+              <strong>Export Results</strong> - View and export the generated
+              test cases
             </li>
           </ul>
         </div>
 
         <div>
-          <h4>What is Pairwise Testing?</h4>
+          <h3>Installation</h3>
+          <p>PictRider is a web application — no installation is required.</p>
           <p>
-            <em>Pairwise testing</em> is a combinatorial testing technique used
-            to reduce the number of test cases while maintaining high test
-            coverage. It is based on the principle that most defects are caused
-            by interactions between two parameters rather than multiple
-            simultaneous factors.
+            PictRider supports the latest versions of modern browsers (Chrome,
+            Firefox, Safari, Edge).
           </p>
+          <h4>Install as a PWA</h4>
           <p>
-            In this approach, test cases are generated to cover all possible
-            combinations of input values for every pair of parameters. This
-            greatly reduces the total number of tests needed compared to
-            exhaustive testing, while still ensuring that critical interactions
-            are evaluated.
+            PictRider also supports installation as a Progressive Web App (PWA)
+            for offline access and a native app-like experience. In Chrome or
+            Edge, click the install icon in the address bar, then click
+            "Install".
           </p>
-          <p>Pairwise testing is especially effective when:</p>
-          <ul>
-            <li>You need to cover a wide range of parameter combinations</li>
-            <li>
-              Full combinatorial testing is impractical due to time or resource
-              constraints
-            </li>
-            <li>
-              You want to systematically reduce redundant test cases without
-              sacrificing coverage quality
-            </li>
-          </ul>
         </div>
 
         <div>
-          <h3>Open Source</h3>
+          <h3>FAQ</h3>
+          <h4>I already use the <code>pict</code> CLI. Do I need this?</h4>
           <p>
-            PictRider is an open-source project. The source code is available on
-            GitHub:
+            A: If you prefer a web-based interface without the need for
+            installation or command-line usage, PictRider provides a
+            user-friendly way to generate pairwise test cases directly in your
+            browser, making it accessible for those who may not be comfortable
+            with command-line tools.
           </p>
+          <h4>What is pairwise testing?</h4>
           <p>
+            Pairwise testing (also known as all-pairs testing) is a
+            combinatorial testing method that generates test cases covering all
+            possible pairs of input parameters. This significantly reduces the
+            number of test cases while maintaining high defect detection rates.
+          </p>
+          <h4>What constraint syntax is supported?</h4>
+          <p>
+            PictRider supports the full PICT constraint syntax. See the
             <a
-              href="https://github.com/takeyaqa/PictRider"
+              href="https://github.com/microsoft/pict/blob/main/doc/pict.md"
               target="_blank"
-              rel="noreferrer noopener"
+              rel="noopener noreferrer"
+              >PICT documentation</a
             >
-              https://github.com/takeyaqa/PictRider
-            </a>
+            for details.
           </p>
         </div>
 
         <div>
-          <h3>Disclaimer</h3>
+          <h3>Privacy</h3>
           <p>
-            PictRider is provided "as is", without warranty of any kind, express
-            or implied. In no event shall the authors, contributors, or
-            copyright holders be liable for any claim, damages, or other
-            liability, whether in an action of contract, tort, or otherwise,
-            arising from, out of, or in connection with the software or the use
-            or other dealings in the software.
+            PictRider uses
+            <a
+              href="https://plausible.io/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Plausible Analytics</a
+            >
+            for basic, privacy-friendly website analytics. Plausible does not
+            use cookies and collects only minimal, anonymized usage data; IP
+            addresses are not stored and data is aggregated. See
+            <a
+              href="https://plausible.io/privacy-focused-web-analytics"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Plausible's privacy documentation</a
+            >
+            for details.
           </p>
           <p>
-            The test cases generated by PictRider are intended to assist in your
-            testing efforts, but they do
-            <em>not guarantee complete test coverage</em>
-            or
-            <em>the absence of defects</em>
-            in your software. Users should always apply professional judgment
-            when using testing tools, and are encouraged to supplement pairwise
-            testing with additional testing strategies as appropriate for their
-            specific use case or risk model.
+            All test case generation is performed locally in your browser using
+            WebAssembly. Your input data is never sent to any server.
           </p>
-          <p>
-            PictRider is an independent project and is not affiliated with
-            Microsoft Corporation.
-          </p>
-        </div>
-
-        <div>
-          <h3>Third-Party Libraries</h3>
-          <p>
-            PictRider uses the following third-party libraries:
-            <a href="/license.md">View third-party dependencies</a>
-          </p>
+          <p>When installed as a PWA, analytics are completely disabled.</p>
         </div>
 
         <div>
           <h3>License</h3>
-          <p>PictRider is licensed under the MIT License:</p>
+          <p>This project is licensed under the MIT License:</p>
           <pre>
 MIT License
 
@@ -279,10 +292,45 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
           </pre>
+          <p>The source code is available on GitHub:</p>
+          <p>
+            <a
+              href="https://github.com/takeyaqa/PictRider"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              https://github.com/takeyaqa/PictRider
+            </a>
+          </p>
         </div>
 
         <div>
-          <h3>Acknowledgement</h3>
+          <h3>Third-Party Libraries</h3>
+          <p>
+            PictRider uses the following third-party libraries:
+            <a href="/license.md">View third-party dependencies</a>
+          </p>
+        </div>
+
+        <div>
+          <h3>Disclaimer</h3>
+          <p>
+            PictRider is provided "as is", without warranty of any kind. The
+            authors are not liable for any damages arising from its use.
+          </p>
+          <p>
+            Generated test cases do <em>not guarantee complete coverage</em> or
+            <em>the absence of defects</em>. Please supplement pairwise testing
+            with other strategies as appropriate.
+          </p>
+          <p>
+            PictRider is an independent project and is not affiliated with
+            Microsoft Corporation.
+          </p>
+        </div>
+
+        <div>
+          <h3>Acknowledgements</h3>
           <p>
             PictRider is heavily inspired by
             <a
@@ -292,7 +340,7 @@ SOFTWARE.
             >
               <strong>PictMaster</strong></a
             >, a powerful Excel-based tool developed by Iwatsu System & Software
-            Co., Ltd..
+            Co., Ltd.
           </p>
           <p>
             We would like to express our respect and appreciation for the ideas,

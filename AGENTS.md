@@ -7,7 +7,7 @@ PictRider is a web-based pairwise testing tool built with React 19, TypeScript, 
 ## Build & Test Commands
 
 ```bash
-# Install dependencies (pnpm 10.x required, Node 24.x) and Playwright
+# Install dependencies (pnpm 10.x required, Node 24.x) and Playwright browsers
 pnpm install
 pnpm exec playwright install --with-deps
 
@@ -17,7 +17,7 @@ cp .env.example .env
 # Vite build
 pnpm run build
 
- # Start dev server at http://127.0.0.1:5173
+# Start dev server at http://127.0.0.1:5173
 pnpm run dev
 
 # Lint and format
@@ -39,13 +39,11 @@ pnpm run test:e2e
 ```
 src/
 ├── features/           # Feature modules (self-contained)
-│   ├── config/         # Global configuration state (Context + useReducer)
-│   ├── constraints/    # constraints input components
+│   ├── config/         # Global configuration state (Context + useImmerReducer)
 │   ├── menu/           # Menu components
-│   ├── parameters/     # Parameter input components
-│   ├── result/         # Result display components
-|   └── sub-models/     # Sub-model input components
-├── layouts/            # Page layout components (TopPanel, BottomPanel, MainArea)
+│   ├── model/          # Model (parameters, constraints, and sub-models) input components
+│   └── result/         # Result display components
+├── layouts/            # Page layout components (MainArea, Header, Footer, etc.)
 ├── shared/             # Shared utilities
 │   ├── components/     # Reusable UI components (Button, TextInput, Switch, etc.)
 │   ├── helpers/        # Utility functions
@@ -70,7 +68,7 @@ The `usePictRunner` hook wraps `@takeyaqa/pict-wasm`. Components accept an optio
 - **Unit tests** (`*.spec.tsx`): Use Vitest browser mode with `vitest-browser-react`. Tests render components and interact via `screen.getByRole()`.
 - **E2E tests** (`tests/`): Playwright tests against the dev server. Follow AAA pattern with `// arrange`, `// act`, `// assert` comments.
 
-## Conventions
+## Key Conventions
 
 - **Git Workflow**: Always create a new branch from `main` before starting any task
 - **TypeScript**: Strict mode with `typescript-eslint` strict + stylistic rules
