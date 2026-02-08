@@ -376,6 +376,33 @@ describe('ConstraintsSection', () => {
       .not.toBeInTheDocument()
   })
 
+  it('Should toggle help content when help button is clicked', async () => {
+    // assert - help content should not be visible by default
+    await expect
+      .element(screen.getByText('Predicate Input Syntax'))
+      .not.toBeInTheDocument()
+
+    // act - click the help button
+    await screen
+      .getByRole('button', { name: 'Toggle constraints help' })
+      .click()
+
+    // assert - help content should now be visible
+    await expect
+      .element(screen.getByText('Predicate Input Syntax'))
+      .toBeInTheDocument()
+
+    // act - click the help button again to collapse
+    await screen
+      .getByRole('button', { name: 'Toggle constraints help' })
+      .click()
+
+    // assert - help content should be hidden again
+    await expect
+      .element(screen.getByText('Predicate Input Syntax'))
+      .not.toBeInTheDocument()
+  })
+
   it.todo('Should reset constraints when click reset button', async () => {
     // arrange
     await screen.getByRole('switch', { name: 'Enable Constraints' }).click()

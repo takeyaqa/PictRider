@@ -1,3 +1,9 @@
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from '@headlessui/react'
+import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid'
 import { useState } from 'react'
 import {
   AlertMessage,
@@ -46,21 +52,53 @@ function ConstraintsSection({
 
   return (
     <Section>
-      <div className="mb-5 flex items-center gap-5">
-        <h2 className="w-30 text-lg font-bold">Constraints</h2>
-        <div>
-          <Switch
-            label="Enable Constraints"
-            checked={config.enableConstraints}
-            onChange={(checked) => {
-              configHandlers.handleChangeConfigCheckbox(
-                'enableConstraints',
-                checked,
-              )
-            }}
-          />
+      <Disclosure>
+        <div className="mb-5 flex items-center gap-5">
+          <h2 className="w-30 text-lg font-bold">Constraints</h2>
+          <div>
+            <Switch
+              label="Enable Constraints"
+              checked={config.enableConstraints}
+              onChange={(checked) => {
+                configHandlers.handleChangeConfigCheckbox(
+                  'enableConstraints',
+                  checked,
+                )
+              }}
+            />
+          </div>
+          <DisclosureButton
+            className="ml-auto flex cursor-pointer items-center gap-1 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            aria-label="Toggle constraints help"
+          >
+            <QuestionMarkCircleIcon className="size-5" />
+            <span>Help</span>
+          </DisclosureButton>
         </div>
-      </div>
+        <DisclosurePanel className="mb-5 rounded border border-gray-300 bg-white p-4 text-sm dark:border-gray-500 dark:bg-gray-700">
+          <h3 className="mb-2 font-bold">Predicate Input Syntax</h3>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+            <dt className="font-mono">value</dt>
+            <dd>Equals (=)</dd>
+            <dt className="font-mono">#value</dt>
+            <dd>Not equals (&lt;&gt;)</dd>
+            <dt className="font-mono">&gt;value</dt>
+            <dd>Greater than</dd>
+            <dt className="font-mono">&lt;value</dt>
+            <dd>Less than</dd>
+            <dt className="font-mono">&gt;=value</dt>
+            <dd>Greater than or equal</dd>
+            <dt className="font-mono">&lt;=value</dt>
+            <dd>Less than or equal</dd>
+            <dt className="font-mono">a, b</dt>
+            <dd>Multiple values (OR for =, AND for #/comparison)</dd>
+            <dt className="font-mono">* ?</dt>
+            <dd>Wildcard pattern (LIKE)</dd>
+            <dt className="font-mono">#pattern*</dt>
+            <dd>Negated wildcard (NOT LIKE)</dd>
+          </dl>
+        </DisclosurePanel>
+      </Disclosure>
       {config.enableConstraints && (
         <div>
           {!constraints.constraintDirectEditMode && (
