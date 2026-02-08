@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import ConfigContext from '../config/context'
@@ -40,16 +39,13 @@ function ResultSectionWrapper({
   result,
   showModelFile = false,
 }: ResultSectionWrapperProps) {
-  const value = useMemo(
-    () => ({
-      config: { ...getInitialConfig(), showModelFile },
-      handlers: {
-        handleChangeConfigCheckbox: vi.fn(),
-        handleChangeConfigInput: vi.fn(),
-      },
-    }),
-    [showModelFile],
-  )
+  const value = {
+    config: { ...getInitialConfig(), showModelFile },
+    handlers: {
+      handleChangeConfigCheckbox: vi.fn(),
+      handleChangeConfigInput: vi.fn(),
+    },
+  }
 
   return (
     <ConfigContext value={value}>
