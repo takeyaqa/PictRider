@@ -5,7 +5,6 @@ on:
 
 env:
   PNPM_VERSION: 10
-  NODE_VERSION: 24
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -32,7 +31,7 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v6
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: "package.json"
           cache: pnpm
       - run: pnpm install
       - run: pnpm run build
