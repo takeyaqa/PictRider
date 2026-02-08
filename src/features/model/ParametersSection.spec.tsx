@@ -1,41 +1,40 @@
 import { useImmerReducer } from 'use-immer'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
-import { uuidv4 } from '../../shared/helpers'
 import ParametersSection from './ParametersSection'
-import { parametersReducer, getInitialParameters } from './reducer'
+import { modelReducer, getInitialModel } from './reducer'
 
 function ParametersSectionWrapper() {
-  const [parameters, dispatchParameters] = useImmerReducer(
-    parametersReducer,
-    getInitialParameters(),
-  )
+  const [model, dispatch] = useImmerReducer(modelReducer, getInitialModel())
 
   const handleChangeParameter = (
     id: string,
     field: 'name' | 'values',
     value: string,
   ) => {
-    dispatchParameters({
+    dispatch({
       type: 'changeParameter',
       payload: { id, field, value },
     })
   }
 
   const handleAddRow = (id: string, target: 'above' | 'below') => {
-    dispatchParameters({
-      type: 'addRow',
-      payload: { id, target, newParameterId: uuidv4() },
+    dispatch({
+      type: 'addParameterRow',
+      payload: { id, target },
     })
   }
 
   const handleRemoveRow = (id: string) => {
-    dispatchParameters({ type: 'removeRow', payload: { id } })
+    dispatch({ type: 'removeParameterRow', payload: { id } })
   }
 
   return (
     <ParametersSection
-      parameters={parameters}
+      parameters={{
+        parameters: model.parameters,
+        parameterErrors: model.parameterErrors,
+      }}
       onChangeParameter={handleChangeParameter}
       onAddRow={handleAddRow}
       onRemoveRow={handleRemoveRow}

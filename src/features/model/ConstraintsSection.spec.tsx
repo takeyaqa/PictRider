@@ -1,26 +1,19 @@
-import { useMemo } from 'react'
 import { useImmerReducer } from 'use-immer'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import ConfigProvider from '../config/provider'
-import { getInitialParameters } from '../parameters'
 import ConstraintsSection from './ConstraintsSection'
-import { constraintsReducer, getInitialConstraints } from './reducer'
+import { modelReducer, getInitialModel } from './reducer'
 
 function ConstraintsSectionWrapper() {
-  const initialParameters = useMemo(() => getInitialParameters(), [])
-  const [constraints, dispatchConstraints] = useImmerReducer(
-    constraintsReducer,
-    getInitialConstraints(initialParameters.parameters),
-  )
+  const [model, dispatch] = useImmerReducer(modelReducer, getInitialModel())
 
   const handleToggleCondition = (constraintId: string, parameterId: string) => {
-    dispatchConstraints({
+    dispatch({
       type: 'toggleCondition',
       payload: {
         constraintId,
         parameterId,
-        parameters: initialParameters.parameters,
       },
     })
   }
@@ -30,51 +23,53 @@ function ConstraintsSectionWrapper() {
     parameterId: string,
     value: string,
   ) => {
-    dispatchConstraints({
+    dispatch({
       type: 'changeCondition',
       payload: {
         constraintId,
         parameterId,
         value,
-        parameters: initialParameters.parameters,
       },
     })
   }
 
   const handleAddConstraint = () => {
-    dispatchConstraints({
+    dispatch({
       type: 'addConstraint',
-      payload: { parameters: initialParameters.parameters },
     })
   }
 
   const handleRemoveConstraint = () => {
-    dispatchConstraints({ type: 'removeConstraint' })
+    dispatch({ type: 'removeConstraint' })
   }
 
   const handleToggleConstraintDirectEditMode = () => {
-    dispatchConstraints({ type: 'toggleConstraintDirectEditMode' })
+    dispatch({ type: 'toggleConstraintDirectEditMode' })
   }
 
   const handleChangeConstraintFormula = (value: string) => {
-    dispatchConstraints({
+    dispatch({
       type: 'changeConstraintFormula',
       payload: { value },
     })
   }
 
   const handleResetConstraints = () => {
-    dispatchConstraints({
+    dispatch({
       type: 'resetConstraints',
-      payload: { parameters: initialParameters.parameters },
     })
   }
 
   return (
     <ConfigProvider>
       <ConstraintsSection
-        constraints={constraints}
-        parameters={initialParameters.parameters}
+        constraints={{
+          constraints: model.constraints,
+          constraintErrors: model.constraintErrors,
+          constraintDirectEditMode: model.constraintDirectEditMode,
+          constraintTexts: model.constraintTexts,
+        }}
+        parameters={model.parameters}
         onToggleCondition={handleToggleCondition}
         onChangeConstraintFormula={handleChangeConstraintFormula}
         onAddConstraint={handleAddConstraint}
