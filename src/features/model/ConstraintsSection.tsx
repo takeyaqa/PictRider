@@ -22,19 +22,18 @@ import type {
 import { useConfig } from '../config'
 
 const PREDICATE_INPUT_SYNTAX = [
-  { id: 10, syntax: 'value', description: 'Equals (=)' },
-  { id: 20, syntax: '#value', description: 'Not equals (<>)' },
-  { id: 30, syntax: '>value', description: 'Greater than' },
-  { id: 40, syntax: '<value', description: 'Less than' },
-  { id: 50, syntax: '>=value', description: 'Greater than or equal' },
-  { id: 60, syntax: '<=value', description: 'Less than or equal' },
+  { syntax: 'value', description: 'Equals (=)' },
+  { syntax: '#value', description: 'Not equals (<>)' },
+  { syntax: '>value', description: 'Greater than' },
+  { syntax: '<value', description: 'Less than' },
+  { syntax: '>=value', description: 'Greater than or equal' },
+  { syntax: '<=value', description: 'Less than or equal' },
   {
-    id: 70,
     syntax: 'a, b',
     description: 'Multiple values (OR for =, AND for #/comparison)',
   },
-  { id: 80, syntax: '* ?', description: 'Wildcard pattern (LIKE)' },
-  { id: 90, syntax: '#pattern*', description: 'Negated wildcard (NOT LIKE)' },
+  { syntax: '* and ?', description: 'Wildcard pattern (LIKE)' },
+  { syntax: '#pattern*', description: 'Negated wildcard (NOT LIKE)' },
 ]
 
 interface ConstraintsSectionProps {
@@ -95,7 +94,7 @@ function ConstraintsSection({
           <h3 className="mb-2 font-bold">Predicate Input Syntax</h3>
           <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
             {PREDICATE_INPUT_SYNTAX.map((item) => (
-              <React.Fragment key={item.id}>
+              <React.Fragment key={item.syntax}>
                 <dt className="font-mono">{item.syntax}</dt>
                 <dd>{item.description}</dd>
               </React.Fragment>
