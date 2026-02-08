@@ -1,4 +1,10 @@
-import { useState } from 'react'
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from '@headlessui/react'
+import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid'
+import React, { useState } from 'react'
 import {
   AlertMessage,
   AugmentDiv,
@@ -14,6 +20,21 @@ import type {
   Parameter,
 } from '../../types'
 import { useConfig } from '../config'
+
+const PREDICATE_INPUT_SYNTAX = [
+  { syntax: 'value', description: 'Equals (=)' },
+  { syntax: '#value', description: 'Not equals (<>)' },
+  { syntax: '>value', description: 'Greater than' },
+  { syntax: '<value', description: 'Less than' },
+  { syntax: '>=value', description: 'Greater than or equal' },
+  { syntax: '<=value', description: 'Less than or equal' },
+  {
+    syntax: 'a, b',
+    description: 'Multiple values (OR for =, AND for #/comparison)',
+  },
+  { syntax: '* and ?', description: 'Wildcard pattern (LIKE)' },
+  { syntax: '#pattern*', description: 'Negated wildcard (NOT LIKE)' },
+]
 
 interface ConstraintsSectionProps {
   constraints: Constraints
@@ -46,21 +67,41 @@ function ConstraintsSection({
 
   return (
     <Section>
-      <div className="mb-5 flex items-center gap-5">
-        <h2 className="w-30 text-lg font-bold">Constraints</h2>
-        <div>
-          <Switch
-            label="Enable Constraints"
-            checked={config.enableConstraints}
-            onChange={(checked) => {
-              configHandlers.handleChangeConfigCheckbox(
-                'enableConstraints',
-                checked,
-              )
-            }}
-          />
+      <Disclosure>
+        <div className="mb-5 flex items-center gap-5">
+          <h2 className="w-30 text-lg font-bold">Constraints</h2>
+          <div>
+            <Switch
+              label="Enable Constraints"
+              checked={config.enableConstraints}
+              onChange={(checked) => {
+                configHandlers.handleChangeConfigCheckbox(
+                  'enableConstraints',
+                  checked,
+                )
+              }}
+            />
+          </div>
+          <DisclosureButton
+            className="ml-auto flex cursor-pointer items-center gap-1 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            aria-label="Toggle constraints help"
+          >
+            <QuestionMarkCircleIcon className="size-5" />
+            <span>Help</span>
+          </DisclosureButton>
         </div>
-      </div>
+        <DisclosurePanel className="mb-5 rounded border border-gray-300 bg-white p-4 text-sm dark:border-gray-500 dark:bg-gray-700">
+          <h3 className="mb-2 font-bold">Predicate Input Syntax</h3>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+            {PREDICATE_INPUT_SYNTAX.map((item) => (
+              <React.Fragment key={item.syntax}>
+                <dt className="font-mono">{item.syntax}</dt>
+                <dd>{item.description}</dd>
+              </React.Fragment>
+            ))}
+          </dl>
+        </DisclosurePanel>
+      </Disclosure>
       {config.enableConstraints && (
         <div>
           {!constraints.constraintDirectEditMode && (
