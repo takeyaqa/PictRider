@@ -55,9 +55,6 @@ export type ModelAction =
     }
   | {
       type: 'addConstraint'
-      payload: {
-        parameters: Parameter[]
-      }
     }
   | {
       type: 'removeConstraint'
@@ -67,15 +64,9 @@ export type ModelAction =
     }
   | {
       type: 'resetConstraints'
-      payload: {
-        parameters: Parameter[]
-      }
     }
   | {
       type: 'updateConstraintTexts'
-      payload: {
-        parameters: Parameter[]
-      }
     }
   // Sub-Model actions
   | {
@@ -404,12 +395,11 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
     }
 
     case 'addConstraint': {
-      const { parameters } = action.payload
       if (draft.constraints.length >= 25) {
         // may not be reached
         break
       }
-      draft.constraints.push(createConstraintFromParameters(parameters))
+      draft.constraints.push(createConstraintFromParameters(draft.parameters))
       draft.constraintTexts.push({
         id: uuidv4(),
         text: '',
@@ -433,8 +423,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
     }
 
     case 'resetConstraints': {
-      const { parameters } = action.payload
-      draft.constraints = [createConstraintFromParameters(parameters)]
+      draft.constraints = [createConstraintFromParameters(draft.parameters)]
       draft.constraintTexts = []
       draft.constraintDirectEditMode = false
       draft.constraintErrors = []
@@ -442,12 +431,11 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
     }
 
     case 'updateConstraintTexts': {
-      const { parameters } = action.payload
       if (draft.constraintDirectEditMode) {
         break
       }
       draft.constraintTexts = printConstraints(
-        fixConstraint(draft.constraints, parameters),
+        fixConstraint(draft.constraints, draft.parameters),
       ).map((text) => ({
         id: uuidv4(),
         text,

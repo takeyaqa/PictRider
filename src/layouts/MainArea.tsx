@@ -93,7 +93,6 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
   const handleAddConstraint = () => {
     dispatch({
       type: 'addConstraint',
-      payload: { parameters: model.parameters },
     })
   }
 
@@ -115,7 +114,6 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
   const handleResetConstraints = () => {
     dispatch({
       type: 'resetConstraints',
-      payload: { parameters: model.parameters },
     })
   }
 
@@ -150,7 +148,6 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
   useEffect(() => {
     dispatch({
       type: 'updateConstraintTexts',
-      payload: { parameters: model.parameters },
     })
   }, [dispatch, model.parameters])
 

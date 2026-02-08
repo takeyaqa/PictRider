@@ -36,7 +36,6 @@ function ConstraintsSectionWrapper() {
   const handleAddConstraint = () => {
     dispatch({
       type: 'addConstraint',
-      payload: { parameters: model.parameters },
     })
   }
 
@@ -58,7 +57,6 @@ function ConstraintsSectionWrapper() {
   const handleResetConstraints = () => {
     dispatch({
       type: 'resetConstraints',
-      payload: { parameters: model.parameters },
     })
   }
 
