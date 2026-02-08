@@ -4,7 +4,7 @@ import {
   DisclosurePanel,
 } from '@headlessui/react'
 import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   AlertMessage,
   AugmentDiv,
@@ -20,6 +20,22 @@ import type {
   Parameter,
 } from '../../types'
 import { useConfig } from '../config'
+
+const PREDICATE_INPUT_SYNTAX = [
+  { id: 10, syntax: 'value', description: 'Equals (=)' },
+  { id: 20, syntax: '#value', description: 'Not equals (<>)' },
+  { id: 30, syntax: '>value', description: 'Greater than' },
+  { id: 40, syntax: '<value', description: 'Less than' },
+  { id: 50, syntax: '>=value', description: 'Greater than or equal' },
+  { id: 60, syntax: '<=value', description: 'Less than or equal' },
+  {
+    id: 70,
+    syntax: 'a, b',
+    description: 'Multiple values (OR for =, AND for #/comparison)',
+  },
+  { id: 80, syntax: '* ?', description: 'Wildcard pattern (LIKE)' },
+  { id: 90, syntax: '#pattern*', description: 'Negated wildcard (NOT LIKE)' },
+]
 
 interface ConstraintsSectionProps {
   constraints: Constraints
@@ -78,24 +94,12 @@ function ConstraintsSection({
         <DisclosurePanel className="mb-5 rounded border border-gray-300 bg-white p-4 text-sm dark:border-gray-500 dark:bg-gray-700">
           <h3 className="mb-2 font-bold">Predicate Input Syntax</h3>
           <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
-            <dt className="font-mono">value</dt>
-            <dd>Equals (=)</dd>
-            <dt className="font-mono">#value</dt>
-            <dd>Not equals (&lt;&gt;)</dd>
-            <dt className="font-mono">&gt;value</dt>
-            <dd>Greater than</dd>
-            <dt className="font-mono">&lt;value</dt>
-            <dd>Less than</dd>
-            <dt className="font-mono">&gt;=value</dt>
-            <dd>Greater than or equal</dd>
-            <dt className="font-mono">&lt;=value</dt>
-            <dd>Less than or equal</dd>
-            <dt className="font-mono">a, b</dt>
-            <dd>Multiple values (OR for =, AND for #/comparison)</dd>
-            <dt className="font-mono">* ?</dt>
-            <dd>Wildcard pattern (LIKE)</dd>
-            <dt className="font-mono">#pattern*</dt>
-            <dd>Negated wildcard (NOT LIKE)</dd>
+            {PREDICATE_INPUT_SYNTAX.map((item) => (
+              <React.Fragment key={item.id}>
+                <dt className="font-mono">{item.syntax}</dt>
+                <dd>{item.description}</dd>
+              </React.Fragment>
+            ))}
           </dl>
         </DisclosurePanel>
       </Disclosure>
