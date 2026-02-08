@@ -41,7 +41,7 @@ src/
 ├── features/           # Feature modules (self-contained)
 │   ├── config/         # Global configuration state (Context + useImmerReducer)
 │   ├── menu/           # Menu components
-│   ├── model/          # Model(Parameter, Constraint and Sub-model) input components
+│   ├── model/          # Model (parameters, constraints, and sub-models) input components
 │   └── result/         # Result display components
 ├── layouts/            # Page layout components (MainArea, Header, Footer, etc.)
 ├── shared/             # Shared utilities
