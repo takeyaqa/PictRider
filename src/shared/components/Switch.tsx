@@ -11,7 +11,7 @@ function Switch({ label, checked, onChange }: SwitchProps) {
     <Field className="flex items-center">
       <HeadlessUiSwitch
         checked={checked}
-        className="group relative flex h-7 w-14 cursor-pointer rounded-full border-gray-300 bg-gray-400 p-1 ease-in-out focus:not-data-focus:outline-none data-checked:bg-blue-500 data-focus:outline data-focus:outline-white dark:bg-gray-700 dark:data-checked:bg-blue-600"
+        className="group relative flex h-7 w-14 cursor-pointer rounded-full bg-gray-400 p-1 ease-in-out focus:not-data-focus:outline-none data-checked:bg-blue-500 data-focus:outline data-focus:outline-white dark:bg-gray-700 dark:data-checked:bg-blue-600"
         onChange={onChange}
       >
         <span
