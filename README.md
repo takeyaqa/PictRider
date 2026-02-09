@@ -4,7 +4,7 @@
   <img src="public/PictRider_logo.svg" alt="PictRider Logo" width="400">
 </p>
 
-## Pairwise Testing on the Web
+## Pairwise testing on the web
 
 **PictRider** is a web-based tool for generating pairwise test cases quickly and easily, with no installation required.
 
@@ -21,6 +21,8 @@ Using an AI agent for test design? Check out **[PictMCP](https://github.com/take
 - ⚡ **WebAssembly Powered** - Fast execution using Microsoft's PICT algorithm compiled to WebAssembly
 - 🔗 **Constraint Support** - Define constraints to filter out invalid parameter combinations
 - 📤 **Export Results** - View and export the generated test cases
+
+The following demo shows generating pairwise test cases in seconds.
 
 <p align="center">
   <img src="docs/PictRider_demo_0.22.0.gif" alt="PictRider Demo" width="800">
@@ -77,3 +79,7 @@ PictRider is an independent project and is not affiliated with Microsoft Corpora
 PictRider is heavily inspired by **[PictMaster](https://sourceforge.net/projects/pictmaster/)**, a powerful Excel-based tool developed by Iwatsu System & Software Co., Ltd.
 
 We would like to express our respect and appreciation for the ideas, user interface design, and contributions that PictMaster has brought to the field of combinatorial testing.
+
+---
+
+If you find PictRider useful, please consider starring the repository.
