@@ -84,6 +84,7 @@ describe('printCodeFromAST', () => {
         type: 'PredicateConstraint',
         predicate: {
           type: 'LikeTerm',
+          negated: false,
           parameter: 'Parameter1',
           patternString: 'pattern*',
         },
@@ -97,17 +98,15 @@ describe('printCodeFromAST', () => {
       const constraint: PredicateConstraint = {
         type: 'PredicateConstraint',
         predicate: {
-          type: 'NotClause',
-          predicate: {
-            type: 'LikeTerm',
-            parameter: 'Parameter1',
-            patternString: 'pattern*',
-          },
+          type: 'LikeTerm',
+          negated: true,
+          parameter: 'Parameter1',
+          patternString: 'pattern*',
         },
       }
 
       const result = printCodeFromAST([constraint])[0]
-      expect(result).toBe('NOT [Parameter1] LIKE "pattern*";')
+      expect(result).toBe('[Parameter1] NOT LIKE "pattern*";')
     })
 
     it('should print an IN term', () => {
@@ -115,6 +114,7 @@ describe('printCodeFromAST', () => {
         type: 'PredicateConstraint',
         predicate: {
           type: 'InTerm',
+          negated: false,
           parameter: 'Parameter1',
           values: [
             { type: 'String', value: 'Value1' },
@@ -126,6 +126,24 @@ describe('printCodeFromAST', () => {
 
       const result = printCodeFromAST([constraint])[0]
       expect(result).toBe('[Parameter1] IN { "Value1", "Value2", 42 };')
+    })
+
+    it('should print a NOT IN term', () => {
+      const constraint: PredicateConstraint = {
+        type: 'PredicateConstraint',
+        predicate: {
+          type: 'InTerm',
+          negated: true,
+          parameter: 'Parameter1',
+          values: [
+            { type: 'String', value: 'Value1' },
+            { type: 'String', value: 'Value2' },
+          ],
+        },
+      }
+
+      const result = printCodeFromAST([constraint])[0]
+      expect(result).toBe('[Parameter1] NOT IN { "Value1", "Value2" };')
     })
   })
 
@@ -283,6 +301,66 @@ describe('printCodeFromAST', () => {
     })
   })
 
+  describe('Function Terms', () => {
+    it('should print IsNegative with parameter', () => {
+      const constraint: PredicateConstraint = {
+        type: 'PredicateConstraint',
+        predicate: {
+          type: 'FunctionTerm',
+          function: 'IsNegative',
+          parameterName: 'Parameter1',
+        },
+      }
+
+      const result = printCodeFromAST([constraint])[0]
+      expect(result).toBe('IsNegative([Parameter1]);')
+    })
+
+    it('should print IsPositive without parameter', () => {
+      const constraint: PredicateConstraint = {
+        type: 'PredicateConstraint',
+        predicate: {
+          type: 'FunctionTerm',
+          function: 'IsPositive',
+        },
+      }
+
+      const result = printCodeFromAST([constraint])[0]
+      expect(result).toBe('IsPositive();')
+    })
+  })
+
+  describe('If Constraint with Else', () => {
+    it('should print IF/THEN/ELSE constraint', () => {
+      const constraint: IfConstraint = {
+        type: 'IfConstraint',
+        condition: {
+          type: 'RelationTerm',
+          parameterName: { type: 'ParameterName', name: 'Parameter1' },
+          relation: '=',
+          right: { type: 'String', value: 'Value1' },
+        },
+        then: {
+          type: 'RelationTerm',
+          parameterName: { type: 'ParameterName', name: 'Parameter2' },
+          relation: '=',
+          right: { type: 'String', value: 'Value2' },
+        },
+        else: {
+          type: 'RelationTerm',
+          parameterName: { type: 'ParameterName', name: 'Parameter2' },
+          relation: '=',
+          right: { type: 'String', value: 'Value3' },
+        },
+      }
+
+      const result = printCodeFromAST([constraint])[0]
+      expect(result).toBe(
+        'IF [Parameter1] = "Value1" THEN [Parameter2] = "Value2" ELSE [Parameter2] = "Value3";',
+      )
+    })
+  })
+
   describe('Complex Combinations', () => {
     it('should print multiple constraints', () => {
       const constraint1: PredicateConstraint = {
@@ -343,6 +421,7 @@ describe('printCodeFromAST', () => {
           type: 'LogicalPredicate',
           left: {
             type: 'InTerm',
+            negated: false,
             parameter: 'Parameter3',
             values: [
               { type: 'String', value: 'Value3' },
@@ -352,6 +431,7 @@ describe('printCodeFromAST', () => {
           operator: 'OR',
           right: {
             type: 'LikeTerm',
+            negated: false,
             parameter: 'Parameter4',
             patternString: 'pattern*',
           },

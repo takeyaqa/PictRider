@@ -39,7 +39,7 @@ export interface NotClause {
 }
 
 // Term
-export type Term = RelationTerm | LikeTerm | InTerm
+export type Term = RelationTerm | LikeTerm | InTerm | FunctionTerm
 
 export interface RelationTerm {
   type: 'RelationTerm'
@@ -50,14 +50,22 @@ export interface RelationTerm {
 
 export interface LikeTerm {
   type: 'LikeTerm'
+  negated: boolean
   parameter: string
   patternString: string
 }
 
 export interface InTerm {
   type: 'InTerm'
+  negated: boolean
   parameter: string
   values: ValueSet
+}
+
+export interface FunctionTerm {
+  type: 'FunctionTerm'
+  function: 'IsNegative' | 'IsPositive'
+  parameterName?: string
 }
 
 // ValueSet
@@ -89,3 +97,29 @@ export interface NumberValue {
   type: 'Number'
   value: number
 }
+
+// Parse Error
+export type ParseErrorType =
+  | 'UnexpectedEndOfInput'
+  | 'UnterminatedString'
+  | 'UnterminatedParameterName'
+  | 'InvalidEscapeCharacter'
+  | 'ExpectedSemicolon'
+  | 'ExpectedKeywordThen'
+  | 'ExpectedClosingParenthesis'
+  | 'ExpectedClosingBrace'
+  | 'ExpectedClosingBracket'
+  | 'ExpectedRelation'
+  | 'ExpectedValue'
+  | 'InvalidNumber'
+  | 'UnexpectedToken'
+
+export interface ParseError {
+  type: ParseErrorType
+  message: string
+  position: number
+}
+
+export type ParseResult<T> =
+  | { ok: true; value: T }
+  | { ok: false; error: ParseError }
