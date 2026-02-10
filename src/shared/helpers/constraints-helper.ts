@@ -11,7 +11,6 @@ import type {
   Term,
   LogicalOperator,
   Clause,
-  NotClause,
 } from '../../pict-constraints-parser/types'
 import type {
   Constraint,
@@ -45,12 +44,7 @@ export function printConstraints(constraints: FixedConstraint[]): string[] {
   return printCodeFromAST(convertTableToConstraints(constraints))
 }
 
-type UnfixedTerm =
-  | RelationTerm
-  | LikeTerm
-  | InTerm
-  | UnfixedRelationTerm
-  | NotClause
+type UnfixedTerm = RelationTerm | LikeTerm | InTerm | UnfixedRelationTerm
 
 interface UnfixedRelationTerm {
   type: 'UnfixedRelationTerm'
@@ -239,17 +233,16 @@ function convertTerm(predicate: string, parameter: string): UnfixedTerm {
   if (relation === 'LIKE') {
     return {
       type: 'LikeTerm',
+      negated: false,
       parameter: parameter,
       patternString: value,
     }
   } else if (relation === 'NOT LIKE') {
     return {
-      type: 'NotClause',
-      predicate: {
-        type: 'LikeTerm',
-        parameter: parameter,
-        patternString: value,
-      },
+      type: 'LikeTerm',
+      negated: true,
+      parameter: parameter,
+      patternString: value,
     }
   } else {
     return {

@@ -1,12 +1,23 @@
-import type { Constraint, Predicate, Clause, Term, Value } from './types'
+import type {
+  Constraints,
+  Constraint,
+  Predicate,
+  Clause,
+  Term,
+  Value,
+} from './types'
 
-export function printCodeFromAST(ast: Constraint[]): string[] {
+export function printCodeFromAST(ast: Constraints): string[] {
   return ast.map(printConstraint)
 }
 
 function printConstraint(constraint: Constraint): string {
   if (constraint.type === 'IfConstraint') {
-    return `IF ${printPredicate(constraint.condition)} THEN ${printPredicate(constraint.then)};`
+    let result = `IF ${printPredicate(constraint.condition)} THEN ${printPredicate(constraint.then)}`
+    if (constraint.else) {
+      result += ` ELSE ${printPredicate(constraint.else)}`
+    }
+    return `${result};`
   } else {
     return `${printPredicate(constraint.predicate)};`
   }
@@ -44,12 +55,20 @@ function printTerm(term: Term): string {
       }
       return `[${term.parameterName.name}] ${term.relation} ${rightValue}`
     }
-    case 'LikeTerm':
-      return `[${term.parameter}] LIKE "${term.patternString}"`
-    case 'InTerm':
-      return `[${term.parameter}] IN { ${generateValueSet(term.values)} }`
-    default:
-      throw new Error('Invalid term type')
+    case 'LikeTerm': {
+      const likeOp = term.negated ? 'NOT LIKE' : 'LIKE'
+      return `[${term.parameter}] ${likeOp} "${term.patternString}"`
+    }
+    case 'InTerm': {
+      const inOp = term.negated ? 'NOT IN' : 'IN'
+      return `[${term.parameter}] ${inOp} { ${generateValueSet(term.values)} }`
+    }
+    case 'FunctionTerm': {
+      if (term.parameterName != null) {
+        return `${term.function}([${term.parameterName}])`
+      }
+      return `${term.function}()`
+    }
   }
 }
 
