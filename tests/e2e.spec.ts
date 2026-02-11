@@ -6,6 +6,12 @@ test('should display default values', async ({ page }) => {
 
   // assert
   await expect(page).toHaveTitle('PictRider: Pairwise testing on the web')
+  await expect(page.getByRole('button', { name: 'Clear Input' })).toBeEnabled()
+  await expect(
+    page.getByRole('button', { name: 'Clear Result' }),
+  ).toBeDisabled()
+  await expect(page.getByRole('button', { name: 'Run' })).toBeEnabled()
+  await expect(page.getByRole('table', { name: 'Result' })).toBeHidden()
 })
 
 test('should display result after clicking Run (default values)', async ({
@@ -18,8 +24,12 @@ test('should display result after clicking Run (default values)', async ({
   await page.getByRole('button', { name: 'Run' }).click()
 
   // assert
+  await expect(page.getByRole('alert')).toBeHidden()
   const table = page.getByRole('table', { name: 'Result' })
   await expect(table).toBeVisible()
+  const downloadButton = page.getByRole('button', { name: 'Download' })
+  await expect(downloadButton).toBeVisible()
+  await expect(downloadButton).toBeEnabled()
   const headerRow = table.getByRole('row').first()
   await expect(headerRow.getByRole('columnheader').nth(1)).toHaveText('Type')
   await expect(headerRow.getByRole('columnheader').nth(4)).toHaveText(
@@ -31,6 +41,21 @@ test('should display result after clicking Run (default values)', async ({
   const lastDataRow = table.getByRole('row').nth(56)
   await expect(lastDataRow.getByRole('cell').nth(2)).toHaveText('Slow')
   await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('NTFS')
+})
+
+test('Should clear results when clicking the Clear Result button', async ({
+  page,
+}) => {
+  // arrange
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Run' }).click()
+  await expect(page.getByRole('table', { name: 'Result' })).toBeVisible()
+
+  // act
+  await page.getByRole('button', { name: 'Clear Result' }).click()
+
+  // assert
+  await expect(page.getByRole('table', { name: 'Result' })).toBeHidden()
 })
 
 test('should display result after clicking Run (edit values)', async ({
@@ -106,6 +131,86 @@ test('should display result after clicking Run (edit values)', async ({
   await expect(row12.getByRole('cell').nth(2)).toHaveText('캄사함니다')
   await expect(row12.getByRole('cell').nth(3)).toHaveText('✋🏿 💪🏿 👐🏿 🙌🏿 👏🏿 🙏🏿')
   await expect(row12.getByRole('cell').nth(4)).toHaveText('בְּרֵאשִׁית')
+})
+
+test('Should call with parameters when add empty row', async ({ page }) => {
+  // arrange
+  await page.goto('/')
+
+  // act - insert a new parameter row and leave it empty
+  await page.getByRole('button', { name: 'Parameter 6 Edit Menu' }).click()
+  await page.getByRole('menuitem', { name: 'Insert Below' }).click()
+  await page.getByRole('button', { name: 'Run' }).click()
+
+  // assert - ignore the empty parameter row
+  await expect(
+    page
+      .getByRole('table', { name: 'Result' })
+      .getByRole('row')
+      .first()
+      .getByRole('columnheader'),
+  ).toHaveCount(7)
+})
+
+test('Should call with parameters when delete existing row', async ({
+  page,
+}) => {
+  // arrange - delete the last parameter row
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Parameter 6 Edit Menu' }).click()
+  await page.getByRole('menuitem', { name: 'Delete Row' }).click()
+
+  // act - run
+  await page.getByRole('button', { name: 'Run' }).click()
+
+  // assert - ignore the deleted parameter row
+  await expect(
+    page
+      .getByRole('table', { name: 'Result' })
+      .getByRole('row')
+      .first()
+      .getByRole('columnheader'),
+  ).toHaveCount(6)
+})
+
+test('Should call with parameters when editing parameter to empty', async ({
+  page,
+}) => {
+  // arrange - clear parameter name
+  await page.goto('/')
+  await page.getByRole('textbox', { name: 'Parameter 2 Name' }).clear()
+
+  // act - run
+  await page.getByRole('button', { name: 'Run' }).click()
+
+  // assert - ignore the empty parameter
+  await expect(
+    page
+      .getByRole('table', { name: 'Result' })
+      .getByRole('row')
+      .first()
+      .getByRole('columnheader'),
+  ).toHaveCount(6)
+})
+
+test('Should call with parameters when editing values to empty', async ({
+  page,
+}) => {
+  // arrange - clear parameter values
+  await page.goto('/')
+  await page.getByRole('textbox', { name: 'Parameter 3 Values' }).clear()
+
+  // act - run
+  await page.getByRole('button', { name: 'Run' }).click()
+
+  // assert - ignore the empty parameter
+  await expect(
+    page
+      .getByRole('table', { name: 'Result' })
+      .getByRole('row')
+      .first()
+      .getByRole('columnheader'),
+  ).toHaveCount(6)
 })
 
 test('should display result after clicking Run with constraints', async ({
@@ -338,4 +443,27 @@ test('should reset constraints when clicking the reset button', async ({
   // assert
   await expect(page.getByText('Constraint 1', { exact: true })).toBeVisible()
   await expect(page.getByText('Constraint 2', { exact: true })).toBeHidden()
+})
+
+test('Should call with sub-models when enable sub-models', async ({ page }) => {
+  // arrange - enable sub-models
+  await page.goto('/')
+  await page.getByRole('switch', { name: 'Enable Sub-Models' }).click()
+  await page.getByRole('checkbox', { name: 'Type', exact: true }).click()
+  await page.getByRole('checkbox', { name: 'Size', exact: true }).click()
+  await page
+    .getByRole('checkbox', { name: 'Format method', exact: true })
+    .click()
+  await page.getByRole('spinbutton', { name: 'Order', exact: true }).clear()
+  await page.getByRole('spinbutton', { name: 'Order', exact: true }).fill('3')
+
+  // act - click the run button
+  await page.getByRole('button', { name: 'Run' }).click()
+
+  // assert - check result table
+  await page.getByRole('checkbox', { name: 'Show model file' }).click()
+  await expect(page.getByRole('table', { name: 'Result' })).toBeVisible()
+  await expect(
+    page.getByText('{ Type, Size, Format method } @ 3'),
+  ).toBeVisible()
 })
