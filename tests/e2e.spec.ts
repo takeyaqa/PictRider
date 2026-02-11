@@ -219,3 +219,121 @@ test('should display result after clicking Run (with randomize generation and de
   // assert
   await expect(page.getByRole('alert')).toContainText('Used seed: 0')
 })
+
+test('should show confirmation dialog when Edit Directly is clicked', async ({
+  page,
+}) => {
+  // arrange
+  await page.goto('/')
+  await page.getByRole('switch', { name: 'Enable Constraints' }).click()
+
+  // act
+  await page.getByRole('button', { name: 'Edit Directly' }).click()
+
+  // assert
+  await expect(
+    page.getByRole('heading', { name: 'Switch to Direct Edit Mode?' }),
+  ).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Cancel' })).toBeVisible()
+})
+
+test('should not change to direct edit mode when confirmation is canceled', async ({
+  page,
+}) => {
+  // arrange
+  await page.goto('/')
+  await page.getByRole('switch', { name: 'Enable Constraints' }).click()
+
+  // act
+  await page.getByRole('button', { name: 'Edit Directly' }).click()
+  await page.getByRole('button', { name: 'Cancel' }).click()
+
+  // assert
+  await expect(
+    page.getByRole('button', { name: 'Edit Directly' }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Add Constraint' }),
+  ).toBeVisible()
+})
+
+test('should change to direct edit mode when confirmed', async ({ page }) => {
+  // arrange
+  await page.goto('/')
+  await page.getByRole('switch', { name: 'Enable Constraints' }).click()
+
+  // act
+  await page.getByRole('button', { name: 'Edit Directly' }).click()
+  await page.getByRole('button', { name: 'Continue' }).click()
+
+  // assert
+  await expect(
+    page.getByRole('button', { name: 'Reset Constraints' }),
+  ).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Edit Directly' })).toBeHidden()
+  await expect(
+    page.getByRole('button', { name: 'Add Constraint' }),
+  ).toBeHidden()
+  await expect(
+    page.getByRole('button', { name: 'Remove Constraint' }),
+  ).toBeHidden()
+})
+
+test('should display result after clicking Run with constraints in direct edit mode', async ({
+  page,
+}) => {
+  // arrange
+  await page.goto('/')
+  await page.getByRole('switch', { name: 'Enable Constraints' }).click()
+  await page.getByRole('button', { name: 'Edit Directly' }).click()
+  await page.getByRole('button', { name: 'Continue' }).click()
+  await expect(
+    page.getByRole('button', { name: 'Reset Constraints' }),
+  ).toBeVisible()
+
+  // Click the formula display area to activate editing mode
+  await page.locator('pre').click()
+  await page
+    .getByRole('textbox', { name: 'Constraint Formula' })
+    .fill(
+      'IF [File system] = "FAT" THEN [Size] <= 4096;\nIF [File system] = "FAT32" THEN [Size] <= 32000;',
+    )
+
+  // act
+  await page.getByRole('button', { name: 'Run' }).click()
+
+  // assert
+  const table = page.getByRole('table', { name: 'Result' })
+  await expect(table).toBeVisible()
+  const headerRow = table.getByRole('row').first()
+  await expect(headerRow.getByRole('columnheader').nth(1)).toHaveText('Type')
+  await expect(headerRow.getByRole('columnheader').nth(4)).toHaveText(
+    'File system',
+  )
+  const firstDataRow = table.getByRole('row').nth(1)
+  await expect(firstDataRow.getByRole('cell').nth(0)).toHaveText('Stripe')
+  await expect(firstDataRow.getByRole('cell').nth(5)).toHaveText('OFF')
+  const lastDataRow = table.getByRole('row').nth(56)
+  await expect(lastDataRow.getByRole('cell').nth(2)).toHaveText('Quick')
+  await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('FAT')
+})
+
+test('should reset constraints when click reset button', async ({ page }) => {
+  // arrange
+  await page.goto('/')
+  await page.getByRole('switch', { name: 'Enable Constraints' }).click()
+  await page.getByRole('button', { name: 'Edit Directly' }).click()
+  await page.getByRole('button', { name: 'Continue' }).click()
+  await expect(
+    page.getByRole('button', { name: 'Reset Constraints' }),
+  ).toBeVisible()
+
+  // act
+  await page.getByRole('button', { name: 'Reset Constraints' }).click()
+  await page.getByRole('button', { name: 'Reset' }).click()
+
+  // assert
+  await expect(page.getByText('Constraint 1', { exact: true })).toBeVisible()
+  await expect(page.getByText('Constraint 2', { exact: true })).toBeHidden()
+})
