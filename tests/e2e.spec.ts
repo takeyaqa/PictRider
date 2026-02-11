@@ -450,10 +450,65 @@ test.describe('PictRider E2E Tests', () => {
       ).toHaveCount(6)
     })
 
-    test.fixme('Should clear inputs when clicking the Clear Input button', async ({
+    test('Should clear inputs when clicking the Clear Input button', async ({
       page,
     }) => {
-      expect(page.title).toBe('FIME!') // TODO: implement clear input test
+      // act - click the clear input button
+      await page.getByRole('button', { name: 'Clear Input' }).click()
+
+      // assert - all parameter names and values are cleared
+      await expect(
+        page.getByRole('textbox', { name: /Parameter \d+ Name/ }),
+      ).toHaveCount(6)
+      await expect(
+        page.getByRole('textbox', { name: /Parameter \d+ Values/ }),
+      ).toHaveCount(6)
+      await expect(
+        page.getByRole('textbox', { name: 'Parameter 1 Name' }),
+      ).toHaveValue('')
+      await expect(
+        page.getByRole('textbox', { name: 'Parameter 1 Values' }),
+      ).toHaveValue('')
+      await expect(
+        page.getByRole('textbox', { name: 'Parameter 2 Name' }),
+      ).toHaveValue('')
+      await expect(
+        page.getByRole('textbox', { name: 'Parameter 2 Values' }),
+      ).toHaveValue('')
+      await expect(
+        page.getByRole('textbox', { name: 'Parameter 3 Name' }),
+      ).toHaveValue('')
+      await expect(
+        page.getByRole('textbox', { name: 'Parameter 3 Values' }),
+      ).toHaveValue('')
+      await expect(
+        page.getByRole('textbox', { name: 'Parameter 4 Name' }),
+      ).toHaveValue('')
+      await expect(
+        page.getByRole('textbox', { name: 'Parameter 4 Values' }),
+      ).toHaveValue('')
+      await expect(
+        page.getByRole('textbox', { name: 'Parameter 5 Name' }),
+      ).toHaveValue('')
+      await expect(
+        page.getByRole('textbox', { name: 'Parameter 5 Values' }),
+      ).toHaveValue('')
+      await expect(
+        page.getByRole('textbox', { name: 'Parameter 6 Name' }),
+      ).toHaveValue('')
+      await expect(
+        page.getByRole('textbox', { name: 'Parameter 6 Values' }),
+      ).toHaveValue('')
+
+      // assert - constraints and sub-models sections remain hidden (toggles unchanged)
+      await expect(page.getByText('Constraint 1', { exact: true })).toBeHidden()
+      await expect(page.getByText('Sub-Model 1', { exact: true })).toBeHidden()
+
+      // assert - menu buttons state unchanged
+      await expect(
+        page.getByRole('button', { name: 'Clear Result' }),
+      ).toBeDisabled()
+      await expect(page.getByRole('button', { name: 'Run' })).toBeEnabled()
     })
 
     test('Should clear results when clicking the Clear Result button', async ({
