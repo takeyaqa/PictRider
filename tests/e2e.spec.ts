@@ -292,8 +292,8 @@ test('should display result after clicking Run with constraints in direct edit m
     page.getByRole('button', { name: 'Reset Constraints' }),
   ).toBeVisible()
 
-  // Click the constraint formula textbox to activate editing mode
-  await page.getByRole('textbox', { name: 'Constraint Formula' }).click()
+  // Click the formula display area to activate editing mode
+  await page.locator('pre').click()
   await page
     .getByRole('textbox', { name: 'Constraint Formula' })
     .fill(
