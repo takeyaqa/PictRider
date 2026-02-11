@@ -9,6 +9,7 @@ import {
   AlertMessage,
   AugmentDiv,
   Button,
+  ConfirmDialog,
   Section,
   Switch,
   TextInput,
@@ -227,6 +228,8 @@ function ConstraintEditor({
   onClickResetConstraints,
 }: ConstraintEditorProps) {
   const [isEditing, setIsEditing] = useState(false)
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
   return (
     <div className="mt-3">
       {constraintDirectEditMode && isEditing ? (
@@ -257,11 +260,10 @@ function ConstraintEditor({
           </span>
           {!constraintDirectEditMode && (
             <Button
-              type="danger"
+              type="primary"
               size="sm"
               onClick={() => {
-                onToggleConstraintDirectEditMode()
-                setIsEditing(true)
+                setIsConfirmDialogOpen(true)
               }}
             >
               Edit Directly
@@ -284,10 +286,47 @@ function ConstraintEditor({
         </>
       )}
       {constraintDirectEditMode && (
-        <Button type="warning" size="md" onClick={onClickResetConstraints}>
+        <Button
+          type="warning"
+          size="md"
+          onClick={() => {
+            setIsResetDialogOpen(true)
+          }}
+        >
           Reset Constraints
         </Button>
       )}
+      <ConfirmDialog
+        open={isConfirmDialogOpen}
+        title="Switch to Direct Edit Mode?"
+        message="Once you switch to direct edit mode, you cannot return to the table format. To go back, you will need to reset all constraints. Do you want to continue?"
+        confirmLabel="Continue"
+        cancelLabel="Cancel"
+        confirmButtonType="danger"
+        onConfirm={() => {
+          setIsConfirmDialogOpen(false)
+          onToggleConstraintDirectEditMode()
+          setIsEditing(true)
+        }}
+        onCancel={() => {
+          setIsConfirmDialogOpen(false)
+        }}
+      />
+      <ConfirmDialog
+        open={isResetDialogOpen}
+        title="Reset All Constraints?"
+        message="All constraint formulas will be deleted and the input will return to table format. This action cannot be undone. Do you want to continue?"
+        confirmLabel="Reset"
+        cancelLabel="Cancel"
+        confirmButtonType="warning"
+        onConfirm={() => {
+          setIsResetDialogOpen(false)
+          onClickResetConstraints()
+        }}
+        onCancel={() => {
+          setIsResetDialogOpen(false)
+        }}
+      />
     </div>
   )
 }
