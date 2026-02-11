@@ -319,7 +319,10 @@ test('should display result after clicking Run with constraints in direct edit m
   await expect(lastDataRow.getByRole('cell').nth(3)).toHaveText('FAT')
 })
 
-test('should reset constraints when click reset button', async ({ page }) => {
+
+test('should reset constraints when clicking the reset button', async ({
+  page,
+}) => {
   // arrange
   await page.goto('/')
   await page.getByRole('switch', { name: 'Enable Constraints' }).click()
