@@ -229,6 +229,7 @@ function ConstraintEditor({
 }: ConstraintEditorProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
   return (
     <div className="mt-3">
       {constraintDirectEditMode && isEditing ? (
@@ -285,7 +286,13 @@ function ConstraintEditor({
         </>
       )}
       {constraintDirectEditMode && (
-        <Button type="warning" size="md" onClick={onClickResetConstraints}>
+        <Button
+          type="warning"
+          size="md"
+          onClick={() => {
+            setIsResetDialogOpen(true)
+          }}
+        >
           Reset Constraints
         </Button>
       )}
@@ -303,6 +310,21 @@ function ConstraintEditor({
         }}
         onCancel={() => {
           setIsConfirmDialogOpen(false)
+        }}
+      />
+      <ConfirmDialog
+        open={isResetDialogOpen}
+        title="Reset All Constraints?"
+        message="All constraint formulas will be deleted and the input will return to table format. This action cannot be undone. Do you want to continue?"
+        confirmLabel="Reset"
+        cancelLabel="Cancel"
+        confirmButtonType="warning"
+        onConfirm={() => {
+          setIsResetDialogOpen(false)
+          onClickResetConstraints()
+        }}
+        onCancel={() => {
+          setIsResetDialogOpen(false)
         }}
       />
     </div>

@@ -455,6 +455,7 @@ describe('ConstraintsSection', () => {
 
     // act
     await screen.getByRole('button', { name: 'Reset Constraints' }).click()
+    await screen.getByRole('button', { name: 'Reset' }).click()
 
     // assert
     await expect
