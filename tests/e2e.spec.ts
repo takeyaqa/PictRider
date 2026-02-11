@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 import { test, expect } from '@playwright/test'
 
 test.describe('PictRider E2E Tests', () => {
@@ -855,16 +856,65 @@ Compression: ON, OFF`),
   })
 
   test.describe('Download results', () => {
-    test.fixme('Should download result as CSV file when clicking Download button', async ({
-      page,
-    }) => {
-      expect(page.title).toBe('FIME!') // TODO: implement download test
+    test.beforeEach(async ({ page }) => {
+      await page.goto('/')
+      await page.getByRole('button', { name: 'Run' }).click()
+      await expect(page.getByRole('table', { name: 'Result' })).toBeVisible()
     })
 
-    test.fixme('Should download result as TSV file when clicking Download button', async ({
+    test('Should download result as CSV file when clicking Download button', async ({
       page,
     }) => {
-      expect(page.title).toBe('FIME!') // TODO: implement download test
+      // act - click download CSV
+      await page.getByRole('button', { name: 'Download' }).click()
+      const downloadPromise = page.waitForEvent('download')
+      await page.getByRole('menuitem', { name: 'CSV' }).click()
+      const download = await downloadPromise
+
+      // assert - file name
+      expect(download.suggestedFilename()).toBe('result.csv')
+
+      // assert - no BOM at the beginning of the file
+      const csvBytes = fs.readFileSync(await download.path()!)
+      expect(csvBytes.length).toBeGreaterThanOrEqual(3) // ensure file is long enough to meaningfully check for a BOM
+      expect(csvBytes.subarray(0, 3)).not.toEqual(
+        Buffer.from([0xef, 0xbb, 0xbf]),
+      )
+
+      // assert - file content
+      const csvContent = csvBytes.toString('utf8')
+
+      // assert - correct header and data
+      const csvLines = csvContent.split('\n')
+      expect(csvLines).toHaveLength(57) // 1 header + 56 data rows
+      expect(csvLines[0]).toBe(
+        '"Type","Size","Format method","File system","Cluster size","Compression"',
+      )
+      expect(csvLines[1]).toBe('"Span","5000","Slow","NTFS","16384","OFF"')
+      expect(csvLines[56]).toBe('"Mirror","5000","Slow","NTFS","2048","OFF"')
+    })
+
+    test('Should download result as TSV file when clicking Download button', async ({
+      page,
+    }) => {
+      // act - click download TSV
+      await page.getByRole('button', { name: 'Download' }).click()
+      const downloadPromise = page.waitForEvent('download')
+      await page.getByRole('menuitem', { name: 'TSV' }).click()
+      const download = await downloadPromise
+
+      // assert - file name
+      expect(download.suggestedFilename()).toBe('result.tsv')
+
+      // assert - file content
+      const tsvContent = fs.readFileSync(await download.path()!, 'utf8')
+      const tsvLines = tsvContent.split('\n')
+      expect(tsvLines).toHaveLength(57) // 1 header + 56 data rows
+      expect(tsvLines[0]).toBe(
+        'Type\tSize\tFormat method\tFile system\tCluster size\tCompression',
+      )
+      expect(tsvLines[1]).toBe('Span\t5000\tSlow\tNTFS\t16384\tOFF')
+      expect(tsvLines[56]).toBe('Mirror\t5000\tSlow\tNTFS\t2048\tOFF')
     })
   })
 })
