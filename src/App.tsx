@@ -1,4 +1,3 @@
-import { PictRunner } from '@takeyaqa/pict-wasm'
 import { ConfigProvider } from './features/config'
 import {
   FooterSection,
@@ -7,11 +6,7 @@ import {
   NotificationMessageSection,
 } from './layouts'
 
-interface AppProps {
-  pictRunnerInjection?: PictRunner // use for testing
-}
-
-function App({ pictRunnerInjection }: AppProps) {
+function App() {
   return (
     <>
       <HeaderSection />
@@ -19,7 +14,7 @@ function App({ pictRunnerInjection }: AppProps) {
         message={import.meta.env.VITE_NOTIFICATION_MESSAGE}
       />
       <ConfigProvider>
-        <MainArea pictRunnerInjection={pictRunnerInjection} />
+        <MainArea />
       </ConfigProvider>
       <FooterSection />
     </>
