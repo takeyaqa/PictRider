@@ -875,10 +875,11 @@ Compression: ON, OFF`),
       expect(download.suggestedFilename()).toBe('result.csv')
 
       // assert - no BOM at the beginning of the file
-      const csvBytes = fs.readFileSync(await download.path())
-      expect(
-        csvBytes[0] === 0xef && csvBytes[1] === 0xbb && csvBytes[2] === 0xbf,
-      ).toBe(false)
+      const csvBytes = fs.readFileSync(await download.path()!)
+      expect(csvBytes.length).toBeGreaterThanOrEqual(3) // ensure file is long enough to meaningfully check for a BOM
+      expect(csvBytes.subarray(0, 3)).not.toEqual(
+        Buffer.from([0xef, 0xbb, 0xbf]),
+      )
 
       // assert - file content
       const csvContent = csvBytes.toString('utf8')
@@ -906,7 +907,7 @@ Compression: ON, OFF`),
       expect(download.suggestedFilename()).toBe('result.tsv')
 
       // assert - file content
-      const tsvContent = fs.readFileSync(await download.path(), 'utf8')
+      const tsvContent = fs.readFileSync(await download.path()!, 'utf8')
       const tsvLines = tsvContent.split('\n')
       expect(tsvLines).toHaveLength(57) // 1 header + 56 data rows
       expect(tsvLines[0]).toBe(
