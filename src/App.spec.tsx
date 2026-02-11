@@ -408,6 +408,7 @@ describe('App', () => {
       // arrange
       await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
       await screen.getByRole('button', { name: 'Edit Directly' }).click()
+      await screen.getByRole('button', { name: 'Continue' }).click()
 
       // act
       await screen

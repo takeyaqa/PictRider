@@ -357,12 +357,53 @@ describe('ConstraintsSection', () => {
     await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
   })
 
-  it('Should change direct edit mode when click button', async () => {
+  it('Should show confirmation dialog when Edit Directly is clicked', async () => {
     // arrange
     await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
 
     // act
     await screen.getByRole('button', { name: 'Edit Directly' }).click()
+
+    // assert - dialog should be visible (dialog is rendered in a portal)
+    await expect
+      .element(
+        screen.getByRole('heading', {
+          name: 'Switch to Direct Edit Mode?',
+        }),
+      )
+      .toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('button', { name: 'Continue' }))
+      .toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('button', { name: 'Cancel' }))
+      .toBeInTheDocument()
+  })
+
+  it('Should not change to direct edit mode when confirmation is canceled', async () => {
+    // arrange
+    await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
+
+    // act - click Edit Directly to open dialog, then cancel
+    await screen.getByRole('button', { name: 'Edit Directly' }).click()
+    await screen.getByRole('button', { name: 'Cancel' }).click()
+
+    // assert - should still be in table mode
+    await expect
+      .element(screen.getByRole('button', { name: 'Edit Directly' }))
+      .toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('button', { name: 'Add Constraint' }))
+      .toBeInTheDocument()
+  })
+
+  it('Should change direct edit mode when click button', async () => {
+    // arrange
+    await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
+
+    // act - click Edit Directly and confirm the dialog
+    await screen.getByRole('button', { name: 'Edit Directly' }).click()
+    await screen.getByRole('button', { name: 'Continue' }).click()
 
     // assert
     await expect
@@ -407,6 +448,7 @@ describe('ConstraintsSection', () => {
     // arrange
     await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
     await screen.getByRole('button', { name: 'Edit Directly' }).click()
+    await screen.getByRole('button', { name: 'Continue' }).click()
     await expect
       .element(screen.getByRole('textbox', { name: 'Constraint Formula' }))
       .toBeInTheDocument()

@@ -9,6 +9,7 @@ import {
   AlertMessage,
   AugmentDiv,
   Button,
+  ConfirmDialog,
   Section,
   Switch,
   TextInput,
@@ -227,6 +228,7 @@ function ConstraintEditor({
   onClickResetConstraints,
 }: ConstraintEditorProps) {
   const [isEditing, setIsEditing] = useState(false)
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
   return (
     <div className="mt-3">
       {constraintDirectEditMode && isEditing ? (
@@ -257,11 +259,10 @@ function ConstraintEditor({
           </span>
           {!constraintDirectEditMode && (
             <Button
-              type="danger"
+              type="primary"
               size="sm"
               onClick={() => {
-                onToggleConstraintDirectEditMode()
-                setIsEditing(true)
+                setIsConfirmDialogOpen(true)
               }}
             >
               Edit Directly
@@ -288,6 +289,22 @@ function ConstraintEditor({
           Reset Constraints
         </Button>
       )}
+      <ConfirmDialog
+        open={isConfirmDialogOpen}
+        title="Switch to Direct Edit Mode?"
+        message="Once you switch to direct edit mode, you cannot return to the table format. To go back, you will need to reset all constraints. Do you want to continue?"
+        confirmLabel="Continue"
+        cancelLabel="Cancel"
+        confirmButtonType="danger"
+        onConfirm={() => {
+          setIsConfirmDialogOpen(false)
+          onToggleConstraintDirectEditMode()
+          setIsEditing(true)
+        }}
+        onCancel={() => {
+          setIsConfirmDialogOpen(false)
+        }}
+      />
     </div>
   )
 }
