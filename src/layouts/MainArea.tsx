@@ -1,4 +1,3 @@
-import { PictRunner } from '@takeyaqa/pict-wasm'
 import { useEffect, useRef, useState } from 'react'
 import { useImmerReducer } from 'use-immer'
 import { OptionsSection } from '../features/config'
@@ -13,11 +12,7 @@ import {
 import { ResultSection } from '../features/result'
 import type { Result } from '../types'
 
-interface MainAreaProps {
-  pictRunnerInjection?: PictRunner // use for testing
-}
-
-function MainArea({ pictRunnerInjection }: MainAreaProps) {
+function MainArea() {
   const [model, dispatch] = useImmerReducer(modelReducer, getInitialModel())
   const [result, setResult] = useState<Result | null>(null)
   const resultSection = useRef<HTMLDivElement>(null)
@@ -155,7 +150,6 @@ function MainArea({ pictRunnerInjection }: MainAreaProps) {
     <main className="grid grid-cols-1 xl:grid-cols-2">
       <div>
         <MenuSection
-          pictRunnerInjection={pictRunnerInjection}
           canClearResult={result !== null}
           parameters={{
             parameters: model.parameters,
