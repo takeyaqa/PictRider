@@ -190,7 +190,9 @@ test.describe('PictRider E2E Tests', () => {
       await expect(
         page.getByRole('button', { name: 'Edit Directly' }),
       ).toBeEnabled()
-      await expect(page.locator('pre')).toHaveText('')
+      await expect(page.getByTestId('constraint-formula-preview')).toHaveText(
+        '',
+      )
 
       // direct edit mode elements are hidden
       await expect(
@@ -656,7 +658,7 @@ IF [File system] = "FAT32" THEN [Size] <= 32000;`,
       await page.getByRole('button', { name: 'Continue' }).click()
 
       // Click the formula display area to activate editing mode
-      await page.locator('pre').click() // TODO: replace with testid
+      await page.getByTestId('constraint-formula-preview').click()
       await page
         .getByRole('textbox', { name: 'Constraint Formula' })
         .fill(
@@ -783,7 +785,9 @@ IF [File system] = "FAT32" THEN [Size] <= 32000;`,
       await expect(
         page.getByRole('button', { name: 'Edit Directly' }),
       ).toBeEnabled()
-      await expect(page.locator('pre')).toHaveText('')
+      await expect(page.getByTestId('constraint-formula-preview')).toHaveText(
+        '',
+      )
 
       // direct edit mode elements are hidden
       await expect(

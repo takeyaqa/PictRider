@@ -270,6 +270,7 @@ function ConstraintEditor({
             </Button>
           )}
           <pre
+            data-testid="constraint-formula-preview"
             className={
               constraintDirectEditMode
                 ? 'max-h-50 min-h-30 overflow-x-auto rounded bg-white p-4 font-mono text-sm text-black dark:bg-gray-600 dark:text-white'
