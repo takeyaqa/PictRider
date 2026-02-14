@@ -18,7 +18,13 @@ __screenshots__/
 
 # Editor directories and files
 .vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
 !.vscode/extensions.json
+!.vscode/*.code-snippets
+!*.code-workspace
+*.vsix
 .idea
 .DS_Store
 *.suo
@@ -32,3 +38,18 @@ __screenshots__/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# mise
+# https://mise.jdx.dev/configuration.html
+# https://mise.jdx.dev/configuration/environments.html
+.mise.*.local.toml
+.mise.local.toml
+mise.*.local.toml
+mise.local.toml
+.mise/*.local.toml
+mise/*.local.toml
+
+# Agents
+.claude/
+.codex/
+.gemini/
