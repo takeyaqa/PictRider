@@ -50,6 +50,8 @@ updates:
           - "vitest-browser-react"
     ignore:
       - dependency-name: "@takeyaqa/pict-wasm"
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
