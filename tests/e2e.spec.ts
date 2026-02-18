@@ -927,7 +927,7 @@ Compression: ON, OFF`),
       // act - click download CSV
       await page.getByRole('button', { name: 'Download' }).click()
       const downloadPromise = page.waitForEvent('download')
-      await page.getByRole('menuitem', { name: 'CSV' }).click()
+      await page.getByRole('menuitem', { name: 'CSV', exact: true }).click()
       const download = await downloadPromise
 
       // assert - file name
@@ -953,13 +953,47 @@ Compression: ON, OFF`),
       expect(csvLines[56]).toBe('"Mirror","5000","Slow","NTFS","2048","OFF"')
     })
 
+    test('Should download result as CSV (Excel) file when clicking Download button', async ({
+      page,
+    }) => {
+      // act - click download CSV (Excel)
+      await page.getByRole('button', { name: 'Download' }).click()
+      const downloadPromise = page.waitForEvent('download')
+      await page
+        .getByRole('menuitem', { name: 'CSV (Excel)', exact: true })
+        .click()
+      const download = await downloadPromise
+
+      // assert - file name
+      expect(download.suggestedFilename()).toBe('result_excel.csv')
+
+      // assert - BOM exists at the beginning of the file
+      const csvExcelBytes = fs.readFileSync(await download.path()!)
+      expect(csvExcelBytes.length).toBeGreaterThanOrEqual(3) // ensure file is long enough to meaningfully check BOM and content
+      expect(csvExcelBytes.subarray(0, 3)).toEqual(
+        Buffer.from([0xef, 0xbb, 0xbf]),
+      )
+
+      // assert - file content after BOM
+      const csvExcelContent = csvExcelBytes.subarray(3).toString('utf8')
+      const csvExcelLines = csvExcelContent.split('\n')
+      expect(csvExcelLines).toHaveLength(57) // 1 header + 56 data rows
+      expect(csvExcelLines[0]).toBe(
+        '"Type","Size","Format method","File system","Cluster size","Compression"',
+      )
+      expect(csvExcelLines[1]).toBe('"Span","5000","Slow","NTFS","16384","OFF"')
+      expect(csvExcelLines[56]).toBe(
+        '"Mirror","5000","Slow","NTFS","2048","OFF"',
+      )
+    })
+
     test('Should download result as TSV file when clicking Download button', async ({
       page,
     }) => {
       // act - click download TSV
       await page.getByRole('button', { name: 'Download' }).click()
       const downloadPromise = page.waitForEvent('download')
-      await page.getByRole('menuitem', { name: 'TSV' }).click()
+      await page.getByRole('menuitem', { name: 'TSV', exact: true }).click()
       const download = await downloadPromise
 
       // assert - file name
