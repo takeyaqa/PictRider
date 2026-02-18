@@ -7,7 +7,7 @@ PictRider is a web-based pairwise testing tool built with React 19, TypeScript, 
 ## Build & Test Commands
 
 ```bash
-# Install dependencies (pnpm 10.x required, Node 24.x) and Playwright browsers
+# Install dependencies (pnpm 10.x required, Node 22.x) and Playwright browsers
 pnpm install
 pnpm exec playwright install --with-deps
 
