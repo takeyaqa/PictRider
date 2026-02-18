@@ -27,15 +27,34 @@ interface ResultSectionProps {
 function ResultSection({ result }: ResultSectionProps) {
   const { config } = useConfig()
 
-  function handleDownload(type: 'csv' | 'tsv') {
+  function handleDownload(type: 'csv' | 'csvExcel' | 'tsv') {
     if (!result) {
       return
     }
 
-    const content =
-      type === 'csv' ? createCsvContent(result) : createTsvContent(result)
-    const mimeType = type === 'csv' ? 'text/csv' : 'text/tab-separated-values'
-    const fileName = type === 'csv' ? 'result.csv' : 'result.tsv'
+    let content = ''
+    let mimeType = ''
+    let fileName = ''
+
+    switch (type) {
+      case 'csv':
+        content = createCsvContent(result)
+        mimeType = 'text/csv'
+        fileName = 'result.csv'
+        break
+      case 'csvExcel':
+        content = `\uFEFF${createCsvContent(result)}`
+        mimeType = 'text/csv'
+        fileName = 'result_excel.csv'
+        break
+      case 'tsv':
+        content = createTsvContent(result)
+        mimeType = 'text/tab-separated-values'
+        fileName = 'result.tsv'
+        break
+      default:
+        return
+    }
 
     // Create a blob and download link
     const blob = new Blob([content], { type: `${mimeType};charset=utf-8;` })
@@ -129,7 +148,7 @@ function ModelFile({ modelFile }: ModelFileProps) {
 }
 
 interface DownloadMenuProps {
-  onDownload: (type: 'csv' | 'tsv') => void
+  onDownload: (type: 'csv' | 'csvExcel' | 'tsv') => void
 }
 
 function DownloadMenu({ onDownload }: DownloadMenuProps) {
@@ -152,6 +171,17 @@ function DownloadMenu({ onDownload }: DownloadMenuProps) {
             }}
           >
             CSV
+          </button>
+        </MenuItem>
+        <MenuItem>
+          <button
+            type="button"
+            className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
+            onClick={() => {
+              onDownload('csvExcel')
+            }}
+          >
+            CSV (Excel)
           </button>
         </MenuItem>
         <MenuItem>
