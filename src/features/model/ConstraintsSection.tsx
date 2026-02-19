@@ -51,6 +51,7 @@ interface ConstraintsSectionProps {
   onToggleConstraintDirectEditMode: () => void
   onChangeConstraintFormula: (value: string) => void
   onResetConstraints: () => void
+  skipDirectEditConfirm?: boolean // Test-only flag to bypass the direct edit confirmation dialog.
 }
 
 function ConstraintsSection({
@@ -63,6 +64,7 @@ function ConstraintsSection({
   onToggleConstraintDirectEditMode,
   onChangeConstraintFormula,
   onResetConstraints,
+  skipDirectEditConfirm = false,
 }: ConstraintsSectionProps) {
   const { config, handlers: configHandlers } = useConfig()
 
@@ -125,6 +127,7 @@ function ConstraintsSection({
             }}
             onToggleConstraintDirectEditMode={onToggleConstraintDirectEditMode}
             onClickResetConstraints={onResetConstraints}
+            skipDirectEditConfirm={skipDirectEditConfirm}
           />
           <AlertMessage messages={constraints.constraintErrors} />
         </div>
@@ -235,6 +238,7 @@ interface ConstraintEditorProps {
   onToggleConstraintDirectEditMode: () => void
   onChangeConstraintFormula: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
   onClickResetConstraints: () => void
+  skipDirectEditConfirm: boolean
 }
 
 function ConstraintEditor({
@@ -243,6 +247,7 @@ function ConstraintEditor({
   onToggleConstraintDirectEditMode,
   onChangeConstraintFormula,
   onClickResetConstraints,
+  skipDirectEditConfirm,
 }: ConstraintEditorProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
@@ -280,6 +285,11 @@ function ConstraintEditor({
               type="primary"
               size="sm"
               onClick={() => {
+                if (skipDirectEditConfirm) {
+                  onToggleConstraintDirectEditMode()
+                  setIsEditing(true)
+                  return
+                }
                 setIsConfirmDialogOpen(true)
               }}
             >
