@@ -146,6 +146,22 @@ interface ConstraintTablesProps {
   onClickRemoveConstraint: () => void
 }
 
+function hasConditionPredicate(predicate: string) {
+  return predicate.trim() !== ''
+}
+
+function getConditionRowBackgroundClass(
+  ifOrThen: 'if' | 'then',
+  predicate: string,
+) {
+  if (!hasConditionPredicate(predicate)) {
+    return ''
+  }
+  return ifOrThen === 'if'
+    ? 'bg-sky-100 dark:bg-sky-950'
+    : 'bg-blue-200 dark:bg-blue-950'
+}
+
 function ConstraintTables({
   constraints,
   parameters,
@@ -168,10 +184,11 @@ function ConstraintTables({
             onClickAdd={onClickAddConstraint}
             onClickRemove={onClickRemoveConstraint}
           >
-            {constraint.conditions.map((condition) => (
+            {constraint.conditions.map((condition, conditionIndex) => (
               <div
                 key={condition.parameterId}
-                className="border-collapse border px-4 py-2 text-left dark:border-gray-500"
+                data-testid={`constraint-condition-row-${i.toString()}-${conditionIndex.toString()}`}
+                className={`border-collapse border px-4 py-2 text-left dark:border-gray-500 ${getConditionRowBackgroundClass(condition.ifOrThen, condition.predicate)}`}
               >
                 <div>
                   <div className="text-sm font-bold">
