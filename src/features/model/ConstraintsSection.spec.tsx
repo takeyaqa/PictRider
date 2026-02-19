@@ -5,7 +5,11 @@ import ConfigProvider from '../config/provider'
 import ConstraintsSection from './ConstraintsSection'
 import { modelReducer, getInitialModel } from './reducer'
 
-function ConstraintsSectionWrapper() {
+function ConstraintsSectionWrapper({
+  skipDirectEditConfirm,
+}: {
+  skipDirectEditConfirm?: boolean
+}) {
   const [model, dispatch] = useImmerReducer(modelReducer, getInitialModel())
 
   const handleToggleCondition = (constraintId: string, parameterId: string) => {
@@ -77,6 +81,7 @@ function ConstraintsSectionWrapper() {
         onToggleConstraintDirectEditMode={handleToggleConstraintDirectEditMode}
         onChangeCondition={handleChangeCondition}
         onResetConstraints={handleResetConstraints}
+        skipDirectEditConfirm={skipDirectEditConfirm}
       />
     </ConfigProvider>
   )
@@ -127,6 +132,33 @@ describe('ConstraintsSection', () => {
         screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(6),
       )
       .not.toBeInTheDocument() // Default app has 6 parameters, so we should have 6 'if' buttons
+  })
+
+  it('Should switch to direct edit mode without confirmation when skipDirectEditConfirm is enabled', async () => {
+    await screen.unmount()
+    screen = await render(
+      <ConstraintsSectionWrapper skipDirectEditConfirm={true} />,
+    )
+
+    // arrange - enable constraints area
+    await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
+
+    // act - click edit directly
+    await screen.getByRole('button', { name: 'Edit Directly' }).click()
+
+    // assert - switched to direct edit mode
+    await expect
+      .element(screen.getByText('Constraint 1', { exact: true }))
+      .not.toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('button', { name: 'Edit Directly' }))
+      .not.toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('button', { name: 'Reset Constraints' }))
+      .toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('textbox', { name: 'Constraint Formula' }))
+      .toBeInTheDocument()
   })
 
   it('Should add a new constraint when add constraint button is clicked', async () => {
