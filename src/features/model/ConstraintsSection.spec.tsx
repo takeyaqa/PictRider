@@ -292,6 +292,52 @@ describe('ConstraintsSection', () => {
       .toHaveTextContent('if')
   })
 
+  it('Should apply condition row styles only when predicate has value', async () => {
+    // arrange - enable constraints area
+    await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
+
+    const conditionRow = screen.getByTestId('constraint-condition-row-0-0')
+    const predicateInput = screen.getByRole('textbox', {
+      name: 'Constraint 1 Type Predicate',
+    })
+
+    // assert - default state should not have color styles when predicate is empty
+    await expect.element(conditionRow).not.toHaveClass('bg-sky-100')
+    await expect.element(conditionRow).not.toHaveClass('dark:bg-sky-950')
+
+    // act - fill spaces only (should still be treated as empty)
+    await predicateInput.fill('   ')
+    await expect.element(conditionRow).not.toHaveClass('bg-sky-100')
+
+    // act - fill with non-empty value
+    await predicateInput.fill('RAID-5')
+
+    // assert - if styles should be applied
+    await expect.element(conditionRow).toHaveClass('bg-sky-100')
+    await expect.element(conditionRow).toHaveClass('dark:bg-sky-950')
+
+    // act - toggle to then
+    await screen
+      .getByRole('button', {
+        name: 'Constraint 1 Type if',
+      })
+      .click()
+
+    // assert - now then styles should be applied
+    await expect.element(conditionRow).toHaveClass('bg-blue-200')
+    await expect.element(conditionRow).toHaveClass('dark:bg-blue-950')
+    await expect.element(conditionRow).not.toHaveClass('bg-sky-100')
+
+    // act - clear input to empty value
+    await predicateInput.clear()
+
+    // assert - color styles should be removed again
+    await expect.element(conditionRow).not.toHaveClass('bg-sky-100')
+    await expect.element(conditionRow).not.toHaveClass('dark:bg-sky-950')
+    await expect.element(conditionRow).not.toHaveClass('bg-blue-200')
+    await expect.element(conditionRow).not.toHaveClass('dark:bg-blue-950')
+  })
+
   it('Should update condition predicate when input is changed', async () => {
     // arrange - enable constraints area
     await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
