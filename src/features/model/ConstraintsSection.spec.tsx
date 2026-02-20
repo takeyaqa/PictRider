@@ -451,7 +451,7 @@ describe('ConstraintsSection', () => {
 
   it.skipIf(server.browser === 'firefox')(
     // firefox does not properly trigger focus/blur events in some cases
-    'Should validate syntax only on blur and highlight th e error line in preview',
+    'Should validate syntax only on blur and highlight the error line in preview',
     async () => {
       await screen.unmount()
       screen = await render(
