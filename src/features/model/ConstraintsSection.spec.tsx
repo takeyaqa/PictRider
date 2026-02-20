@@ -144,7 +144,7 @@ describe('ConstraintsSection', () => {
   })
 
   it.todo(
-    'Fail only on Firefox: Should switch to direct edit mode without confirmation when skipDirectEditConfirm is enabled',
+    'Fails only on Firefox: Should switch to direct edit mode without confirmation when skipDirectEditConfirm is enabled',
     async () => {
       await screen.unmount()
       screen = await render(
