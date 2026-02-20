@@ -14,7 +14,11 @@ export default defineConfig({
       provider: playwright(),
       enabled: true,
       headless: true,
-      instances: [{ browser: 'chromium' }],
+      instances: [
+        { browser: 'chromium' },
+        { browser: 'firefox' },
+        { browser: 'webkit' },
+      ],
     },
   },
 })
