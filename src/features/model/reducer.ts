@@ -1,4 +1,5 @@
 import type { Draft } from 'immer'
+import { parseConstraints } from '../../pict-constraints-parser'
 import { fixConstraint, printConstraints, uuidv4 } from '../../shared/helpers'
 import type {
   Message,
@@ -49,6 +50,12 @@ export type ModelAction =
     }
   | {
       type: 'changeConstraintFormula'
+      payload: {
+        value: string
+      }
+    }
+  | {
+      type: 'validateConstraintFormula'
       payload: {
         value: string
       }
@@ -382,6 +389,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
         text,
       }))
       draft.constraintErrors = errors
+      draft.constraintSyntaxErrorLine = null
       break
     }
 
@@ -391,6 +399,31 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
         id: uuidv4(),
         text,
       }))
+      break
+    }
+
+    case 'validateConstraintFormula': {
+      if (!draft.constraintDirectEditMode) {
+        break
+      }
+      const { value } = action.payload
+      const parseResult = parseConstraints(value)
+      if (parseResult.ok) {
+        draft.constraintErrors = []
+        draft.constraintSyntaxErrorLine = null
+        break
+      }
+      const lineNumber = getLineNumberFromPosition(
+        value,
+        parseResult.error.position,
+      )
+      draft.constraintErrors = [
+        {
+          id: uuidv4(),
+          text: `Constraint syntax error at line ${lineNumber.toString()}: ${parseResult.error.message}`,
+        },
+      ]
+      draft.constraintSyntaxErrorLine = lineNumber
       break
     }
 
@@ -427,6 +460,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
       draft.constraintTexts = []
       draft.constraintDirectEditMode = false
       draft.constraintErrors = []
+      draft.constraintSyntaxErrorLine = null
       break
     }
 
@@ -517,6 +551,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
       draft.constraintTexts = []
       draft.constraintDirectEditMode = false
       draft.constraintErrors = []
+      draft.constraintSyntaxErrorLine = null
       draft.subModels = [
         {
           id: uuidv4(),
@@ -579,6 +614,7 @@ export function getInitialModel(): Model {
     constraints: [createConstraintFromParameters(parameters)],
     constraintTexts: [],
     constraintDirectEditMode: false,
+    constraintSyntaxErrorLine: null,
     subModels: [
       {
         id: uuidv4(),
@@ -619,4 +655,11 @@ function searchCondition(
     throw new Error('Condition not found')
   }
   return condition
+}
+
+function getLineNumberFromPosition(value: string, position: number): number {
+  if (position <= 0) {
+    return 1
+  }
+  return value.slice(0, position).split('\n').length
 }
