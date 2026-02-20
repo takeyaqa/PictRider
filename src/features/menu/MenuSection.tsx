@@ -36,7 +36,8 @@ function MenuSection({
     c.conditions.some((cond) => !cond.isValid),
   )
   const hasSyntaxErrorsInDirectEditMode =
-    constraints.constraintDirectEditMode && constraints.constraintErrors.length > 0
+    constraints.constraintDirectEditMode &&
+    constraints.constraintErrors.length > 0
 
   const canRunPict =
     !containsInvalidValues &&
