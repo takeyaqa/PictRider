@@ -4,10 +4,16 @@ import { CheckIcon } from '@heroicons/react/16/solid'
 interface CheckboxProps {
   label: string
   checked: boolean
+  'aria-label'?: string
   onChange: (checked: boolean) => void
 }
 
-function Checkbox({ label, checked, onChange }: CheckboxProps) {
+function Checkbox({
+  label,
+  checked,
+  'aria-label': ariaLabel,
+  onChange,
+}: CheckboxProps) {
   return (
     <Field className="flex items-center">
       <HeadlessUiCheckbox
@@ -17,7 +23,16 @@ function Checkbox({ label, checked, onChange }: CheckboxProps) {
       >
         <CheckIcon className="hidden fill-white group-data-checked:inline" />
       </HeadlessUiCheckbox>
-      <Label className="cursor-pointer">{label}</Label>
+      <Label className="cursor-pointer">
+        {ariaLabel ? (
+          <>
+            <span className="sr-only">{ariaLabel}</span>
+            <span aria-hidden="true">{label}</span>
+          </>
+        ) : (
+          label
+        )}
+      </Label>
     </Field>
   )
 }

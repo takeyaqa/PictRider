@@ -219,7 +219,55 @@ test.describe('PictRider E2E Tests', () => {
         page.getByRole('button', { name: 'Add Sub-Model' }),
       ).toBeEnabled()
 
-      // TODO: sub-model's checkboxes has duplicated names, need to fix
+      // first sub-model inputs are uniquely accessible
+      await expect(
+        page.getByRole('checkbox', { name: 'Sub-Model 1 Type', exact: true }),
+      ).toHaveCount(1)
+      await expect(
+        page.getByRole('checkbox', { name: 'Sub-Model 1 Size', exact: true }),
+      ).toHaveCount(1)
+      await expect(
+        page.getByRole('spinbutton', {
+          name: 'Sub-Model 1 Order',
+          exact: true,
+        }),
+      ).toHaveCount(1)
+
+      // add second sub-model and verify names do not collide
+      await page.getByRole('button', { name: 'Add Sub-Model' }).click()
+      await expect(page.getByText('Sub-Model 2', { exact: true })).toBeVisible()
+      await expect(
+        page.getByRole('checkbox', { name: 'Sub-Model 2 Type', exact: true }),
+      ).toHaveCount(1)
+      await expect(
+        page.getByRole('checkbox', { name: 'Sub-Model 2 Size', exact: true }),
+      ).toHaveCount(1)
+      await expect(
+        page.getByRole('spinbutton', {
+          name: 'Sub-Model 2 Order',
+          exact: true,
+        }),
+      ).toHaveCount(1)
+
+      // each sub-model has exactly one uniquely named control
+      await expect(
+        page.getByRole('checkbox', { name: 'Sub-Model 1 Type', exact: true }),
+      ).toHaveCount(1)
+      await expect(
+        page.getByRole('checkbox', { name: 'Sub-Model 2 Type', exact: true }),
+      ).toHaveCount(1)
+      await expect(
+        page.getByRole('spinbutton', {
+          name: 'Sub-Model 1 Order',
+          exact: true,
+        }),
+      ).toHaveCount(1)
+      await expect(
+        page.getByRole('spinbutton', {
+          name: 'Sub-Model 2 Order',
+          exact: true,
+        }),
+      ).toHaveCount(1)
     })
   })
 
@@ -809,14 +857,23 @@ IF [File system] = "FAT32" THEN [Size] <= 32000;`,
       page,
     }) => {
       // arrange - select parameters for sub-models
-      await page.getByRole('checkbox', { name: 'Type', exact: true }).click()
-      await page.getByRole('checkbox', { name: 'Size', exact: true }).click()
       await page
-        .getByRole('checkbox', { name: 'Format method', exact: true })
+        .getByRole('checkbox', { name: 'Sub-Model 1 Type', exact: true })
         .click()
-      await page.getByRole('spinbutton', { name: 'Order', exact: true }).clear()
       await page
-        .getByRole('spinbutton', { name: 'Order', exact: true })
+        .getByRole('checkbox', { name: 'Sub-Model 1 Size', exact: true })
+        .click()
+      await page
+        .getByRole('checkbox', {
+          name: 'Sub-Model 1 Format method',
+          exact: true,
+        })
+        .click()
+      await page
+        .getByRole('spinbutton', { name: 'Sub-Model 1 Order', exact: true })
+        .clear()
+      await page
+        .getByRole('spinbutton', { name: 'Sub-Model 1 Order', exact: true })
         .fill('3')
 
       // enable show model file for assertion

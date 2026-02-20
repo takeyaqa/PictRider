@@ -81,12 +81,16 @@ describe('SubModelArea', () => {
       .toBeInTheDocument()
     await expect
       .element(
-        screen.getByRole('spinbutton', { name: 'Order', exact: true }).nth(0),
+        screen
+          .getByRole('spinbutton', { name: 'Sub-Model 1 Order', exact: true })
+          .nth(0),
       )
       .toBeInTheDocument()
     await expect
       .element(
-        screen.getByRole('spinbutton', { name: 'Order', exact: true }).nth(1),
+        screen
+          .getByRole('spinbutton', { name: 'Sub-Model 2 Order', exact: true })
+          .nth(0),
       )
       .not.toBeInTheDocument()
   })
