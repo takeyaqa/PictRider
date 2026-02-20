@@ -1,5 +1,6 @@
 import { useImmerReducer } from 'use-immer'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { server } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 import ConfigProvider from '../config/provider'
 import ConstraintsSection from './ConstraintsSection'
@@ -143,32 +144,36 @@ describe('ConstraintsSection', () => {
       .not.toBeInTheDocument() // Default app has 6 parameters, so we should have 6 'if' buttons
   })
 
-  it('Should switch to direct edit mode without confirmation when skipDirectEditConfirm is enabled', async () => {
-    await screen.unmount()
-    screen = await render(
-      <ConstraintsSectionWrapper skipDirectEditConfirm={true} />,
-    )
+  it.skipIf(server.browser === 'firefox')(
+    // firefox does not properly trigger focus/blur events in some cases
+    'Should switch to direct edit mode without confirmation when skipDirectEditConfirm is enabled',
+    async () => {
+      await screen.unmount()
+      screen = await render(
+        <ConstraintsSectionWrapper skipDirectEditConfirm={true} />,
+      )
 
-    // arrange - enable constraints area
-    await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
+      // arrange - enable constraints area
+      await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
 
-    // act - click edit directly
-    await screen.getByRole('button', { name: 'Edit Directly' }).click()
+      // act - click edit directly
+      await screen.getByRole('button', { name: 'Edit Directly' }).click()
 
-    // assert - switched to direct edit mode
-    await expect
-      .element(screen.getByText('Constraint 1', { exact: true }))
-      .not.toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('button', { name: 'Edit Directly' }))
-      .not.toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('button', { name: 'Reset Constraints' }))
-      .toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('textbox', { name: 'Constraint Formula' }))
-      .toBeInTheDocument()
-  })
+      // assert - switched to direct edit mode
+      await expect
+        .element(screen.getByText('Constraint 1', { exact: true }))
+        .not.toBeInTheDocument()
+      await expect
+        .element(screen.getByRole('button', { name: 'Edit Directly' }))
+        .not.toBeInTheDocument()
+      await expect
+        .element(screen.getByRole('button', { name: 'Reset Constraints' }))
+        .toBeInTheDocument()
+      await expect
+        .element(screen.getByRole('textbox', { name: 'Constraint Formula' }))
+        .toBeInTheDocument()
+    },
+  )
 
   it('Should add a new constraint when add constraint button is clicked', async () => {
     // arrange -  enable constraints area
@@ -444,83 +449,91 @@ describe('ConstraintsSection', () => {
     await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
   })
 
-  it('Should validate syntax only on blur and highlight the error line in preview', async () => {
-    await screen.unmount()
-    screen = await render(
-      <ConstraintsSectionWrapper skipDirectEditConfirm={true} />,
-    )
+  it.skipIf(server.browser === 'firefox')(
+    // firefox does not properly trigger focus/blur events in some cases
+    'Should validate syntax only on blur and highlight the error line in preview',
+    async () => {
+      await screen.unmount()
+      screen = await render(
+        <ConstraintsSectionWrapper skipDirectEditConfirm={true} />,
+      )
 
-    // arrange - enable constraints area and open direct edit
-    await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
-    await screen.getByRole('button', { name: 'Edit Directly' }).click()
-    const formulaInput = screen.getByRole('textbox', {
-      name: 'Constraint Formula',
-    })
+      // arrange - enable constraints area and open direct edit
+      await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
+      await screen.getByRole('button', { name: 'Edit Directly' }).click()
+      const formulaInput = screen.getByRole('textbox', {
+        name: 'Constraint Formula',
+      })
 
-    // act - input invalid formula (line 2 has syntax error)
-    await formulaInput.fill('[Type] = "RAID-5";\nIF [Size] = 1000')
+      // act - input invalid formula (line 2 has syntax error)
+      await formulaInput.fill('[Type] = "RAID-5";\nIF [Size] = 1000')
 
-    // assert - before blur, syntax validation should not run
-    await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
+      // assert - before blur, syntax validation should not run
+      await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
 
-    // act - blur to trigger validation and switch to preview
-    await screen
-      .getByRole('button', { name: 'Toggle constraints help' })
-      .click()
+      // act - blur to trigger validation and switch to preview
+      await screen
+        .getByRole('button', { name: 'Toggle constraints help' })
+        .click()
 
-    // assert - syntax error message and line highlight should be shown
-    await expect
-      .element(screen.getByRole('alert'))
-      .toHaveTextContent('Constraint syntax error at line 2:')
-    await expect
-      .element(screen.getByTestId('constraint-formula-line-1'))
-      .not.toHaveClass('decoration-wavy')
-    await expect
-      .element(screen.getByTestId('constraint-formula-line-2'))
-      .toHaveClass('decoration-wavy')
-  })
+      // assert - syntax error message and line highlight should be shown
+      await expect
+        .element(screen.getByRole('alert'))
+        .toHaveTextContent('Constraint syntax error at line 2:')
+      await expect
+        .element(screen.getByTestId('constraint-formula-line-1'))
+        .not.toHaveClass('decoration-wavy')
+      await expect
+        .element(screen.getByTestId('constraint-formula-line-2'))
+        .toHaveClass('decoration-wavy')
+    },
+  )
 
-  it('Should clear syntax error alert and underline when formula becomes valid after blur', async () => {
-    await screen.unmount()
-    screen = await render(
-      <ConstraintsSectionWrapper skipDirectEditConfirm={true} />,
-    )
+  it.skipIf(server.browser === 'firefox')(
+    // firefox does not properly trigger focus/blur events in some cases
+    'Should clear syntax error alert and underline when formula becomes valid after blur',
+    async () => {
+      await screen.unmount()
+      screen = await render(
+        <ConstraintsSectionWrapper skipDirectEditConfirm={true} />,
+      )
 
-    // arrange - open direct edit and create syntax error
-    await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
-    await screen.getByRole('button', { name: 'Edit Directly' }).click()
-    const formulaInput = screen.getByRole('textbox', {
-      name: 'Constraint Formula',
-    })
-    await formulaInput.fill('IF [Type] = "RAID-5"')
-    await screen
-      .getByRole('button', { name: 'Toggle constraints help' })
-      .click()
+      // arrange - open direct edit and create syntax error
+      await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
+      await screen.getByRole('button', { name: 'Edit Directly' }).click()
+      const formulaInput = screen.getByRole('textbox', {
+        name: 'Constraint Formula',
+      })
+      await formulaInput.fill('IF [Type] = "RAID-5"')
+      await screen
+        .getByRole('button', { name: 'Toggle constraints help' })
+        .click()
 
-    // assume - syntax error is shown
-    await expect
-      .element(screen.getByRole('alert'))
-      .toHaveTextContent('Constraint syntax error at line 1:')
-    await expect
-      .element(screen.getByTestId('constraint-formula-line-1'))
-      .toHaveClass('decoration-wavy')
+      // assume - syntax error is shown
+      await expect
+        .element(screen.getByRole('alert'))
+        .toHaveTextContent('Constraint syntax error at line 1:')
+      await expect
+        .element(screen.getByTestId('constraint-formula-line-1'))
+        .toHaveClass('decoration-wavy')
 
-    // act - fix formula and blur again
-    await screen.getByTestId('constraint-formula-preview').click()
-    const fixedFormulaInput = screen.getByRole('textbox', {
-      name: 'Constraint Formula',
-    })
-    await fixedFormulaInput.fill('IF [Type] = "RAID-5" THEN [Size] > 1000;')
-    await screen
-      .getByRole('button', { name: 'Toggle constraints help' })
-      .click()
+      // act - fix formula and blur again
+      await screen.getByTestId('constraint-formula-preview').click()
+      const fixedFormulaInput = screen.getByRole('textbox', {
+        name: 'Constraint Formula',
+      })
+      await fixedFormulaInput.fill('IF [Type] = "RAID-5" THEN [Size] > 1000;')
+      await screen
+        .getByRole('button', { name: 'Toggle constraints help' })
+        .click()
 
-    // assert - alert and highlight are removed
-    await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
-    await expect
-      .element(screen.getByTestId('constraint-formula-line-1'))
-      .not.toHaveClass('decoration-wavy')
-  })
+      // assert - alert and highlight are removed
+      await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
+      await expect
+        .element(screen.getByTestId('constraint-formula-line-1'))
+        .not.toHaveClass('decoration-wavy')
+    },
+  )
 
   it('Should toggle help content when help button is clicked', async () => {
     // assert - help content should not be visible by default
