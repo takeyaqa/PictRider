@@ -72,9 +72,6 @@ export type ModelAction =
   | {
       type: 'resetConstraints'
     }
-  | {
-      type: 'updateConstraintTexts'
-    }
   // Sub-Model actions
   | {
       type: 'clickSubModelParameters'
@@ -224,6 +221,9 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
         })
       }
       draft.parameterErrors = errors
+      if (field === 'name') {
+        syncConstraintTextsFromTable(draft)
+      }
 
       break
     }
@@ -295,6 +295,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
         })
       }
       draft.constraints = newConstraints
+      syncConstraintTextsFromTable(draft)
       break
     }
 
@@ -326,6 +327,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
       // Third, remove parameter row
       const newParameters = draft.parameters.filter((p) => p.id !== id)
       draft.parameters = newParameters
+      syncConstraintTextsFromTable(draft)
       break
     }
 
@@ -461,19 +463,6 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
       draft.constraintDirectEditMode = false
       draft.constraintErrors = []
       draft.constraintSyntaxErrorLine = null
-      break
-    }
-
-    case 'updateConstraintTexts': {
-      if (draft.constraintDirectEditMode) {
-        break
-      }
-      draft.constraintTexts = printConstraints(
-        fixConstraint(draft.constraints, draft.parameters),
-      ).map((text) => ({
-        id: uuidv4(),
-        text,
-      }))
       break
     }
 
@@ -655,6 +644,18 @@ function searchCondition(
     throw new Error('Condition not found')
   }
   return condition
+}
+
+function syncConstraintTextsFromTable(draft: Draft<Model>): void {
+  if (draft.constraintDirectEditMode) {
+    return
+  }
+  draft.constraintTexts = printConstraints(
+    fixConstraint(draft.constraints, draft.parameters),
+  ).map((text) => ({
+    id: uuidv4(),
+    text,
+  }))
 }
 
 function getLineNumberFromPosition(value: string, position: number): number {

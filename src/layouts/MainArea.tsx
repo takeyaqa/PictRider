@@ -146,13 +146,6 @@ function MainArea() {
     dispatch({ type: 'removeSubModel' })
   }
 
-  // Update constraint texts when parameters change
-  useEffect(() => {
-    dispatch({
-      type: 'updateConstraintTexts',
-    })
-  }, [dispatch, model.parameters])
-
   return (
     <main className="grid grid-cols-1 xl:grid-cols-2">
       <div>
