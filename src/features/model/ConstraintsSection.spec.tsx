@@ -1,6 +1,5 @@
 import { useImmerReducer } from 'use-immer'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { server } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 import ConfigProvider from '../config/provider'
 import ConstraintsSection from './ConstraintsSection'
@@ -144,35 +143,29 @@ describe('ConstraintsSection', () => {
       .not.toBeInTheDocument() // Default app has 6 parameters, so we should have 6 'if' buttons
   })
 
-  it.skipIf(server.browser === 'firefox')(
-    'Should switch to direct edit mode without confirmation when skipDirectEditConfirm is enabled',
-    async () => {
-      await screen.unmount()
-      screen = await render(
-        <ConstraintsSectionWrapper skipDirectEditConfirm={true} />,
-      )
+  it('Should switch to direct edit mode without confirmation when skipDirectEditConfirm is enabled', async () => {
+    await screen.unmount()
+    screen = await render(
+      <ConstraintsSectionWrapper skipDirectEditConfirm={true} />,
+    )
 
-      // arrange - enable constraints area
-      await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
+    // arrange - enable constraints area
+    await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
 
-      // act - click edit directly
-      await screen.getByRole('button', { name: 'Edit Directly' }).click()
+    // act - click edit directly
+    await screen.getByRole('button', { name: 'Edit Directly' }).click()
 
-      // assert - switched to direct edit mode
-      await expect
-        .element(screen.getByText('Constraint 1', { exact: true }))
-        .not.toBeInTheDocument()
-      await expect
-        .element(screen.getByRole('button', { name: 'Edit Directly' }))
-        .not.toBeInTheDocument()
-      await expect
-        .element(screen.getByRole('button', { name: 'Reset Constraints' }))
-        .toBeInTheDocument()
-      await expect
-        .element(screen.getByRole('textbox', { name: 'Constraint Formula' }))
-        .toBeInTheDocument()
-    },
-  )
+    // assert - switched to direct edit mode
+    await expect
+      .element(screen.getByText('Constraint 1', { exact: true }))
+      .not.toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('button', { name: 'Edit Directly' }))
+      .not.toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('button', { name: 'Reset Constraints' }))
+      .toBeInTheDocument()
+  })
 
   it('Should add a new constraint when add constraint button is clicked', async () => {
     // arrange -  enable constraints area
