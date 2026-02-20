@@ -6,6 +6,7 @@ interface NumberInputProps {
   min: number
   max: number
   disabled?: boolean
+  'aria-label'?: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -15,11 +16,21 @@ function NumberInput({
   min,
   max,
   disabled,
+  'aria-label': ariaLabel,
   onChange,
 }: NumberInputProps) {
   return (
     <Field disabled={disabled}>
-      <Label>{label}</Label>
+      <Label>
+        {ariaLabel ? (
+          <>
+            <span className="sr-only">{ariaLabel}</span>
+            <span aria-hidden="true">{label}</span>
+          </>
+        ) : (
+          label
+        )}
+      </Label>
       <Input
         type="number"
         value={value}

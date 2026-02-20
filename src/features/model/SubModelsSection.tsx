@@ -70,6 +70,7 @@ function SubModelsSection({
                     >
                       <Checkbox
                         label={parameter.name}
+                        aria-label={`Sub-Model ${(i + 1).toString()} ${parameter.name}`}
                         checked={subModel.parameterIds.includes(parameter.id)}
                         onChange={(checked) => {
                           onClickSubModelParameters(
@@ -85,6 +86,7 @@ function SubModelsSection({
                 <div>
                   <NumberInput
                     label="Order"
+                    aria-label={`Sub-Model ${(i + 1).toString()} Order`}
                     value={subModel.order}
                     min={2}
                     max={parameters.length}
