@@ -1,7 +1,7 @@
 import { PictRunner } from '@takeyaqa/pict-wasm'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
-import type { Parameters } from '../../types'
+import type { Constraints, Parameters } from '../../types'
 import ConfigProvider from '../config/provider'
 import { getInitialModel } from '../model/reducer'
 import MenuSection from './MenuSection'
@@ -10,6 +10,7 @@ interface MenuSectionWrapperProps {
   pictRunnerInjection: PictRunner
   canClearResult?: boolean
   parametersOverride?: Parameters
+  constraintsOverride?: Constraints
   onClearInput?: () => void
   onClearResult?: () => void
   setResult?: () => void
@@ -19,6 +20,7 @@ function MenuSectionWrapper({
   pictRunnerInjection,
   canClearResult = false,
   parametersOverride,
+  constraintsOverride,
   onClearResult = vi.fn(),
   onClearInput = vi.fn(),
   setResult = vi.fn(),
@@ -29,11 +31,12 @@ function MenuSectionWrapper({
     parameterErrors: [],
   }
 
-  const constraints = {
+  const constraints = constraintsOverride || {
     constraints: model.constraints,
     constraintTexts: model.constraintTexts,
     constraintDirectEditMode: false,
     constraintErrors: [],
+    constraintSyntaxErrorLine: null,
   }
 
   const subModels = {
@@ -198,5 +201,62 @@ describe('MenuSection', () => {
     await expect
       .element(screen.getByRole('button', { name: 'Run' }))
       .toBeDisabled()
+  })
+
+  it('Should disable Run button when direct edit mode has syntax errors', async () => {
+    const model = getInitialModel()
+    const constraintsWithSyntaxError: Constraints = {
+      constraints: model.constraints,
+      constraintTexts: [
+        {
+          id: '1',
+          text: 'IF [Type] = "RAID-5"',
+        },
+      ],
+      constraintDirectEditMode: true,
+      constraintErrors: [
+        {
+          id: '1',
+          text: 'Constraint syntax error at line 1: Expected THEN but found EOF',
+        },
+      ],
+      constraintSyntaxErrorLine: 1,
+    }
+    screen = await render(
+      <MenuSectionWrapper
+        pictRunnerInjection={pictRunnerMock}
+        constraintsOverride={constraintsWithSyntaxError}
+      />,
+    )
+
+    await expect
+      .element(screen.getByRole('button', { name: 'Run' }))
+      .toBeDisabled()
+  })
+
+  it('Should enable Run button in direct edit mode when syntax errors are absent', async () => {
+    const model = getInitialModel()
+    const constraintsWithoutSyntaxError: Constraints = {
+      constraints: model.constraints,
+      constraintTexts: [
+        {
+          id: '1',
+          text: 'IF [Type] = "RAID-5" THEN [Size] > 1000;',
+        },
+      ],
+      constraintDirectEditMode: true,
+      constraintErrors: [],
+      constraintSyntaxErrorLine: null,
+    }
+    screen = await render(
+      <MenuSectionWrapper
+        pictRunnerInjection={pictRunnerMock}
+        constraintsOverride={constraintsWithoutSyntaxError}
+      />,
+    )
+
+    await expect
+      .element(screen.getByRole('button', { name: 'Run' }))
+      .toBeEnabled()
   })
 })

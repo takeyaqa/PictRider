@@ -43,6 +43,7 @@ export interface Constraints {
   constraintTexts: ConstraintText[]
   constraintDirectEditMode: boolean
   constraintErrors: Message[]
+  constraintSyntaxErrorLine: number | null
 }
 
 export interface SubModel {
@@ -65,6 +66,7 @@ export interface Model {
   constraints: Constraint[]
   constraintTexts: ConstraintText[]
   constraintDirectEditMode: boolean
+  constraintSyntaxErrorLine: number | null
   subModels: SubModel[]
   parameterErrors: Message[]
   constraintErrors: Message[]

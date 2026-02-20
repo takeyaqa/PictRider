@@ -35,10 +35,13 @@ function MenuSection({
   const containsInvalidConstraints = constraints.constraints.some((c) =>
     c.conditions.some((cond) => !cond.isValid),
   )
+  const hasSyntaxErrorsInDirectEditMode =
+    constraints.constraintDirectEditMode && constraints.constraintErrors.length > 0
 
   const canRunPict =
     !containsInvalidValues &&
     !containsInvalidConstraints &&
+    !hasSyntaxErrorsInDirectEditMode &&
     pictRunnerLoaded &&
     pictRunner.current
 
@@ -46,6 +49,7 @@ function MenuSection({
     if (
       containsInvalidValues ||
       containsInvalidConstraints ||
+      hasSyntaxErrorsInDirectEditMode ||
       !pictRunnerLoaded ||
       !pictRunner.current
     ) {

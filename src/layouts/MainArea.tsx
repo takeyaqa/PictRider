@@ -106,6 +106,13 @@ function MainArea() {
     })
   }
 
+  const handleValidateConstraintFormula = (value: string) => {
+    dispatch({
+      type: 'validateConstraintFormula',
+      payload: { value },
+    })
+  }
+
   const handleResetConstraints = () => {
     dispatch({
       type: 'resetConstraints',
@@ -160,6 +167,7 @@ function MainArea() {
             constraintErrors: model.constraintErrors,
             constraintDirectEditMode: model.constraintDirectEditMode,
             constraintTexts: model.constraintTexts,
+            constraintSyntaxErrorLine: model.constraintSyntaxErrorLine,
           }}
           subModels={{ subModels: model.subModels }}
           onClearInput={handleClearInput}
@@ -183,10 +191,12 @@ function MainArea() {
             constraintErrors: model.constraintErrors,
             constraintDirectEditMode: model.constraintDirectEditMode,
             constraintTexts: model.constraintTexts,
+            constraintSyntaxErrorLine: model.constraintSyntaxErrorLine,
           }}
           parameters={model.parameters}
           onToggleCondition={handleToggleCondition}
           onChangeConstraintFormula={handleChangeConstraintFormula}
+          onValidateConstraintFormula={handleValidateConstraintFormula}
           onAddConstraint={handleAddConstraint}
           onRemoveConstraint={handleRemoveConstraint}
           onToggleConstraintDirectEditMode={

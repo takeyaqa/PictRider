@@ -50,6 +50,7 @@ interface ConstraintsSectionProps {
   onRemoveConstraint: () => void
   onToggleConstraintDirectEditMode: () => void
   onChangeConstraintFormula: (value: string) => void
+  onValidateConstraintFormula: (value: string) => void
   onResetConstraints: () => void
   skipDirectEditConfirm?: boolean // Test-only flag to bypass the direct edit confirmation dialog.
 }
@@ -63,6 +64,7 @@ function ConstraintsSection({
   onRemoveConstraint,
   onToggleConstraintDirectEditMode,
   onChangeConstraintFormula,
+  onValidateConstraintFormula,
   onResetConstraints,
   skipDirectEditConfirm = false,
 }: ConstraintsSectionProps) {
@@ -125,6 +127,10 @@ function ConstraintsSection({
             onChangeConstraintFormula={(e) => {
               onChangeConstraintFormula(e.target.value)
             }}
+            onValidateConstraintFormula={(e) => {
+              onValidateConstraintFormula(e.target.value)
+            }}
+            constraintSyntaxErrorLine={constraints.constraintSyntaxErrorLine}
             onToggleConstraintDirectEditMode={onToggleConstraintDirectEditMode}
             onClickResetConstraints={onResetConstraints}
             skipDirectEditConfirm={skipDirectEditConfirm}
@@ -237,6 +243,10 @@ interface ConstraintEditorProps {
   constraintDirectEditMode: boolean
   onToggleConstraintDirectEditMode: () => void
   onChangeConstraintFormula: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onValidateConstraintFormula: (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => void
+  constraintSyntaxErrorLine: number | null
   onClickResetConstraints: () => void
   skipDirectEditConfirm: boolean
 }
@@ -246,6 +256,8 @@ function ConstraintEditor({
   constraintDirectEditMode,
   onToggleConstraintDirectEditMode,
   onChangeConstraintFormula,
+  onValidateConstraintFormula,
+  constraintSyntaxErrorLine,
   onClickResetConstraints,
   skipDirectEditConfirm,
 }: ConstraintEditorProps) {
@@ -270,7 +282,8 @@ function ConstraintEditor({
             onChange={(e) => {
               onChangeConstraintFormula(e)
             }}
-            onBlur={() => {
+            onBlur={(e) => {
+              onValidateConstraintFormula(e)
               setIsEditing(false)
             }}
           ></textarea>
@@ -307,8 +320,16 @@ function ConstraintEditor({
               setIsEditing(true)
             }}
           >
-            {constraintTexts.map((constraintText) => (
-              <code key={constraintText.id}>{`${constraintText.text}\n`}</code>
+            {constraintTexts.map((constraintText, index) => (
+              <code
+                key={constraintText.id}
+                data-testid={`constraint-formula-line-${(index + 1).toString()}`}
+                className={
+                  constraintSyntaxErrorLine === index + 1
+                    ? 'underline decoration-red-500 decoration-wavy underline-offset-2 dark:decoration-red-400'
+                    : ''
+                }
+              >{`${constraintText.text}\n`}</code>
             ))}
           </pre>
         </>
