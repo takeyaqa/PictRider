@@ -12,7 +12,36 @@
       type="image/svg+xml"
     />
     <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
+    <meta
+      name="theme-color"
+      content="#1e2939"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta
+      name="theme-color"
+      content="#f9fafb"
+      media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+    />
     <style>
+      :root {
+        color-scheme: light dark;
+        --color-background: #ffffff;
+        --color-text: #000000;
+        --color-link: #2563eb;
+        --color-pre-background: #f3f4f6;
+        --color-pre-text: #000000;
+        --color-footer-text: #6b7280;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-background: #000000;
+          --color-text: #ffffff;
+          --color-link: #60a5fa;
+          --color-pre-background: #374151;
+          --color-pre-text: #f9fafb;
+          --color-footer-text: #9ca3af;
+        }
+      }
       html {
         line-height: 1.5;
         -webkit-text-size-adjust: 100%;
@@ -25,8 +54,8 @@
         -webkit-tap-highlight-color: transparent;
       }
       body {
-        color: #000000;
-        background-color: #ffffff;
+        color: var(--color-text);
+        background-color: var(--color-background);
       }
       nav {
         height: 40px;
@@ -102,7 +131,7 @@
       }
 
       a {
-        color: #2563eb;
+        color: var(--color-link);
 
         :hover {
           text-decoration: underline;
@@ -120,7 +149,8 @@
         font-feature-settings: normal;
         font-variation-settings: normal;
         line-height: 1.25rem;
-        background-color: #f3f4f6;
+        color: var(--color-pre-text);
+        background-color: var(--color-pre-background);
       }
       footer {
         margin-bottom: 2.5rem;
@@ -129,7 +159,7 @@
       footer p {
         margin-top: 0;
         margin-bottom: 0;
-        color: #6b7280;
+        color: var(--color-footer-text);
       }
     </style>
   </head>
