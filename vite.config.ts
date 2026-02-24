@@ -26,7 +26,7 @@ export default defineConfig({
         short_name: 'PictRider',
         description:
           'A web-based pairwise test case generator powered by WebAssembly. No installation required.',
-        theme_color: '#ffffff',
+        theme_color: '#f9fafb',
         display: 'standalone',
         icons: [
           { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
