@@ -13,6 +13,9 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: ['**/*.{js,wasm,css,html,md}'],
+      },
       includeAssets: [
         'favicon.ico',
         'PictRider_icon.svg',
