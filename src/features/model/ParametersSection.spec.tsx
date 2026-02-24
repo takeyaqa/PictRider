@@ -89,6 +89,53 @@ describe('ParametersSection', () => {
       .toHaveValue('ON, OFF')
   })
 
+  it('Should toggle help content when help button is clicked', async () => {
+    // assert - help content should not be visible by default
+    await expect
+      .element(
+        screen.getByRole('heading', {
+          level: 3,
+          name: 'Parameter Input Format',
+        }),
+      )
+      .not.toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('heading', { level: 4, name: 'Aliasing' }))
+      .not.toBeInTheDocument()
+
+    // act - click the help button
+    await screen.getByRole('button', { name: 'Toggle parameters help' }).click()
+
+    // assert - help content should now be visible
+    await expect
+      .element(
+        screen.getByRole('heading', {
+          level: 3,
+          name: 'Parameter Input Format',
+        }),
+      )
+      .toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('heading', { level: 4, name: 'Aliasing' }))
+      .toBeInTheDocument()
+
+    // act - click the help button again to collapse
+    await screen.getByRole('button', { name: 'Toggle parameters help' }).click()
+
+    // assert - help content should be hidden again
+    await expect
+      .element(
+        screen.getByRole('heading', {
+          level: 3,
+          name: 'Parameter Input Format',
+        }),
+      )
+      .not.toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('heading', { level: 4, name: 'Aliasing' }))
+      .not.toBeInTheDocument()
+  })
+
   it('Should add a new parameter row when clicking the add row button', async () => {
     // act
     await screen.getByRole('button', { name: 'Parameter 6 Edit Menu' }).click()
