@@ -37,6 +37,9 @@ const PREDICATE_INPUT_SYNTAX = [
   { syntax: '#pattern*', description: 'Negated wildcard (NOT LIKE)' },
 ]
 
+const PICT_CONSTRAINT_SYNTAX_DOC_URL =
+  'https://github.com/microsoft/pict/blob/main/doc/pict.md'
+
 interface ConstraintsSectionProps {
   constraints: Constraints
   parameters: Parameter[]
@@ -105,6 +108,18 @@ function ConstraintsSection({
               </React.Fragment>
             ))}
           </dl>
+          <p className="mt-4">
+            Direct Edit Mode supports the full PICT constraint syntax. See{' '}
+            <a
+              href={PICT_CONSTRAINT_SYNTAX_DOC_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              PICT documentation
+            </a>{' '}
+            for details.
+          </p>
         </DisclosurePanel>
       </Disclosure>
       {config.enableConstraints && (
