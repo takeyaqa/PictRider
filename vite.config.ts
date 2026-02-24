@@ -13,9 +13,11 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      workbox: {
-        globPatterns: ['**/*.{js,wasm,css,html,svg,md}'],
-      },
+      includeAssets: [
+        'favicon.ico',
+        'PictRider_icon.svg',
+        'apple-touch-icon-180x180.png',
+      ],
       manifest: {
         name: 'PictRider',
         short_name: 'PictRider',
@@ -23,9 +25,22 @@ export default defineConfig({
           'A web-based pairwise test case generator powered by WebAssembly. No installation required.',
         theme_color: '#ffffff',
         display: 'standalone',
-      },
-      pwaAssets: {
-        image: 'public/PictRider_icon.svg',
+        icons: [
+          { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
+          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any',
+          },
+          {
+            src: 'maskable-icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+        ],
       },
     }),
   ],
