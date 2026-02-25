@@ -3,7 +3,9 @@ minimumReleaseAgeExclude:
   - "@takeyaqa/pict-wasm"
 trustPolicy: no-downgrade
 trustPolicyExclude:
+  - rollup
   - semver
+  - undici-types
 onlyBuiltDependencies:
   - esbuild
   - sharp
