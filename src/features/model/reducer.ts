@@ -237,64 +237,38 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
 
       // first, add parameter row
       const newParameterId = uuidv4()
-      const newParameters: Parameter[] = []
-      for (const p of draft.parameters) {
-        if (p.id === id) {
-          const newParameter: Parameter = {
-            id: newParameterId,
-            name: '',
-            values: '',
-            isValidName: true,
-            isValidValues: true,
-          }
-          switch (target) {
-            case 'above':
-              newParameters.push(newParameter)
-              newParameters.push(p)
-              break
-            case 'below':
-              newParameters.push(p)
-              newParameters.push(newParameter)
-              break
-          }
-        } else {
-          newParameters.push(p)
-        }
+      const newParameter: Parameter = {
+        id: newParameterId,
+        name: '',
+        values: '',
+        isValidName: true,
+        isValidValues: true,
       }
-      draft.parameters = newParameters
+      const parameterIndex = draft.parameters.findIndex((p) => p.id === id)
+      if (parameterIndex >= 0) {
+        const insertParameterIndex =
+          target === 'above' ? parameterIndex : parameterIndex + 1
+        draft.parameters.splice(insertParameterIndex, 0, newParameter)
+      }
 
       // second, add condition row in constraints
-      const newConstraints: Constraint[] = []
-      for (const c of draft.constraints) {
-        const newConditions: Condition[] = []
-        for (const cc of c.conditions) {
-          if (cc.parameterId === id) {
-            const newCondition: Condition = {
-              ifOrThen: 'if',
-              predicate: '',
-              parameterId: newParameterId,
-              isValid: true,
-            }
-            switch (target) {
-              case 'above':
-                newConditions.push(newCondition)
-                newConditions.push(cc)
-                break
-              case 'below':
-                newConditions.push(cc)
-                newConditions.push(newCondition)
-                break
-            }
-          } else {
-            newConditions.push(cc)
-          }
+      for (const constraint of draft.constraints) {
+        const conditionIndex = constraint.conditions.findIndex(
+          (condition) => condition.parameterId === id,
+        )
+        if (conditionIndex < 0) {
+          continue
         }
-        newConstraints.push({
-          ...c,
-          conditions: newConditions,
-        })
+        const newCondition: Condition = {
+          ifOrThen: 'if',
+          predicate: '',
+          parameterId: newParameterId,
+          isValid: true,
+        }
+        const insertConditionIndex =
+          target === 'above' ? conditionIndex : conditionIndex + 1
+        constraint.conditions.splice(insertConditionIndex, 0, newCondition)
       }
-      draft.constraints = newConstraints
       syncConstraintTextsFromTable(draft)
       break
     }
@@ -307,26 +281,41 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
       }
 
       // First, remove parameter from sub-models
-      const newSubModels = draft.subModels.map((subModel) => {
-        return {
-          ...subModel,
-          parameterIds: subModel.parameterIds.filter((i) => i !== id),
+      for (const subModel of draft.subModels) {
+        let parameterIndex = subModel.parameterIds.findIndex(
+          (parameterId) => parameterId === id,
+        )
+        while (parameterIndex >= 0) {
+          subModel.parameterIds.splice(parameterIndex, 1)
+          parameterIndex = subModel.parameterIds.findIndex(
+            (parameterId) => parameterId === id,
+          )
         }
-      })
-      draft.subModels = newSubModels
+      }
 
       // Second, remove condition row in constraints
-      const newConstraints = draft.constraints.map((c) => {
-        return {
-          ...c,
-          conditions: c.conditions.filter((cc) => cc.parameterId !== id),
+      for (const constraint of draft.constraints) {
+        let conditionIndex = constraint.conditions.findIndex(
+          (condition) => condition.parameterId === id,
+        )
+        while (conditionIndex >= 0) {
+          constraint.conditions.splice(conditionIndex, 1)
+          conditionIndex = constraint.conditions.findIndex(
+            (condition) => condition.parameterId === id,
+          )
         }
-      })
-      draft.constraints = newConstraints
+      }
 
       // Third, remove parameter row
-      const newParameters = draft.parameters.filter((p) => p.id !== id)
-      draft.parameters = newParameters
+      let parameterIndex = draft.parameters.findIndex(
+        (parameter) => parameter.id === id,
+      )
+      while (parameterIndex >= 0) {
+        draft.parameters.splice(parameterIndex, 1)
+        parameterIndex = draft.parameters.findIndex(
+          (parameter) => parameter.id === id,
+        )
+      }
       syncConstraintTextsFromTable(draft)
       break
     }
@@ -474,19 +463,18 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
         break
       }
       if (checked) {
-        const newParameterIds = [...target.parameterIds, parameterId]
-
-        draft.subModels = draft.subModels.map((m) =>
-          m.id === subModelId ? { ...m, parameterIds: newParameterIds } : m,
-        )
+        target.parameterIds.push(parameterId)
         break
       } else {
-        const newParameterIds = target.parameterIds.filter(
-          (paramId) => paramId !== parameterId,
+        let targetIndex = target.parameterIds.findIndex(
+          (paramId) => paramId === parameterId,
         )
-        draft.subModels = draft.subModels.map((m) =>
-          m.id === subModelId ? { ...m, parameterIds: newParameterIds } : m,
-        )
+        while (targetIndex >= 0) {
+          target.parameterIds.splice(targetIndex, 1)
+          targetIndex = target.parameterIds.findIndex(
+            (paramId) => paramId === parameterId,
+          )
+        }
         break
       }
     }
@@ -498,9 +486,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
         // may not be reached
         break
       }
-      draft.subModels = draft.subModels.map((m) =>
-        m.id === id ? { ...m, order: order } : m,
-      )
+      target.order = order
       break
     }
 
