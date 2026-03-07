@@ -1,7 +1,6 @@
 {
   "name": "pictrider",
   "private": true,
-  "version": "0.26.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
