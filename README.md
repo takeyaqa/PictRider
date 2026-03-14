@@ -12,8 +12,6 @@
 
 **<https://pictrider.takeyaqa.dev/>**
 
-Using an AI agent for test design? Check out **[PictMCP](https://github.com/takeyaqa/PictMCP#readme)**.
-
 ## Features
 
 - 🌐 **No Installation Required** - Get started immediately from your browser
