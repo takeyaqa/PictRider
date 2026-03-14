@@ -11,7 +11,13 @@ import eslintConfigPrettier from 'eslint-config-prettier/flat'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores([
+    'dist',
+    'test-results',
+    'playwright-report',
+    'blob-report',
+    '__screenshots__',
+  ]),
   {
     files: ['src/**/*.{ts,tsx}'],
     ignores: ['src/**/*.spec.{ts,tsx}'],

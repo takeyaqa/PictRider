@@ -72,7 +72,9 @@ test.describe('PictRider E2E Tests', () => {
       await expect(
         page.getByRole('switch', { name: 'Enable Constraints' }),
       ).toBeEnabled()
-      await expect(page.getByText('Constraint 1', { exact: true })).toBeHidden()
+      await expect(
+        page.getByRole('group', { name: 'Constraint 1' }),
+      ).toBeHidden()
       await expect(
         page.getByText('Constraint Formula', { exact: true }),
       ).toBeHidden()
@@ -81,7 +83,9 @@ test.describe('PictRider E2E Tests', () => {
       await expect(
         page.getByRole('switch', { name: 'Enable Sub-Models' }),
       ).toBeEnabled()
-      await expect(page.getByText('Sub-Model 1', { exact: true })).toBeHidden()
+      await expect(
+        page.getByRole('group', { name: 'Sub-Model 1' }),
+      ).toBeHidden()
 
       // default other options state
       await expect(
@@ -113,7 +117,7 @@ test.describe('PictRider E2E Tests', () => {
       // assert - default constraint state
       // header and buttons
       await expect(
-        page.getByText('Constraint 1', { exact: true }),
+        page.getByRole('group', { name: 'Constraint 1' }),
       ).toBeVisible()
       await expect(
         page.getByRole('button', { name: 'Remove Constraint' }),
@@ -181,7 +185,9 @@ test.describe('PictRider E2E Tests', () => {
       ).toHaveValue('')
 
       // second constraint is hidden
-      await expect(page.getByText('Constraint 2', { exact: true })).toBeHidden()
+      await expect(
+        page.getByRole('group', { name: 'Constraint 2' }),
+      ).toBeHidden()
 
       // formula display area
       await expect(
@@ -211,7 +217,9 @@ test.describe('PictRider E2E Tests', () => {
 
       // assert - default sub-model state
       // header and buttons
-      await expect(page.getByText('Sub-Model 1', { exact: true })).toBeVisible()
+      await expect(
+        page.getByRole('group', { name: 'Sub-Model 1' }),
+      ).toBeVisible()
       await expect(
         page.getByRole('button', { name: 'Remove Sub-Model' }),
       ).toBeDisabled()
@@ -235,7 +243,9 @@ test.describe('PictRider E2E Tests', () => {
 
       // add second sub-model and verify names do not collide
       await page.getByRole('button', { name: 'Add Sub-Model' }).click()
-      await expect(page.getByText('Sub-Model 2', { exact: true })).toBeVisible()
+      await expect(
+        page.getByRole('group', { name: 'Sub-Model 2' }),
+      ).toBeVisible()
       await expect(
         page.getByRole('checkbox', { name: 'Sub-Model 2 Type', exact: true }),
       ).toHaveCount(1)
@@ -551,8 +561,12 @@ test.describe('PictRider E2E Tests', () => {
       ).toHaveValue('')
 
       // assert - constraints and sub-models sections remain hidden (toggles unchanged)
-      await expect(page.getByText('Constraint 1', { exact: true })).toBeHidden()
-      await expect(page.getByText('Sub-Model 1', { exact: true })).toBeHidden()
+      await expect(
+        page.getByRole('group', { name: 'Constraint 1' }),
+      ).toBeHidden()
+      await expect(
+        page.getByRole('group', { name: 'Sub-Model 1' }),
+      ).toBeHidden()
 
       // assert - menu buttons state unchanged
       await expect(
@@ -674,7 +688,7 @@ IF [File system] = "FAT32" THEN [Size] <= 32000;`,
 
       // assert - still in table edit mode
       await expect(
-        page.getByText('Constraint 1', { exact: true }),
+        page.getByRole('group', { name: 'Constraint 1' }),
       ).toBeVisible()
       await expect(
         page.getByRole('button', { name: 'Edit Directly' }),
@@ -689,7 +703,9 @@ IF [File system] = "FAT32" THEN [Size] <= 32000;`,
       await page.getByRole('button', { name: 'Continue' }).click()
 
       // assert - in direct edit mode
-      await expect(page.getByText('Constraint 1', { exact: true })).toBeHidden()
+      await expect(
+        page.getByRole('group', { name: 'Constraint 1' }),
+      ).toBeHidden()
       await expect(
         page.getByRole('button', { name: 'Edit Directly' }),
       ).toBeHidden()
@@ -756,7 +772,7 @@ IF [File system] = "FAT32" THEN [Size] <= 32000;`,
       // assert - back to table edit mode with default state
       // header and buttons
       await expect(
-        page.getByText('Constraint 1', { exact: true }),
+        page.getByRole('group', { name: 'Constraint 1' }),
       ).toBeVisible()
       await expect(
         page.getByRole('button', { name: 'Remove Constraint' }),
@@ -824,7 +840,9 @@ IF [File system] = "FAT32" THEN [Size] <= 32000;`,
       ).toHaveValue('')
 
       // second constraint is hidden
-      await expect(page.getByText('Constraint 2', { exact: true })).toBeHidden()
+      await expect(
+        page.getByRole('group', { name: 'Constraint 2' }),
+      ).toBeHidden()
 
       // formula display area
       await expect(

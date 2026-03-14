@@ -124,13 +124,13 @@ describe('ConstraintsSection', () => {
 
     // assert - verify constraints area is rendered
     await expect
+      .element(screen.getByRole('group', { name: 'Constraint 1' }))
+      .toBeInTheDocument()
+    await expect
       .element(screen.getByRole('button', { name: 'Add Constraint' }))
       .toBeInTheDocument()
     await expect
       .element(screen.getByRole('button', { name: 'Remove Constraint' }))
-      .toBeInTheDocument()
-    await expect
-      .element(screen.getByText('Constraint 1', { exact: true }))
       .toBeInTheDocument()
     await expect
       .element(
@@ -161,7 +161,7 @@ describe('ConstraintsSection', () => {
 
       // assert - switched to direct edit mode
       await expect
-        .element(screen.getByText('Constraint 1', { exact: true }))
+        .element(screen.getByRole('group', { name: 'Constraint 1' }))
         .not.toBeInTheDocument()
       await expect
         .element(screen.getByRole('button', { name: 'Edit Directly' }))
@@ -181,10 +181,10 @@ describe('ConstraintsSection', () => {
 
     // assume - initially there should be one constraint
     await expect
-      .element(screen.getByText('Constraint 1', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Constraint 1' }))
       .toBeInTheDocument()
     await expect
-      .element(screen.getByText('Constraint 2', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Constraint 2' }))
       .not.toBeInTheDocument()
 
     // act - add a new constraint
@@ -192,10 +192,13 @@ describe('ConstraintsSection', () => {
 
     // assert - now there should be two constraints
     await expect
-      .element(screen.getByText('Constraint 1', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Constraint 2' }))
       .toBeInTheDocument()
     await expect
-      .element(screen.getByText('Constraint 2', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Constraint 1' }))
+      .toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('group', { name: 'Constraint 2' }))
       .toBeInTheDocument()
     await expect
       .element(
@@ -216,7 +219,7 @@ describe('ConstraintsSection', () => {
 
     // assume - there should be two constraints
     await expect
-      .element(screen.getByText('Constraint 2', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Constraint 2' }))
       .toBeInTheDocument()
 
     // assert - remove constraint button should be enabled
@@ -229,10 +232,10 @@ describe('ConstraintsSection', () => {
 
     // assert - now there should be only one constraint
     await expect
-      .element(screen.getByText('Constraint 1', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Constraint 1' }))
       .toBeInTheDocument()
     await expect
-      .element(screen.getByText('Constraint 2', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Constraint 2' }))
       .not.toBeInTheDocument()
     await expect
       .element(
@@ -278,10 +281,10 @@ describe('ConstraintsSection', () => {
 
     // Initial state - should have 1 constraint
     await expect
-      .element(screen.getByText('Constraint 1', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Constraint 1' }))
       .toBeInTheDocument()
     await expect
-      .element(screen.getByText('Constraint 25', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Constraint 25' }))
       .not.toBeInTheDocument()
 
     // Add constraints until we reach the limit (25)
@@ -292,7 +295,7 @@ describe('ConstraintsSection', () => {
 
     // Verify we have 25 constraints
     await expect
-      .element(screen.getByText('Constraint 25', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Constraint 25' }))
       .toBeInTheDocument()
 
     // Verify the Add Constraint button is disabled
