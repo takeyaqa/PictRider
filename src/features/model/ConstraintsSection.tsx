@@ -2,6 +2,9 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
+  Field,
+  Label,
+  Textarea,
 } from '@headlessui/react'
 import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid'
 import React, { useState } from 'react'
@@ -282,17 +285,13 @@ function ConstraintEditor({
   return (
     <div className="mt-3">
       {constraintDirectEditMode && isEditing ? (
-        <>
-          <label
-            className="mb-2 block text-base font-bold text-gray-900 dark:text-white"
-            htmlFor="constraint_formula"
-          >
+        <Field>
+          <Label className="mb-2 block text-base font-bold text-gray-900 dark:text-white">
             Constraint Formula
-          </label>
-          <textarea
-            className="max-h-50 min-h-30 w-full rounded border border-black bg-white p-4 font-mono text-sm text-black focus:border-transparent focus:ring-3 focus:ring-blue-500 focus:outline-none dark:border-gray-500 dark:bg-gray-600 dark:text-white"
+          </Label>
+          <Textarea
+            className="max-h-50 min-h-30 w-full cursor-text rounded border border-black bg-white p-4 font-mono text-sm text-black data-focus:border-transparent data-focus:ring-3 data-focus:ring-blue-500 data-focus:outline-none dark:border-gray-500 dark:bg-gray-600 dark:text-white"
             value={constraintTexts.map((c) => c.text).join('\n')}
-            id="constraint_formula"
             autoFocus={true}
             onChange={(e) => {
               onChangeConstraintFormula(e)
@@ -301,8 +300,8 @@ function ConstraintEditor({
               onValidateConstraintFormula(e)
               setIsEditing(false)
             }}
-          ></textarea>
-        </>
+          />
+        </Field>
       ) : (
         <>
           <span className="mr-3 mb-2 inline text-base font-bold text-gray-900 dark:text-white">
