@@ -1,7 +1,7 @@
 import { PlusIcon, XMarkIcon } from '@heroicons/react/16/solid'
 import Button from './Button'
 
-interface AugmentDivProps {
+interface RepeatableFieldsetProps {
   children: React.ReactNode
   title: string
   heading: string
@@ -12,7 +12,7 @@ interface AugmentDivProps {
   onClickRemove: () => void
 }
 
-function AugmentDiv({
+function RepeatableFieldset({
   children,
   title,
   heading,
@@ -21,11 +21,12 @@ function AugmentDiv({
   canRenderButtons,
   onClickAdd,
   onClickRemove,
-}: AugmentDivProps) {
+}: RepeatableFieldsetProps) {
   return (
-    <div className="mb-5">
+    <fieldset className="mb-5 min-w-0 border-0 p-0">
+      <legend className="sr-only">{heading}</legend>
       <div className="flex h-10 border-collapse grid-cols-3 items-center justify-between border bg-gray-200 px-4 py-2 text-left font-bold dark:border-gray-500 dark:bg-gray-600 dark:text-white">
-        <div>{heading}</div>
+        <div aria-hidden="true">{heading}</div>
         {canRenderButtons ? (
           <div className="flex gap-1">
             <Button
@@ -52,8 +53,8 @@ function AugmentDiv({
         )}
       </div>
       {children}
-    </div>
+    </fieldset>
   )
 }
 
-export default AugmentDiv
+export default RepeatableFieldset

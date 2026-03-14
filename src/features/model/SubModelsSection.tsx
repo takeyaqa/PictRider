@@ -1,7 +1,7 @@
 import {
-  AugmentDiv,
   Checkbox,
   NumberInput,
+  RepeatableFieldset,
   Section,
   Switch,
 } from '../../shared/components'
@@ -51,7 +51,7 @@ function SubModelsSection({
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-2">
         {config.enableSubModels &&
           subModels.subModels.map((subModel, i) => (
-            <AugmentDiv
+            <RepeatableFieldset
               key={subModel.id}
               title="Sub-Model"
               heading={`Sub-Model ${(i + 1).toString()}`}
@@ -96,7 +96,7 @@ function SubModelsSection({
                   />
                 </div>
               </div>
-            </AugmentDiv>
+            </RepeatableFieldset>
           ))}
       </div>
     </Section>

@@ -74,10 +74,10 @@ describe('SubModelArea', () => {
 
     // assert - verify sub-models area is rendered
     await expect
-      .element(screen.getByRole('heading', { level: 2, name: 'Sub-Models' }))
+      .element(screen.getByRole('group', { name: 'Sub-Model 1' }))
       .toBeInTheDocument()
     await expect
-      .element(screen.getByText('Sub-Model 1', { exact: true }))
+      .element(screen.getByRole('heading', { level: 2, name: 'Sub-Models' }))
       .toBeInTheDocument()
     await expect
       .element(
@@ -104,10 +104,13 @@ describe('SubModelArea', () => {
 
     // assert - now there should be two sub-models
     await expect
-      .element(screen.getByText('Sub-Model 1', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Sub-Model 2' }))
       .toBeInTheDocument()
     await expect
-      .element(screen.getByText('Sub-Model 2', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Sub-Model 1' }))
+      .toBeInTheDocument()
+    await expect
+      .element(screen.getByRole('group', { name: 'Sub-Model 2' }))
       .toBeInTheDocument()
 
     // act - remove a new sub-model
@@ -115,10 +118,10 @@ describe('SubModelArea', () => {
 
     // assert - now there should be one sub-model
     await expect
-      .element(screen.getByText('Sub-Model 1', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Sub-Model 1' }))
       .toBeInTheDocument()
     await expect
-      .element(screen.getByText('Sub-Model 2', { exact: true }))
+      .element(screen.getByRole('group', { name: 'Sub-Model 2' }))
       .not.toBeInTheDocument()
   })
 })
