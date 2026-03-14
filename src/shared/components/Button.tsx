@@ -25,7 +25,7 @@ function Button({
   return (
     <HeadlessUiButton
       type="button"
-      className={`cursor-pointer rounded px-3 py-2 data-disabled:cursor-not-allowed data-disabled:opacity-50 ${colorClass} ${sizeClass} ${fontMonoClass}`}
+      className={`cursor-pointer rounded px-3 py-2 focus-visible:ring-3 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none disabled:saturate-50 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:saturate-50 dark:focus-visible:ring-offset-gray-900 ${colorClass} ${sizeClass} ${fontMonoClass}`}
       disabled={disabled}
       aria-label={ariaLabel}
       onClick={onClick}
