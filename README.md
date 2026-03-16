@@ -12,6 +12,8 @@
 
 **<https://pictrider.takeyaqa.dev/>**
 
+Using an AI agent for test design? Check out **[tester-skills](https://github.com/takeyaqa/tester-skills#readme)**.
+
 ## Features
 
 - 🌐 **No Installation Required** - Get started immediately from your browser
