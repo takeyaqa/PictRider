@@ -18,7 +18,7 @@ function HeaderSection() {
               About
             </a>
           </li>
-          <li>
+          <li className="hidden md:block">
             <a
               href="https://github.com/takeyaqa/tester-skills#readme"
               target="_blank"
