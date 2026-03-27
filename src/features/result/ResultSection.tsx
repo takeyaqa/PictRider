@@ -20,6 +20,28 @@ function createTsvContent(result: Result) {
   return [headerRow, ...bodyRows].join('\n')
 }
 
+function createContent(
+  result: Result,
+  type: 'csv' | 'csvExcel' | 'tsv',
+): [string, string, string] {
+  switch (type) {
+    case 'csv':
+      return [createCsvContent(result), 'text/csv', 'result.csv']
+    case 'csvExcel':
+      return [
+        `\uFEFF${createCsvContent(result)}`,
+        'text/csv',
+        'result_excel.csv',
+      ]
+    case 'tsv':
+      return [
+        createTsvContent(result),
+        'text/tab-separated-values',
+        'result.tsv',
+      ]
+  }
+}
+
 interface ResultSectionProps {
   result: Result | null
 }
@@ -31,30 +53,7 @@ function ResultSection({ result }: ResultSectionProps) {
     if (!result) {
       return
     }
-
-    let content = ''
-    let mimeType = ''
-    let fileName = ''
-
-    switch (type) {
-      case 'csv':
-        content = createCsvContent(result)
-        mimeType = 'text/csv'
-        fileName = 'result.csv'
-        break
-      case 'csvExcel':
-        content = `\uFEFF${createCsvContent(result)}`
-        mimeType = 'text/csv'
-        fileName = 'result_excel.csv'
-        break
-      case 'tsv':
-        content = createTsvContent(result)
-        mimeType = 'text/tab-separated-values'
-        fileName = 'result.tsv'
-        break
-      default:
-        return
-    }
+    const [content, mimeType, fileName] = createContent(result, type)
 
     // Create a blob and download link
     const blob = new Blob([content], { type: `${mimeType};charset=utf-8;` })
