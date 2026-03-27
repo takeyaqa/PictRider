@@ -18,8 +18,8 @@ importers:
         specifier: ^0.4.4
         version: 0.4.4
       '@takeyaqa/pict-wasm':
-        specifier: 3.7.4-wasm.17
-        version: 3.7.4-wasm.17
+        specifier: 3.7.4-wasm.18
+        version: 3.7.4-wasm.18
       immer:
         specifier: ^11.1.4
         version: 11.1.4
@@ -1206,8 +1206,8 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
-  '@takeyaqa/pict-wasm@3.7.4-wasm.17':
-    resolution: {integrity: sha512-hUFSaCJ2GhyKwjpsGi3p709shOT5c5o4XDkOuS4s3D/FKQkLrDyxiTVYOwqzg3NZ8XtpI3Bww2Mb7q7qSKUT5Q==}
+  '@takeyaqa/pict-wasm@3.7.4-wasm.18':
+    resolution: {integrity: sha512-NcRJ377cACFtm8S/2wkKMiRvYNS2TfrDAvnTORNaiCdqQuthXtUHJB1UNAuYr2m1yBT7f2hpEqoKt4+0V7tHSg==}
     engines: {node: ^22 || ^24}
 
   '@tanstack/react-virtual@3.13.23':
@@ -4180,7 +4180,7 @@ snapshots:
       tailwindcss: 4.2.2
       vite: 8.0.3(@types/node@22.19.15)(jiti@2.6.1)(terser@5.46.1)
 
-  '@takeyaqa/pict-wasm@3.7.4-wasm.17': {}
+  '@takeyaqa/pict-wasm@3.7.4-wasm.18': {}
 
   '@tanstack/react-virtual@3.13.23(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
