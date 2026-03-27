@@ -7,5 +7,4 @@ trustPolicyExclude:
   - semver
   - undici-types
 onlyBuiltDependencies:
-  - esbuild
   - sharp
