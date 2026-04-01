@@ -41,7 +41,7 @@ jobs:
           VITE_BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
           VITE_NOTIFICATION_MESSAGE: ${{ vars.NOTIFICATION_MESSAGE }}
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
