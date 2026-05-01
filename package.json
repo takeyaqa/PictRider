@@ -18,7 +18,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@headlessui/react": "^2.2.9",
+    "@headlessui/react": "^2.2.10",
     "@heroicons/react": "^2.2.0",
     "@plausible-analytics/tracker": "^0.4.4",
     "@takeyaqa/pict-wasm": "3.7.4-wasm.18",
