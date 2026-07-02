@@ -22,7 +22,7 @@
     "@heroicons/react": "^2.2.0",
     "@plausible-analytics/tracker": "^0.4.5",
     "@takeyaqa/pict-wasm": "3.7.4-wasm.26",
-    "immer": "^11.1.8",
+    "immer": "^11.1.9",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "tailwindcss": "^4.3.1",
