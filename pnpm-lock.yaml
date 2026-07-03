@@ -21,8 +21,8 @@ importers:
         specifier: 3.7.4-wasm.26
         version: 3.7.4-wasm.26
       immer:
-        specifier: ^11.1.8
-        version: 11.1.8
+        specifier: ^11.1.9
+        version: 11.1.9
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -34,7 +34,7 @@ importers:
         version: 4.3.1
       use-immer:
         specifier: ^0.11.0
-        version: 0.11.0(immer@11.1.8)(react@19.2.7)
+        version: 0.11.0(immer@11.1.9)(react@19.2.7)
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -1995,8 +1995,8 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
-  immer@11.1.8:
-    resolution: {integrity: sha512-/tbkHMW7y10Lx6i1crLjD4/OhNkRG+Fo7byZHtah0547nIeXYcpIXaUh0IAQY6gO5459qpGGYapcEOHtFXkIuA==}
+  immer@11.1.9:
+    resolution: {integrity: sha512-sc/z0Cyti70bZa0ZU4sWfAElfovFb9Ni8tArJZLuklYWxegPiK3pDOql1Rq5H0FIRAW9LSQRG6OX4KqBldbhBA==}
 
   imurmurhash@0.1.4:
     resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
@@ -5254,7 +5254,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immer@11.1.8: {}
+  immer@11.1.9: {}
 
   imurmurhash@0.1.4: {}
 
@@ -6131,9 +6131,9 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  use-immer@0.11.0(immer@11.1.8)(react@19.2.7):
+  use-immer@0.11.0(immer@11.1.9)(react@19.2.7):
     dependencies:
-      immer: 11.1.8
+      immer: 11.1.9
       react: 19.2.7
 
   use-sync-external-store@1.6.0(react@19.2.7):
