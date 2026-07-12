@@ -17,6 +17,7 @@ function usePictRunner(pictRunnerInjection?: PictRunner) {
       setPictRunnerLoaded(true);
     };
 
+    // oxlint-disable-next-line no-floating-promises
     loadPictRunner();
   }, [pictRunnerInjection]);
 

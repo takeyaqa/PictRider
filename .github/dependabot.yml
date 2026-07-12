@@ -17,6 +17,7 @@ updates:
           - "eslint-plugin-playwright"
           - "oxfmt"
           - "oxlint"
+          - "oxlint-tsgolint"
       immer:
         patterns:
           - "immer"
