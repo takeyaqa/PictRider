@@ -1,15 +1,15 @@
-import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
-import Button from './Button'
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import Button from "./Button";
 
 interface ConfirmDialogProps {
-  open: boolean
-  title: string
-  message: string
-  confirmLabel: string
-  cancelLabel: string
-  confirmButtonType: 'primary' | 'danger' | 'warning' | 'secondary' | 'success'
-  onConfirm: () => void
-  onCancel: () => void
+  open: boolean;
+  title: string;
+  message: string;
+  confirmLabel: string;
+  cancelLabel: string;
+  confirmButtonType: "primary" | "danger" | "warning" | "secondary" | "success";
+  onConfirm: () => void;
+  onCancel: () => void;
 }
 
 function ConfirmDialog({
@@ -41,7 +41,7 @@ function ConfirmDialog({
         </div>
       </DialogPanel>
     </Dialog>
-  )
+  );
 }
 
-export default ConfirmDialog
+export default ConfirmDialog;

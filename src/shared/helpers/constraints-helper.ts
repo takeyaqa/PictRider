@@ -1,4 +1,4 @@
-import { printCodeFromAST } from '../../pict-constraints-parser'
+import { printCodeFromAST } from "../../pict-constraints-parser";
 import type {
   Constraints as ConstraintsAst,
   Predicate,
@@ -11,8 +11,8 @@ import type {
   Term,
   LogicalOperator,
   Clause,
-} from '../../pict-constraints-parser/types'
-import type { Constraint, FixedCondition, FixedConstraint, Parameter } from '../../types'
+} from "../../pict-constraints-parser/types";
+import type { Constraint, FixedCondition, FixedConstraint, Parameter } from "../../types";
 
 export function fixConstraint(
   constraints: Constraint[],
@@ -20,164 +20,164 @@ export function fixConstraint(
 ): FixedConstraint[] {
   return constraints.map((c) => ({
     conditions: c.conditions.map((cond) => {
-      const parameter = parameters.find((p) => p.id === cond.parameterId)
+      const parameter = parameters.find((p) => p.id === cond.parameterId);
       if (!parameter) {
-        throw new Error(`Parameter not found for condition: ${cond.parameterId}`)
+        throw new Error(`Parameter not found for condition: ${cond.parameterId}`);
       }
       return {
         ifOrThen: cond.ifOrThen,
         predicate: cond.predicate,
         parameterName: parameter.name,
-      }
+      };
     }),
-  }))
+  }));
 }
 
 export function printConstraints(constraints: FixedConstraint[]): string[] {
-  return printCodeFromAST(convertTableToConstraints(constraints))
+  return printCodeFromAST(convertTableToConstraints(constraints));
 }
 
-type UnfixedTerm = RelationTerm | LikeTerm | InTerm | UnfixedRelationTerm
+type UnfixedTerm = RelationTerm | LikeTerm | InTerm | UnfixedRelationTerm;
 
 interface UnfixedRelationTerm {
-  type: 'UnfixedRelationTerm'
-  parameterName: ParameterName
-  relation: Relation
-  right: Value | ParameterName
+  type: "UnfixedRelationTerm";
+  parameterName: ParameterName;
+  relation: Relation;
+  right: Value | ParameterName;
 }
 
 function convertTableToConstraints(constraints: FixedConstraint[]): ConstraintsAst {
-  const constraintsAst: ConstraintsAst = []
+  const constraintsAst: ConstraintsAst = [];
   for (const constraint of constraints) {
     const ifConditions = constraint.conditions.filter(
-      (c) => c.ifOrThen === 'if' && c.predicate !== '',
-    )
+      (c) => c.ifOrThen === "if" && c.predicate !== "",
+    );
     const thenConditions = constraint.conditions.filter(
-      (c) => c.ifOrThen === 'then' && c.predicate !== '',
-    )
+      (c) => c.ifOrThen === "then" && c.predicate !== "",
+    );
     if (thenConditions.length === 0) {
-      continue
+      continue;
     }
     if (isError(ifConditions) || isError(thenConditions)) {
-      continue
+      continue;
     }
     if (ifConditions.length > 0) {
       const ifPredicates = ifConditions.map((condition) => {
-        return convertPredicate(condition)
-      })
+        return convertPredicate(condition);
+      });
       const thenPredicates = thenConditions.map((condition) => {
-        return convertPredicate(condition)
-      })
+        return convertPredicate(condition);
+      });
       constraintsAst.push({
-        type: 'IfConstraint',
+        type: "IfConstraint",
         condition: convertIfOrThenConstraint(ifPredicates),
         then: convertIfOrThenConstraint(thenPredicates),
-      })
+      });
     } else {
       const thenPredicates = thenConditions.map((condition) => {
-        return convertPredicate(condition)
-      })
+        return convertPredicate(condition);
+      });
       constraintsAst.push({
-        type: 'PredicateConstraint',
+        type: "PredicateConstraint",
         predicate: convertIfOrThenConstraint(thenPredicates),
-      })
+      });
     }
   }
-  return constraintsAst
+  return constraintsAst;
 }
 
 function convertIfOrThenConstraint(predicates: Predicate[]): Predicate {
-  let predicate: Predicate
+  let predicate: Predicate;
   if (predicates.length === 1) {
-    predicate = predicates[0]
+    predicate = predicates[0];
   } else {
-    let left: Clause
-    if (predicates[0].type !== 'LogicalPredicate') {
-      left = predicates[0]
+    let left: Clause;
+    if (predicates[0].type !== "LogicalPredicate") {
+      left = predicates[0];
     } else {
       left = {
-        type: 'PredicateClause',
+        type: "PredicateClause",
         predicate: predicates[0],
-      }
+      };
     }
     predicate = {
-      type: 'LogicalPredicate',
+      type: "LogicalPredicate",
       left: left,
-      operator: 'AND',
+      operator: "AND",
       right: predicates[1],
-    }
+    };
     for (let i = 2; i < predicates.length; i++) {
       predicate = {
-        type: 'LogicalPredicate',
+        type: "LogicalPredicate",
         left: {
-          type: 'PredicateClause',
+          type: "PredicateClause",
           predicate: predicate,
         },
-        operator: 'AND',
+        operator: "AND",
         right: predicates[i],
-      }
+      };
     }
   }
-  return predicate
+  return predicate;
 }
 
 function convertPredicate(condition: FixedCondition): Predicate {
-  const tokens = condition.predicate.split(',').map((token) => token.trim())
-  const isAllNegated = tokens[0].startsWith('#')
+  const tokens = condition.predicate.split(",").map((token) => token.trim());
+  const isAllNegated = tokens[0].startsWith("#");
   const terms = tokens.map((token) => {
-    return convertTerm(token, condition.parameterName)
-  })
-  let predicate: Predicate
+    return convertTerm(token, condition.parameterName);
+  });
+  let predicate: Predicate;
   if (terms.length === 1) {
-    predicate = fixFirstTerm(terms[0], isAllNegated)
+    predicate = fixFirstTerm(terms[0], isAllNegated);
   } else {
-    const firstTerm = fixFirstTerm(terms[0], isAllNegated)
-    let secondTerm: Clause
-    let operator: LogicalOperator = 'OR'
-    if (terms[1].type === 'UnfixedRelationTerm') {
-      ;[operator, secondTerm] = fixRestTerm(terms[1], isAllNegated)
+    const firstTerm = fixFirstTerm(terms[0], isAllNegated);
+    let secondTerm: Clause;
+    let operator: LogicalOperator = "OR";
+    if (terms[1].type === "UnfixedRelationTerm") {
+      [operator, secondTerm] = fixRestTerm(terms[1], isAllNegated);
     } else {
-      secondTerm = terms[1]
+      secondTerm = terms[1];
     }
     predicate = {
-      type: 'LogicalPredicate',
+      type: "LogicalPredicate",
       left: firstTerm,
       operator: operator,
       right: secondTerm,
-    }
+    };
     for (let i = 2; i < terms.length; i++) {
-      let operator: LogicalOperator = 'OR'
-      const targetTerm = terms[i]
-      let fixedTerm: Clause
-      if (targetTerm.type === 'UnfixedRelationTerm') {
-        ;[operator, fixedTerm] = fixRestTerm(targetTerm, isAllNegated)
+      let operator: LogicalOperator = "OR";
+      const targetTerm = terms[i];
+      let fixedTerm: Clause;
+      if (targetTerm.type === "UnfixedRelationTerm") {
+        [operator, fixedTerm] = fixRestTerm(targetTerm, isAllNegated);
       } else {
-        fixedTerm = targetTerm
+        fixedTerm = targetTerm;
       }
       predicate = {
-        type: 'LogicalPredicate',
+        type: "LogicalPredicate",
         left: {
-          type: 'PredicateClause',
+          type: "PredicateClause",
           predicate: predicate,
         },
         operator: operator,
         right: fixedTerm,
-      }
+      };
     }
   }
-  return predicate
+  return predicate;
 }
 
 function fixFirstTerm(unfixedTerm: UnfixedTerm, isAllNegated: boolean): Clause {
-  if (unfixedTerm.type === 'UnfixedRelationTerm') {
+  if (unfixedTerm.type === "UnfixedRelationTerm") {
     return {
-      type: 'RelationTerm',
+      type: "RelationTerm",
       parameterName: unfixedTerm.parameterName,
-      relation: isAllNegated ? '<>' : unfixedTerm.relation,
+      relation: isAllNegated ? "<>" : unfixedTerm.relation,
       right: unfixedTerm.right,
-    }
+    };
   } else {
-    return unfixedTerm
+    return unfixedTerm;
   }
 }
 
@@ -185,97 +185,97 @@ function fixRestTerm(
   unfixedTerm: UnfixedRelationTerm,
   isAllNegated: boolean,
 ): [LogicalOperator, Term] {
-  let operator: LogicalOperator
+  let operator: LogicalOperator;
 
   if (
     isAllNegated ||
-    unfixedTerm.relation === '>' ||
-    unfixedTerm.relation === '<' ||
-    unfixedTerm.relation === '>=' ||
-    unfixedTerm.relation === '<='
+    unfixedTerm.relation === ">" ||
+    unfixedTerm.relation === "<" ||
+    unfixedTerm.relation === ">=" ||
+    unfixedTerm.relation === "<="
   ) {
-    operator = 'AND'
+    operator = "AND";
   } else {
-    operator = 'OR'
+    operator = "OR";
   }
   return [
     operator,
     {
-      type: 'RelationTerm',
+      type: "RelationTerm",
       parameterName: unfixedTerm.parameterName,
-      relation: isAllNegated ? '<>' : unfixedTerm.relation,
+      relation: isAllNegated ? "<>" : unfixedTerm.relation,
       right: unfixedTerm.right,
     },
-  ]
+  ];
 }
 
 function isError(conditions: FixedCondition[]): boolean {
   for (const cond of conditions) {
     // '#' is only allowed at the beginning of the predicate
-    if (cond.predicate.includes('#') && !cond.predicate.startsWith('#')) {
-      return true
+    if (cond.predicate.includes("#") && !cond.predicate.startsWith("#")) {
+      return true;
     }
   }
-  return false
+  return false;
 }
 
 function convertTerm(predicate: string, parameter: string): UnfixedTerm {
-  const [relation, value] = splitValueAndRelation(predicate)
-  if (relation === 'LIKE') {
+  const [relation, value] = splitValueAndRelation(predicate);
+  if (relation === "LIKE") {
     return {
-      type: 'LikeTerm',
+      type: "LikeTerm",
       negated: false,
       parameter: parameter,
       patternString: value,
-    }
-  } else if (relation === 'NOT LIKE') {
+    };
+  } else if (relation === "NOT LIKE") {
     return {
-      type: 'LikeTerm',
+      type: "LikeTerm",
       negated: true,
       parameter: parameter,
       patternString: value,
-    }
+    };
   } else {
     return {
-      type: 'UnfixedRelationTerm',
+      type: "UnfixedRelationTerm",
       parameterName: {
-        type: 'ParameterName',
+        type: "ParameterName",
         name: parameter,
       },
       relation: relation,
       right: Number.isNaN(Number(value))
         ? {
-            type: 'String',
+            type: "String",
             value: value,
           }
         : {
-            type: 'Number',
+            type: "Number",
             value: Number(value),
           },
-    }
+    };
   }
 }
 
-function splitValueAndRelation(predicate: string): [Relation | 'NOT LIKE' | 'LIKE', string] {
-  if (predicate.startsWith('#') && isPatternString(predicate)) {
-    return ['NOT LIKE', predicate.replace('#', '').trim()]
+function splitValueAndRelation(predicate: string): [Relation | "NOT LIKE" | "LIKE", string] {
+  if (predicate.startsWith("#") && isPatternString(predicate)) {
+    return ["NOT LIKE", predicate.replace("#", "").trim()];
   } else if (isPatternString(predicate)) {
-    return ['LIKE', predicate.trim()]
-  } else if (predicate.startsWith('#')) {
-    return ['<>', predicate.replace('#', '').trim()]
-  } else if (predicate.startsWith('>=')) {
-    return ['>=', predicate.replace('>=', '').trim()]
-  } else if (predicate.startsWith('<=')) {
-    return ['<=', predicate.replace('<=', '').trim()]
-  } else if (predicate.startsWith('>')) {
-    return ['>', predicate.replace('>', '').trim()]
-  } else if (predicate.startsWith('<')) {
-    return ['<', predicate.replace('<', '').trim()]
+    return ["LIKE", predicate.trim()];
+  } else if (predicate.startsWith("#")) {
+    return ["<>", predicate.replace("#", "").trim()];
+  } else if (predicate.startsWith(">=")) {
+    return [">=", predicate.replace(">=", "").trim()];
+  } else if (predicate.startsWith("<=")) {
+    return ["<=", predicate.replace("<=", "").trim()];
+  } else if (predicate.startsWith(">")) {
+    return [">", predicate.replace(">", "").trim()];
+  } else if (predicate.startsWith("<")) {
+    return ["<", predicate.replace("<", "").trim()];
   } else {
-    return ['=', predicate.trim()]
+    return ["=", predicate.trim()];
   }
 }
 
 function isPatternString(value: string): boolean {
-  return value.includes('*') || value.includes('?')
+  return value.includes("*") || value.includes("?");
 }

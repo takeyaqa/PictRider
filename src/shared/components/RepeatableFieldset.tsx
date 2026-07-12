@@ -1,15 +1,15 @@
-import { PlusIcon, XMarkIcon } from '@heroicons/react/16/solid'
-import Button from './Button'
+import { PlusIcon, XMarkIcon } from "@heroicons/react/16/solid";
+import Button from "./Button";
 
 interface RepeatableFieldsetProps {
-  children: React.ReactNode
-  title: string
-  heading: string
-  totalLength: number
-  maxLength: number
-  canRenderButtons: boolean
-  onClickAdd: () => void
-  onClickRemove: () => void
+  children: React.ReactNode;
+  title: string;
+  heading: string;
+  totalLength: number;
+  maxLength: number;
+  canRenderButtons: boolean;
+  onClickAdd: () => void;
+  onClickRemove: () => void;
 }
 
 function RepeatableFieldset({
@@ -49,12 +49,12 @@ function RepeatableFieldset({
             </Button>
           </div>
         ) : (
-          ''
+          ""
         )}
       </div>
       {children}
     </fieldset>
-  )
+  );
 }
 
-export default RepeatableFieldset
+export default RepeatableFieldset;

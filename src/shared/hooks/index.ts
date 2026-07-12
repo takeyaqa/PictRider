@@ -1,1 +1,1 @@
-export { default as usePictRunner } from './usePictRunner'
+export { default as usePictRunner } from "./usePictRunner";

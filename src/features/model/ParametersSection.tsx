@@ -6,16 +6,16 @@ import {
   MenuButton,
   MenuItem,
   MenuItems,
-} from '@headlessui/react'
-import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid'
-import { AlertMessage, Section, TextInput } from '../../shared/components'
-import type { Parameters } from '../../types'
+} from "@headlessui/react";
+import { QuestionMarkCircleIcon } from "@heroicons/react/16/solid";
+import { AlertMessage, Section, TextInput } from "../../shared/components";
+import type { Parameters } from "../../types";
 
 interface ParametersSectionProps {
-  parameters: Parameters
-  onChangeParameter: (id: string, field: 'name' | 'values', value: string) => void
-  onAddRow: (id: string, target: 'above' | 'below') => void
-  onRemoveRow: (id: string) => void
+  parameters: Parameters;
+  onChangeParameter: (id: string, field: "name" | "values", value: string) => void;
+  onAddRow: (id: string, target: "above" | "below") => void;
+  onRemoveRow: (id: string) => void;
 }
 
 function ParametersSection({
@@ -76,7 +76,7 @@ function ParametersSection({
               value={parameter.name}
               isValid={parameter.isValidName}
               onChange={(e) => {
-                onChangeParameter(parameter.id, 'name', e.target.value)
+                onChangeParameter(parameter.id, "name", e.target.value);
               }}
             />
           </div>
@@ -86,7 +86,7 @@ function ParametersSection({
               value={parameter.values}
               isValid={parameter.isValidValues}
               onChange={(e) => {
-                onChangeParameter(parameter.id, 'values', e.target.value)
+                onChangeParameter(parameter.id, "values", e.target.value);
               }}
             />
           </div>
@@ -103,15 +103,15 @@ function ParametersSection({
       ))}
       <AlertMessage messages={parameters.parameterErrors} />
     </Section>
-  )
+  );
 }
 
 interface ParameterMenuProps {
-  parameterId: string
-  parameterHeading: string
-  parametersLength: number
-  onAddRow: (id: string, position: 'above' | 'below') => void
-  onRemoveRow: (id: string) => void
+  parameterId: string;
+  parameterHeading: string;
+  parametersLength: number;
+  onAddRow: (id: string, position: "above" | "below") => void;
+  onRemoveRow: (id: string) => void;
 }
 
 function ParameterMenu({
@@ -139,7 +139,7 @@ function ParameterMenu({
             disabled={parametersLength >= 25}
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
-              onAddRow(parameterId, 'above')
+              onAddRow(parameterId, "above");
             }}
           >
             Insert Above
@@ -151,7 +151,7 @@ function ParameterMenu({
             disabled={parametersLength >= 25}
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
-              onAddRow(parameterId, 'below')
+              onAddRow(parameterId, "below");
             }}
           >
             Insert Below
@@ -163,7 +163,7 @@ function ParameterMenu({
             disabled={parametersLength <= 1}
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 disabled:text-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
-              onRemoveRow(parameterId)
+              onRemoveRow(parameterId);
             }}
           >
             Delete Row
@@ -171,7 +171,7 @@ function ParameterMenu({
         </MenuItem>
       </MenuItems>
     </Menu>
-  )
+  );
 }
 
-export default ParametersSection
+export default ParametersSection;

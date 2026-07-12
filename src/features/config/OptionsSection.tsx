@@ -1,8 +1,8 @@
-import { Checkbox, NumberInput, Section } from '../../shared/components'
-import useConfig from './hook'
+import { Checkbox, NumberInput, Section } from "../../shared/components";
+import useConfig from "./hook";
 
 function OptionsSection() {
-  const { config, handlers } = useConfig()
+  const { config, handlers } = useConfig();
   return (
     <Section>
       <h2 className="mb-5 text-lg font-bold">Options</h2>
@@ -14,7 +14,7 @@ function OptionsSection() {
             min={1}
             max={50}
             onChange={(e) => {
-              handlers.handleChangeConfigInput('orderOfCombinations', e)
+              handlers.handleChangeConfigInput("orderOfCombinations", e);
             }}
           />
         </div>
@@ -24,7 +24,7 @@ function OptionsSection() {
               label="Randomize generation"
               checked={config.randomizeGeneration}
               onChange={(checked) => {
-                handlers.handleChangeConfigCheckbox('randomizeGeneration', checked)
+                handlers.handleChangeConfigCheckbox("randomizeGeneration", checked);
               }}
             />
           </div>
@@ -36,7 +36,7 @@ function OptionsSection() {
               max={65535}
               disabled={!config.randomizeGeneration}
               onChange={(e) => {
-                handlers.handleChangeConfigInput('randomizeSeed', e)
+                handlers.handleChangeConfigInput("randomizeSeed", e);
               }}
             />
           </div>
@@ -46,13 +46,13 @@ function OptionsSection() {
             label="Show model file"
             checked={config.showModelFile}
             onChange={(checked) => {
-              handlers.handleChangeConfigCheckbox('showModelFile', checked)
+              handlers.handleChangeConfigCheckbox("showModelFile", checked);
             }}
           />
         </div>
       </div>
     </Section>
-  )
+  );
 }
 
-export default OptionsSection
+export default OptionsSection;

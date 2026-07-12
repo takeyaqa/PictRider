@@ -1,20 +1,20 @@
-import { createContext } from 'react'
-import type { Config } from '../../types'
+import { createContext } from "react";
+import type { Config } from "../../types";
 
 interface ConfigContextType {
-  config: Config
+  config: Config;
   handlers: {
     handleChangeConfigCheckbox: (
-      type: 'enableSubModels' | 'enableConstraints' | 'showModelFile' | 'randomizeGeneration',
+      type: "enableSubModels" | "enableConstraints" | "showModelFile" | "randomizeGeneration",
       checked: boolean,
-    ) => void
+    ) => void;
     handleChangeConfigInput: (
-      type: 'orderOfCombinations' | 'randomizeSeed',
+      type: "orderOfCombinations" | "randomizeSeed",
       e: React.ChangeEvent<HTMLInputElement>,
-    ) => void
-  }
+    ) => void;
+  };
 }
 
-const ConfigContext = createContext<ConfigContextType | undefined>(undefined)
+const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
 
-export default ConfigContext
+export default ConfigContext;
