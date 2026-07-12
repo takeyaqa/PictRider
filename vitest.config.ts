@@ -7,9 +7,6 @@ export default defineConfig({
   test: {
     include: ["./src/**/*.spec.{ts,tsx}"],
     testTimeout: 20000,
-    coverage: {
-      provider: "istanbul",
-    },
     browser: {
       provider: playwright(),
       enabled: true,
