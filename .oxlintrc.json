@@ -12,6 +12,9 @@
   "env": {
     "builtin": true
   },
+  "options": {
+    "typeAware": true
+  },
   "overrides": [
     {
       "files": ["./tests/e2e.spec.ts"],
