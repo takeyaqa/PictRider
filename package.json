@@ -13,7 +13,6 @@
     "lint:fix": "oxlint --fix",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:run:coverage": "vitest run --coverage",
     "test:e2e": "playwright test"
   },
   "dependencies": {
@@ -36,7 +35,6 @@
     "@vite-pwa/assets-generator": "^1.0.2",
     "@vitejs/plugin-react": "^6.0.3",
     "@vitest/browser-playwright": "^4.1.9",
-    "@vitest/coverage-istanbul": "^4.1.9",
     "eslint-plugin-playwright": "^2.10.4",
     "globals": "^17.7.0",
     "oxfmt": "^0.58.0",

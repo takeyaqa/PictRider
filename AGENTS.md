@@ -17,7 +17,7 @@ cp .env.example .env
 # Vite build
 pnpm run build
 
-# Start dev server at http://127.0.0.1:5173
+# Start dev server at http://localhost:5173
 pnpm run dev
 
 # Lint and format
