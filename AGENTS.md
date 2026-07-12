@@ -23,7 +23,6 @@ pnpm run dev
 # Lint and format
 pnpm run fmt
 pnpm run lint
-pnpm run typecheck
 
 # Unit tests (Vitest with browser mode via Playwright)
 pnpm run test:run
@@ -77,5 +76,5 @@ The `usePictRunner` hook wraps `@takeyaqa/pict-wasm`. Components accept an optio
 - **IDs**: Use `uuidv4()` from `shared/helpers` for generating unique identifiers
 - **Validation**: Input validation happens in reducers, setting `isValid*` flags on state objects
 - **Commit Messages**: Use Conventional Commits format (e.g., `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `ci:`)
-- **Before committing** - Always run `pnpm run fmt`, `pnpm run lint`, `pnpm run typecheck`, `pnpm run test:run`, and `pnpm run test:e2e`
+- **Before committing** - Always run `pnpm run fmt`, `pnpm run lint`, `pnpm run test:run`, and `pnpm run test:e2e`
 - **Ignore `pnpm-lock.yaml`** - Always skip this file during code review and pull request creation
