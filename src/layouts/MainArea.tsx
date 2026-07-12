@@ -1,115 +1,115 @@
-import { useEffect, useRef, useState } from 'react'
-import { useImmerReducer } from 'use-immer'
-import { OptionsSection } from '../features/config'
-import { MenuSection } from '../features/menu'
+import { useEffect, useRef, useState } from "react";
+import { useImmerReducer } from "use-immer";
+import { OptionsSection } from "../features/config";
+import { MenuSection } from "../features/menu";
 import {
   ConstraintsSection,
   ParametersSection,
   SubModelsSection,
   getInitialModel,
   modelReducer,
-} from '../features/model'
-import { ResultSection } from '../features/result'
-import type { Result } from '../types'
+} from "../features/model";
+import { ResultSection } from "../features/result";
+import type { Result } from "../types";
 
 function MainArea() {
-  const [model, dispatch] = useImmerReducer(modelReducer, getInitialModel())
-  const [result, setResult] = useState<Result | null>(null)
-  const resultSection = useRef<HTMLDivElement>(null)
+  const [model, dispatch] = useImmerReducer(modelReducer, getInitialModel());
+  const [result, setResult] = useState<Result | null>(null);
+  const resultSection = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (
       result !== null &&
       resultSection.current &&
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(width < 80rem)').matches // tailwind: xl, two columns layout
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(width < 80rem)").matches // tailwind: xl, two columns layout
     ) {
       resultSection.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
+        behavior: "smooth",
+        block: "start",
+      });
     }
-  }, [result])
+  }, [result]);
 
   // menu handlers
   const handleClearInput = () => {
-    dispatch({ type: 'clear' })
-  }
+    dispatch({ type: "clear" });
+  };
 
   // Parameter handlers
-  const handleChangeParameter = (id: string, field: 'name' | 'values', value: string) => {
+  const handleChangeParameter = (id: string, field: "name" | "values", value: string) => {
     dispatch({
-      type: 'changeParameter',
+      type: "changeParameter",
       payload: { id, field, value },
-    })
-  }
+    });
+  };
 
-  const handleAddRow = (id: string, target: 'above' | 'below') => {
+  const handleAddRow = (id: string, target: "above" | "below") => {
     dispatch({
-      type: 'addParameterRow',
+      type: "addParameterRow",
       payload: { id, target },
-    })
-  }
+    });
+  };
 
   const handleRemoveRow = (id: string) => {
-    dispatch({ type: 'removeParameterRow', payload: { id } })
-  }
+    dispatch({ type: "removeParameterRow", payload: { id } });
+  };
 
   // Constraint handlers
   const handleToggleCondition = (constraintId: string, parameterId: string) => {
     dispatch({
-      type: 'toggleCondition',
+      type: "toggleCondition",
       payload: {
         constraintId,
         parameterId,
       },
-    })
-  }
+    });
+  };
 
   const handleChangeCondition = (constraintId: string, parameterId: string, value: string) => {
     dispatch({
-      type: 'changeCondition',
+      type: "changeCondition",
       payload: {
         constraintId,
         parameterId,
         value,
       },
-    })
-  }
+    });
+  };
 
   const handleAddConstraint = () => {
     dispatch({
-      type: 'addConstraint',
-    })
-  }
+      type: "addConstraint",
+    });
+  };
 
   const handleRemoveConstraint = () => {
-    dispatch({ type: 'removeConstraint' })
-  }
+    dispatch({ type: "removeConstraint" });
+  };
 
   const handleToggleConstraintDirectEditMode = () => {
-    dispatch({ type: 'toggleConstraintDirectEditMode' })
-  }
+    dispatch({ type: "toggleConstraintDirectEditMode" });
+  };
 
   const handleChangeConstraintFormula = (value: string) => {
     dispatch({
-      type: 'changeConstraintFormula',
+      type: "changeConstraintFormula",
       payload: { value },
-    })
-  }
+    });
+  };
 
   const handleValidateConstraintFormula = (value: string) => {
     dispatch({
-      type: 'validateConstraintFormula',
+      type: "validateConstraintFormula",
       payload: { value },
-    })
-  }
+    });
+  };
 
   const handleResetConstraints = () => {
     dispatch({
-      type: 'resetConstraints',
-    })
-  }
+      type: "resetConstraints",
+    });
+  };
 
   // SubModel handlers
   const handleClickSubModelParameters = (
@@ -118,25 +118,25 @@ function MainArea() {
     checked: boolean,
   ) => {
     dispatch({
-      type: 'clickSubModelParameters',
+      type: "clickSubModelParameters",
       payload: { subModelId, parameterId, checked },
-    })
-  }
+    });
+  };
 
   const handleChangeSubModelOrder = (id: string, order: number) => {
     dispatch({
-      type: 'changeSubModelOrder',
+      type: "changeSubModelOrder",
       payload: { id, order },
-    })
-  }
+    });
+  };
 
   const handleAddSubModel = () => {
-    dispatch({ type: 'addSubModel' })
-  }
+    dispatch({ type: "addSubModel" });
+  };
 
   const handleRemoveSubModel = () => {
-    dispatch({ type: 'removeSubModel' })
-  }
+    dispatch({ type: "removeSubModel" });
+  };
 
   return (
     <main className="grid grid-cols-1 xl:grid-cols-2">
@@ -157,7 +157,7 @@ function MainArea() {
           subModels={{ subModels: model.subModels }}
           onClearInput={handleClearInput}
           onClearResult={() => {
-            setResult(null)
+            setResult(null);
           }}
           setResult={setResult}
         />
@@ -202,7 +202,7 @@ function MainArea() {
         <ResultSection result={result} />
       </div>
     </main>
-  )
+  );
 }
 
-export default MainArea
+export default MainArea;

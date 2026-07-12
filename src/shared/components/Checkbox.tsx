@@ -1,14 +1,14 @@
-import { Checkbox as HeadlessUiCheckbox, Field, Label } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/16/solid'
+import { Checkbox as HeadlessUiCheckbox, Field, Label } from "@headlessui/react";
+import { CheckIcon } from "@heroicons/react/16/solid";
 
 interface CheckboxProps {
-  label: string
-  checked: boolean
-  'aria-label'?: string
-  onChange: (checked: boolean) => void
+  label: string;
+  checked: boolean;
+  "aria-label"?: string;
+  onChange: (checked: boolean) => void;
 }
 
-function Checkbox({ label, checked, 'aria-label': ariaLabel, onChange }: CheckboxProps) {
+function Checkbox({ label, checked, "aria-label": ariaLabel, onChange }: CheckboxProps) {
   return (
     <Field className="flex items-center">
       <HeadlessUiCheckbox
@@ -29,7 +29,7 @@ function Checkbox({ label, checked, 'aria-label': ariaLabel, onChange }: Checkbo
         )}
       </Label>
     </Field>
-  )
+  );
 }
 
-export default Checkbox
+export default Checkbox;

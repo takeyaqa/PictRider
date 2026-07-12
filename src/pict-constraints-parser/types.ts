@@ -1,123 +1,123 @@
-export type Constraints = Constraint[]
+export type Constraints = Constraint[];
 
 // Constraint
-export type Constraint = IfConstraint | PredicateConstraint
+export type Constraint = IfConstraint | PredicateConstraint;
 
 export interface IfConstraint {
-  type: 'IfConstraint'
-  condition: Predicate
-  then: Predicate
-  else?: Predicate
+  type: "IfConstraint";
+  condition: Predicate;
+  then: Predicate;
+  else?: Predicate;
 }
 
 export interface PredicateConstraint {
-  type: 'PredicateConstraint'
-  predicate: Predicate
+  type: "PredicateConstraint";
+  predicate: Predicate;
 }
 
 // Predicate
-export type Predicate = Clause | LogicalPredicate
+export type Predicate = Clause | LogicalPredicate;
 
 export interface LogicalPredicate {
-  type: 'LogicalPredicate'
-  left: Clause
-  operator: LogicalOperator
-  right: Predicate
+  type: "LogicalPredicate";
+  left: Clause;
+  operator: LogicalOperator;
+  right: Predicate;
 }
 
 // Clause
-export type Clause = Term | PredicateClause | NotClause
+export type Clause = Term | PredicateClause | NotClause;
 
 export interface PredicateClause {
-  type: 'PredicateClause'
-  predicate: Predicate
+  type: "PredicateClause";
+  predicate: Predicate;
 }
 
 export interface NotClause {
-  type: 'NotClause'
-  predicate: Predicate
+  type: "NotClause";
+  predicate: Predicate;
 }
 
 // Term
-export type Term = RelationTerm | LikeTerm | InTerm | FunctionTerm
+export type Term = RelationTerm | LikeTerm | InTerm | FunctionTerm;
 
 export interface RelationTerm {
-  type: 'RelationTerm'
-  parameterName: ParameterName
-  relation: Relation
-  right: Value | ParameterName
+  type: "RelationTerm";
+  parameterName: ParameterName;
+  relation: Relation;
+  right: Value | ParameterName;
 }
 
 export interface LikeTerm {
-  type: 'LikeTerm'
-  negated: boolean
-  parameter: string
-  patternString: string
+  type: "LikeTerm";
+  negated: boolean;
+  parameter: string;
+  patternString: string;
 }
 
 export interface InTerm {
-  type: 'InTerm'
-  negated: boolean
-  parameter: string
-  values: ValueSet
+  type: "InTerm";
+  negated: boolean;
+  parameter: string;
+  values: ValueSet;
 }
 
 export interface FunctionTerm {
-  type: 'FunctionTerm'
-  function: 'IsNegative' | 'IsPositive'
-  parameterName?: string
+  type: "FunctionTerm";
+  function: "IsNegative" | "IsPositive";
+  parameterName?: string;
 }
 
 // ValueSet
-export type ValueSet = Value[]
+export type ValueSet = Value[];
 
 // LogicalOperator
-export type LogicalOperator = 'AND' | 'OR'
+export type LogicalOperator = "AND" | "OR";
 
 // Relation
-export type Relation = '=' | '<>' | '>' | '>=' | '<' | '<='
+export type Relation = "=" | "<>" | ">" | ">=" | "<" | "<=";
 
 // ParameterName
 export interface ParameterName {
-  type: 'ParameterName'
-  name: string
+  type: "ParameterName";
+  name: string;
 }
 
 // Value
-export type Value = StringValue | NumberValue
+export type Value = StringValue | NumberValue;
 
 // String
 export interface StringValue {
-  type: 'String'
-  value: string
+  type: "String";
+  value: string;
 }
 
 // Number
 export interface NumberValue {
-  type: 'Number'
-  value: number
+  type: "Number";
+  value: number;
 }
 
 // Parse Error
 export type ParseErrorType =
-  | 'UnexpectedEndOfInput'
-  | 'UnterminatedString'
-  | 'UnterminatedParameterName'
-  | 'InvalidEscapeCharacter'
-  | 'ExpectedSemicolon'
-  | 'ExpectedKeywordThen'
-  | 'ExpectedClosingParenthesis'
-  | 'ExpectedClosingBrace'
-  | 'ExpectedClosingBracket'
-  | 'ExpectedRelation'
-  | 'ExpectedValue'
-  | 'InvalidNumber'
-  | 'UnexpectedToken'
+  | "UnexpectedEndOfInput"
+  | "UnterminatedString"
+  | "UnterminatedParameterName"
+  | "InvalidEscapeCharacter"
+  | "ExpectedSemicolon"
+  | "ExpectedKeywordThen"
+  | "ExpectedClosingParenthesis"
+  | "ExpectedClosingBrace"
+  | "ExpectedClosingBracket"
+  | "ExpectedRelation"
+  | "ExpectedValue"
+  | "InvalidNumber"
+  | "UnexpectedToken";
 
 export interface ParseError {
-  type: ParseErrorType
-  message: string
-  position: number
+  type: ParseErrorType;
+  message: string;
+  position: number;
 }
 
-export type ParseResult<T> = { ok: true; value: T } | { ok: false; error: ParseError }
+export type ParseResult<T> = { ok: true; value: T } | { ok: false; error: ParseError };

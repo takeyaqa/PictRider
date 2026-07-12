@@ -1,59 +1,59 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/16/solid'
-import { AlertMessage, Section } from '../../shared/components'
-import type { Result } from '../../types'
-import { useConfig } from '../config'
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/16/solid";
+import { AlertMessage, Section } from "../../shared/components";
+import type { Result } from "../../types";
+import { useConfig } from "../config";
 
 function createCsvContent(result: Result) {
-  const headerRow = result.header.map((h) => `"${h.name}"`).join(',')
-  const bodyRows = result.body.map((row) => row.values.map((col) => `"${col.value}"`).join(','))
-  return [headerRow, ...bodyRows].join('\n')
+  const headerRow = result.header.map((h) => `"${h.name}"`).join(",");
+  const bodyRows = result.body.map((row) => row.values.map((col) => `"${col.value}"`).join(","));
+  return [headerRow, ...bodyRows].join("\n");
 }
 
 function createTsvContent(result: Result) {
-  const headerRow = result.header.map((h) => h.name).join('\t')
-  const bodyRows = result.body.map((row) => row.values.map((col) => col.value).join('\t'))
-  return [headerRow, ...bodyRows].join('\n')
+  const headerRow = result.header.map((h) => h.name).join("\t");
+  const bodyRows = result.body.map((row) => row.values.map((col) => col.value).join("\t"));
+  return [headerRow, ...bodyRows].join("\n");
 }
 
-function createContent(result: Result, type: 'csv' | 'csvExcel' | 'tsv'): [string, string, string] {
+function createContent(result: Result, type: "csv" | "csvExcel" | "tsv"): [string, string, string] {
   switch (type) {
-    case 'csv':
-      return [createCsvContent(result), 'text/csv', 'result.csv']
-    case 'csvExcel':
-      return [`\uFEFF${createCsvContent(result)}`, 'text/csv', 'result_excel.csv']
-    case 'tsv':
-      return [createTsvContent(result), 'text/tab-separated-values', 'result.tsv']
+    case "csv":
+      return [createCsvContent(result), "text/csv", "result.csv"];
+    case "csvExcel":
+      return [`\uFEFF${createCsvContent(result)}`, "text/csv", "result_excel.csv"];
+    case "tsv":
+      return [createTsvContent(result), "text/tab-separated-values", "result.tsv"];
   }
 }
 
 interface ResultSectionProps {
-  result: Result | null
+  result: Result | null;
 }
 
 function ResultSection({ result }: ResultSectionProps) {
-  const { config } = useConfig()
+  const { config } = useConfig();
 
-  function handleDownload(type: 'csv' | 'csvExcel' | 'tsv') {
+  function handleDownload(type: "csv" | "csvExcel" | "tsv") {
     if (!result) {
-      return
+      return;
     }
-    const [content, mimeType, fileName] = createContent(result, type)
+    const [content, mimeType, fileName] = createContent(result, type);
 
     // Create a blob and download link
-    const blob = new Blob([content], { type: `${mimeType};charset=utf-8;` })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.setAttribute('href', url)
-    link.setAttribute('download', fileName)
-    link.style.visibility = 'hidden'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    const blob = new Blob([content], { type: `${mimeType};charset=utf-8;` });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", fileName);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   if (!result) {
-    return null
+    return null;
   }
 
   return (
@@ -103,11 +103,11 @@ function ResultSection({ result }: ResultSectionProps) {
         </table>
       </div>
     </Section>
-  )
+  );
 }
 
 interface ModelFileProps {
-  modelFile: string
+  modelFile: string;
 }
 
 function ModelFile({ modelFile }: ModelFileProps) {
@@ -120,11 +120,11 @@ function ModelFile({ modelFile }: ModelFileProps) {
         </pre>
       </div>
     </div>
-  )
+  );
 }
 
 interface DownloadMenuProps {
-  onDownload: (type: 'csv' | 'csvExcel' | 'tsv') => void
+  onDownload: (type: "csv" | "csvExcel" | "tsv") => void;
 }
 
 function DownloadMenu({ onDownload }: DownloadMenuProps) {
@@ -143,7 +143,7 @@ function DownloadMenu({ onDownload }: DownloadMenuProps) {
             type="button"
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
-              onDownload('csv')
+              onDownload("csv");
             }}
           >
             CSV
@@ -154,7 +154,7 @@ function DownloadMenu({ onDownload }: DownloadMenuProps) {
             type="button"
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
-              onDownload('csvExcel')
+              onDownload("csvExcel");
             }}
           >
             CSV (Excel)
@@ -165,7 +165,7 @@ function DownloadMenu({ onDownload }: DownloadMenuProps) {
             type="button"
             className="w-full cursor-pointer px-4 py-1 text-left text-black hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-500"
             onClick={() => {
-              onDownload('tsv')
+              onDownload("tsv");
             }}
           >
             TSV
@@ -173,7 +173,7 @@ function DownloadMenu({ onDownload }: DownloadMenuProps) {
         </MenuItem>
       </MenuItems>
     </Menu>
-  )
+  );
 }
 
-export default ResultSection
+export default ResultSection;

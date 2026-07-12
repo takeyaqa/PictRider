@@ -1,12 +1,12 @@
-import type { Message } from '../../types'
+import type { Message } from "../../types";
 
 interface AlertMessageProps {
-  messages: Message[]
+  messages: Message[];
 }
 
 function AlertMessage({ messages }: AlertMessageProps) {
   if (messages.length === 0) {
-    return null
+    return null;
   }
   return (
     <div
@@ -17,7 +17,7 @@ function AlertMessage({ messages }: AlertMessageProps) {
         <p key={message.id}>{message.text}</p>
       ))}
     </div>
-  )
+  );
 }
 
-export default AlertMessage
+export default AlertMessage;

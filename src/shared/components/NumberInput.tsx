@@ -1,13 +1,13 @@
-import { Field, Label, Input } from '@headlessui/react'
+import { Field, Label, Input } from "@headlessui/react";
 
 interface NumberInputProps {
-  label: string
-  value: number | ''
-  min: number
-  max: number
-  disabled?: boolean
-  'aria-label'?: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  label: string;
+  value: number | "";
+  min: number;
+  max: number;
+  disabled?: boolean;
+  "aria-label"?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function NumberInput({
@@ -16,7 +16,7 @@ function NumberInput({
   min,
   max,
   disabled,
-  'aria-label': ariaLabel,
+  "aria-label": ariaLabel,
   onChange,
 }: NumberInputProps) {
   return (
@@ -41,7 +41,7 @@ function NumberInput({
         onChange={onChange}
       />
     </Field>
-  )
+  );
 }
 
-export default NumberInput
+export default NumberInput;

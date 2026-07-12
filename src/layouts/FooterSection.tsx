@@ -4,7 +4,7 @@ function FooterSection() {
       <p>Released under the MIT License.</p>
       <p>Copyright © 2025-2026 Takeshi Kishi</p>
     </footer>
-  )
+  );
 }
 
-export default FooterSection
+export default FooterSection;

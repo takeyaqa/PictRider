@@ -62,7 +62,7 @@ function HeaderSection() {
         </ul>
       </nav>
     </header>
-  )
+  );
 }
 
-export default HeaderSection
+export default HeaderSection;

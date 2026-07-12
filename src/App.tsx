@@ -1,5 +1,5 @@
-import { ConfigProvider } from './features/config'
-import { FooterSection, HeaderSection, MainArea, NotificationMessageSection } from './layouts'
+import { ConfigProvider } from "./features/config";
+import { FooterSection, HeaderSection, MainArea, NotificationMessageSection } from "./layouts";
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
       </ConfigProvider>
       <FooterSection />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

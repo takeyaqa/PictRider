@@ -5,9 +5,9 @@ import {
   Field,
   Label,
   Textarea,
-} from '@headlessui/react'
-import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid'
-import React, { useState } from 'react'
+} from "@headlessui/react";
+import { QuestionMarkCircleIcon } from "@heroicons/react/16/solid";
+import React, { useState } from "react";
 import {
   AlertMessage,
   Button,
@@ -16,39 +16,39 @@ import {
   Section,
   Switch,
   TextInput,
-} from '../../shared/components'
-import type { Constraint, Constraints, ConstraintText, Parameter } from '../../types'
-import { useConfig } from '../config'
+} from "../../shared/components";
+import type { Constraint, Constraints, ConstraintText, Parameter } from "../../types";
+import { useConfig } from "../config";
 
 const PREDICATE_INPUT_SYNTAX = [
-  { syntax: 'value', description: 'Equals (=)' },
-  { syntax: '#value', description: 'Not equals (<>)' },
-  { syntax: '>value', description: 'Greater than' },
-  { syntax: '<value', description: 'Less than' },
-  { syntax: '>=value', description: 'Greater than or equal' },
-  { syntax: '<=value', description: 'Less than or equal' },
+  { syntax: "value", description: "Equals (=)" },
+  { syntax: "#value", description: "Not equals (<>)" },
+  { syntax: ">value", description: "Greater than" },
+  { syntax: "<value", description: "Less than" },
+  { syntax: ">=value", description: "Greater than or equal" },
+  { syntax: "<=value", description: "Less than or equal" },
   {
-    syntax: 'a, b',
-    description: 'Multiple values (OR for =, AND for #/comparison)',
+    syntax: "a, b",
+    description: "Multiple values (OR for =, AND for #/comparison)",
   },
-  { syntax: '* and ?', description: 'Wildcard pattern (LIKE)' },
-  { syntax: '#pattern*', description: 'Negated wildcard (NOT LIKE)' },
-]
+  { syntax: "* and ?", description: "Wildcard pattern (LIKE)" },
+  { syntax: "#pattern*", description: "Negated wildcard (NOT LIKE)" },
+];
 
-const PICT_CONSTRAINT_SYNTAX_DOC_URL = 'https://github.com/microsoft/pict/blob/main/doc/pict.md'
+const PICT_CONSTRAINT_SYNTAX_DOC_URL = "https://github.com/microsoft/pict/blob/main/doc/pict.md";
 
 interface ConstraintsSectionProps {
-  constraints: Constraints
-  parameters: Parameter[]
-  onToggleCondition: (constraintId: string, parameterId: string) => void
-  onChangeCondition: (constraintId: string, parameterId: string, value: string) => void
-  onAddConstraint: () => void
-  onRemoveConstraint: () => void
-  onToggleConstraintDirectEditMode: () => void
-  onChangeConstraintFormula: (value: string) => void
-  onValidateConstraintFormula: (value: string) => void
-  onResetConstraints: () => void
-  skipDirectEditConfirm?: boolean // Test-only flag to bypass the direct edit confirmation dialog.
+  constraints: Constraints;
+  parameters: Parameter[];
+  onToggleCondition: (constraintId: string, parameterId: string) => void;
+  onChangeCondition: (constraintId: string, parameterId: string, value: string) => void;
+  onAddConstraint: () => void;
+  onRemoveConstraint: () => void;
+  onToggleConstraintDirectEditMode: () => void;
+  onChangeConstraintFormula: (value: string) => void;
+  onValidateConstraintFormula: (value: string) => void;
+  onResetConstraints: () => void;
+  skipDirectEditConfirm?: boolean; // Test-only flag to bypass the direct edit confirmation dialog.
 }
 
 function ConstraintsSection({
@@ -64,7 +64,7 @@ function ConstraintsSection({
   onResetConstraints,
   skipDirectEditConfirm = false,
 }: ConstraintsSectionProps) {
-  const { config, handlers: configHandlers } = useConfig()
+  const { config, handlers: configHandlers } = useConfig();
 
   return (
     <Section>
@@ -76,7 +76,7 @@ function ConstraintsSection({
               label="Enable Constraints"
               checked={config.enableConstraints}
               onChange={(checked) => {
-                configHandlers.handleChangeConfigCheckbox('enableConstraints', checked)
+                configHandlers.handleChangeConfigCheckbox("enableConstraints", checked);
               }}
             />
           </div>
@@ -99,7 +99,7 @@ function ConstraintsSection({
             ))}
           </dl>
           <p className="mt-4">
-            Direct Edit Mode supports the full PICT constraint syntax. See{' '}
+            Direct Edit Mode supports the full PICT constraint syntax. See{" "}
             <a
               href={PICT_CONSTRAINT_SYNTAX_DOC_URL}
               target="_blank"
@@ -107,7 +107,7 @@ function ConstraintsSection({
               className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
             >
               PICT documentation
-            </a>{' '}
+            </a>{" "}
             for details.
           </p>
         </DisclosurePanel>
@@ -121,7 +121,7 @@ function ConstraintsSection({
               onClickAddConstraint={onAddConstraint}
               onClickRemoveConstraint={onRemoveConstraint}
               onChangeCondition={(constraintId, parameterId, event) => {
-                onChangeCondition(constraintId, parameterId, event.target.value)
+                onChangeCondition(constraintId, parameterId, event.target.value);
               }}
               onToggleCondition={onToggleCondition}
             />
@@ -130,10 +130,10 @@ function ConstraintsSection({
             constraintTexts={constraints.constraintTexts}
             constraintDirectEditMode={constraints.constraintDirectEditMode}
             onChangeConstraintFormula={(e) => {
-              onChangeConstraintFormula(e.target.value)
+              onChangeConstraintFormula(e.target.value);
             }}
             onValidateConstraintFormula={(e) => {
-              onValidateConstraintFormula(e.target.value)
+              onValidateConstraintFormula(e.target.value);
             }}
             constraintSyntaxErrorLine={constraints.constraintSyntaxErrorLine}
             onToggleConstraintDirectEditMode={onToggleConstraintDirectEditMode}
@@ -144,31 +144,31 @@ function ConstraintsSection({
         </div>
       )}
     </Section>
-  )
+  );
 }
 
 interface ConstraintTablesProps {
-  constraints: Constraint[]
-  parameters: Parameter[]
-  onToggleCondition: (constraintId: string, parameterId: string) => void
+  constraints: Constraint[];
+  parameters: Parameter[];
+  onToggleCondition: (constraintId: string, parameterId: string) => void;
   onChangeCondition: (
     constraintId: string,
     parameterId: string,
     event: React.ChangeEvent<HTMLInputElement>,
-  ) => void
-  onClickAddConstraint: () => void
-  onClickRemoveConstraint: () => void
+  ) => void;
+  onClickAddConstraint: () => void;
+  onClickRemoveConstraint: () => void;
 }
 
 function hasConditionPredicate(predicate: string) {
-  return predicate.trim() !== ''
+  return predicate.trim() !== "";
 }
 
-function getConditionRowBackgroundClass(ifOrThen: 'if' | 'then', predicate: string) {
+function getConditionRowBackgroundClass(ifOrThen: "if" | "then", predicate: string) {
   if (!hasConditionPredicate(predicate)) {
-    return ''
+    return "";
   }
-  return ifOrThen === 'if' ? 'bg-sky-100 dark:bg-sky-950' : 'bg-blue-200 dark:bg-blue-950'
+  return ifOrThen === "if" ? "bg-sky-100 dark:bg-sky-950" : "bg-blue-200 dark:bg-blue-950";
 }
 
 function ConstraintTables({
@@ -210,7 +210,7 @@ function ConstraintTables({
                       fontMono={true}
                       aria-label={`Constraint ${(i + 1).toString()} ${getParameterName(parameters, condition.parameterId)} ${condition.ifOrThen}`}
                       onClick={() => {
-                        onToggleCondition(constraint.id, condition.parameterId)
+                        onToggleCondition(constraint.id, condition.parameterId);
                       }}
                     >
                       {condition.ifOrThen}
@@ -220,7 +220,7 @@ function ConstraintTables({
                       value={condition.predicate}
                       isValid={condition.isValid}
                       onChange={(e) => {
-                        onChangeCondition(constraint.id, condition.parameterId, e)
+                        onChangeCondition(constraint.id, condition.parameterId, e);
                       }}
                     />
                   </div>
@@ -231,18 +231,18 @@ function ConstraintTables({
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 interface ConstraintEditorProps {
-  constraintTexts: ConstraintText[]
-  constraintDirectEditMode: boolean
-  onToggleConstraintDirectEditMode: () => void
-  onChangeConstraintFormula: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
-  onValidateConstraintFormula: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
-  constraintSyntaxErrorLine: number | null
-  onClickResetConstraints: () => void
-  skipDirectEditConfirm: boolean
+  constraintTexts: ConstraintText[];
+  constraintDirectEditMode: boolean;
+  onToggleConstraintDirectEditMode: () => void;
+  onChangeConstraintFormula: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onValidateConstraintFormula: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  constraintSyntaxErrorLine: number | null;
+  onClickResetConstraints: () => void;
+  skipDirectEditConfirm: boolean;
 }
 
 function ConstraintEditor({
@@ -255,9 +255,9 @@ function ConstraintEditor({
   onClickResetConstraints,
   skipDirectEditConfirm,
 }: ConstraintEditorProps) {
-  const [isEditing, setIsEditing] = useState(false)
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
-  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
+  const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   return (
     <div className="mt-3">
       {constraintDirectEditMode && isEditing ? (
@@ -267,14 +267,14 @@ function ConstraintEditor({
           </Label>
           <Textarea
             className="max-h-50 min-h-30 w-full cursor-text rounded border border-black bg-white p-4 font-mono text-sm text-black data-focus:border-transparent data-focus:ring-3 data-focus:ring-blue-500 data-focus:outline-none dark:border-gray-500 dark:bg-gray-600 dark:text-white"
-            value={constraintTexts.map((c) => c.text).join('\n')}
+            value={constraintTexts.map((c) => c.text).join("\n")}
             autoFocus={true}
             onChange={(e) => {
-              onChangeConstraintFormula(e)
+              onChangeConstraintFormula(e);
             }}
             onBlur={(e) => {
-              onValidateConstraintFormula(e)
-              setIsEditing(false)
+              onValidateConstraintFormula(e);
+              setIsEditing(false);
             }}
           />
         </Field>
@@ -289,11 +289,11 @@ function ConstraintEditor({
               size="sm"
               onClick={() => {
                 if (skipDirectEditConfirm) {
-                  onToggleConstraintDirectEditMode()
-                  setIsEditing(true)
-                  return
+                  onToggleConstraintDirectEditMode();
+                  setIsEditing(true);
+                  return;
                 }
-                setIsConfirmDialogOpen(true)
+                setIsConfirmDialogOpen(true);
               }}
             >
               Edit Directly
@@ -303,11 +303,11 @@ function ConstraintEditor({
             data-testid="constraint-formula-preview"
             className={
               constraintDirectEditMode
-                ? 'max-h-50 min-h-30 overflow-x-auto rounded bg-white p-4 font-mono text-sm text-black dark:bg-gray-600 dark:text-white'
-                : 'max-h-50 min-h-30 overflow-x-auto rounded bg-gray-100 p-4 font-mono text-sm text-black dark:bg-gray-600 dark:text-white'
+                ? "max-h-50 min-h-30 overflow-x-auto rounded bg-white p-4 font-mono text-sm text-black dark:bg-gray-600 dark:text-white"
+                : "max-h-50 min-h-30 overflow-x-auto rounded bg-gray-100 p-4 font-mono text-sm text-black dark:bg-gray-600 dark:text-white"
             }
             onClick={() => {
-              setIsEditing(true)
+              setIsEditing(true);
             }}
           >
             {constraintTexts.map((constraintText, index) => (
@@ -316,8 +316,8 @@ function ConstraintEditor({
                 data-testid={`constraint-formula-line-${(index + 1).toString()}`}
                 className={
                   constraintSyntaxErrorLine === index + 1
-                    ? 'underline decoration-red-500 decoration-wavy underline-offset-2 dark:decoration-red-400'
-                    : ''
+                    ? "underline decoration-red-500 decoration-wavy underline-offset-2 dark:decoration-red-400"
+                    : ""
                 }
               >{`${constraintText.text}\n`}</code>
             ))}
@@ -329,7 +329,7 @@ function ConstraintEditor({
           type="warning"
           size="md"
           onClick={() => {
-            setIsResetDialogOpen(true)
+            setIsResetDialogOpen(true);
           }}
         >
           Reset Constraints
@@ -343,12 +343,12 @@ function ConstraintEditor({
         cancelLabel="Cancel"
         confirmButtonType="danger"
         onConfirm={() => {
-          setIsConfirmDialogOpen(false)
-          onToggleConstraintDirectEditMode()
-          setIsEditing(true)
+          setIsConfirmDialogOpen(false);
+          onToggleConstraintDirectEditMode();
+          setIsEditing(true);
         }}
         onCancel={() => {
-          setIsConfirmDialogOpen(false)
+          setIsConfirmDialogOpen(false);
         }}
       />
       <ConfirmDialog
@@ -359,20 +359,20 @@ function ConstraintEditor({
         cancelLabel="Cancel"
         confirmButtonType="warning"
         onConfirm={() => {
-          setIsResetDialogOpen(false)
-          onClickResetConstraints()
+          setIsResetDialogOpen(false);
+          onClickResetConstraints();
         }}
         onCancel={() => {
-          setIsResetDialogOpen(false)
+          setIsResetDialogOpen(false);
         }}
       />
     </div>
-  )
+  );
 }
 
 function getParameterName(parameters: Parameter[], parameterId: string): string {
-  const parameter = parameters.find((p) => p.id === parameterId)
-  return parameter ? parameter.name : ''
+  const parameter = parameters.find((p) => p.id === parameterId);
+  return parameter ? parameter.name : "";
 }
 
-export default ConstraintsSection
+export default ConstraintsSection;

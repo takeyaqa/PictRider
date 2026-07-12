@@ -1,14 +1,20 @@
-import { Checkbox, NumberInput, RepeatableFieldset, Section, Switch } from '../../shared/components'
-import type { Parameter, SubModels } from '../../types'
-import { useConfig } from '../config'
+import {
+  Checkbox,
+  NumberInput,
+  RepeatableFieldset,
+  Section,
+  Switch,
+} from "../../shared/components";
+import type { Parameter, SubModels } from "../../types";
+import { useConfig } from "../config";
 
 interface SubModelsSectionProps {
-  subModels: SubModels
-  parameters: Parameter[]
-  onClickSubModelParameters: (subModelId: string, parameterId: string, checked: boolean) => void
-  onChangeSubModelOrder: (id: string, order: number) => void
-  onAddSubModel: () => void
-  onRemoveSubModel: () => void
+  subModels: SubModels;
+  parameters: Parameter[];
+  onClickSubModelParameters: (subModelId: string, parameterId: string, checked: boolean) => void;
+  onChangeSubModelOrder: (id: string, order: number) => void;
+  onAddSubModel: () => void;
+  onRemoveSubModel: () => void;
 }
 
 function SubModelsSection({
@@ -19,7 +25,7 @@ function SubModelsSection({
   onAddSubModel,
   onRemoveSubModel,
 }: SubModelsSectionProps) {
-  const { config, handlers: configHandlers } = useConfig()
+  const { config, handlers: configHandlers } = useConfig();
 
   return (
     <Section>
@@ -30,7 +36,7 @@ function SubModelsSection({
             label="Enable Sub-Models"
             checked={config.enableSubModels}
             onChange={(checked) => {
-              configHandlers.handleChangeConfigCheckbox('enableSubModels', checked)
+              configHandlers.handleChangeConfigCheckbox("enableSubModels", checked);
             }}
           />
         </div>
@@ -57,7 +63,7 @@ function SubModelsSection({
                         aria-label={`Sub-Model ${(i + 1).toString()} ${parameter.name}`}
                         checked={subModel.parameterIds.includes(parameter.id)}
                         onChange={(checked) => {
-                          onClickSubModelParameters(subModel.id, parameter.id, checked)
+                          onClickSubModelParameters(subModel.id, parameter.id, checked);
                         }}
                       />
                     </div>
@@ -71,7 +77,7 @@ function SubModelsSection({
                     min={2}
                     max={parameters.length}
                     onChange={(e) => {
-                      onChangeSubModelOrder(subModel.id, Number(e.target.value))
+                      onChangeSubModelOrder(subModel.id, Number(e.target.value));
                     }}
                   />
                 </div>
@@ -80,7 +86,7 @@ function SubModelsSection({
           ))}
       </div>
     </Section>
-  )
+  );
 }
 
-export default SubModelsSection
+export default SubModelsSection;

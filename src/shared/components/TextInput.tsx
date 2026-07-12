@@ -1,16 +1,16 @@
-import { Field, Label, Input } from '@headlessui/react'
+import { Field, Label, Input } from "@headlessui/react";
 
 interface TextInputProps {
-  label: string
-  value: string
-  isValid: boolean
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  label: string;
+  value: string;
+  isValid: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function TextInput({ label, value, isValid, onChange }: TextInputProps) {
   const validClass = isValid
-    ? 'border-black data-focus:ring-blue-500'
-    : 'border-red-500 data-focus:ring-red-500'
+    ? "border-black data-focus:ring-blue-500"
+    : "border-red-500 data-focus:ring-red-500";
   return (
     <Field>
       <Label className="hidden">{label}</Label>
@@ -22,7 +22,7 @@ function TextInput({ label, value, isValid, onChange }: TextInputProps) {
         onChange={onChange}
       />
     </Field>
-  )
+  );
 }
 
-export default TextInput
+export default TextInput;

@@ -1,9 +1,9 @@
-import { Switch as HeadlessUiSwitch, Field, Label } from '@headlessui/react'
+import { Switch as HeadlessUiSwitch, Field, Label } from "@headlessui/react";
 
 interface SwitchProps {
-  label: string
-  checked: boolean
-  onChange: (checked: boolean) => void
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
 }
 
 function Switch({ label, checked, onChange }: SwitchProps) {
@@ -21,7 +21,7 @@ function Switch({ label, checked, onChange }: SwitchProps) {
       </HeadlessUiSwitch>
       <Label className="hidden cursor-pointer">{label}</Label>
     </Field>
-  )
+  );
 }
 
-export default Switch
+export default Switch;

@@ -1,19 +1,19 @@
-import { PictRunner } from '@takeyaqa/pict-wasm'
-import { Button, Section } from '../../shared/components'
-import { runPict } from '../../shared/helpers'
-import { usePictRunner } from '../../shared/hooks'
-import type { Constraints, Parameters, Result, SubModels } from '../../types'
-import { useConfig } from '../config'
+import { PictRunner } from "@takeyaqa/pict-wasm";
+import { Button, Section } from "../../shared/components";
+import { runPict } from "../../shared/helpers";
+import { usePictRunner } from "../../shared/hooks";
+import type { Constraints, Parameters, Result, SubModels } from "../../types";
+import { useConfig } from "../config";
 
 interface MenuSectionProps {
-  pictRunnerInjection?: PictRunner // use for testing
-  canClearResult: boolean
-  parameters: Parameters
-  constraints: Constraints
-  subModels: SubModels
-  onClearInput: () => void
-  onClearResult: () => void
-  setResult: (result: Result) => void
+  pictRunnerInjection?: PictRunner; // use for testing
+  canClearResult: boolean;
+  parameters: Parameters;
+  constraints: Constraints;
+  subModels: SubModels;
+  onClearInput: () => void;
+  onClearResult: () => void;
+  setResult: (result: Result) => void;
 }
 
 function MenuSection({
@@ -26,24 +26,24 @@ function MenuSection({
   onClearResult,
   setResult,
 }: MenuSectionProps) {
-  const { pictRunner, pictRunnerLoaded } = usePictRunner(pictRunnerInjection)
-  const { config } = useConfig()
+  const { pictRunner, pictRunnerLoaded } = usePictRunner(pictRunnerInjection);
+  const { config } = useConfig();
 
   const containsInvalidValues = parameters.parameters.some(
     (p) => !p.isValidName || !p.isValidValues,
-  )
+  );
   const containsInvalidConstraints = constraints.constraints.some((c) =>
     c.conditions.some((cond) => !cond.isValid),
-  )
+  );
   const hasSyntaxErrorsInDirectEditMode =
-    constraints.constraintDirectEditMode && constraints.constraintErrors.length > 0
+    constraints.constraintDirectEditMode && constraints.constraintErrors.length > 0;
 
   const canRunPict =
     !containsInvalidValues &&
     !containsInvalidConstraints &&
     !hasSyntaxErrorsInDirectEditMode &&
     pictRunnerLoaded &&
-    pictRunner.current
+    pictRunner.current;
 
   function handleClickRun() {
     if (
@@ -53,7 +53,7 @@ function MenuSection({
       !pictRunnerLoaded ||
       !pictRunner.current
     ) {
-      return
+      return;
     }
     const result = runPict(
       pictRunner.current,
@@ -61,8 +61,8 @@ function MenuSection({
       constraints.constraintTexts,
       subModels.subModels,
       config,
-    )
-    setResult(result)
+    );
+    setResult(result);
   }
 
   return (
@@ -85,7 +85,7 @@ function MenuSection({
         </li>
       </menu>
     </Section>
-  )
+  );
 }
 
-export default MenuSection
+export default MenuSection;

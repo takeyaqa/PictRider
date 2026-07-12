@@ -1,275 +1,275 @@
-import type { Draft } from 'immer'
-import { parseConstraints } from '../../pict-constraints-parser'
-import { fixConstraint, printConstraints, uuidv4 } from '../../shared/helpers'
-import type { Message, Parameter, Model, Condition, Constraint } from '../../types'
+import type { Draft } from "immer";
+import { parseConstraints } from "../../pict-constraints-parser";
+import { fixConstraint, printConstraints, uuidv4 } from "../../shared/helpers";
+import type { Message, Parameter, Model, Condition, Constraint } from "../../types";
 
 export type ModelAction =
   // Parameter actions
   | {
-      type: 'changeParameter'
+      type: "changeParameter";
       payload: {
-        id: string
-        field: 'name' | 'values'
-        value: string
-      }
+        id: string;
+        field: "name" | "values";
+        value: string;
+      };
     }
   | {
-      type: 'addParameterRow'
+      type: "addParameterRow";
       payload: {
-        id: string
-        target: 'above' | 'below'
-      }
+        id: string;
+        target: "above" | "below";
+      };
     }
   | {
-      type: 'removeParameterRow'
+      type: "removeParameterRow";
       payload: {
-        id: string
-      }
+        id: string;
+      };
     }
   // Constraint actions
   | {
-      type: 'toggleCondition'
+      type: "toggleCondition";
       payload: {
-        constraintId: string
-        parameterId: string
-      }
+        constraintId: string;
+        parameterId: string;
+      };
     }
   | {
-      type: 'changeCondition'
+      type: "changeCondition";
       payload: {
-        constraintId: string
-        parameterId: string
-        value: string
-      }
+        constraintId: string;
+        parameterId: string;
+        value: string;
+      };
     }
   | {
-      type: 'changeConstraintFormula'
+      type: "changeConstraintFormula";
       payload: {
-        value: string
-      }
+        value: string;
+      };
     }
   | {
-      type: 'validateConstraintFormula'
+      type: "validateConstraintFormula";
       payload: {
-        value: string
-      }
+        value: string;
+      };
     }
   | {
-      type: 'addConstraint'
+      type: "addConstraint";
     }
   | {
-      type: 'removeConstraint'
+      type: "removeConstraint";
     }
   | {
-      type: 'toggleConstraintDirectEditMode'
+      type: "toggleConstraintDirectEditMode";
     }
   | {
-      type: 'resetConstraints'
+      type: "resetConstraints";
     }
   // Sub-Model actions
   | {
-      type: 'clickSubModelParameters'
+      type: "clickSubModelParameters";
       payload: {
-        subModelId: string
-        parameterId: string
-        checked: boolean
-      }
+        subModelId: string;
+        parameterId: string;
+        checked: boolean;
+      };
     }
   | {
-      type: 'changeSubModelOrder'
+      type: "changeSubModelOrder";
       payload: {
-        id: string
-        order: number
-      }
+        id: string;
+        order: number;
+      };
     }
   | {
-      type: 'addSubModel'
+      type: "addSubModel";
     }
   | {
-      type: 'removeSubModel'
+      type: "removeSubModel";
     }
   // global actions
   | {
-      type: 'clear'
-    }
+      type: "clear";
+    };
 
 const invalidParameterNameCharacters = [
-  '#', // comments identifier, constraints operator
-  ':', // parameter and values separator
-  '<', // values reference identifier, constraints operator
-  '>', // values reference identifier, constraints operator
-  '(', // values weight identifier
-  ')', // values weight identifier
-  '|', // values alias identifier
-  ',', // values separator
-  '~', // values negation identifier
-  '{', // sub-models identifier
-  '}', // sub-models identifier
-  '@', // sub-models identifier
-  '[', // constraints parameter identifier
-  ']', // constraints parameter identifier
-  ';', // constraints terminator
-  '=', // constraints operator
-  '!', // constraints operator
-  '+', // constraints operator
-  '&', // constraints operator
-  '*', // pattern string wildcard
-  '?', // pattern string wildcard
-]
+  "#", // comments identifier, constraints operator
+  ":", // parameter and values separator
+  "<", // values reference identifier, constraints operator
+  ">", // values reference identifier, constraints operator
+  "(", // values weight identifier
+  ")", // values weight identifier
+  "|", // values alias identifier
+  ",", // values separator
+  "~", // values negation identifier
+  "{", // sub-models identifier
+  "}", // sub-models identifier
+  "@", // sub-models identifier
+  "[", // constraints parameter identifier
+  "]", // constraints parameter identifier
+  ";", // constraints terminator
+  "=", // constraints operator
+  "!", // constraints operator
+  "+", // constraints operator
+  "&", // constraints operator
+  "*", // pattern string wildcard
+  "?", // pattern string wildcard
+];
 
 const invalidParameterValuesCharacters = [
-  '#', // comments identifier, constraints operator
-  ':', // parameter and values separator
-  '{', // sub-models identifier
-  '}', // sub-models identifier
-  '@', // sub-models identifier
-  '[', // constraints parameter identifier
-  ']', // constraints parameter identifier
-  ';', // constraints terminator
-  '=', // constraints operator
-  '!', // constraints operator
-  '+', // constraints operator
-  '&', // constraints operator
-  '*', // pattern string wildcard
-  '?', // pattern string wildcard
-]
+  "#", // comments identifier, constraints operator
+  ":", // parameter and values separator
+  "{", // sub-models identifier
+  "}", // sub-models identifier
+  "@", // sub-models identifier
+  "[", // constraints parameter identifier
+  "]", // constraints parameter identifier
+  ";", // constraints terminator
+  "=", // constraints operator
+  "!", // constraints operator
+  "+", // constraints operator
+  "&", // constraints operator
+  "*", // pattern string wildcard
+  "?", // pattern string wildcard
+];
 
 const invalidConstraintCharacters = [
-  ':', // parameter and values separator
-  '(', // values weight identifier
-  ')', // values weight identifier
-  '|', // values alias identifier
-  '~', // values negation identifier
-  '{', // sub-models identifier
-  '}', // sub-models identifier
-  '@', // sub-models identifier
-  '[', // constraints parameter identifier
-  ']', // constraints parameter identifier
-  ';', // constraints terminator
-]
+  ":", // parameter and values separator
+  "(", // values weight identifier
+  ")", // values weight identifier
+  "|", // values alias identifier
+  "~", // values negation identifier
+  "{", // sub-models identifier
+  "}", // sub-models identifier
+  "@", // sub-models identifier
+  "[", // constraints parameter identifier
+  "]", // constraints parameter identifier
+  ";", // constraints terminator
+];
 
 export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
   switch (action.type) {
-    case 'changeParameter': {
-      const { id, field, value } = action.payload
+    case "changeParameter": {
+      const { id, field, value } = action.payload;
       // Reset validation flags
       for (const parameter of draft.parameters) {
-        parameter.isValidName = true
-        parameter.isValidValues = true
+        parameter.isValidName = true;
+        parameter.isValidValues = true;
       }
-      const newParameter = draft.parameters.find((p) => p.id === id)
+      const newParameter = draft.parameters.find((p) => p.id === id);
       if (!newParameter) {
         // may not be reached
-        break
+        break;
       }
-      newParameter[field] = value
-      const errors: Message[] = []
+      newParameter[field] = value;
+      const errors: Message[] = [];
 
       // Check for duplicate parameter
-      if (field === 'name') {
-        const parameterNames = draft.parameters.map((p) => p.name)
+      if (field === "name") {
+        const parameterNames = draft.parameters.map((p) => p.name);
         const duplicates = parameterNames.filter(
           (item, index) => item && parameterNames.indexOf(item) !== index,
-        )
+        );
         if (duplicates.length > 0) {
           for (const parameter of draft.parameters) {
             if (duplicates.includes(parameter.name)) {
-              parameter.isValidName = false
+              parameter.isValidName = false;
             }
           }
-          errors.push({ id: uuidv4(), text: 'Parameter names must be unique.' })
+          errors.push({ id: uuidv4(), text: "Parameter names must be unique." });
         }
       }
 
       // Check for invalid characters
-      let invalidParameterName = false
-      let invalidParameterValues = false
+      let invalidParameterName = false;
+      let invalidParameterValues = false;
       for (const parameter of draft.parameters) {
         if (invalidParameterNameCharacters.some((char) => parameter.name.includes(char))) {
-          parameter.isValidName = false
-          invalidParameterName = true
+          parameter.isValidName = false;
+          invalidParameterName = true;
         }
         if (invalidParameterValuesCharacters.some((char) => parameter.values.includes(char))) {
-          parameter.isValidValues = false
-          invalidParameterValues = true
+          parameter.isValidValues = false;
+          invalidParameterValues = true;
         }
       }
       if (invalidParameterName) {
         errors.push({
           id: uuidv4(),
-          text: `Parameter name cannot contain special characters: ${invalidParameterNameCharacters.map((s) => `"${s}"`).join(', ')}`,
-        })
+          text: `Parameter name cannot contain special characters: ${invalidParameterNameCharacters.map((s) => `"${s}"`).join(", ")}`,
+        });
       }
       if (invalidParameterValues) {
         errors.push({
           id: uuidv4(),
-          text: `Parameter values cannot contain special characters: ${invalidParameterValuesCharacters.map((s) => `"${s}"`).join(', ')}`,
-        })
+          text: `Parameter values cannot contain special characters: ${invalidParameterValuesCharacters.map((s) => `"${s}"`).join(", ")}`,
+        });
       }
-      draft.parameterErrors = errors
-      if (field === 'name') {
-        syncConstraintTextsFromTable(draft)
+      draft.parameterErrors = errors;
+      if (field === "name") {
+        syncConstraintTextsFromTable(draft);
       }
 
-      break
+      break;
     }
 
-    case 'addParameterRow': {
-      const { id, target } = action.payload
+    case "addParameterRow": {
+      const { id, target } = action.payload;
       if (draft.parameters.length >= 25) {
         // may not be reached
-        break
+        break;
       }
 
       // first, add parameter row
-      const newParameterId = uuidv4()
+      const newParameterId = uuidv4();
       const newParameter: Parameter = {
         id: newParameterId,
-        name: '',
-        values: '',
+        name: "",
+        values: "",
         isValidName: true,
         isValidValues: true,
-      }
-      const parameterIndex = draft.parameters.findIndex((p) => p.id === id)
+      };
+      const parameterIndex = draft.parameters.findIndex((p) => p.id === id);
       if (parameterIndex >= 0) {
-        const insertParameterIndex = target === 'above' ? parameterIndex : parameterIndex + 1
-        draft.parameters.splice(insertParameterIndex, 0, newParameter)
+        const insertParameterIndex = target === "above" ? parameterIndex : parameterIndex + 1;
+        draft.parameters.splice(insertParameterIndex, 0, newParameter);
       }
 
       // second, add condition row in constraints
       for (const constraint of draft.constraints) {
         const conditionIndex = constraint.conditions.findIndex(
           (condition) => condition.parameterId === id,
-        )
+        );
         if (conditionIndex < 0) {
-          continue
+          continue;
         }
         const newCondition: Condition = {
-          ifOrThen: 'if',
-          predicate: '',
+          ifOrThen: "if",
+          predicate: "",
           parameterId: newParameterId,
           isValid: true,
-        }
-        const insertConditionIndex = target === 'above' ? conditionIndex : conditionIndex + 1
-        constraint.conditions.splice(insertConditionIndex, 0, newCondition)
+        };
+        const insertConditionIndex = target === "above" ? conditionIndex : conditionIndex + 1;
+        constraint.conditions.splice(insertConditionIndex, 0, newCondition);
       }
-      syncConstraintTextsFromTable(draft)
-      break
+      syncConstraintTextsFromTable(draft);
+      break;
     }
 
-    case 'removeParameterRow': {
-      const { id } = action.payload
+    case "removeParameterRow": {
+      const { id } = action.payload;
       if (draft.parameters.length <= 1) {
         // may not be reached
-        break
+        break;
       }
 
       // First, remove parameter from sub-models
       for (const subModel of draft.subModels) {
-        let parameterIndex = subModel.parameterIds.findIndex((parameterId) => parameterId === id)
+        let parameterIndex = subModel.parameterIds.findIndex((parameterId) => parameterId === id);
         while (parameterIndex >= 0) {
-          subModel.parameterIds.splice(parameterIndex, 1)
-          parameterIndex = subModel.parameterIds.findIndex((parameterId) => parameterId === id)
+          subModel.parameterIds.splice(parameterIndex, 1);
+          parameterIndex = subModel.parameterIds.findIndex((parameterId) => parameterId === id);
         }
       }
 
@@ -277,221 +277,221 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
       for (const constraint of draft.constraints) {
         let conditionIndex = constraint.conditions.findIndex(
           (condition) => condition.parameterId === id,
-        )
+        );
         while (conditionIndex >= 0) {
-          constraint.conditions.splice(conditionIndex, 1)
+          constraint.conditions.splice(conditionIndex, 1);
           conditionIndex = constraint.conditions.findIndex(
             (condition) => condition.parameterId === id,
-          )
+          );
         }
       }
 
       // Third, remove parameter row
-      let parameterIndex = draft.parameters.findIndex((parameter) => parameter.id === id)
+      let parameterIndex = draft.parameters.findIndex((parameter) => parameter.id === id);
       while (parameterIndex >= 0) {
-        draft.parameters.splice(parameterIndex, 1)
-        parameterIndex = draft.parameters.findIndex((parameter) => parameter.id === id)
+        draft.parameters.splice(parameterIndex, 1);
+        parameterIndex = draft.parameters.findIndex((parameter) => parameter.id === id);
       }
-      syncConstraintTextsFromTable(draft)
-      break
+      syncConstraintTextsFromTable(draft);
+      break;
     }
 
-    case 'toggleCondition': {
-      const { constraintId, parameterId } = action.payload
-      const newCondition = searchCondition(draft.constraints, constraintId, parameterId)
-      newCondition.ifOrThen = newCondition.ifOrThen === 'if' ? 'then' : 'if'
+    case "toggleCondition": {
+      const { constraintId, parameterId } = action.payload;
+      const newCondition = searchCondition(draft.constraints, constraintId, parameterId);
+      newCondition.ifOrThen = newCondition.ifOrThen === "if" ? "then" : "if";
 
       draft.constraintTexts = printConstraints(
         fixConstraint(draft.constraints, draft.parameters),
       ).map((text) => ({
         id: uuidv4(),
         text,
-      }))
-      break
+      }));
+      break;
     }
 
-    case 'changeCondition': {
-      const { constraintId, parameterId, value } = action.payload
-      const newCondition = searchCondition(draft.constraints, constraintId, parameterId)
-      newCondition.predicate = value
+    case "changeCondition": {
+      const { constraintId, parameterId, value } = action.payload;
+      const newCondition = searchCondition(draft.constraints, constraintId, parameterId);
+      newCondition.predicate = value;
       // Reset validation flags
       for (const constraint of draft.constraints) {
         for (const condition of constraint.conditions) {
-          condition.isValid = true
+          condition.isValid = true;
         }
       }
       // Check for invalid characters
-      const errors: Message[] = []
-      let invalidConstraint = false
+      const errors: Message[] = [];
+      let invalidConstraint = false;
       for (const constraint of draft.constraints) {
         for (const condition of constraint.conditions) {
           if (invalidConstraintCharacters.some((char) => condition.predicate.includes(char))) {
-            condition.isValid = false
-            invalidConstraint = true
+            condition.isValid = false;
+            invalidConstraint = true;
           }
         }
       }
       if (invalidConstraint) {
         errors.push({
           id: uuidv4(),
-          text: `Constraints cannot contain special characters: ${invalidConstraintCharacters.map((s) => `"${s}"`).join(', ')}`,
-        })
+          text: `Constraints cannot contain special characters: ${invalidConstraintCharacters.map((s) => `"${s}"`).join(", ")}`,
+        });
       }
       draft.constraintTexts = printConstraints(
         fixConstraint(draft.constraints, draft.parameters),
       ).map((text) => ({
         id: uuidv4(),
         text,
-      }))
-      draft.constraintErrors = errors
-      draft.constraintSyntaxErrorLine = null
-      break
+      }));
+      draft.constraintErrors = errors;
+      draft.constraintSyntaxErrorLine = null;
+      break;
     }
 
-    case 'changeConstraintFormula': {
-      const { value } = action.payload
-      draft.constraintTexts = value.split('\n').map((text) => ({
+    case "changeConstraintFormula": {
+      const { value } = action.payload;
+      draft.constraintTexts = value.split("\n").map((text) => ({
         id: uuidv4(),
         text,
-      }))
-      break
+      }));
+      break;
     }
 
-    case 'validateConstraintFormula': {
+    case "validateConstraintFormula": {
       if (!draft.constraintDirectEditMode) {
-        break
+        break;
       }
-      const { value } = action.payload
-      const parseResult = parseConstraints(value)
+      const { value } = action.payload;
+      const parseResult = parseConstraints(value);
       if (parseResult.ok) {
-        draft.constraintErrors = []
-        draft.constraintSyntaxErrorLine = null
-        break
+        draft.constraintErrors = [];
+        draft.constraintSyntaxErrorLine = null;
+        break;
       }
-      const lineNumber = getLineNumberFromPosition(value, parseResult.error.position)
+      const lineNumber = getLineNumberFromPosition(value, parseResult.error.position);
       draft.constraintErrors = [
         {
           id: uuidv4(),
           text: `Constraint syntax error at line ${lineNumber.toString()}: ${parseResult.error.message}`,
         },
-      ]
-      draft.constraintSyntaxErrorLine = lineNumber
-      break
+      ];
+      draft.constraintSyntaxErrorLine = lineNumber;
+      break;
     }
 
-    case 'addConstraint': {
+    case "addConstraint": {
       if (draft.constraints.length >= 25) {
         // may not be reached
-        break
+        break;
       }
-      draft.constraints.push(createConstraintFromParameters(draft.parameters))
+      draft.constraints.push(createConstraintFromParameters(draft.parameters));
       draft.constraintTexts.push({
         id: uuidv4(),
-        text: '',
-      })
-      break
+        text: "",
+      });
+      break;
     }
 
-    case 'removeConstraint': {
+    case "removeConstraint": {
       if (draft.constraints.length <= 1) {
         // may not be reached
-        break
+        break;
       }
-      draft.constraints.pop()
-      draft.constraintTexts.pop()
-      break
+      draft.constraints.pop();
+      draft.constraintTexts.pop();
+      break;
     }
 
-    case 'toggleConstraintDirectEditMode': {
-      draft.constraintDirectEditMode = !draft.constraintDirectEditMode
-      break
+    case "toggleConstraintDirectEditMode": {
+      draft.constraintDirectEditMode = !draft.constraintDirectEditMode;
+      break;
     }
 
-    case 'resetConstraints': {
-      draft.constraints = [createConstraintFromParameters(draft.parameters)]
-      draft.constraintTexts = []
-      draft.constraintDirectEditMode = false
-      draft.constraintErrors = []
-      draft.constraintSyntaxErrorLine = null
-      break
+    case "resetConstraints": {
+      draft.constraints = [createConstraintFromParameters(draft.parameters)];
+      draft.constraintTexts = [];
+      draft.constraintDirectEditMode = false;
+      draft.constraintErrors = [];
+      draft.constraintSyntaxErrorLine = null;
+      break;
     }
 
-    case 'clickSubModelParameters': {
-      const { subModelId, parameterId, checked } = action.payload
-      const target = draft.subModels.find((m) => m.id === subModelId)
+    case "clickSubModelParameters": {
+      const { subModelId, parameterId, checked } = action.payload;
+      const target = draft.subModels.find((m) => m.id === subModelId);
       if (!target) {
         // may not be reached
-        break
+        break;
       }
       if (checked) {
-        target.parameterIds.push(parameterId)
-        break
+        target.parameterIds.push(parameterId);
+        break;
       } else {
-        let targetIndex = target.parameterIds.findIndex((paramId) => paramId === parameterId)
+        let targetIndex = target.parameterIds.findIndex((paramId) => paramId === parameterId);
         while (targetIndex >= 0) {
-          target.parameterIds.splice(targetIndex, 1)
-          targetIndex = target.parameterIds.findIndex((paramId) => paramId === parameterId)
+          target.parameterIds.splice(targetIndex, 1);
+          targetIndex = target.parameterIds.findIndex((paramId) => paramId === parameterId);
         }
-        break
+        break;
       }
     }
 
-    case 'changeSubModelOrder': {
-      const { id, order } = action.payload
-      const target = draft.subModels.find((m) => m.id === id)
+    case "changeSubModelOrder": {
+      const { id, order } = action.payload;
+      const target = draft.subModels.find((m) => m.id === id);
       if (!target) {
         // may not be reached
-        break
+        break;
       }
-      target.order = order
-      break
+      target.order = order;
+      break;
     }
 
-    case 'addSubModel': {
+    case "addSubModel": {
       if (draft.subModels.length >= 2) {
         // may not be reached
-        break
+        break;
       }
       draft.subModels.push({
         id: uuidv4(),
         parameterIds: [],
         order: 2,
-      })
-      break
+      });
+      break;
     }
 
-    case 'removeSubModel': {
+    case "removeSubModel": {
       if (draft.subModels.length <= 1) {
         // may not be reached
-        break
+        break;
       }
-      draft.subModels.pop()
-      break
+      draft.subModels.pop();
+      break;
     }
 
-    case 'clear': {
-      const newParameterIds = draft.parameters.map(() => uuidv4())
+    case "clear": {
+      const newParameterIds = draft.parameters.map(() => uuidv4());
       draft.parameters = draft.parameters.map((_, index) => ({
         id: newParameterIds[index],
-        name: '',
-        values: '',
+        name: "",
+        values: "",
         isValidName: true,
         isValidValues: true,
-      }))
-      draft.parameterErrors = []
-      draft.constraints = [createConstraintFromParameters(draft.parameters)]
-      draft.constraintTexts = []
-      draft.constraintDirectEditMode = false
-      draft.constraintErrors = []
-      draft.constraintSyntaxErrorLine = null
+      }));
+      draft.parameterErrors = [];
+      draft.constraints = [createConstraintFromParameters(draft.parameters)];
+      draft.constraintTexts = [];
+      draft.constraintDirectEditMode = false;
+      draft.constraintErrors = [];
+      draft.constraintSyntaxErrorLine = null;
       draft.subModels = [
         {
           id: uuidv4(),
           parameterIds: [],
           order: 2,
         },
-      ]
-      break
+      ];
+      break;
     }
   }
 }
@@ -500,47 +500,47 @@ export function getInitialModel(): Model {
   const parameters = [
     {
       id: uuidv4(),
-      name: 'Type',
-      values: 'Single, Span, Stripe, Mirror, RAID-5',
+      name: "Type",
+      values: "Single, Span, Stripe, Mirror, RAID-5",
       isValidName: true,
       isValidValues: true,
     },
     {
       id: uuidv4(),
-      name: 'Size',
-      values: '10, 100, 500, 1000, 5000, 10000, 40000',
+      name: "Size",
+      values: "10, 100, 500, 1000, 5000, 10000, 40000",
       isValidName: true,
       isValidValues: true,
     },
     {
       id: uuidv4(),
-      name: 'Format method',
-      values: 'Quick, Slow',
+      name: "Format method",
+      values: "Quick, Slow",
       isValidName: true,
       isValidValues: true,
     },
     {
       id: uuidv4(),
-      name: 'File system',
-      values: 'FAT, FAT32, NTFS',
+      name: "File system",
+      values: "FAT, FAT32, NTFS",
       isValidName: true,
       isValidValues: true,
     },
     {
       id: uuidv4(),
-      name: 'Cluster size',
-      values: '512, 1024, 2048, 4096, 8192, 16384, 32768, 65536',
+      name: "Cluster size",
+      values: "512, 1024, 2048, 4096, 8192, 16384, 32768, 65536",
       isValidName: true,
       isValidValues: true,
     },
     {
       id: uuidv4(),
-      name: 'Compression',
-      values: 'ON, OFF',
+      name: "Compression",
+      values: "ON, OFF",
       isValidName: true,
       isValidValues: true,
     },
-  ]
+  ];
   return {
     parameters: parameters,
     constraints: [createConstraintFromParameters(parameters)],
@@ -556,19 +556,19 @@ export function getInitialModel(): Model {
     ],
     parameterErrors: [],
     constraintErrors: [],
-  }
+  };
 }
 
 function createConstraintFromParameters(parameters: Parameter[]): Constraint {
   const conditions: Condition[] = parameters.map((p) => {
     return {
-      ifOrThen: 'if',
-      predicate: '',
+      ifOrThen: "if",
+      predicate: "",
       parameterId: p.id,
       isValid: true,
-    }
-  })
-  return { id: uuidv4(), conditions: conditions }
+    };
+  });
+  return { id: uuidv4(), conditions: conditions };
 }
 
 function searchCondition(
@@ -576,32 +576,32 @@ function searchCondition(
   constraintId: string,
   parameterId: string,
 ): Condition {
-  const constraint = constraints.find((c) => c.id === constraintId)
+  const constraint = constraints.find((c) => c.id === constraintId);
   if (!constraint) {
-    throw new Error('Constraint not found')
+    throw new Error("Constraint not found");
   }
-  const condition = constraint.conditions.find((p) => p.parameterId === parameterId)
+  const condition = constraint.conditions.find((p) => p.parameterId === parameterId);
   if (!condition) {
-    throw new Error('Condition not found')
+    throw new Error("Condition not found");
   }
-  return condition
+  return condition;
 }
 
 function syncConstraintTextsFromTable(draft: Draft<Model>): void {
   if (draft.constraintDirectEditMode) {
-    return
+    return;
   }
   draft.constraintTexts = printConstraints(fixConstraint(draft.constraints, draft.parameters)).map(
     (text) => ({
       id: uuidv4(),
       text,
     }),
-  )
+  );
 }
 
 function getLineNumberFromPosition(value: string, position: number): number {
   if (position <= 0) {
-    return 1
+    return 1;
   }
-  return value.slice(0, position).split('\n').length
+  return value.slice(0, position).split("\n").length;
 }
