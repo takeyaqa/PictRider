@@ -72,7 +72,7 @@ The `usePictRunner` hook wraps `@takeyaqa/pict-wasm`. Components accept an optio
 
 - **Git Workflow**: Always create a new branch from `main` before starting any task
 - **TypeScript**: Strict mode with `typescript-eslint` strict + stylistic rules
-- **Prettier** for formatting
+- **oxfmt** for formatting
 - **React**: Functional components only, hooks for state/effects
 - **IDs**: Use `uuidv4()` from `shared/helpers` for generating unique identifiers
 - **Validation**: Input validation happens in reducers, setting `isValid*` flags on state objects

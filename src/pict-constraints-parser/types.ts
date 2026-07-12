@@ -121,4 +121,5 @@ export interface ParseError {
 }
 
 export type ParseResult<T> =
-  { ok: true; value: T } | { ok: false; error: ParseError }
+  | { ok: true; value: T }
+  | { ok: false; error: ParseError }

@@ -12,15 +12,14 @@ updates:
       prefix: "build"
       include: "scope"
     groups:
-      eslint-and-prettier:
+      eslint-and-oxfmt:
         patterns:
           - "@eslint/*"
           - "eslint"
           - "eslint-config-prettier"
           - "eslint-plugin-playwright"
           - "eslint-plugin-react-*"
-          - "prettier"
-          - "prettier-plugin-tailwindcss"
+          - "oxfmt"
           - "typescript-eslint"
       immer:
         patterns:
