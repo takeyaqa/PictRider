@@ -9,7 +9,6 @@ function usePictRunner(pictRunnerInjection?: PictRunner) {
     // Use the injected PictRunner for testing
     if (pictRunnerInjection) {
       pictRunner.current = pictRunnerInjection;
-      // eslint-disable-next-line react-hooks/set-state-in-effect, react-x/set-state-in-effect
       setPictRunnerLoaded(true);
       return;
     }
@@ -18,7 +17,6 @@ function usePictRunner(pictRunnerInjection?: PictRunner) {
       setPictRunnerLoaded(true);
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadPictRunner();
   }, [pictRunnerInjection]);
 
