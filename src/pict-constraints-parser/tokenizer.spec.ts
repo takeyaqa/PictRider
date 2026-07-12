@@ -11,16 +11,7 @@ describe('tokenize', () => {
     it('should tokenize lowercase keywords', () => {
       const tokens = tokenize('if then else and or not in like')
       const types = tokens.slice(0, -1).map((t) => t.type)
-      expect(types).toEqual([
-        'IF',
-        'THEN',
-        'ELSE',
-        'AND',
-        'OR',
-        'NOT',
-        'IN',
-        'LIKE',
-      ])
+      expect(types).toEqual(['IF', 'THEN', 'ELSE', 'AND', 'OR', 'NOT', 'IN', 'LIKE'])
     })
 
     it('should tokenize mixed case keywords', () => {
@@ -256,12 +247,7 @@ describe('tokenize', () => {
     it('should tokenize function call', () => {
       const tokens = tokenize('IsNegative([Param])')
       const types = tokens.slice(0, -1).map((t) => t.type)
-      expect(types).toEqual([
-        'ISNEGATIVE',
-        'LPAREN',
-        'PARAMETER_NAME',
-        'RPAREN',
-      ])
+      expect(types).toEqual(['ISNEGATIVE', 'LPAREN', 'PARAMETER_NAME', 'RPAREN'])
     })
   })
 })

@@ -3,11 +3,7 @@ import type { Config } from '../../types'
 
 type ConfigAction =
   | {
-      type:
-        | 'enableSubModels'
-        | 'enableConstraints'
-        | 'showModelFile'
-        | 'randomizeGeneration'
+      type: 'enableSubModels' | 'enableConstraints' | 'showModelFile' | 'randomizeGeneration'
       payload: { checked: boolean }
     }
   | {
@@ -15,10 +11,7 @@ type ConfigAction =
       payload: { e: React.ChangeEvent<HTMLInputElement> }
     }
 
-export function configReducer(
-  draft: Draft<Config>,
-  action: ConfigAction,
-): void {
+export function configReducer(draft: Draft<Config>, action: ConfigAction): void {
   switch (action.type) {
     case 'enableSubModels': {
       const { checked } = action.payload
@@ -38,8 +31,7 @@ export function configReducer(
     case 'orderOfCombinations': {
       const { e } = action.payload
 
-      draft.orderOfCombinations =
-        e.target.value !== '' ? Number(e.target.value) : ''
+      draft.orderOfCombinations = e.target.value !== '' ? Number(e.target.value) : ''
       break
     }
     case 'randomizeGeneration': {

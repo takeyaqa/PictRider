@@ -29,9 +29,7 @@ function ConfirmDialog({
       className="fixed inset-0 z-50 flex items-center justify-center"
     >
       <DialogPanel className="relative w-full max-w-md rounded-md border border-gray-400 bg-white p-4 shadow-lg dark:border-gray-500 dark:bg-gray-700">
-        <DialogTitle className="text-lg font-bold text-black dark:text-white">
-          {title}
-        </DialogTitle>
+        <DialogTitle className="text-lg font-bold text-black dark:text-white">{title}</DialogTitle>
         <p className="mt-2 text-sm text-black dark:text-white">{message}</p>
         <div className="mt-4 flex justify-end gap-3">
           <Button type="secondary" size="sm" onClick={onCancel}>

@@ -6,39 +6,24 @@ import { useConfig } from '../config'
 
 function createCsvContent(result: Result) {
   const headerRow = result.header.map((h) => `"${h.name}"`).join(',')
-  const bodyRows = result.body.map((row) =>
-    row.values.map((col) => `"${col.value}"`).join(','),
-  )
+  const bodyRows = result.body.map((row) => row.values.map((col) => `"${col.value}"`).join(','))
   return [headerRow, ...bodyRows].join('\n')
 }
 
 function createTsvContent(result: Result) {
   const headerRow = result.header.map((h) => h.name).join('\t')
-  const bodyRows = result.body.map((row) =>
-    row.values.map((col) => col.value).join('\t'),
-  )
+  const bodyRows = result.body.map((row) => row.values.map((col) => col.value).join('\t'))
   return [headerRow, ...bodyRows].join('\n')
 }
 
-function createContent(
-  result: Result,
-  type: 'csv' | 'csvExcel' | 'tsv',
-): [string, string, string] {
+function createContent(result: Result, type: 'csv' | 'csvExcel' | 'tsv'): [string, string, string] {
   switch (type) {
     case 'csv':
       return [createCsvContent(result), 'text/csv', 'result.csv']
     case 'csvExcel':
-      return [
-        `\uFEFF${createCsvContent(result)}`,
-        'text/csv',
-        'result_excel.csv',
-      ]
+      return [`\uFEFF${createCsvContent(result)}`, 'text/csv', 'result_excel.csv']
     case 'tsv':
-      return [
-        createTsvContent(result),
-        'text/tab-separated-values',
-        'result.tsv',
-      ]
+      return [createTsvContent(result), 'text/tab-separated-values', 'result.tsv']
   }
 }
 
@@ -75,10 +60,7 @@ function ResultSection({ result }: ResultSectionProps) {
     <Section>
       {config.showModelFile && <ModelFile modelFile={result.modelFile} />}
       <div className="mb-4 grid grid-cols-2 items-center">
-        <h2
-          className="justify-self-start text-xl font-bold"
-          id="result_heading"
-        >
+        <h2 className="justify-self-start text-xl font-bold" id="result_heading">
           Result
         </h2>
         <div className="justify-self-end">
@@ -87,15 +69,10 @@ function ResultSection({ result }: ResultSectionProps) {
       </div>
       <AlertMessage messages={result.messages} />
       <div className="overflow-x-auto">
-        <table
-          className="min-w-full border-collapse text-left"
-          aria-labelledby="result_heading"
-        >
+        <table className="min-w-full border-collapse text-left" aria-labelledby="result_heading">
           <thead>
             <tr className="bg-gray-100 font-bold dark:bg-gray-600">
-              <th className="border border-black px-1 py-2 sm:px-4 dark:border-gray-500">
-                #
-              </th>
+              <th className="border border-black px-1 py-2 sm:px-4 dark:border-gray-500">#</th>
               {result.header.map((h) => (
                 <th
                   key={h.id}

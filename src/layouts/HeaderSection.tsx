@@ -46,12 +46,7 @@ function HeaderSection() {
                   type="image/svg+xml"
                   media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
                 />
-                <img
-                  src="/github-mark.svg"
-                  alt="GitHub"
-                  width="25"
-                  height="25"
-                />
+                <img src="/github-mark.svg" alt="GitHub" width="25" height="25" />
               </picture>
             </a>
           </li>

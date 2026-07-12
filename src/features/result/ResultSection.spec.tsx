@@ -35,10 +35,7 @@ interface ResultSectionWrapperProps {
   showModelFile?: boolean
 }
 
-function ResultSectionWrapper({
-  result,
-  showModelFile = false,
-}: ResultSectionWrapperProps) {
+function ResultSectionWrapper({ result, showModelFile = false }: ResultSectionWrapperProps) {
   const value = {
     config: { ...getInitialConfig(), showModelFile },
     handlers: {
@@ -66,12 +63,8 @@ describe('ResultSection', () => {
     screen = await render(<ResultSectionWrapper result={null} />)
 
     // assert
-    await expect
-      .element(screen.getByRole('table', { name: 'Result' }))
-      .not.toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('button', { name: 'Download' }))
-      .not.toBeInTheDocument()
+    await expect.element(screen.getByRole('table', { name: 'Result' })).not.toBeInTheDocument()
+    await expect.element(screen.getByRole('button', { name: 'Download' })).not.toBeInTheDocument()
   })
 
   it('Should display result table with header and body', async () => {
@@ -82,23 +75,17 @@ describe('ResultSection', () => {
     await expect.element(screen.getByText('Result')).toBeInTheDocument()
 
     // assert - table
-    await expect
-      .element(screen.getByRole('table', { name: 'Result' }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('table', { name: 'Result' })).toBeInTheDocument()
 
     // assert - body cells
     await expect
       .element(screen.getByRole('cell', { name: 'Single', exact: true }))
       .toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('cell', { name: '10', exact: true }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('cell', { name: '10', exact: true })).toBeInTheDocument()
     await expect
       .element(screen.getByRole('cell', { name: 'Span', exact: true }))
       .toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('cell', { name: '100', exact: true }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('cell', { name: '100', exact: true })).toBeInTheDocument()
   })
 
   it('Should display Download button', async () => {
@@ -106,9 +93,7 @@ describe('ResultSection', () => {
     screen = await render(<ResultSectionWrapper result={sampleResult} />)
 
     // assert
-    await expect
-      .element(screen.getByRole('button', { name: 'Download' }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('button', { name: 'Download' })).toBeInTheDocument()
   })
 
   it('Should not display Model File section by default', async () => {
@@ -121,15 +106,11 @@ describe('ResultSection', () => {
 
   it('Should display Model File section when showModelFile is true', async () => {
     // arrange
-    screen = await render(
-      <ResultSectionWrapper result={sampleResult} showModelFile={true} />,
-    )
+    screen = await render(<ResultSectionWrapper result={sampleResult} showModelFile={true} />)
 
     // assert
     await expect.element(screen.getByText('Model File')).toBeInTheDocument()
-    await expect
-      .element(screen.getByText('Type: Single, Span\nSize: 10, 100'))
-      .toBeInTheDocument()
+    await expect.element(screen.getByText('Type: Single, Span\nSize: 10, 100')).toBeInTheDocument()
   })
 
   it('Should display alert messages when result has messages', async () => {

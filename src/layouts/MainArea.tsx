@@ -37,11 +37,7 @@ function MainArea() {
   }
 
   // Parameter handlers
-  const handleChangeParameter = (
-    id: string,
-    field: 'name' | 'values',
-    value: string,
-  ) => {
+  const handleChangeParameter = (id: string, field: 'name' | 'values', value: string) => {
     dispatch({
       type: 'changeParameter',
       payload: { id, field, value },
@@ -70,11 +66,7 @@ function MainArea() {
     })
   }
 
-  const handleChangeCondition = (
-    constraintId: string,
-    parameterId: string,
-    value: string,
-  ) => {
+  const handleChangeCondition = (constraintId: string, parameterId: string, value: string) => {
     dispatch({
       type: 'changeCondition',
       payload: {
@@ -192,9 +184,7 @@ function MainArea() {
           onValidateConstraintFormula={handleValidateConstraintFormula}
           onAddConstraint={handleAddConstraint}
           onRemoveConstraint={handleRemoveConstraint}
-          onToggleConstraintDirectEditMode={
-            handleToggleConstraintDirectEditMode
-          }
+          onToggleConstraintDirectEditMode={handleToggleConstraintDirectEditMode}
           onChangeCondition={handleChangeCondition}
           onResetConstraints={handleResetConstraints}
         />

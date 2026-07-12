@@ -13,11 +13,7 @@ import type { Parameters } from '../../types'
 
 interface ParametersSectionProps {
   parameters: Parameters
-  onChangeParameter: (
-    id: string,
-    field: 'name' | 'values',
-    value: string,
-  ) => void
+  onChangeParameter: (id: string, field: 'name' | 'values', value: string) => void
   onAddRow: (id: string, target: 'above' | 'below') => void
   onRemoveRow: (id: string) => void
 }
@@ -63,9 +59,7 @@ function ParametersSection({
           <p>
             Use <span className="font-mono">|</span> to separate names.
           </p>
-          <p className="mb-2">
-            Aliases are rotated across generated test cases.
-          </p>
+          <p className="mb-2">Aliases are rotated across generated test cases.</p>
           <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
             <dt className="font-mono">Parameters</dt>
             <dd className="font-mono">Browser</dd>
@@ -75,10 +69,7 @@ function ParametersSection({
         </DisclosurePanel>
       </Disclosure>
       {parameters.parameters.map((parameter, i) => (
-        <div
-          className="mb-3 grid grid-cols-12 gap-0 sm:mb-1 sm:gap-5"
-          key={parameter.id}
-        >
+        <div className="mb-3 grid grid-cols-12 gap-0 sm:mb-1 sm:gap-5" key={parameter.id}>
           <div className="col-span-11 sm:col-span-3">
             <TextInput
               label={`Parameter ${(i + 1).toString()} Name`}

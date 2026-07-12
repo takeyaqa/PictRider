@@ -2,9 +2,7 @@ interface NotificationMessageSectionProps {
   message: string
 }
 
-function NotificationMessageSection({
-  message,
-}: NotificationMessageSectionProps) {
+function NotificationMessageSection({ message }: NotificationMessageSectionProps) {
   if (!message) {
     return null
   }

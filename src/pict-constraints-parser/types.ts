@@ -120,6 +120,4 @@ export interface ParseError {
   position: number
 }
 
-export type ParseResult<T> =
-  | { ok: true; value: T }
-  | { ok: false; error: ParseError }
+export type ParseResult<T> = { ok: true; value: T } | { ok: false; error: ParseError }

@@ -1,13 +1,7 @@
 import type { Draft } from 'immer'
 import { parseConstraints } from '../../pict-constraints-parser'
 import { fixConstraint, printConstraints, uuidv4 } from '../../shared/helpers'
-import type {
-  Message,
-  Parameter,
-  Model,
-  Condition,
-  Constraint,
-} from '../../types'
+import type { Message, Parameter, Model, Condition, Constraint } from '../../types'
 
 export type ModelAction =
   // Parameter actions
@@ -191,19 +185,11 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
       let invalidParameterName = false
       let invalidParameterValues = false
       for (const parameter of draft.parameters) {
-        if (
-          invalidParameterNameCharacters.some((char) =>
-            parameter.name.includes(char),
-          )
-        ) {
+        if (invalidParameterNameCharacters.some((char) => parameter.name.includes(char))) {
           parameter.isValidName = false
           invalidParameterName = true
         }
-        if (
-          invalidParameterValuesCharacters.some((char) =>
-            parameter.values.includes(char),
-          )
-        ) {
+        if (invalidParameterValuesCharacters.some((char) => parameter.values.includes(char))) {
           parameter.isValidValues = false
           invalidParameterValues = true
         }
@@ -246,8 +232,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
       }
       const parameterIndex = draft.parameters.findIndex((p) => p.id === id)
       if (parameterIndex >= 0) {
-        const insertParameterIndex =
-          target === 'above' ? parameterIndex : parameterIndex + 1
+        const insertParameterIndex = target === 'above' ? parameterIndex : parameterIndex + 1
         draft.parameters.splice(insertParameterIndex, 0, newParameter)
       }
 
@@ -265,8 +250,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
           parameterId: newParameterId,
           isValid: true,
         }
-        const insertConditionIndex =
-          target === 'above' ? conditionIndex : conditionIndex + 1
+        const insertConditionIndex = target === 'above' ? conditionIndex : conditionIndex + 1
         constraint.conditions.splice(insertConditionIndex, 0, newCondition)
       }
       syncConstraintTextsFromTable(draft)
@@ -282,14 +266,10 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
 
       // First, remove parameter from sub-models
       for (const subModel of draft.subModels) {
-        let parameterIndex = subModel.parameterIds.findIndex(
-          (parameterId) => parameterId === id,
-        )
+        let parameterIndex = subModel.parameterIds.findIndex((parameterId) => parameterId === id)
         while (parameterIndex >= 0) {
           subModel.parameterIds.splice(parameterIndex, 1)
-          parameterIndex = subModel.parameterIds.findIndex(
-            (parameterId) => parameterId === id,
-          )
+          parameterIndex = subModel.parameterIds.findIndex((parameterId) => parameterId === id)
         }
       }
 
@@ -307,14 +287,10 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
       }
 
       // Third, remove parameter row
-      let parameterIndex = draft.parameters.findIndex(
-        (parameter) => parameter.id === id,
-      )
+      let parameterIndex = draft.parameters.findIndex((parameter) => parameter.id === id)
       while (parameterIndex >= 0) {
         draft.parameters.splice(parameterIndex, 1)
-        parameterIndex = draft.parameters.findIndex(
-          (parameter) => parameter.id === id,
-        )
+        parameterIndex = draft.parameters.findIndex((parameter) => parameter.id === id)
       }
       syncConstraintTextsFromTable(draft)
       break
@@ -322,11 +298,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
 
     case 'toggleCondition': {
       const { constraintId, parameterId } = action.payload
-      const newCondition = searchCondition(
-        draft.constraints,
-        constraintId,
-        parameterId,
-      )
+      const newCondition = searchCondition(draft.constraints, constraintId, parameterId)
       newCondition.ifOrThen = newCondition.ifOrThen === 'if' ? 'then' : 'if'
 
       draft.constraintTexts = printConstraints(
@@ -340,11 +312,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
 
     case 'changeCondition': {
       const { constraintId, parameterId, value } = action.payload
-      const newCondition = searchCondition(
-        draft.constraints,
-        constraintId,
-        parameterId,
-      )
+      const newCondition = searchCondition(draft.constraints, constraintId, parameterId)
       newCondition.predicate = value
       // Reset validation flags
       for (const constraint of draft.constraints) {
@@ -357,11 +325,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
       let invalidConstraint = false
       for (const constraint of draft.constraints) {
         for (const condition of constraint.conditions) {
-          if (
-            invalidConstraintCharacters.some((char) =>
-              condition.predicate.includes(char),
-            )
-          ) {
+          if (invalidConstraintCharacters.some((char) => condition.predicate.includes(char))) {
             condition.isValid = false
             invalidConstraint = true
           }
@@ -404,10 +368,7 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
         draft.constraintSyntaxErrorLine = null
         break
       }
-      const lineNumber = getLineNumberFromPosition(
-        value,
-        parseResult.error.position,
-      )
+      const lineNumber = getLineNumberFromPosition(value, parseResult.error.position)
       draft.constraintErrors = [
         {
           id: uuidv4(),
@@ -466,14 +427,10 @@ export function modelReducer(draft: Draft<Model>, action: ModelAction): void {
         target.parameterIds.push(parameterId)
         break
       } else {
-        let targetIndex = target.parameterIds.findIndex(
-          (paramId) => paramId === parameterId,
-        )
+        let targetIndex = target.parameterIds.findIndex((paramId) => paramId === parameterId)
         while (targetIndex >= 0) {
           target.parameterIds.splice(targetIndex, 1)
-          targetIndex = target.parameterIds.findIndex(
-            (paramId) => paramId === parameterId,
-          )
+          targetIndex = target.parameterIds.findIndex((paramId) => paramId === parameterId)
         }
         break
       }
@@ -623,9 +580,7 @@ function searchCondition(
   if (!constraint) {
     throw new Error('Constraint not found')
   }
-  const condition = constraint.conditions.find(
-    (p) => p.parameterId === parameterId,
-  )
+  const condition = constraint.conditions.find((p) => p.parameterId === parameterId)
   if (!condition) {
     throw new Error('Condition not found')
   }
@@ -636,12 +591,12 @@ function syncConstraintTextsFromTable(draft: Draft<Model>): void {
   if (draft.constraintDirectEditMode) {
     return
   }
-  draft.constraintTexts = printConstraints(
-    fixConstraint(draft.constraints, draft.parameters),
-  ).map((text) => ({
-    id: uuidv4(),
-    text,
-  }))
+  draft.constraintTexts = printConstraints(fixConstraint(draft.constraints, draft.parameters)).map(
+    (text) => ({
+      id: uuidv4(),
+      text,
+    }),
+  )
 }
 
 function getLineNumberFromPosition(value: string, position: number): number {

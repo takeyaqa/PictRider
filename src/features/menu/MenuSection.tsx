@@ -36,8 +36,7 @@ function MenuSection({
     c.conditions.some((cond) => !cond.isValid),
   )
   const hasSyntaxErrorsInDirectEditMode =
-    constraints.constraintDirectEditMode &&
-    constraints.constraintErrors.length > 0
+    constraints.constraintDirectEditMode && constraints.constraintErrors.length > 0
 
   const canRunPict =
     !containsInvalidValues &&
@@ -75,22 +74,12 @@ function MenuSection({
           </Button>
         </li>
         <li>
-          <Button
-            type="warning"
-            size="sm"
-            disabled={!canClearResult}
-            onClick={onClearResult}
-          >
+          <Button type="warning" size="sm" disabled={!canClearResult} onClick={onClearResult}>
             Clear Result
           </Button>
         </li>
         <li className="border-l border-l-black pl-5">
-          <Button
-            type="primary"
-            size="sm"
-            disabled={!canRunPict}
-            onClick={handleClickRun}
-          >
+          <Button type="primary" size="sm" disabled={!canRunPict} onClick={handleClickRun}>
             Run
           </Button>
         </li>

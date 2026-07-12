@@ -6,11 +6,7 @@ function ConfigProvider({ children }: { children: React.ReactNode }) {
   const [config, dispatch] = useImmerReducer(configReducer, getInitialConfig())
 
   const handleChangeConfigCheckbox = (
-    type:
-      | 'enableSubModels'
-      | 'enableConstraints'
-      | 'showModelFile'
-      | 'randomizeGeneration',
+    type: 'enableSubModels' | 'enableConstraints' | 'showModelFile' | 'randomizeGeneration',
     checked: boolean,
   ) => {
     dispatch({

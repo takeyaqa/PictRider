@@ -6,11 +6,7 @@ import ConfigProvider from '../config/provider'
 import ConstraintsSection from './ConstraintsSection'
 import { modelReducer, getInitialModel } from './reducer'
 
-function ConstraintsSectionWrapper({
-  skipDirectEditConfirm,
-}: {
-  skipDirectEditConfirm?: boolean
-}) {
+function ConstraintsSectionWrapper({ skipDirectEditConfirm }: { skipDirectEditConfirm?: boolean }) {
   const [model, dispatch] = useImmerReducer(modelReducer, getInitialModel())
 
   const handleToggleCondition = (constraintId: string, parameterId: string) => {
@@ -23,11 +19,7 @@ function ConstraintsSectionWrapper({
     })
   }
 
-  const handleChangeCondition = (
-    constraintId: string,
-    parameterId: string,
-    value: string,
-  ) => {
+  const handleChangeCondition = (constraintId: string, parameterId: string, value: string) => {
     dispatch({
       type: 'changeCondition',
       payload: {
@@ -123,24 +115,16 @@ describe('ConstraintsSection', () => {
     await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
 
     // assert - verify constraints area is rendered
-    await expect
-      .element(screen.getByRole('group', { name: 'Constraint 1' }))
-      .toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('button', { name: 'Add Constraint' }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Constraint 1' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('button', { name: 'Add Constraint' })).toBeInTheDocument()
     await expect
       .element(screen.getByRole('button', { name: 'Remove Constraint' }))
       .toBeInTheDocument()
     await expect
-      .element(
-        screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(5),
-      )
+      .element(screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(5))
       .toBeInTheDocument() // Default app has 6 parameters, so we should have 6 'if' buttons
     await expect
-      .element(
-        screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(6),
-      )
+      .element(screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(6))
       .not.toBeInTheDocument() // Default app has 6 parameters, so we should have 6 'if' buttons
   })
 
@@ -149,9 +133,7 @@ describe('ConstraintsSection', () => {
     'Should switch to direct edit mode without confirmation when skipDirectEditConfirm is enabled',
     async () => {
       await screen.unmount()
-      screen = await render(
-        <ConstraintsSectionWrapper skipDirectEditConfirm={true} />,
-      )
+      screen = await render(<ConstraintsSectionWrapper skipDirectEditConfirm={true} />)
 
       // arrange - enable constraints area
       await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
@@ -180,9 +162,7 @@ describe('ConstraintsSection', () => {
     await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
 
     // assume - initially there should be one constraint
-    await expect
-      .element(screen.getByRole('group', { name: 'Constraint 1' }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Constraint 1' })).toBeInTheDocument()
     await expect
       .element(screen.getByRole('group', { name: 'Constraint 2' }))
       .not.toBeInTheDocument()
@@ -191,24 +171,14 @@ describe('ConstraintsSection', () => {
     await screen.getByRole('button', { name: 'Add Constraint' }).click()
 
     // assert - now there should be two constraints
+    await expect.element(screen.getByRole('group', { name: 'Constraint 2' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Constraint 1' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Constraint 2' })).toBeInTheDocument()
     await expect
-      .element(screen.getByRole('group', { name: 'Constraint 2' }))
-      .toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('group', { name: 'Constraint 1' }))
-      .toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('group', { name: 'Constraint 2' }))
-      .toBeInTheDocument()
-    await expect
-      .element(
-        screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(11),
-      )
+      .element(screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(11))
       .toBeInTheDocument() // With 6 parameters and 2 constraints, we should have 12 'if' buttons
     await expect
-      .element(
-        screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(12),
-      )
+      .element(screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(12))
       .not.toBeInTheDocument() // With 6 parameters and 2 constraints, we should have 12 'if' buttons
   })
 
@@ -218,34 +188,24 @@ describe('ConstraintsSection', () => {
     await screen.getByRole('button', { name: 'Add Constraint' }).click()
 
     // assume - there should be two constraints
-    await expect
-      .element(screen.getByRole('group', { name: 'Constraint 2' }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Constraint 2' })).toBeInTheDocument()
 
     // assert - remove constraint button should be enabled
-    await expect
-      .element(screen.getByRole('button', { name: 'Remove Constraint' }))
-      .toBeEnabled()
+    await expect.element(screen.getByRole('button', { name: 'Remove Constraint' })).toBeEnabled()
 
     // act - remove a constraint
     await screen.getByRole('button', { name: 'Remove Constraint' }).click()
 
     // assert - now there should be only one constraint
-    await expect
-      .element(screen.getByRole('group', { name: 'Constraint 1' }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Constraint 1' })).toBeInTheDocument()
     await expect
       .element(screen.getByRole('group', { name: 'Constraint 2' }))
       .not.toBeInTheDocument()
     await expect
-      .element(
-        screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(5),
-      )
+      .element(screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(5))
       .toBeInTheDocument() // With 6 parameters and 1 constraint, we should have 6 'if' buttons
     await expect
-      .element(
-        screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(6),
-      )
+      .element(screen.getByRole('button', { name: /Constraint [0-9]+ .+ if/ }).nth(6))
       .not.toBeInTheDocument() // With 6 parameters and 1 constraint, we should have 6 'if' buttons
   })
 
@@ -254,25 +214,19 @@ describe('ConstraintsSection', () => {
     await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
 
     // assert - by default there's only one constraint, so remove button should be disabled
-    await expect
-      .element(screen.getByRole('button', { name: 'Remove Constraint' }))
-      .toBeDisabled()
+    await expect.element(screen.getByRole('button', { name: 'Remove Constraint' })).toBeDisabled()
 
     // act - add a constraint
     await screen.getByRole('button', { name: 'Add Constraint' }).click()
 
     // assert - now remove button should be enabled
-    await expect
-      .element(screen.getByRole('button', { name: 'Remove Constraint' }))
-      .toBeEnabled()
+    await expect.element(screen.getByRole('button', { name: 'Remove Constraint' })).toBeEnabled()
 
     // act - remove the constraint
     await screen.getByRole('button', { name: 'Remove Constraint' }).click()
 
     // assert - remove button should be disabled again
-    await expect
-      .element(screen.getByRole('button', { name: 'Remove Constraint' }))
-      .toBeDisabled()
+    await expect.element(screen.getByRole('button', { name: 'Remove Constraint' })).toBeDisabled()
   })
 
   it('Should disable add constraint button when maximum constraint limit (25) is reached', async () => {
@@ -280,9 +234,7 @@ describe('ConstraintsSection', () => {
     await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
 
     // Initial state - should have 1 constraint
-    await expect
-      .element(screen.getByRole('group', { name: 'Constraint 1' }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Constraint 1' })).toBeInTheDocument()
     await expect
       .element(screen.getByRole('group', { name: 'Constraint 25' }))
       .not.toBeInTheDocument()
@@ -294,14 +246,10 @@ describe('ConstraintsSection', () => {
     }
 
     // Verify we have 25 constraints
-    await expect
-      .element(screen.getByRole('group', { name: 'Constraint 25' }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Constraint 25' })).toBeInTheDocument()
 
     // Verify the Add Constraint button is disabled
-    await expect
-      .element(screen.getByRole('button', { name: 'Add Constraint' }))
-      .toBeDisabled()
+    await expect.element(screen.getByRole('button', { name: 'Add Constraint' })).toBeDisabled()
   })
 
   it('Should toggle condition between if and then when clicked', async () => {
@@ -414,9 +362,7 @@ describe('ConstraintsSection', () => {
     await expect.element(input2).toHaveValue('> 1000')
 
     // the constraint should be displayed in the pre element
-    const preElement = screen.getByText(
-      /IF \[Type\] = "RAID-5" THEN \[Size\] > 1000;/i,
-    )
+    const preElement = screen.getByText(/IF \[Type\] = "RAID-5" THEN \[Size\] > 1000;/i)
     await expect.element(preElement).toBeInTheDocument()
   })
 
@@ -457,9 +403,7 @@ describe('ConstraintsSection', () => {
     'Should validate syntax only on blur and highlight the error line in preview',
     async () => {
       await screen.unmount()
-      screen = await render(
-        <ConstraintsSectionWrapper skipDirectEditConfirm={true} />,
-      )
+      screen = await render(<ConstraintsSectionWrapper skipDirectEditConfirm={true} />)
 
       // arrange - enable constraints area and open direct edit
       await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
@@ -475,9 +419,7 @@ describe('ConstraintsSection', () => {
       await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
 
       // act - blur to trigger validation and switch to preview
-      await screen
-        .getByRole('button', { name: 'Toggle constraints help' })
-        .click()
+      await screen.getByRole('button', { name: 'Toggle constraints help' }).click()
 
       // assert - syntax error message and line highlight should be shown
       await expect
@@ -497,9 +439,7 @@ describe('ConstraintsSection', () => {
     'Should clear syntax error alert and underline when formula becomes valid after blur',
     async () => {
       await screen.unmount()
-      screen = await render(
-        <ConstraintsSectionWrapper skipDirectEditConfirm={true} />,
-      )
+      screen = await render(<ConstraintsSectionWrapper skipDirectEditConfirm={true} />)
 
       // arrange - open direct edit and create syntax error
       await screen.getByRole('switch', { name: 'Enable Constraints' }).click()
@@ -508,9 +448,7 @@ describe('ConstraintsSection', () => {
         name: 'Constraint Formula',
       })
       await formulaInput.fill('IF [Type] = "RAID-5"')
-      await screen
-        .getByRole('button', { name: 'Toggle constraints help' })
-        .click()
+      await screen.getByRole('button', { name: 'Toggle constraints help' }).click()
 
       // assume - syntax error is shown
       await expect
@@ -526,9 +464,7 @@ describe('ConstraintsSection', () => {
         name: 'Constraint Formula',
       })
       await fixedFormulaInput.fill('IF [Type] = "RAID-5" THEN [Size] > 1000;')
-      await screen
-        .getByRole('button', { name: 'Toggle constraints help' })
-        .click()
+      await screen.getByRole('button', { name: 'Toggle constraints help' }).click()
 
       // assert - alert and highlight are removed
       await expect.element(screen.getByRole('alert')).not.toBeInTheDocument()
@@ -540,28 +476,18 @@ describe('ConstraintsSection', () => {
 
   it('Should toggle help content when help button is clicked', async () => {
     // assert - help content should not be visible by default
-    await expect
-      .element(screen.getByText('Predicate Input Syntax'))
-      .not.toBeInTheDocument()
+    await expect.element(screen.getByText('Predicate Input Syntax')).not.toBeInTheDocument()
 
     // act - click the help button
-    await screen
-      .getByRole('button', { name: 'Toggle constraints help' })
-      .click()
+    await screen.getByRole('button', { name: 'Toggle constraints help' }).click()
 
     // assert - help content should now be visible
-    await expect
-      .element(screen.getByText('Predicate Input Syntax'))
-      .toBeInTheDocument()
+    await expect.element(screen.getByText('Predicate Input Syntax')).toBeInTheDocument()
 
     // act - click the help button again to collapse
-    await screen
-      .getByRole('button', { name: 'Toggle constraints help' })
-      .click()
+    await screen.getByRole('button', { name: 'Toggle constraints help' }).click()
 
     // assert - help content should be hidden again
-    await expect
-      .element(screen.getByText('Predicate Input Syntax'))
-      .not.toBeInTheDocument()
+    await expect.element(screen.getByText('Predicate Input Syntax')).not.toBeInTheDocument()
   })
 })

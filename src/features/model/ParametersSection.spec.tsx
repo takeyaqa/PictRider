@@ -7,11 +7,7 @@ import { modelReducer, getInitialModel } from './reducer'
 function ParametersSectionWrapper() {
   const [model, dispatch] = useImmerReducer(modelReducer, getInitialModel())
 
-  const handleChangeParameter = (
-    id: string,
-    field: 'name' | 'values',
-    value: string,
-  ) => {
+  const handleChangeParameter = (id: string, field: 'name' | 'values', value: string) => {
     dispatch({
       type: 'changeParameter',
       payload: { id, field, value },
@@ -56,24 +52,16 @@ describe('ParametersSection', () => {
   it('Should display default parameter values', async () => {
     // assert - only checking default text and values
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(5),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(5))
       .toBeInTheDocument()
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(6),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(6))
       .not.toBeInTheDocument()
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Values/ }).nth(5),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Values/ }).nth(5))
       .toBeInTheDocument()
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Values/ }).nth(6),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Values/ }).nth(6))
       .not.toBeInTheDocument()
     await expect
       .element(screen.getByRole('textbox', { name: 'Parameter 1 Name' }))
@@ -143,14 +131,10 @@ describe('ParametersSection', () => {
 
     // assert - check count and default values (new row should be empty)
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(6),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(6))
       .toBeInTheDocument()
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Values/ }).nth(6),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Values/ }).nth(6))
       .toBeInTheDocument()
     await expect
       .element(screen.getByRole('textbox', { name: 'Parameter 1 Name' }))
@@ -164,9 +148,7 @@ describe('ParametersSection', () => {
     await expect
       .element(screen.getByRole('textbox', { name: 'Parameter 6 Values' }))
       .toHaveValue('ON, OFF')
-    await expect
-      .element(screen.getByRole('textbox', { name: 'Parameter 7 Name' }))
-      .toHaveValue('')
+    await expect.element(screen.getByRole('textbox', { name: 'Parameter 7 Name' })).toHaveValue('')
     await expect
       .element(screen.getByRole('textbox', { name: 'Parameter 7 Values' }))
       .toHaveValue('')
@@ -179,14 +161,10 @@ describe('ParametersSection', () => {
 
     // assert - check count and default values
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(5),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(5))
       .not.toBeInTheDocument()
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Values/ }).nth(5),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Values/ }).nth(5))
       .not.toBeInTheDocument()
     await expect
       .element(screen.getByRole('textbox', { name: 'Parameter 1 Name' }))
@@ -217,17 +195,13 @@ describe('ParametersSection', () => {
 
     // assert
     await screen.getByRole('button', { name: 'Parameter 1 Edit Menu' }).click()
-    await expect
-      .element(screen.getByRole('menuitem', { name: 'Delete Row' }))
-      .toBeDisabled()
+    await expect.element(screen.getByRole('menuitem', { name: 'Delete Row' })).toBeDisabled()
   })
 
   it('Should handle adding and removing multiple parameter rows', async () => {
     // Initial state - 6 parameter rows
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(5),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(5))
       .toBeInTheDocument()
 
     // Add 3 rows
@@ -237,9 +211,7 @@ describe('ParametersSection', () => {
     await screen.getByRole('menuitem', { name: 'Insert Below' }).click()
     // assert
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(6),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(6))
       .toBeInTheDocument()
 
     // act - add second row
@@ -247,9 +219,7 @@ describe('ParametersSection', () => {
     await screen.getByRole('menuitem', { name: 'Insert Above' }).click()
     // assert
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(7),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(7))
       .toBeInTheDocument()
 
     // act - add third row
@@ -257,9 +227,7 @@ describe('ParametersSection', () => {
     await screen.getByRole('menuitem', { name: 'Insert Below' }).click()
     // assert
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(8),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(8))
       .toBeInTheDocument()
 
     // Now remove 2 rows
@@ -268,9 +236,7 @@ describe('ParametersSection', () => {
     await screen.getByRole('menuitem', { name: 'Delete Row' }).click()
     // assert
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(8),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(8))
       .not.toBeInTheDocument()
 
     // act - remove second row
@@ -278,27 +244,19 @@ describe('ParametersSection', () => {
     await screen.getByRole('menuitem', { name: 'Delete Row' }).click()
     // assert
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(7),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(7))
       .not.toBeInTheDocument()
 
     // Verify we still have the correct values in the remaining textbox
     await expect
       .element(screen.getByRole('textbox', { name: 'Parameter 1 Name' }))
       .toHaveValue('Type')
-    await expect
-      .element(screen.getByRole('textbox', { name: 'Parameter 2 Name' }))
-      .toHaveValue('')
-    await expect
-      .element(screen.getByRole('textbox', { name: 'Parameter 3 Name' }))
-      .toHaveValue('')
+    await expect.element(screen.getByRole('textbox', { name: 'Parameter 2 Name' })).toHaveValue('')
+    await expect.element(screen.getByRole('textbox', { name: 'Parameter 3 Name' })).toHaveValue('')
     await expect
       .element(screen.getByRole('textbox', { name: 'Parameter 4 Name' }))
       .toHaveValue('Size')
-    await expect
-      .element(screen.getByRole('textbox', { name: 'Parameter 5 Name' }))
-      .toHaveValue('')
+    await expect.element(screen.getByRole('textbox', { name: 'Parameter 5 Name' })).toHaveValue('')
     await expect
       .element(screen.getByRole('textbox', { name: 'Parameter 6 Name' }))
       .toHaveValue('File system')
@@ -310,42 +268,30 @@ describe('ParametersSection', () => {
   it('Should disable add row button when maximum row limit (25) is reached', async () => {
     // Initial state - 6 parameter rows
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(5),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(5))
       .toBeInTheDocument()
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(6),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(6))
       .not.toBeInTheDocument()
 
     // Add rows until we reach the limit (25 rows)
     // We already have 6 rows, so we need to add 19 more
     for (let i = 0; i < 19; i++) {
-      await screen
-        .getByRole('button', { name: 'Parameter 1 Edit Menu' })
-        .click()
+      await screen.getByRole('button', { name: 'Parameter 1 Edit Menu' }).click()
       await screen.getByRole('menuitem', { name: 'Insert Above' }).click()
     }
 
     // Verify we have 25 rows
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(24),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(24))
       .toBeInTheDocument()
     await expect
-      .element(
-        screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(25),
-      )
+      .element(screen.getByRole('textbox', { name: /Parameter [0-9]+ Name/ }).nth(25))
       .not.toBeInTheDocument()
 
     // Verify the Add Row button is disabled
     await screen.getByRole('button', { name: 'Parameter 1 Edit Menu' }).click()
-    await expect
-      .element(screen.getByRole('menuitem', { name: 'Insert Above' }))
-      .toBeDisabled()
+    await expect.element(screen.getByRole('menuitem', { name: 'Insert Above' })).toBeDisabled()
   })
 
   it('Should display error message when duplicate parameter names are found (single)', async () => {

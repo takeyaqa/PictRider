@@ -24,10 +24,7 @@ function OptionsSection() {
               label="Randomize generation"
               checked={config.randomizeGeneration}
               onChange={(checked) => {
-                handlers.handleChangeConfigCheckbox(
-                  'randomizeGeneration',
-                  checked,
-                )
+                handlers.handleChangeConfigCheckbox('randomizeGeneration', checked)
               }}
             />
           </div>
