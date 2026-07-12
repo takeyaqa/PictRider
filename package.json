@@ -10,7 +10,7 @@
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "lint": "oxlint",
-    "lint:fix": "oxlint",
+    "lint:fix": "oxlint --fix",
     "test": "vitest",
     "test:run": "vitest run",
     "test:run:coverage": "vitest run --coverage",
