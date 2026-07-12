@@ -17,12 +17,7 @@ import {
   Switch,
   TextInput,
 } from '../../shared/components'
-import type {
-  Constraint,
-  Constraints,
-  ConstraintText,
-  Parameter,
-} from '../../types'
+import type { Constraint, Constraints, ConstraintText, Parameter } from '../../types'
 import { useConfig } from '../config'
 
 const PREDICATE_INPUT_SYNTAX = [
@@ -40,18 +35,13 @@ const PREDICATE_INPUT_SYNTAX = [
   { syntax: '#pattern*', description: 'Negated wildcard (NOT LIKE)' },
 ]
 
-const PICT_CONSTRAINT_SYNTAX_DOC_URL =
-  'https://github.com/microsoft/pict/blob/main/doc/pict.md'
+const PICT_CONSTRAINT_SYNTAX_DOC_URL = 'https://github.com/microsoft/pict/blob/main/doc/pict.md'
 
 interface ConstraintsSectionProps {
   constraints: Constraints
   parameters: Parameter[]
   onToggleCondition: (constraintId: string, parameterId: string) => void
-  onChangeCondition: (
-    constraintId: string,
-    parameterId: string,
-    value: string,
-  ) => void
+  onChangeCondition: (constraintId: string, parameterId: string, value: string) => void
   onAddConstraint: () => void
   onRemoveConstraint: () => void
   onToggleConstraintDirectEditMode: () => void
@@ -86,10 +76,7 @@ function ConstraintsSection({
               label="Enable Constraints"
               checked={config.enableConstraints}
               onChange={(checked) => {
-                configHandlers.handleChangeConfigCheckbox(
-                  'enableConstraints',
-                  checked,
-                )
+                configHandlers.handleChangeConfigCheckbox('enableConstraints', checked)
               }}
             />
           </div>
@@ -177,16 +164,11 @@ function hasConditionPredicate(predicate: string) {
   return predicate.trim() !== ''
 }
 
-function getConditionRowBackgroundClass(
-  ifOrThen: 'if' | 'then',
-  predicate: string,
-) {
+function getConditionRowBackgroundClass(ifOrThen: 'if' | 'then', predicate: string) {
   if (!hasConditionPredicate(predicate)) {
     return ''
   }
-  return ifOrThen === 'if'
-    ? 'bg-sky-100 dark:bg-sky-950'
-    : 'bg-blue-200 dark:bg-blue-950'
+  return ifOrThen === 'if' ? 'bg-sky-100 dark:bg-sky-950' : 'bg-blue-200 dark:bg-blue-950'
 }
 
 function ConstraintTables({
@@ -238,11 +220,7 @@ function ConstraintTables({
                       value={condition.predicate}
                       isValid={condition.isValid}
                       onChange={(e) => {
-                        onChangeCondition(
-                          constraint.id,
-                          condition.parameterId,
-                          e,
-                        )
+                        onChangeCondition(constraint.id, condition.parameterId, e)
                       }}
                     />
                   </div>
@@ -261,9 +239,7 @@ interface ConstraintEditorProps {
   constraintDirectEditMode: boolean
   onToggleConstraintDirectEditMode: () => void
   onChangeConstraintFormula: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
-  onValidateConstraintFormula: (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => void
+  onValidateConstraintFormula: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
   constraintSyntaxErrorLine: number | null
   onClickResetConstraints: () => void
   skipDirectEditConfirm: boolean
@@ -394,10 +370,7 @@ function ConstraintEditor({
   )
 }
 
-function getParameterName(
-  parameters: Parameter[],
-  parameterId: string,
-): string {
+function getParameterName(parameters: Parameter[], parameterId: string): string {
   const parameter = parameters.find((p) => p.id === parameterId)
   return parameter ? parameter.name : ''
 }

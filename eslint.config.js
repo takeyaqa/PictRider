@@ -35,11 +35,7 @@ export default defineConfig([
   },
   {
     files: ['src/**/*.spec.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      vitest.configs.recommended,
-    ],
+    extends: [js.configs.recommended, tseslint.configs.recommended, vitest.configs.recommended],
   },
   {
     files: ['tests/**/*.spec.ts'],

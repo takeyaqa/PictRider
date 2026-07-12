@@ -6,13 +6,7 @@ import {
   type PictSubModel,
 } from '@takeyaqa/pict-wasm'
 import { uuidv4 } from './util'
-import type {
-  Config,
-  ConstraintText,
-  Parameter,
-  Result,
-  SubModel,
-} from '../../types'
+import type { Config, ConstraintText, Parameter, Result, SubModel } from '../../types'
 
 export function runPict(
   pictRunner: PictRunner,
@@ -22,9 +16,7 @@ export function runPict(
   config: Config,
 ) {
   const pictParameters = processParameters(parameters)
-  const pictSubModels = config.enableSubModels
-    ? processSubModels(subModels, parameters)
-    : undefined
+  const pictSubModels = config.enableSubModels ? processSubModels(subModels, parameters) : undefined
   const pictConstraintTexts = config.enableConstraints
     ? processConstraintTexts(constraintTexts)
     : undefined
@@ -43,10 +35,7 @@ function processParameters(parameters: Parameter[]): PictParameter[] {
     .map((p) => ({ name: p.name, values: p.values }))
 }
 
-function processSubModels(
-  subModels: SubModel[],
-  parameters: Parameter[],
-): PictSubModel[] {
+function processSubModels(subModels: SubModel[], parameters: Parameter[]): PictSubModel[] {
   return subModels
     .filter((sm) => sm.parameterIds.length > 0)
     .map((sm) => ({
@@ -67,13 +56,10 @@ function processConstraintTexts(constraintTexts: ConstraintText[]): string {
 
 function processOptions(config: Config): PictOptions {
   return {
-    orderOfCombinations:
-      config.orderOfCombinations !== '' ? config.orderOfCombinations : 2,
+    orderOfCombinations: config.orderOfCombinations !== '' ? config.orderOfCombinations : 2,
     randomizeGeneration: config.randomizeGeneration,
     randomizeSeed:
-      config.randomizeGeneration && config.randomizeSeed !== ''
-        ? config.randomizeSeed
-        : undefined,
+      config.randomizeGeneration && config.randomizeSeed !== '' ? config.randomizeSeed : undefined,
   }
 }
 

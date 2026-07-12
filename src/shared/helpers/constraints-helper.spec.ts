@@ -144,9 +144,7 @@ describe('convertConstraints', () => {
     ]
 
     const result = printConstraints(constraints)[0]
-    expect(result).toBe(
-      'IF [A] = "a3" THEN [B] <> "b1" AND ([C] = "c2" OR [C] = "c3");',
-    )
+    expect(result).toBe('IF [A] = "a3" THEN [B] <> "b1" AND ([C] = "c2" OR [C] = "c3");')
   })
 
   it('should convert basic constraint (7)', () => {
@@ -399,9 +397,7 @@ describe('convertConstraints', () => {
     ]
 
     const result = printConstraints(constraints)[0]
-    expect(result).toBe(
-      'IF [Type] = "RAID-5" AND [Format method] = "Quick" THEN [Size] > 1000;',
-    )
+    expect(result).toBe('IF [Type] = "RAID-5" AND [Format method] = "Quick" THEN [Size] > 1000;')
   })
 
   it('should convert a constraint with triple if conditions', () => {
@@ -462,9 +458,7 @@ describe('convertConstraints', () => {
     ]
 
     const result = printConstraints(constraints)[0]
-    expect(result).toBe(
-      'IF [Type] = "RAID-5" THEN [Size] > 1000 AND [Compression] = "OFF";',
-    )
+    expect(result).toBe('IF [Type] = "RAID-5" THEN [Size] > 1000 AND [Compression] = "OFF";')
   })
 
   it('should ignore conditions with empty predicates', () => {

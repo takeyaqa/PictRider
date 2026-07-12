@@ -35,9 +35,7 @@ function Button({
   )
 }
 
-function getColorClass(
-  type: 'primary' | 'secondary' | 'success' | 'danger' | 'warning',
-) {
+function getColorClass(type: 'primary' | 'secondary' | 'success' | 'danger' | 'warning') {
   switch (type) {
     case 'primary':
       return 'bg-blue-500 text-white data-hover:bg-blue-600'

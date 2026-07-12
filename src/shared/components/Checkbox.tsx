@@ -8,12 +8,7 @@ interface CheckboxProps {
   onChange: (checked: boolean) => void
 }
 
-function Checkbox({
-  label,
-  checked,
-  'aria-label': ariaLabel,
-  onChange,
-}: CheckboxProps) {
+function Checkbox({ label, checked, 'aria-label': ariaLabel, onChange }: CheckboxProps) {
   return (
     <Field className="flex items-center">
       <HeadlessUiCheckbox

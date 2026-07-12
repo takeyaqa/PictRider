@@ -97,17 +97,11 @@ export function tokenize(input: string): Token[] {
       }
       if (ch === '\\') {
         if (pos >= input.length) {
-          throw throwError(
-            'UnexpectedEndOfInput',
-            'Unexpected end of input in escape sequence',
-          )
+          throw throwError('UnexpectedEndOfInput', 'Unexpected end of input in escape sequence')
         }
         const next = advance()
         if (!SPECIAL_CHARS.has(next)) {
-          throw throwError(
-            'InvalidEscapeCharacter',
-            `Invalid escape character: \\${next}`,
-          )
+          throw throwError('InvalidEscapeCharacter', `Invalid escape character: \\${next}`)
         }
         result += next
       } else {
@@ -127,17 +121,11 @@ export function tokenize(input: string): Token[] {
       }
       if (ch === '\\') {
         if (pos >= input.length) {
-          throw throwError(
-            'UnexpectedEndOfInput',
-            'Unexpected end of input in escape sequence',
-          )
+          throw throwError('UnexpectedEndOfInput', 'Unexpected end of input in escape sequence')
         }
         const next = advance()
         if (!SPECIAL_CHARS.has(next)) {
-          throw throwError(
-            'InvalidEscapeCharacter',
-            `Invalid escape character: \\${next}`,
-          )
+          throw throwError('InvalidEscapeCharacter', `Invalid escape character: \\${next}`)
         }
         result += next
       } else {

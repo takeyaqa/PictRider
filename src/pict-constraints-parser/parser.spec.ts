@@ -336,9 +336,7 @@ describe('parseConstraints', () => {
 
   describe('IF/THEN/ELSE', () => {
     it('should parse IF/THEN/ELSE', () => {
-      const constraints = expectOk(
-        'IF [P1] = "a" THEN [P2] = "b" ELSE [P2] = "c";',
-      )
+      const constraints = expectOk('IF [P1] = "a" THEN [P2] = "b" ELSE [P2] = "c";')
       expect(constraints[0]).toEqual({
         type: 'IfConstraint',
         condition: {
@@ -503,8 +501,7 @@ describe('parseConstraints', () => {
     })
 
     it('should roundtrip complex constraint', () => {
-      const input =
-        'IF [P1] = "a" AND NOT [P2] = "b" THEN [P3] IN { "c", "d" } OR [P4] LIKE "e*";'
+      const input = 'IF [P1] = "a" AND NOT [P2] = "b" THEN [P3] IN { "c", "d" } OR [P4] LIKE "e*";'
       const constraints = expectOk(input)
       const printed = printCodeFromAST(constraints)
       expect(printed[0]).toBe(input)
@@ -515,9 +512,7 @@ describe('parseConstraints', () => {
     it('should return error for missing semicolon', () => {
       const result = parseConstraints('[P] = "v"')
       expect(result.ok).toBe(false)
-      expect((result as Extract<typeof result, { ok: false }>).error.type).toBe(
-        'ExpectedSemicolon',
-      )
+      expect((result as Extract<typeof result, { ok: false }>).error.type).toBe('ExpectedSemicolon')
     })
 
     it('should return error for missing THEN', () => {
@@ -563,17 +558,13 @@ describe('parseConstraints', () => {
     it('should return success for empty input', () => {
       const result = parseConstraints('')
       expect(result.ok).toBe(true)
-      expect(
-        (result as Extract<typeof result, { ok: true }>).value,
-      ).toHaveLength(0)
+      expect((result as Extract<typeof result, { ok: true }>).value).toHaveLength(0)
     })
 
     it('should return error for missing relation', () => {
       const result = parseConstraints('[P] "v";')
       expect(result.ok).toBe(false)
-      expect((result as Extract<typeof result, { ok: false }>).error.type).toBe(
-        'ExpectedRelation',
-      )
+      expect((result as Extract<typeof result, { ok: false }>).error.type).toBe('ExpectedRelation')
     })
   })
 })

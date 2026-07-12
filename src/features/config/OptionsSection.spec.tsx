@@ -28,9 +28,7 @@ describe('OptionsSection', () => {
 
     // assert - check Order of combinations default value is 2
     await expect
-      .element(
-        screen.getByRole('spinbutton', { name: 'Order of combinations' }),
-      )
+      .element(screen.getByRole('spinbutton', { name: 'Order of combinations' }))
       .toHaveValue(2)
 
     // assert - check Randomize generation is unchecked
@@ -39,9 +37,7 @@ describe('OptionsSection', () => {
       .not.toBeChecked()
 
     // assert - check Seed is disabled when randomize is off
-    await expect
-      .element(screen.getByRole('spinbutton', { name: 'Seed' }))
-      .toBeDisabled()
+    await expect.element(screen.getByRole('spinbutton', { name: 'Seed' })).toBeDisabled()
 
     // assert - check Show model file is unchecked
     await expect
@@ -73,25 +69,19 @@ describe('OptionsSection', () => {
       .toBeChecked()
 
     // assert - Seed should be enabled
-    await expect
-      .element(screen.getByRole('spinbutton', { name: 'Seed' }))
-      .toBeEnabled()
+    await expect.element(screen.getByRole('spinbutton', { name: 'Seed' })).toBeEnabled()
   })
 
   it('Should disable seed input when randomize generation is unchecked', async () => {
     // arrange - enable randomize generation first
     await screen.getByRole('checkbox', { name: 'Randomize generation' }).click()
-    await expect
-      .element(screen.getByRole('spinbutton', { name: 'Seed' }))
-      .toBeEnabled()
+    await expect.element(screen.getByRole('spinbutton', { name: 'Seed' })).toBeEnabled()
 
     // act - uncheck randomize generation
     await screen.getByRole('checkbox', { name: 'Randomize generation' }).click()
 
     // assert - Seed should be disabled again
-    await expect
-      .element(screen.getByRole('spinbutton', { name: 'Seed' }))
-      .toBeDisabled()
+    await expect.element(screen.getByRole('spinbutton', { name: 'Seed' })).toBeDisabled()
   })
 
   it('Should change seed value when randomize generation is enabled', async () => {
@@ -111,9 +101,7 @@ describe('OptionsSection', () => {
     await screen.getByRole('checkbox', { name: 'Show model file' }).click()
 
     // assert
-    await expect
-      .element(screen.getByRole('checkbox', { name: 'Show model file' }))
-      .toBeChecked()
+    await expect.element(screen.getByRole('checkbox', { name: 'Show model file' })).toBeChecked()
 
     // act - uncheck
     await screen.getByRole('checkbox', { name: 'Show model file' }).click()

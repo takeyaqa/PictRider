@@ -73,25 +73,15 @@ describe('SubModelArea', () => {
     await screen.getByRole('switch', { name: 'Enable Sub-Models' }).click()
 
     // assert - verify sub-models area is rendered
-    await expect
-      .element(screen.getByRole('group', { name: 'Sub-Model 1' }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Sub-Model 1' })).toBeInTheDocument()
     await expect
       .element(screen.getByRole('heading', { level: 2, name: 'Sub-Models' }))
       .toBeInTheDocument()
     await expect
-      .element(
-        screen
-          .getByRole('spinbutton', { name: 'Sub-Model 1 Order', exact: true })
-          .nth(0),
-      )
+      .element(screen.getByRole('spinbutton', { name: 'Sub-Model 1 Order', exact: true }).nth(0))
       .toBeInTheDocument()
     await expect
-      .element(
-        screen
-          .getByRole('spinbutton', { name: 'Sub-Model 2 Order', exact: true })
-          .nth(0),
-      )
+      .element(screen.getByRole('spinbutton', { name: 'Sub-Model 2 Order', exact: true }).nth(0))
       .not.toBeInTheDocument()
   })
 
@@ -103,25 +93,15 @@ describe('SubModelArea', () => {
     await screen.getByRole('button', { name: 'Add Sub-Model' }).click()
 
     // assert - now there should be two sub-models
-    await expect
-      .element(screen.getByRole('group', { name: 'Sub-Model 2' }))
-      .toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('group', { name: 'Sub-Model 1' }))
-      .toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('group', { name: 'Sub-Model 2' }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Sub-Model 2' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Sub-Model 1' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Sub-Model 2' })).toBeInTheDocument()
 
     // act - remove a new sub-model
     await screen.getByRole('button', { name: 'Remove Sub-Model' }).click()
 
     // assert - now there should be one sub-model
-    await expect
-      .element(screen.getByRole('group', { name: 'Sub-Model 1' }))
-      .toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('group', { name: 'Sub-Model 2' }))
-      .not.toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Sub-Model 1' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('group', { name: 'Sub-Model 2' })).not.toBeInTheDocument()
   })
 })

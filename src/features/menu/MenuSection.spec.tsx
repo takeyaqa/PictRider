@@ -83,60 +83,39 @@ describe('MenuSection', () => {
 
   it('Should display three menu buttons', async () => {
     // arrange
-    screen = await render(
-      <MenuSectionWrapper pictRunnerInjection={pictRunnerMock} />,
-    )
+    screen = await render(<MenuSectionWrapper pictRunnerInjection={pictRunnerMock} />)
 
     // assert
-    await expect
-      .element(screen.getByRole('button', { name: 'Clear Input' }))
-      .toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('button', { name: 'Clear Result' }))
-      .toBeInTheDocument()
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeInTheDocument()
+    await expect.element(screen.getByRole('button', { name: 'Clear Input' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('button', { name: 'Clear Result' })).toBeInTheDocument()
+    await expect.element(screen.getByRole('button', { name: 'Run' })).toBeInTheDocument()
   })
 
   it('Should disable Clear Result button when canClearResult is false', async () => {
     // arrange
     screen = await render(
-      <MenuSectionWrapper
-        pictRunnerInjection={pictRunnerMock}
-        canClearResult={false}
-      />,
+      <MenuSectionWrapper pictRunnerInjection={pictRunnerMock} canClearResult={false} />,
     )
 
     // assert
-    await expect
-      .element(screen.getByRole('button', { name: 'Clear Result' }))
-      .toBeDisabled()
+    await expect.element(screen.getByRole('button', { name: 'Clear Result' })).toBeDisabled()
   })
 
   it('Should enable Clear Result button when canClearResult is true', async () => {
     // arrange
     screen = await render(
-      <MenuSectionWrapper
-        pictRunnerInjection={pictRunnerMock}
-        canClearResult={true}
-      />,
+      <MenuSectionWrapper pictRunnerInjection={pictRunnerMock} canClearResult={true} />,
     )
 
     // assert
-    await expect
-      .element(screen.getByRole('button', { name: 'Clear Result' }))
-      .toBeEnabled()
+    await expect.element(screen.getByRole('button', { name: 'Clear Result' })).toBeEnabled()
   })
 
   it('Should call handleClearInput when Clear Input is clicked', async () => {
     // arrange
     const handleClearInput = vi.fn()
     screen = await render(
-      <MenuSectionWrapper
-        pictRunnerInjection={pictRunnerMock}
-        onClearInput={handleClearInput}
-      />,
+      <MenuSectionWrapper pictRunnerInjection={pictRunnerMock} onClearInput={handleClearInput} />,
     )
 
     // act
@@ -166,14 +145,10 @@ describe('MenuSection', () => {
 
   it('Should enable Run button when pict runner is loaded and no validation errors', async () => {
     // arrange
-    screen = await render(
-      <MenuSectionWrapper pictRunnerInjection={pictRunnerMock} />,
-    )
+    screen = await render(<MenuSectionWrapper pictRunnerInjection={pictRunnerMock} />)
 
     // assert
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeEnabled()
+    await expect.element(screen.getByRole('button', { name: 'Run' })).toBeEnabled()
   })
 
   it('Should disable Run button when parameters contain invalid values', async () => {
@@ -198,9 +173,7 @@ describe('MenuSection', () => {
     )
 
     // assert
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeDisabled()
+    await expect.element(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
   })
 
   it('Should disable Run button when direct edit mode has syntax errors', async () => {
@@ -229,9 +202,7 @@ describe('MenuSection', () => {
       />,
     )
 
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeDisabled()
+    await expect.element(screen.getByRole('button', { name: 'Run' })).toBeDisabled()
   })
 
   it('Should enable Run button in direct edit mode when syntax errors are absent', async () => {
@@ -255,8 +226,6 @@ describe('MenuSection', () => {
       />,
     )
 
-    await expect
-      .element(screen.getByRole('button', { name: 'Run' }))
-      .toBeEnabled()
+    await expect.element(screen.getByRole('button', { name: 'Run' })).toBeEnabled()
   })
 })

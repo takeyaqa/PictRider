@@ -166,9 +166,7 @@ describe('printCodeFromAST', () => {
       }
 
       const result = printCodeFromAST([constraint])[0]
-      expect(result).toBe(
-        'IF [Parameter1] = "Value1" THEN [Parameter2] = "Value2";',
-      )
+      expect(result).toBe('IF [Parameter1] = "Value1" THEN [Parameter2] = "Value2";')
     })
   })
 
@@ -195,9 +193,7 @@ describe('printCodeFromAST', () => {
       }
 
       const result = printCodeFromAST([constraint])[0]
-      expect(result).toBe(
-        '[Parameter1] = "Value1" AND [Parameter2] = "Value2";',
-      )
+      expect(result).toBe('[Parameter1] = "Value1" AND [Parameter2] = "Value2";')
     })
 
     it('should print a logical OR predicate', () => {

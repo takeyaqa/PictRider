@@ -11,12 +11,7 @@ import type {
   ParseError,
   ParseResult,
 } from './types'
-import {
-  tokenize,
-  ParseException,
-  type Token,
-  type TokenType,
-} from './tokenizer'
+import { tokenize, ParseException, type Token, type TokenType } from './tokenizer'
 
 class Parser {
   private tokens: Token[]
@@ -57,10 +52,7 @@ class Parser {
     return this.advance()
   }
 
-  private throwError(
-    type: ParseError['type'],
-    message: string,
-  ): ParseException {
+  private throwError(type: ParseError['type'], message: string): ParseException {
     return new ParseException(type, message, this.peek().position)
   }
 
@@ -134,13 +126,9 @@ class Parser {
 
   private parseTerm(): Term {
     // Function: IsNegative(...) or IsPositive(...)
-    if (
-      this.peek().type === 'ISNEGATIVE' ||
-      this.peek().type === 'ISPOSITIVE'
-    ) {
+    if (this.peek().type === 'ISNEGATIVE' || this.peek().type === 'ISPOSITIVE') {
       const funcToken = this.advance()
-      const funcName =
-        funcToken.type === 'ISNEGATIVE' ? 'IsNegative' : 'IsPositive'
+      const funcName = funcToken.type === 'ISNEGATIVE' ? 'IsNegative' : 'IsPositive'
       this.expect('LPAREN')
       let parameterName: string | undefined
       if (this.peek().type === 'PARAMETER_NAME') {
@@ -261,10 +249,7 @@ class Parser {
       this.advance()
       return { type: 'Number', value: token.value as number }
     }
-    throw this.throwError(
-      'ExpectedValue',
-      `Expected value but found ${token.type}`,
-    )
+    throw this.throwError('ExpectedValue', `Expected value but found ${token.type}`)
   }
 
   private parseValueSet(): ValueSet {

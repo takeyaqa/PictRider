@@ -53,9 +53,7 @@ describe('modelReducer', () => {
       },
     })
 
-    expect(next.constraintTexts[0]?.text).toBe(
-      'IF [Drive Type] = "RAID-5" THEN [Size] > 1000;',
-    )
+    expect(next.constraintTexts[0]?.text).toBe('IF [Drive Type] = "RAID-5" THEN [Size] > 1000;')
   })
 
   it('does not regenerate constraintTexts when parameter values change', () => {
@@ -86,9 +84,9 @@ describe('modelReducer', () => {
       },
     })
 
-    expect(
-      next.constraintTexts.map((constraintText) => constraintText.text),
-    ).toEqual([TABLE_CONSTRAINT_TEXT])
+    expect(next.constraintTexts.map((constraintText) => constraintText.text)).toEqual([
+      TABLE_CONSTRAINT_TEXT,
+    ])
     expect(next.constraintTexts[0]?.id).not.toBe('stale')
   })
 
@@ -104,9 +102,9 @@ describe('modelReducer', () => {
       },
     })
 
-    expect(
-      next.constraintTexts.map((constraintText) => constraintText.text),
-    ).toEqual([TABLE_CONSTRAINT_TEXT])
+    expect(next.constraintTexts.map((constraintText) => constraintText.text)).toEqual([
+      TABLE_CONSTRAINT_TEXT,
+    ])
     expect(next.constraintTexts[0]?.id).not.toBe('stale')
   })
 
@@ -125,8 +123,6 @@ describe('modelReducer', () => {
       },
     })
 
-    expect(next.constraintTexts).toEqual([
-      { id: 'manual', text: 'MANUAL_TEXT' },
-    ])
+    expect(next.constraintTexts).toEqual([{ id: 'manual', text: 'MANUAL_TEXT' }])
   })
 })

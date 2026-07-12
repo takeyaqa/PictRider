@@ -16,11 +16,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,wasm,css,html,md}'],
       },
-      includeAssets: [
-        'favicon.ico',
-        'PictRider_icon.svg',
-        'apple-touch-icon-180x180.png',
-      ],
+      includeAssets: ['favicon.ico', 'PictRider_icon.svg', 'apple-touch-icon-180x180.png'],
       manifest: {
         name: 'PictRider',
         short_name: 'PictRider',

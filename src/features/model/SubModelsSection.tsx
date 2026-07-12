@@ -1,21 +1,11 @@
-import {
-  Checkbox,
-  NumberInput,
-  RepeatableFieldset,
-  Section,
-  Switch,
-} from '../../shared/components'
+import { Checkbox, NumberInput, RepeatableFieldset, Section, Switch } from '../../shared/components'
 import type { Parameter, SubModels } from '../../types'
 import { useConfig } from '../config'
 
 interface SubModelsSectionProps {
   subModels: SubModels
   parameters: Parameter[]
-  onClickSubModelParameters: (
-    subModelId: string,
-    parameterId: string,
-    checked: boolean,
-  ) => void
+  onClickSubModelParameters: (subModelId: string, parameterId: string, checked: boolean) => void
   onChangeSubModelOrder: (id: string, order: number) => void
   onAddSubModel: () => void
   onRemoveSubModel: () => void
@@ -40,10 +30,7 @@ function SubModelsSection({
             label="Enable Sub-Models"
             checked={config.enableSubModels}
             onChange={(checked) => {
-              configHandlers.handleChangeConfigCheckbox(
-                'enableSubModels',
-                checked,
-              )
+              configHandlers.handleChangeConfigCheckbox('enableSubModels', checked)
             }}
           />
         </div>
@@ -64,20 +51,13 @@ function SubModelsSection({
               <div className="grid grid-cols-2 items-center gap-5 border p-5 dark:border-gray-500">
                 <div>
                   {parameters.map((parameter) => (
-                    <div
-                      key={`${subModel.id}-${parameter.id}`}
-                      className="mb-1 items-center"
-                    >
+                    <div key={`${subModel.id}-${parameter.id}`} className="mb-1 items-center">
                       <Checkbox
                         label={parameter.name}
                         aria-label={`Sub-Model ${(i + 1).toString()} ${parameter.name}`}
                         checked={subModel.parameterIds.includes(parameter.id)}
                         onChange={(checked) => {
-                          onClickSubModelParameters(
-                            subModel.id,
-                            parameter.id,
-                            checked,
-                          )
+                          onClickSubModelParameters(subModel.id, parameter.id, checked)
                         }}
                       />
                     </div>

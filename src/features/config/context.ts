@@ -5,11 +5,7 @@ interface ConfigContextType {
   config: Config
   handlers: {
     handleChangeConfigCheckbox: (
-      type:
-        | 'enableSubModels'
-        | 'enableConstraints'
-        | 'showModelFile'
-        | 'randomizeGeneration',
+      type: 'enableSubModels' | 'enableConstraints' | 'showModelFile' | 'randomizeGeneration',
       checked: boolean,
     ) => void
     handleChangeConfigInput: (

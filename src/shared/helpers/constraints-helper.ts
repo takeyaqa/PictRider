@@ -12,12 +12,7 @@ import type {
   LogicalOperator,
   Clause,
 } from '../../pict-constraints-parser/types'
-import type {
-  Constraint,
-  FixedCondition,
-  FixedConstraint,
-  Parameter,
-} from '../../types'
+import type { Constraint, FixedCondition, FixedConstraint, Parameter } from '../../types'
 
 export function fixConstraint(
   constraints: Constraint[],
@@ -27,9 +22,7 @@ export function fixConstraint(
     conditions: c.conditions.map((cond) => {
       const parameter = parameters.find((p) => p.id === cond.parameterId)
       if (!parameter) {
-        throw new Error(
-          `Parameter not found for condition: ${cond.parameterId}`,
-        )
+        throw new Error(`Parameter not found for condition: ${cond.parameterId}`)
       }
       return {
         ifOrThen: cond.ifOrThen,
@@ -53,9 +46,7 @@ interface UnfixedRelationTerm {
   right: Value | ParameterName
 }
 
-function convertTableToConstraints(
-  constraints: FixedConstraint[],
-): ConstraintsAst {
+function convertTableToConstraints(constraints: FixedConstraint[]): ConstraintsAst {
   const constraintsAst: ConstraintsAst = []
   for (const constraint of constraints) {
     const ifConditions = constraint.conditions.filter(
@@ -265,9 +256,7 @@ function convertTerm(predicate: string, parameter: string): UnfixedTerm {
   }
 }
 
-function splitValueAndRelation(
-  predicate: string,
-): [Relation | 'NOT LIKE' | 'LIKE', string] {
+function splitValueAndRelation(predicate: string): [Relation | 'NOT LIKE' | 'LIKE', string] {
   if (predicate.startsWith('#') && isPatternString(predicate)) {
     return ['NOT LIKE', predicate.replace('#', '').trim()]
   } else if (isPatternString(predicate)) {
