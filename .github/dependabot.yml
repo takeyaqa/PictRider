@@ -6,7 +6,7 @@ updates:
       interval: "monthly"
     versioning-strategy: increase
     cooldown:
-      default-days: 1
+      default-days: 3
     open-pull-requests-limit: 20
     commit-message:
       prefix: "build"
@@ -54,7 +54,7 @@ updates:
     schedule:
       interval: "monthly"
     cooldown:
-      default-days: 1
+      default-days: 3
     commit-message:
       prefix: "ci"
       include: "scope"
