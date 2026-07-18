@@ -19,7 +19,7 @@
     "@headlessui/react": "^2.2.10",
     "@heroicons/react": "^2.2.0",
     "@plausible-analytics/tracker": "^0.4.5",
-    "@takeyaqa/pict-wasm": "3.7.4-wasm.26",
+    "@takeyaqa/pict-wasm": "3.7.4-wasm.27",
     "immer": "^11.1.11",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
