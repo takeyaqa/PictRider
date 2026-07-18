@@ -3,8 +3,7 @@ minimumReleaseAgeExclude:
   - "@takeyaqa/pict-wasm"
 trustPolicy: no-downgrade
 trustPolicyExclude:
-  - rollup
+  - "@trickfilm400/rollup-plugin-off-main-thread"
   - semver
-  - undici-types
 onlyBuiltDependencies:
   - sharp
