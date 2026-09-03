@@ -9,6 +9,7 @@ function usePictRunner(pictRunnerInjection?: PictRunner) {
     // Use the injected PictRunner for testing
     if (pictRunnerInjection) {
       pictRunner.current = pictRunnerInjection;
+      // oxlint-disable-next-line set-state-in-effect
       setPictRunnerLoaded(true);
       return;
     }
