@@ -5,5 +5,4 @@ trustPolicy: no-downgrade
 trustPolicyExclude:
   - "@trickfilm400/rollup-plugin-off-main-thread"
   - semver
-onlyBuiltDependencies:
-  - sharp
+pmOnFail: ignore
